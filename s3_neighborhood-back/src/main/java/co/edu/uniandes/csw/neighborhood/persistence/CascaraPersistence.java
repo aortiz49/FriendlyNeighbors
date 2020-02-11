@@ -1,4 +1,6 @@
 /*
+/*
+/*
 MIT License
 
 Copyright (c) 2019 Universidad de los Andes - ISIS2603
@@ -39,6 +41,6 @@ public class CascaraPersistence {
 
     private static final Logger LOGGER = Logger.getLogger(CascaraPersistence.class.getName());
 
-    @PersistenceContext(unitName = "neighborhoodPU")
+    @PersistenceContext(unitName = "neighborhoodPU" )
     protected EntityManager em;
 }
