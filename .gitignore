@@ -26,3 +26,6 @@ hs_err_pid*
 # Jar y bat de la cascara.
 !Cascara.jar
 !Cascara.bat
+/s3_vecindario-api/target/
+/s3_neighborhood-back/target/
+/s3_neighborhood-api/target/

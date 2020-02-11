@@ -1,6 +1,8 @@
-MIT License
+<?xml version="1.0"?>
+<!--
+The MIT License (MIT)
 
-Copyright (c) 2019 ISIS2603
+Copyright (c) 2019 Los Andes University
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +21,16 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+-->
+<arquillian
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://jboss.org/schema/arquillian"
+    xsi:schemaLocation="http://jboss.org/schema/arquillian http://www.jboss.org/schema/arquillian/arquillian_1_0.xsd">
+    <defaultProtocol type="Servlet 3.0"></defaultProtocol>
+    <container qualifier="glassfish-embedded" default="true">
+        <configuration>
+            <property name="bindHttpPort">7070</property>
+            <property name="bindHttpsPort">7171</property>
+        </configuration>
+    </container>
+</arquillian>

@@ -1,6 +1,7 @@
+/*
 MIT License
 
-Copyright (c) 2019 ISIS2603
+Copyright (c) 2019 Universidad de los Andes - ISIS2603
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +20,25 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+ */
+package co.edu.uniandes.csw.neighborhood.persistence;
+
+import java.util.logging.Logger;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+/**
+ * Clase que maneja la persistencia para la Cascara. Se conecta a través del
+ * Entity Manager de javax.persistance con la base de datos SQL.
+ *
+ * @author ISIS2603
+ */
+@Stateless
+public class CascaraPersistence {
+
+    private static final Logger LOGGER = Logger.getLogger(CascaraPersistence.class.getName());
+
+    @PersistenceContext(unitName = "neighborhoodPU")
+    protected EntityManager em;
+}

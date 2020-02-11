@@ -1,6 +1,7 @@
+/*
 MIT License
 
-Copyright (c) 2019 ISIS2603
+Copyright (c) 2019 Universidad de los Andes - ISIS2603
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +20,25 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+ */
+package co.edu.uniandes.csw.neighborhood.ejb;
+
+import co.edu.uniandes.csw.neighborhood.persistence.CascaraPersistence;
+import java.util.logging.Logger;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+
+/**
+ * Clase que implementa la conexion con la persistencia para la cascara.
+ *
+ * @author ISIS2603
+ */
+@Stateless
+public class CascaraLogic {
+
+    private static final Logger LOGGER = Logger.getLogger(CascaraLogic.class.getName());
+
+    @Inject
+    private CascaraPersistence cascaraPersistence;
+
+}
