@@ -42,7 +42,7 @@ public class CommentEntity extends BaseEntity implements Serializable{
     
     @PodamExclude
    @ManyToOne
-   ResidentProfileEntity author;
+  private  ResidentProfileEntity author;
 
     public Date getDate() {
         return date;

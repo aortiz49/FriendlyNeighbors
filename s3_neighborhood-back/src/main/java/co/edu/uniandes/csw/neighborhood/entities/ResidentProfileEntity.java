@@ -71,7 +71,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable{
          cascade = CascadeType.PERSIST, orphanRemoval = true
     )
             
-    List<FavorEntity> favors =  new ArrayList<>();
+    private List<FavorEntity> favors =  new ArrayList<>();
     
     
     /**
@@ -83,7 +83,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable{
         fetch = javax.persistence.FetchType.LAZY,
          cascade = CascadeType.PERSIST, orphanRemoval = true
     )
-    List<ServiceEntity> services  = new ArrayList<>();;
+   private List<ServiceEntity> services  = new ArrayList<>();;
     
         
     /**
@@ -95,7 +95,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable{
         fetch = javax.persistence.FetchType.LAZY,
          cascade = CascadeType.PERSIST, orphanRemoval = true
     )
-    List<NotificationEntity> notifications = new ArrayList<>();
+   private List<NotificationEntity> notifications = new ArrayList<>();
      
     /**
      * Represents posts made by this resident 
@@ -103,7 +103,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable{
     @PodamExclude
     @OneToMany(mappedBy = "author",fetch=FetchType.LAZY,
          cascade = CascadeType.PERSIST, orphanRemoval = true)
-    List<PostEntity> posts = new ArrayList<>();
+  private  List<PostEntity> posts = new ArrayList<>();
      
      
     /**
@@ -115,7 +115,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable{
         fetch = javax.persistence.FetchType.LAZY,
          cascade = CascadeType.PERSIST, orphanRemoval = true
     )
-    List<EventEntity> events  = new ArrayList<>();
+    private List<EventEntity> events  = new ArrayList<>();
     
     
          /**
@@ -125,6 +125,8 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable{
         @OneToOne(mappedBy = "residentProfile", fetch=FetchType.EAGER)
     private LoginEntity login;
 
+        
+        
     public String getName() {
         return name;
     }

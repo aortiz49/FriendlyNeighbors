@@ -69,8 +69,9 @@ public class PostEntity extends BaseEntity implements Serializable{
         fetch = javax.persistence.FetchType.LAZY,
          cascade = CascadeType.PERSIST, orphanRemoval = true
     )
-    List<CommentEntity> comments = new ArrayList();
+    private List<CommentEntity> comments = new ArrayList();
 
+     
     public Date getDatePosted() {
         return datePosted;
     }
