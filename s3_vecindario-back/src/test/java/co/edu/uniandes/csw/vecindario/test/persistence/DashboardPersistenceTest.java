@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package co.edu.uniandes.csw.friendlyNeighbors.test.persistence;
+package co.edu.uniandes.csw.vecindario.test.persistence;
 
-import co.edu.uniandes.csw.friendlyNeighbors.entities.DashboardEntity;
-import co.edu.uniandes.csw.friendlyNeighbors.persistence.DashboardPersistence;
+import co.edu.uniandes.csw.vecindario.entities.DashboardEntity;
+import co.edu.uniandes.csw.vecindario.persistence.DashboardPersistence;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
