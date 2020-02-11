@@ -185,7 +185,7 @@ public class PostPersistenceTest {
      * Test for deleting a Post.
      */
     @Test
-    public void deleteAuthorTest() {
+    public void deletePostTest() {
         PostEntity entity = data.get(0);
         postPersistence.delete(entity.getId());
         PostEntity deleted = em.find(PostEntity.class, entity.getId());

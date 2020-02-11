@@ -184,7 +184,7 @@ public class ResidentProfilePersistenceTest {
      * Test for deleting a resident.
      */
     @Test
-    public void deleteAuthorTest() {
+    public void deleteResidentTest() {
         ResidentProfileEntity entity = data.get(0);
         residentPersistence.delete(entity.getId());
         ResidentProfileEntity deleted = em.find(ResidentProfileEntity.class, entity.getId());
