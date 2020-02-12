@@ -1,30 +1,8 @@
-/*
-MIT License
 
-Copyright (c) 2019 Universidad de los Andes - ISIS2603
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
- */
 package co.edu.uniandes.csw.neighborhood.test.persistence;
 
-import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
-import co.edu.uniandes.csw.neighborhood.persistence.PostPersistence;
+import co.edu.uniandes.csw.neighborhood.entities.GroupEntity;
+import co.edu.uniandes.csw.neighborhood.persistence.GroupPersistence;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -43,15 +21,15 @@ import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
- * Persistence test for Post
+ * Persistence test for Group
  *
  * @author albayona
  */
 @RunWith(Arquillian.class)
-public class PostPersistenceTest {
+public class GroupPersistenceTest {
 
     @Inject
-    private PostPersistence postPersistence;
+    private GroupPersistence groupPersistence;
     
 
     @PersistenceContext
@@ -60,7 +38,7 @@ public class PostPersistenceTest {
     @Inject
     UserTransaction utx;
 
-    private List<PostEntity> data = new ArrayList<>();
+    private List<GroupEntity> data = new ArrayList<>();
 
     /**
      * @return Returns jar which Arquillian will deploy embedded in Payara.
@@ -70,8 +48,8 @@ public class PostPersistenceTest {
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addPackage(PostEntity.class.getPackage())
-                .addPackage(PostPersistence.class.getPackage())
+                .addPackage(GroupEntity.class.getPackage())
+                .addPackage(GroupPersistence.class.getPackage())
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
@@ -101,7 +79,7 @@ public class PostPersistenceTest {
      * Clears tables involved in tests 
      */
     private void clearData() {
-        em.createQuery("delete from PostEntity").executeUpdate();
+        em.createQuery("delete from GroupEntity").executeUpdate();
     }
 
     /**
@@ -110,7 +88,7 @@ public class PostPersistenceTest {
     private void insertData() {
         PodamFactory factory = new PodamFactoryImpl();
         for (int i = 0; i < 3; i++) {
-            PostEntity entity = factory.manufacturePojo(PostEntity.class);
+            GroupEntity entity = factory.manufacturePojo(GroupEntity.class);
 
             em.persist(entity);
             data.add(entity);
@@ -118,31 +96,31 @@ public class PostPersistenceTest {
     }
 
     /**
-     * Creating test for Post.
+     * Creating test for Group.
      */
     @Test
-    public void createPostTest() {
+    public void createGroupTest() {
         PodamFactory factory = new PodamFactoryImpl();
-        PostEntity newEntity = factory.manufacturePojo(PostEntity.class);
-        PostEntity result = postPersistence.create(newEntity);
+        GroupEntity newEntity = factory.manufacturePojo(GroupEntity.class);
+        GroupEntity result = groupPersistence.create(newEntity);
 
         Assert.assertNotNull(result);
 
-        PostEntity entity = em.find(PostEntity.class, result.getId());
+        GroupEntity entity = em.find(GroupEntity.class, result.getId());
 
-        Assert.assertEquals(newEntity.getTitle(), entity.getTitle());
+        Assert.assertEquals(newEntity.getName(), entity.getName());
     }
     
     /**
-     * Test for retrieving all posts from DB.
+     * Test for retrieving all groups from DB.
      */
         @Test
     public void findAllTest() {
-        List<PostEntity> list = postPersistence.findAll();
+        List<GroupEntity> list = groupPersistence.findAll();
         Assert.assertEquals(data.size(), list.size());
-        for (PostEntity ent : list) {
+        for (GroupEntity ent : list) {
             boolean found = false;
-            for (PostEntity entity : data) {
+            for (GroupEntity entity : data) {
                 if (ent.getId().equals(entity.getId())) {
                     found = true;
                 }
@@ -152,43 +130,44 @@ public class PostPersistenceTest {
     }
     
     /**
-     * Test for a query about a Post.
+     * Test for a query about a Group.
      */
     @Test
-    public void getPostTest() {
-        PostEntity entity = data.get(0);
-        PostEntity newEntity = postPersistence.find(entity.getId());
+    public void getGroupTest() {
+        GroupEntity entity = data.get(0);
+        GroupEntity newEntity = groupPersistence.find(entity.getId());
         Assert.assertNotNull(newEntity);
-        Assert.assertEquals(entity.getDatePosted(), newEntity.getDatePosted());
-        Assert.assertEquals(entity.getTitle(), newEntity.getTitle());
+        Assert.assertEquals(entity.getName(), newEntity.getName());
+        Assert.assertEquals(entity.getDescription(), newEntity.getDescription());
     }
 
      /**
-     * Test for updating a Post.
+     * Test for updating a Group.
      */
     @Test
-    public void updatePostTest() {
-        PostEntity entity = data.get(0);
+    public void updateGroupTest() {
+        GroupEntity entity = data.get(0);
         PodamFactory factory = new PodamFactoryImpl();
-        PostEntity newEntity = factory.manufacturePojo(PostEntity.class);
+        GroupEntity newEntity = factory.manufacturePojo(GroupEntity.class);
 
         newEntity.setId(entity.getId());
 
-        postPersistence.update(newEntity);
+        groupPersistence.update(newEntity);
 
-        PostEntity resp = em.find(PostEntity.class, entity.getId());
+        GroupEntity resp = em.find(GroupEntity.class, entity.getId());
 
-        Assert.assertEquals(newEntity.getDatePosted(), resp.getDatePosted());
+        Assert.assertEquals(newEntity.getName(), resp.getName());
+        Assert.assertEquals(newEntity.getDescription(), resp.getDescription());
     }
     
      /**
-     * Test for deleting a Post.
+     * Test for deleting a Group.
      */
     @Test
-    public void deletePostTest() {
-        PostEntity entity = data.get(0);
-        postPersistence.delete(entity.getId());
-        PostEntity deleted = em.find(PostEntity.class, entity.getId());
+    public void deleteGroupTest() {
+        GroupEntity entity = data.get(0);
+        groupPersistence.delete(entity.getId());
+        GroupEntity deleted = em.find(GroupEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
      
