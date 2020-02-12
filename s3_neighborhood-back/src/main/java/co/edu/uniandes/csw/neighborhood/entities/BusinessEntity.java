@@ -28,7 +28,9 @@ package co.edu.uniandes.csw.neighborhood.entities;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import uk.co.jemos.podam.common.PodamExclude;
 
 /**
@@ -42,9 +44,27 @@ public class BusinessEntity extends BaseEntity implements Serializable {
 // Relations
 //===================================================
 
+    /**
+     * The owner of the business.
+     */
     @PodamExclude
     @ManyToOne
     private BusinessOwnerProfileEntity owner;
+
+    /**
+     * The business' dashboard
+     */
+    @PodamExclude
+    @OneToOne(mappedBy = "business", fetch = FetchType.LAZY)
+    private Dashboard dashboard;
+    
+    /**
+     * The neighborhood the business belongs to.
+     */
+    @PodamExclude
+    @ManyToOne
+    private NeighborhoodEntity neighborhood;
+
 //===================================================
 // Attributes
 //===================================================
@@ -78,6 +98,61 @@ public class BusinessEntity extends BaseEntity implements Serializable {
 //===================================================
 // Getters & Setters
 //===================================================
+
+    /**
+     * Returns the owner of the business.
+     * 
+     * @return the business owner
+     */
+    public BusinessOwnerProfileEntity getOwner() {
+        return owner;
+    }
+
+    /**
+     * Sets the owner of the business.
+     * 
+     * @param pOwner the new business owner 
+     */
+    public void setOwner(BusinessOwnerProfileEntity pOwner) {
+        owner = pOwner;
+    }
+
+    /**
+     * Returns the business' dashboard.
+     * 
+     * @return the business' dashborad
+     */
+    public Dashboard getDashboard() {
+        return dashboard;
+    }
+
+    /**
+     * Sets the business' dashboard.
+     * 
+     * @param pDashboard the new business dashboard
+     */
+    public void setDashboard(Dashboard pDashboard) {
+        dashboard = pDashboard;
+    }
+
+    /**
+     * Returns the neighborhood the business is in.
+     * 
+     * @return the business' neighborhood
+     */
+    public NeighborhoodEntity getNeighborhood() {
+        return neighborhood;
+    }
+
+    /**
+     * Sets the neighborhood the busness is in.
+     * 
+     * @param pNeighborhood the business' new neighborhood
+     */
+    public void setNeighborhood(NeighborhoodEntity pNeighborhood) {
+        neighborhood = pNeighborhood;
+    }
+      
     /**
      * Returns the name of the business.
      *

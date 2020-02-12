@@ -8,8 +8,11 @@ package co.edu.uniandes.csw.neighborhood.entities;
 import co.edu.uniandes.csw.neighborhood.podam.DateStrategy;
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import uk.co.jemos.podam.common.PodamExclude;
 import uk.co.jemos.podam.common.PodamStrategyValue;
 
 /**
@@ -17,10 +20,18 @@ import uk.co.jemos.podam.common.PodamStrategyValue;
  *
  * @author aortiz49
  */
+@Entity
 public class ServiceEntity extends BaseEntity implements Serializable {
 //===================================================
 // Relations
 //=================================================== 
+
+    /**
+     * The resident who published the service offer.
+     */
+    @PodamExclude
+    @ManyToOne
+    private ResidentProfileEntity resident;
 
 //===================================================
 // Attributes
@@ -55,6 +66,25 @@ public class ServiceEntity extends BaseEntity implements Serializable {
 //===================================================
 // Getters & Setters
 //===================================================
+    
+    /**
+     * Returns the resident who authored the service offer.
+     * 
+     * @return resident who created service offer
+     */
+    public ResidentProfileEntity getResident() {
+        return resident;
+    }
+
+    /**
+     * Sets the resident who authored the service offer.
+     * 
+     * @param pResident the new resident author of the service offer 
+     */
+    public void setResident(ResidentProfileEntity pResident) {
+        resident = pResident;
+    }
+    
     /**
      * Returns the date on which the service offer was posted.
      *
