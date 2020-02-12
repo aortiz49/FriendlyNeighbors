@@ -1,7 +1,6 @@
 package co.edu.uniandes.csw.neighborhood.persistence;
 
-import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
-import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
+import co.edu.uniandes.csw.neighborhood.entities.GroupEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,81 +10,81 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
- * This class handles persistence for PostEntity. The connection is stablished
+ * This class handles persistence for GroupEntity. The connection is stablished
  * by Entity Manager from javax.persistance to the SQL DB.
  *
  * @author albayona
  */
 @Stateless
-public class PostPersistence {
+public class GroupPersistence {
 
-    private static final Logger LOGGER = Logger.getLogger(PostPersistence.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(GroupPersistence.class.getName());
 
     @PersistenceContext(unitName = "neighborhoodPU" )
     protected EntityManager em;
 
     /**
-     * Creates a post within DB
+     * Creates a group within DB
      *
-     * @param postEntity post object to be created in DB
+     * @param groupEntity group object to be created in DB
      * @return returns the created entity with an id given by DB.
      */
-    public PostEntity create(PostEntity postEntity) {
-        LOGGER.log(Level.INFO, "Creating a new post");
+    public GroupEntity create(GroupEntity groupEntity) {
+        LOGGER.log(Level.INFO, "Creating a new group");
 
-        em.persist(postEntity);
-        LOGGER.log(Level.INFO, "Post created");
-        return postEntity;
+        em.persist(groupEntity);
+        LOGGER.log(Level.INFO, "group created");
+        return groupEntity;
     }
 
     
     /**
-     * Returns all posts from DB.
+     * Returns all groups from DB.
      *
-     * @return a list with all posts found in DB.
+     * @return a list with all groups found in DB.
      */
-    public List<PostEntity> findAll() {
-        LOGGER.log(Level.INFO, "Querying for all posts");
+    public List<GroupEntity> findAll() {
+        LOGGER.log(Level.INFO, "Querying for all groups");
         
-        TypedQuery query = em.createQuery("select u from PostEntity u", PostEntity.class);
+        TypedQuery query = em.createQuery("select u from GroupEntity u", GroupEntity.class);
        
         return query.getResultList();
     }
     
         /**
-     * Looks for a post with the id given by argument
+     * Looks for a group with the id given by argument
      *
-     * @param postId: id from post to be found.
-     * @return a post.
+     * @param groupId: id from group to be found.
+     * @return a group.
      */
-    public PostEntity find(Long postId) {
-        LOGGER.log(Level.INFO, "Querying for post with id={0}", postId);
+    public GroupEntity find(Long groupId) {
+        LOGGER.log(Level.INFO, "Querying for group with id={0}", groupId);
        
         
-        return em.find(PostEntity.class, postId);
+        return em.find(GroupEntity.class, groupId);
     }
 
 
         /**
-     * Updates a post with the modified post given by argument.
+     * Updates a group with the modified group given by argument.
      *
-     * @param postEntity: the modified post. 
-     * @return the updated post
+     * @param groupEntity: the modified group. 
+     * @return the updated group
      */
-    public PostEntity update(PostEntity postEntity) {
-        LOGGER.log(Level.INFO, "Updating post with id={0}", postEntity.getId());
-        return em.merge(postEntity);
+    public GroupEntity update(GroupEntity groupEntity) {
+        LOGGER.log(Level.INFO, "Updating group with id={0}", groupEntity.getId());
+        return em.merge(groupEntity);
     }
     
         /**
-     * Deletes from DB a post with the id given by argument
+     * Deletes from DB a group with the id given by argument
      *
-     * @param postId: id from post to be deleted.
+     * @param groupId: id from group to be deleted.
      */
-    public void delete(Long postId) {
+    public void delete(Long groupId) {
 
-        LOGGER.log(Level.INFO, "Deleting post wit id={0}", postId);
-        PostEntity postEntity = em.find(PostEntity.class, postId);
-        em.remove(postEntity);
+        LOGGER.log(Level.INFO, "Deleting group with id={0}", groupId);
+        GroupEntity groupEntity = em.find(GroupEntity.class, groupId);
+        em.remove(groupEntity);
     }
 }
