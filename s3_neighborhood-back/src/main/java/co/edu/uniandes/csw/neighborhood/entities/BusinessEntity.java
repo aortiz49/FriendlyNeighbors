@@ -56,7 +56,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
      */
     @PodamExclude
     @OneToOne(mappedBy = "business", fetch = FetchType.LAZY)
-    private Dashboard dashboard;
+    private DashboardEntity dashboard;
     
     /**
      * The neighborhood the business belongs to.
@@ -122,7 +122,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
      * 
      * @return the business' dashborad
      */
-    public Dashboard getDashboard() {
+    public DashboardEntity getDashboard() {
         return dashboard;
     }
 
@@ -131,7 +131,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
      * 
      * @param pDashboard the new business dashboard
      */
-    public void setDashboard(Dashboard pDashboard) {
+    public void setDashboard(DashboardEntity pDashboard) {
         dashboard = pDashboard;
     }
 

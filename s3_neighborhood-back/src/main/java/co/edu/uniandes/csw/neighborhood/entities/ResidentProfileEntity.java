@@ -11,6 +11,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import uk.co.jemos.podam.common.PodamExclude;
 
@@ -19,100 +20,108 @@ import uk.co.jemos.podam.common.PodamExclude;
  * @author estudiante
  */
 @Entity
-public class ResidentProfileEntity extends BaseEntity implements Serializable{
-    
+public class ResidentProfileEntity extends BaseEntity implements Serializable {
+
     /**
-     * Represents the name of this resident 
+     * Represents the name of this resident
      */
     private String name;
-    
-        
+
     /**
-     * Represents phone number of this resident 
+     * Represents phone number of this resident
      */
     private String phoneNumber;
-    
-     /**
-     * Represents email of this resident 
+
+    /**
+     * Represents email of this resident
      */
     private String email;
-    
+
     /**
-     * Represents nickname of this resident 
+     * Represents nickname of this resident
      */
     private String nickname;
-    
+
     /**
-     * Represents preferences of this resident 
+     * Represents preferences of this resident
      */
     private String preferences;
-    
+
     /**
-     * Represents a link to a proof of residence file of this resident 
+     * Represents a link to a proof of residence file of this resident
      */
     private String proofOfResidence;
-    
+
     /**
-     * Represents pictures uploaded by this resident 
+     * Represents pictures uploaded by this resident
      */
     private String[] pictureLinks;
-    
-    
+
+    @PodamExclude
+    @ManyToOne
+    private NeighborhoodEntity neighborhood;
+
     /**
-     * Represents favors requested by this resident 
+     * Represents favors requested by this resident
      */
-        @PodamExclude
+    @PodamExclude
     @OneToMany(
-        mappedBy = "author",
-        fetch = javax.persistence.FetchType.LAZY,
-         cascade = CascadeType.PERSIST, orphanRemoval = true
+            mappedBy = "author",
+            fetch = javax.persistence.FetchType.LAZY,
+            cascade = CascadeType.PERSIST, orphanRemoval = true
     )
-            
-    private List<FavorEntity> favors =  new ArrayList<>();
-    
-    
+
+    private List<FavorEntity> favors = new ArrayList<>();
+
     /**
-     * Represents services offered by this resident 
+     * Represents services offered by this resident
      */
-        @PodamExclude
-        @OneToMany(
-        mappedBy = "author",
-        fetch = javax.persistence.FetchType.LAZY,
-         cascade = CascadeType.PERSIST, orphanRemoval = true
+    @PodamExclude
+    @OneToMany(
+            mappedBy = "author",
+            fetch = javax.persistence.FetchType.LAZY,
+            cascade = CascadeType.PERSIST, orphanRemoval = true
     )
-   private List<ServiceEntity> services  = new ArrayList<>();;
+    private List<ServiceEntity> services = new ArrayList<>();
+    ;
     
         
     /**
      * Represents notifications posted by this resident 
      */
      @PodamExclude
-     @OneToMany(
-        mappedBy = "author",
-        fetch = javax.persistence.FetchType.LAZY,
-         cascade = CascadeType.PERSIST, orphanRemoval = true
+    @OneToMany(
+            mappedBy = "author",
+            fetch = javax.persistence.FetchType.LAZY,
+            cascade = CascadeType.PERSIST, orphanRemoval = true
     )
-   private List<NotificationEntity> notifications = new ArrayList<>();
-     
+    private List<NotificationEntity> notifications = new ArrayList<>();
+
     /**
-     * Represents posts made by this resident 
+     * Represents posts made by this resident
      */
     @PodamExclude
-    @OneToMany(mappedBy = "author",fetch=FetchType.LAZY,
-         cascade = CascadeType.PERSIST, orphanRemoval = true)
-  private  List<PostEntity> posts = new ArrayList<>();
-     
-     
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<PostEntity> posts = new ArrayList<>();
+
     /**
-     * Represents events posted by this resident 
+     * Represents events posted by this resident
      */
     @PodamExclude
     @OneToMany(
-        mappedBy = "author",
-        fetch = javax.persistence.FetchType.LAZY,
-         cascade = CascadeType.PERSIST, orphanRemoval = true
+            mappedBy = "author",
+            fetch = javax.persistence.FetchType.LAZY,
+            cascade = CascadeType.PERSIST, orphanRemoval = true
     )
-    private List<EventEntity> events  = new ArrayList<>();
+    private List<EventEntity> events = new ArrayList<>();
+
+    @PodamExclude
+    @OneToMany(
+            mappedBy = "resident",
+            fetch = javax.persistence.FetchType.LAZY,
+            cascade = CascadeType.PERSIST, orphanRemoval = true
+    )
+    private List<LoginEntity> logins = new ArrayList<>();
 
 }
-

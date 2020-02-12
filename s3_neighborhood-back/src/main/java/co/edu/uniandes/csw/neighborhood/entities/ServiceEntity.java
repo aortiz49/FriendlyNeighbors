@@ -27,11 +27,11 @@ public class ServiceEntity extends BaseEntity implements Serializable {
 //=================================================== 
 
     /**
-     * The resident who published the service offer.
+     * The resident who authored the service offer.
      */
     @PodamExclude
     @ManyToOne
-    private ResidentProfileEntity resident;
+    private ResidentProfileEntity author;
 
 //===================================================
 // Attributes
@@ -56,7 +56,7 @@ public class ServiceEntity extends BaseEntity implements Serializable {
     /**
      * The name of the author of the service offer.
      */
-    private String author;
+    private String serviceAuthor;
 
     /**
      * The availability of the service offer.
@@ -73,16 +73,16 @@ public class ServiceEntity extends BaseEntity implements Serializable {
      * @return resident who created service offer
      */
     public ResidentProfileEntity getResident() {
-        return resident;
+        return author;
     }
 
     /**
      * Sets the resident who authored the service offer.
      * 
-     * @param pResident the new resident author of the service offer 
+     * @param pAuthor the new resident author of the service offer 
      */
-    public void setResident(ResidentProfileEntity pResident) {
-        resident = pResident;
+    public void setResident(ResidentProfileEntity pAuthor) {
+        author = pAuthor;
     }
     
     /**
@@ -145,7 +145,7 @@ public class ServiceEntity extends BaseEntity implements Serializable {
      * @return the author who wrote the service offer
      */
     public String getAuthor() {
-        return author;
+        return serviceAuthor;
     }
 
     /**
@@ -154,7 +154,7 @@ public class ServiceEntity extends BaseEntity implements Serializable {
      * @param pAuthor the new author of the service offer
      */
     public void setAuthor(String pAuthor) {
-        author = pAuthor;
+        serviceAuthor = pAuthor;
     }
 
     /**
