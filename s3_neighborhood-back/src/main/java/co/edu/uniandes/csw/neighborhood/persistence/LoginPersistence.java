@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package co.edu.uniandes.csw.vecindario.persistence;
+package co.edu.uniandes.csw.neighborhood.persistence;
 
-import co.edu.uniandes.csw.vecindario.entities.LoginEntity;
+import co.edu.uniandes.csw.neighborhood.entities.LoginEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;

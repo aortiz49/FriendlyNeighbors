@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package co.edu.uniandes.csw.vecindario.test.persistence;
+package co.edu.uniandes.csw.neighborhood.test.persistence;
 
-import co.edu.uniandes.csw.vecindario.entities.OfferEntity;
-import co.edu.uniandes.csw.vecindario.persistence.OfferPersistence;
+import co.edu.uniandes.csw.neighborhood.entities.OfferEntity;
+import co.edu.uniandes.csw.neighborhood.persistence.OfferPersistence;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;

@@ -11,7 +11,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import uk.co.jemos.podam.common.PodamExclude;
 
@@ -20,7 +19,6 @@ import uk.co.jemos.podam.common.PodamExclude;
  * @author estudiante
  */
 @Entity
-<<<<<<< HEAD
 public class ResidentProfileEntity extends BaseEntity implements Serializable{
     
     /**
@@ -115,135 +113,6 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable{
          cascade = CascadeType.PERSIST, orphanRemoval = true
     )
     private List<EventEntity> events  = new ArrayList<>();
-=======
-class ResidentProfileEntity extends BaseEntity implements Serializable {
-    @PodamExclude
-    @ManyToOne
-    private NeighborhoodEntity neighborhood;
->>>>>>> 3f77621435cfb5f3255b84e0de1c6a79ec7fbed5
-    
-    @PodamExclude
-    @OneToMany(mappedBy = "resident", fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<ServiceEntity> services = new ArrayList<>();
-    
-<<<<<<< HEAD
-         /**
-     * Represents events posted by this resident 
-     */
-        @PodamExclude
-        @OneToOne(mappedBy = "residentProfile", fetch=FetchType.EAGER)
-    private LoginEntity login;
 
-        
-        
-    public String getName() {
-        return name;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public String getPreferences() {
-        return preferences;
-    }
-
-    public String getProofOfResidence() {
-        return proofOfResidence;
-    }
-
-    public String[] getPictureLinks() {
-        return pictureLinks;
-    }
-
-    public List<FavorEntity> getFavors() {
-        return favors;
-    }
-
-    public List<ServiceEntity> getServices() {
-        return services;
-    }
-
-    public List<NotificationEntity> getNotifications() {
-        return notifications;
-    }
-
-    public List<PostEntity> getPosts() {
-        return posts;
-    }
-
-    public List<EventEntity> getEvents() {
-        return events;
-    }
-
-    public LoginEntity getLogin() {
-        return login;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void setPreferences(String preferences) {
-        this.preferences = preferences;
-    }
-
-    public void setProofOfResidence(String proofOfResidence) {
-        this.proofOfResidence = proofOfResidence;
-    }
-
-    public void setPictureLinks(String[] pictureLinks) {
-        this.pictureLinks = pictureLinks;
-    }
-
-    public void setFavors(List<FavorEntity> favors) {
-        this.favors = favors;
-    }
-
-    public void setServices(List<ServiceEntity> services) {
-        this.services = services;
-    }
-
-    public void setNotifications(List<NotificationEntity> notifications) {
-        this.notifications = notifications;
-    }
-
-    public void setPosts(List<PostEntity> posts) {
-        this.posts = posts;
-    }
-
-    public void setEvents(List<EventEntity> events) {
-        this.events = events;
-    }
-
-    public void setLogin(LoginEntity login) {
-        this.login = login;
-    }
-
-        
-        
-=======
 }
->>>>>>> 3f77621435cfb5f3255b84e0de1c6a79ec7fbed5
 
