@@ -31,3 +31,4 @@ class ResidentProfileEntity extends BaseEntity implements Serializable {
     private List<ServiceEntity> services = new ArrayList<>();
     
 }
+

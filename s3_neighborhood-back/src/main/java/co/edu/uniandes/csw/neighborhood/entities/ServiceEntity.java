@@ -175,5 +175,4 @@ public class ServiceEntity extends BaseEntity implements Serializable {
     public void setIsAvailable(boolean pIsAvailable) {
         isAvailable = pIsAvailable;
     }
-
 }
