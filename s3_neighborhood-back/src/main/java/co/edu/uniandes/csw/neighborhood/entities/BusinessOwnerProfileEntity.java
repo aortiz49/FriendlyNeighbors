@@ -29,6 +29,8 @@ package co.edu.uniandes.csw.neighborhood.entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import uk.co.jemos.podam.common.PodamExclude;
@@ -38,13 +40,18 @@ import uk.co.jemos.podam.common.PodamExclude;
  *
  * @author aortiz49
  */
+@Entity
 public class BusinessOwnerProfileEntity extends BaseEntity implements Serializable {
 //===================================================
 // Relations
 //=================================================== 
 
+    /**
+     * The businesses owned by a business owner.
+     */
     @PodamExclude
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<BusinessEntity> businesses = new ArrayList<>();
 //===================================================
 // Attributes

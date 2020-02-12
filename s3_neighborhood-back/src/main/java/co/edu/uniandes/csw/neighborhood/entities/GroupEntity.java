@@ -5,6 +5,8 @@
  */
 package co.edu.uniandes.csw.neighborhood.entities;
 
+import javax.persistence.Entity;
+
 /**
  *
  * @author aortiz49

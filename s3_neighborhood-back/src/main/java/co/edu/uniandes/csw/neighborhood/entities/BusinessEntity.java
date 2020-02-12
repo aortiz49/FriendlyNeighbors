@@ -27,19 +27,24 @@ package co.edu.uniandes.csw.neighborhood.entities;
 //===================================================
 
 import java.io.Serializable;
+import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import uk.co.jemos.podam.common.PodamExclude;
 
 /**
  * Enitity that represents a busuiness.
  *
  * @author aortiz49
  */
+@Entity
 public class BusinessEntity extends BaseEntity implements Serializable {
 //===================================================
 // Relations
 //===================================================
-@ManyToOne
-private BusinessOwnerProfileEntity owner;
+
+    @PodamExclude
+    @ManyToOne
+    private BusinessOwnerProfileEntity owner;
 //===================================================
 // Attributes
 //===================================================
