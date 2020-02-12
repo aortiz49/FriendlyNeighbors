@@ -1,8 +1,12 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package co.edu.uniandes.csw.vecindario.test.persistence;
 
-package co.edu.uniandes.csw.neighborhood.test.persistence;
-
-import co.edu.uniandes.csw.neighborhood.entities.CommentEntity;
-import co.edu.uniandes.csw.neighborhood.persistence.CommentPersistence;
+import co.edu.uniandes.csw.vecindario.entities.DashboardEntity;
+import co.edu.uniandes.csw.vecindario.persistence.DashboardPersistence;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -19,26 +23,25 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
-
 /**
- * Persistence test for Comment
+ * Persistence test for DashboardPersistenceTest
  *
- * @author albayona
+ * @author Carlos Figueredo
  */
 @RunWith(Arquillian.class)
-public class CommentPersistenceTest {
-
+public class DashboardPersistenceTest {
+    
     @Inject
-    private CommentPersistence commentPersistence;
+    private DashboardPersistence dashboardPersistence;
 
     @PersistenceContext
     private EntityManager em;
 
     @Inject
     UserTransaction utx;
-
-    private List<CommentEntity> data = new ArrayList<>();
-
+    
+    private List<DashboardEntity> data = new ArrayList<>();
+    
     /**
      * @return Returns jar which Arquillian will deploy embedded in Payara.
      * jar contains classes, DB descriptor and
@@ -47,8 +50,8 @@ public class CommentPersistenceTest {
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addPackage(CommentEntity.class.getPackage())
-                .addPackage(CommentPersistence.class.getPackage())
+                .addPackage(DashboardEntity.class.getPackage())
+                .addPackage(DashboardPersistence.class.getPackage())
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
@@ -72,54 +75,55 @@ public class CommentPersistenceTest {
                 e1.printStackTrace();
             }
         }
+    
     }
-
+    
     /**
      * Clears tables involved in tests 
      */
     private void clearData() {
-        em.createQuery("delete from CommentEntity").executeUpdate();
+        em.createQuery("delete from DashboardEntity").executeUpdate();
     }
-
+    
     /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
         PodamFactory factory = new PodamFactoryImpl();
         for (int i = 0; i < 3; i++) {
-            CommentEntity entity = factory.manufacturePojo(CommentEntity.class);
+            DashboardEntity entity = factory.manufacturePojo(DashboardEntity.class);
 
             em.persist(entity);
             data.add(entity);
         }
     }
-
+    
     /**
-     * Creating test for Comment.
+     * Test for creating a Dashboard.
      */
     @Test
-    public void createCommentTest() {
+    public void createLoginTest() {
         PodamFactory factory = new PodamFactoryImpl();
-        CommentEntity newEntity = factory.manufacturePojo(CommentEntity.class);
-        CommentEntity result = commentPersistence.create(newEntity);
+        DashboardEntity newEntity = factory.manufacturePojo(DashboardEntity.class);
+        DashboardEntity result = dashboardPersistence.create(newEntity);
 
         Assert.assertNotNull(result);
 
-        CommentEntity entity = em.find(CommentEntity.class, result.getId());
+        DashboardEntity entity = em.find(DashboardEntity.class, result.getId());
 
-        Assert.assertEquals(newEntity.getText(), entity.getText());
+        Assert.assertEquals(newEntity.getId(), entity.getId());
     }
     
-     /**
-     * Test for retrieving all comments from DB.
+    /**
+     * Test for retrieving all dashboards from DB.
      */
         @Test
     public void findAllTest() {
-        List<CommentEntity> list = commentPersistence.findAll();
+        List<DashboardEntity> list = dashboardPersistence.findAll();
         Assert.assertEquals(data.size(), list.size());
-        for (CommentEntity ent : list) {
+        for (DashboardEntity ent : list) {
             boolean found = false;
-            for (CommentEntity entity : data) {
+            for (DashboardEntity entity : data) {
                 if (ent.getId().equals(entity.getId())) {
                     found = true;
                 }
@@ -129,46 +133,43 @@ public class CommentPersistenceTest {
     }
     
     /**
-     * Test for a query about a Comment.
+     * Test for a query about a dashboard.
      */
     @Test
-    public void getCommentTest() {
-        CommentEntity entity = data.get(0);
-        CommentEntity newEntity = commentPersistence.find(entity.getId());
+    public void getLoginTest() {
+        DashboardEntity entity = data.get(0);
+        DashboardEntity newEntity = dashboardPersistence.find(entity.getId());
         Assert.assertNotNull(newEntity);
-        Assert.assertEquals(entity.getDate(), newEntity.getDate());
-        Assert.assertEquals(entity.getText(), newEntity.getText());
-    }
+        Assert.assertEquals(entity.getId(), newEntity.getId());
 
-     /**
-     * Test for updating a Comment.
+    }
+    
+    /**
+     * Test for updating a dashboard.
      */
     @Test
-    public void updateCommentTest() {
-        CommentEntity entity = data.get(0);
+    public void updateResidentTest() {
+        DashboardEntity entity = data.get(0);
         PodamFactory factory = new PodamFactoryImpl();
-        CommentEntity newEntity = factory.manufacturePojo(CommentEntity.class);
+        DashboardEntity newEntity = factory.manufacturePojo(DashboardEntity.class);
 
         newEntity.setId(entity.getId());
 
-        commentPersistence.update(newEntity);
+        dashboardPersistence.update(newEntity);
 
-        CommentEntity resp = em.find(CommentEntity.class, entity.getId());
+        DashboardEntity resp = em.find(DashboardEntity.class, entity.getId());
 
-        Assert.assertEquals(newEntity.getDate(), resp.getDate());
+        Assert.assertEquals(newEntity.getId(), resp.getId());
     }
     
-     /**
-     * Test for deleting a Comment.
+    /**
+     * Test for deleting a offer.
      */
     @Test
-    public void deleteCommentTest() {
-        CommentEntity entity = data.get(0);
-        commentPersistence.delete(entity.getId());
-        CommentEntity deleted = em.find(CommentEntity.class, entity.getId());
+    public void deleteAuthorTest() {
+        DashboardEntity entity = data.get(0);
+        dashboardPersistence.delete(entity.getId());
+        DashboardEntity deleted = em.find(DashboardEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
-    
-    
-    
 }

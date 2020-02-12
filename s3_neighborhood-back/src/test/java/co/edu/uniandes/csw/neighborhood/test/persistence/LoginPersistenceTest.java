@@ -1,8 +1,12 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package co.edu.uniandes.csw.vecindario.test.persistence;
 
-package co.edu.uniandes.csw.neighborhood.test.persistence;
-
-import co.edu.uniandes.csw.neighborhood.entities.CommentEntity;
-import co.edu.uniandes.csw.neighborhood.persistence.CommentPersistence;
+import co.edu.uniandes.csw.vecindario.entities.LoginEntity;
+import co.edu.uniandes.csw.vecindario.persistence.LoginPersistence;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -19,17 +23,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
-
 /**
- * Persistence test for Comment
+ * Persistence test for LoginPersistenceTest
  *
- * @author albayona
+ * @author Carlos Figueredo
  */
 @RunWith(Arquillian.class)
-public class CommentPersistenceTest {
-
+public class LoginPersistenceTest {
     @Inject
-    private CommentPersistence commentPersistence;
+    private LoginPersistence loginPersistence;
 
     @PersistenceContext
     private EntityManager em;
@@ -37,8 +39,8 @@ public class CommentPersistenceTest {
     @Inject
     UserTransaction utx;
 
-    private List<CommentEntity> data = new ArrayList<>();
-
+    private List<LoginEntity> data = new ArrayList<>();
+    
     /**
      * @return Returns jar which Arquillian will deploy embedded in Payara.
      * jar contains classes, DB descriptor and
@@ -47,8 +49,8 @@ public class CommentPersistenceTest {
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addPackage(CommentEntity.class.getPackage())
-                .addPackage(CommentPersistence.class.getPackage())
+                .addPackage(LoginEntity.class.getPackage())
+                .addPackage(LoginPersistence.class.getPackage())
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
@@ -72,54 +74,55 @@ public class CommentPersistenceTest {
                 e1.printStackTrace();
             }
         }
+    
     }
-
+    
     /**
      * Clears tables involved in tests 
      */
     private void clearData() {
-        em.createQuery("delete from CommentEntity").executeUpdate();
+        em.createQuery("delete from LoginEntity").executeUpdate();
     }
-
+    
     /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
         PodamFactory factory = new PodamFactoryImpl();
         for (int i = 0; i < 3; i++) {
-            CommentEntity entity = factory.manufacturePojo(CommentEntity.class);
+            LoginEntity entity = factory.manufacturePojo(LoginEntity.class);
 
             em.persist(entity);
             data.add(entity);
         }
     }
-
+    
     /**
-     * Creating test for Comment.
+     * Test for creating a Login.
      */
     @Test
-    public void createCommentTest() {
+    public void createLoginTest() {
         PodamFactory factory = new PodamFactoryImpl();
-        CommentEntity newEntity = factory.manufacturePojo(CommentEntity.class);
-        CommentEntity result = commentPersistence.create(newEntity);
+        LoginEntity newEntity = factory.manufacturePojo(LoginEntity.class);
+        LoginEntity result = loginPersistence.create(newEntity);
 
         Assert.assertNotNull(result);
 
-        CommentEntity entity = em.find(CommentEntity.class, result.getId());
+        LoginEntity entity = em.find(LoginEntity.class, result.getId());
 
-        Assert.assertEquals(newEntity.getText(), entity.getText());
+        Assert.assertEquals(newEntity.getUserName(), entity.getUserName());
     }
     
-     /**
-     * Test for retrieving all comments from DB.
+    /**
+     * Test for retrieving all logins from DB.
      */
         @Test
     public void findAllTest() {
-        List<CommentEntity> list = commentPersistence.findAll();
+        List<LoginEntity> list = loginPersistence.findAll();
         Assert.assertEquals(data.size(), list.size());
-        for (CommentEntity ent : list) {
+        for (LoginEntity ent : list) {
             boolean found = false;
-            for (CommentEntity entity : data) {
+            for (LoginEntity entity : data) {
                 if (ent.getId().equals(entity.getId())) {
                     found = true;
                 }
@@ -129,46 +132,45 @@ public class CommentPersistenceTest {
     }
     
     /**
-     * Test for a query about a Comment.
+     * Test for a query about a login.
      */
     @Test
-    public void getCommentTest() {
-        CommentEntity entity = data.get(0);
-        CommentEntity newEntity = commentPersistence.find(entity.getId());
+    public void getLoginTest() {
+        LoginEntity entity = data.get(0);
+        LoginEntity newEntity = loginPersistence.find(entity.getId());
         Assert.assertNotNull(newEntity);
-        Assert.assertEquals(entity.getDate(), newEntity.getDate());
-        Assert.assertEquals(entity.getText(), newEntity.getText());
-    }
+        Assert.assertEquals(entity.getUserName(), newEntity.getUserName());
+        Assert.assertEquals(entity.getPassword(), newEntity.getPassword());
+        Assert.assertEquals(entity.getRol(), newEntity.getRol());
 
-     /**
-     * Test for updating a Comment.
+    }
+    
+    /**
+     * Test for updating a login.
      */
     @Test
-    public void updateCommentTest() {
-        CommentEntity entity = data.get(0);
+    public void updateResidentTest() {
+        LoginEntity entity = data.get(0);
         PodamFactory factory = new PodamFactoryImpl();
-        CommentEntity newEntity = factory.manufacturePojo(CommentEntity.class);
+        LoginEntity newEntity = factory.manufacturePojo(LoginEntity.class);
 
         newEntity.setId(entity.getId());
 
-        commentPersistence.update(newEntity);
+        loginPersistence.update(newEntity);
 
-        CommentEntity resp = em.find(CommentEntity.class, entity.getId());
+        LoginEntity resp = em.find(LoginEntity.class, entity.getId());
 
-        Assert.assertEquals(newEntity.getDate(), resp.getDate());
+        Assert.assertEquals(newEntity.getUserName(), resp.getUserName());
     }
     
-     /**
-     * Test for deleting a Comment.
+    /**
+     * Test for deleting a login.
      */
     @Test
-    public void deleteCommentTest() {
-        CommentEntity entity = data.get(0);
-        commentPersistence.delete(entity.getId());
-        CommentEntity deleted = em.find(CommentEntity.class, entity.getId());
+    public void deleteAuthorTest() {
+        LoginEntity entity = data.get(0);
+        loginPersistence.delete(entity.getId());
+        LoginEntity deleted = em.find(LoginEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
-    
-    
-    
 }

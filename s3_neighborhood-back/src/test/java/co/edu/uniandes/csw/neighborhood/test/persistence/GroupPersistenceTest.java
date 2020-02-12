@@ -1,8 +1,8 @@
 
 package co.edu.uniandes.csw.neighborhood.test.persistence;
 
-import co.edu.uniandes.csw.neighborhood.entities.CommentEntity;
-import co.edu.uniandes.csw.neighborhood.persistence.CommentPersistence;
+import co.edu.uniandes.csw.neighborhood.entities.GroupEntity;
+import co.edu.uniandes.csw.neighborhood.persistence.GroupPersistence;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -21,15 +21,16 @@ import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
- * Persistence test for Comment
+ * Persistence test for Group
  *
  * @author albayona
  */
 @RunWith(Arquillian.class)
-public class CommentPersistenceTest {
+public class GroupPersistenceTest {
 
     @Inject
-    private CommentPersistence commentPersistence;
+    private GroupPersistence groupPersistence;
+    
 
     @PersistenceContext
     private EntityManager em;
@@ -37,7 +38,7 @@ public class CommentPersistenceTest {
     @Inject
     UserTransaction utx;
 
-    private List<CommentEntity> data = new ArrayList<>();
+    private List<GroupEntity> data = new ArrayList<>();
 
     /**
      * @return Returns jar which Arquillian will deploy embedded in Payara.
@@ -47,8 +48,8 @@ public class CommentPersistenceTest {
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addPackage(CommentEntity.class.getPackage())
-                .addPackage(CommentPersistence.class.getPackage())
+                .addPackage(GroupEntity.class.getPackage())
+                .addPackage(GroupPersistence.class.getPackage())
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
@@ -78,7 +79,7 @@ public class CommentPersistenceTest {
      * Clears tables involved in tests 
      */
     private void clearData() {
-        em.createQuery("delete from CommentEntity").executeUpdate();
+        em.createQuery("delete from GroupEntity").executeUpdate();
     }
 
     /**
@@ -87,7 +88,7 @@ public class CommentPersistenceTest {
     private void insertData() {
         PodamFactory factory = new PodamFactoryImpl();
         for (int i = 0; i < 3; i++) {
-            CommentEntity entity = factory.manufacturePojo(CommentEntity.class);
+            GroupEntity entity = factory.manufacturePojo(GroupEntity.class);
 
             em.persist(entity);
             data.add(entity);
@@ -95,31 +96,31 @@ public class CommentPersistenceTest {
     }
 
     /**
-     * Creating test for Comment.
+     * Creating test for Group.
      */
     @Test
-    public void createCommentTest() {
+    public void createGroupTest() {
         PodamFactory factory = new PodamFactoryImpl();
-        CommentEntity newEntity = factory.manufacturePojo(CommentEntity.class);
-        CommentEntity result = commentPersistence.create(newEntity);
+        GroupEntity newEntity = factory.manufacturePojo(GroupEntity.class);
+        GroupEntity result = groupPersistence.create(newEntity);
 
         Assert.assertNotNull(result);
 
-        CommentEntity entity = em.find(CommentEntity.class, result.getId());
+        GroupEntity entity = em.find(GroupEntity.class, result.getId());
 
-        Assert.assertEquals(newEntity.getText(), entity.getText());
+        Assert.assertEquals(newEntity.getName(), entity.getName());
     }
     
-     /**
-     * Test for retrieving all comments from DB.
+    /**
+     * Test for retrieving all groups from DB.
      */
         @Test
     public void findAllTest() {
-        List<CommentEntity> list = commentPersistence.findAll();
+        List<GroupEntity> list = groupPersistence.findAll();
         Assert.assertEquals(data.size(), list.size());
-        for (CommentEntity ent : list) {
+        for (GroupEntity ent : list) {
             boolean found = false;
-            for (CommentEntity entity : data) {
+            for (GroupEntity entity : data) {
                 if (ent.getId().equals(entity.getId())) {
                     found = true;
                 }
@@ -129,46 +130,46 @@ public class CommentPersistenceTest {
     }
     
     /**
-     * Test for a query about a Comment.
+     * Test for a query about a Group.
      */
     @Test
-    public void getCommentTest() {
-        CommentEntity entity = data.get(0);
-        CommentEntity newEntity = commentPersistence.find(entity.getId());
+    public void getGroupTest() {
+        GroupEntity entity = data.get(0);
+        GroupEntity newEntity = groupPersistence.find(entity.getId());
         Assert.assertNotNull(newEntity);
-        Assert.assertEquals(entity.getDate(), newEntity.getDate());
-        Assert.assertEquals(entity.getText(), newEntity.getText());
+        Assert.assertEquals(entity.getName(), newEntity.getName());
+        Assert.assertEquals(entity.getDescription(), newEntity.getDescription());
     }
 
      /**
-     * Test for updating a Comment.
+     * Test for updating a Group.
      */
     @Test
-    public void updateCommentTest() {
-        CommentEntity entity = data.get(0);
+    public void updateGroupTest() {
+        GroupEntity entity = data.get(0);
         PodamFactory factory = new PodamFactoryImpl();
-        CommentEntity newEntity = factory.manufacturePojo(CommentEntity.class);
+        GroupEntity newEntity = factory.manufacturePojo(GroupEntity.class);
 
         newEntity.setId(entity.getId());
 
-        commentPersistence.update(newEntity);
+        groupPersistence.update(newEntity);
 
-        CommentEntity resp = em.find(CommentEntity.class, entity.getId());
+        GroupEntity resp = em.find(GroupEntity.class, entity.getId());
 
-        Assert.assertEquals(newEntity.getDate(), resp.getDate());
+        Assert.assertEquals(newEntity.getName(), resp.getName());
+        Assert.assertEquals(newEntity.getDescription(), resp.getDescription());
     }
     
      /**
-     * Test for deleting a Comment.
+     * Test for deleting a Group.
      */
     @Test
-    public void deleteCommentTest() {
-        CommentEntity entity = data.get(0);
-        commentPersistence.delete(entity.getId());
-        CommentEntity deleted = em.find(CommentEntity.class, entity.getId());
+    public void deleteGroupTest() {
+        GroupEntity entity = data.get(0);
+        groupPersistence.delete(entity.getId());
+        GroupEntity deleted = em.find(GroupEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
-    
-    
+     
     
 }

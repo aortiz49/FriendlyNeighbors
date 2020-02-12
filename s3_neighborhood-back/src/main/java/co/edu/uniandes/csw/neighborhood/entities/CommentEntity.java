@@ -16,7 +16,7 @@ import uk.co.jemos.podam.common.PodamExclude;
 import uk.co.jemos.podam.common.PodamStrategyValue;
 
 /**
- *
+ *This class represent a comment made in a post
  * @author albayona
  */
 

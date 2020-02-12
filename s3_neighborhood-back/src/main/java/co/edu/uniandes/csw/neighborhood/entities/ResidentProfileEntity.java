@@ -7,21 +7,20 @@ package co.edu.uniandes.csw.neighborhood.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import uk.co.jemos.podam.common.PodamExclude;
 
 /**
  *
- * @author albayona
+ * @author estudiante
  */
-
 @Entity
+<<<<<<< HEAD
 public class ResidentProfileEntity extends BaseEntity implements Serializable{
     
     /**
@@ -116,8 +115,19 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable{
          cascade = CascadeType.PERSIST, orphanRemoval = true
     )
     private List<EventEntity> events  = new ArrayList<>();
+=======
+class ResidentProfileEntity extends BaseEntity implements Serializable {
+    @PodamExclude
+    @ManyToOne
+    private NeighborhoodEntity neighborhood;
+>>>>>>> 3f77621435cfb5f3255b84e0de1c6a79ec7fbed5
     
+    @PodamExclude
+    @OneToMany(mappedBy = "resident", fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<ServiceEntity> services = new ArrayList<>();
     
+<<<<<<< HEAD
          /**
      * Represents events posted by this resident 
      */
@@ -233,5 +243,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable{
 
         
         
+=======
+}
+>>>>>>> 3f77621435cfb5f3255b84e0de1c6a79ec7fbed5
 
-}  
