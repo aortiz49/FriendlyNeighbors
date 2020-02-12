@@ -12,12 +12,13 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import uk.co.jemos.podam.common.PodamExclude;
 
 /**
- *
+ * This class represent a resident in a neighborhood
  * @author albayona
  */
 
@@ -118,13 +119,19 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable{
     private List<EventEntity> events  = new ArrayList<>();
     
     
-         /**
+      /**
      * Represents events posted by this resident 
      */
         @PodamExclude
         @OneToOne(mappedBy = "residentProfile", fetch=FetchType.EAGER)
     private LoginEntity login;
 
+     /**
+     * Represents groups this resident is part of
+     */
+        @PodamExclude
+        @ManyToMany(mappedBy = "members", fetch=FetchType.EAGER)
+    private List<GroupEntity> groups  = new ArrayList<>();
         
         
     public String getName() {
@@ -229,6 +236,14 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable{
 
     public void setLogin(LoginEntity login) {
         this.login = login;
+    }
+
+    public List<GroupEntity> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<GroupEntity> groups) {
+        this.groups = groups;
     }
 
         
