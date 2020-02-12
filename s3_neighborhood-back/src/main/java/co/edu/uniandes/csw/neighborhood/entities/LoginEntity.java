@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package co.edu.uniandes.csw.vecindario.entities;
 
 import java.io.Serializable;
@@ -56,5 +55,6 @@ public void setIdLogin(int pId){
     public void setRol(String rol) {
         this.rol = rol;
     }
-
+ 
+    
 }
