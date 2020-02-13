@@ -28,7 +28,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
  *
  * @author v.cardonac1
  */
-@RunWith(Arquillian.class)
+ @RunWith(Arquillian.class)
 public class LocationPersistenceTest {
 
     @Inject
