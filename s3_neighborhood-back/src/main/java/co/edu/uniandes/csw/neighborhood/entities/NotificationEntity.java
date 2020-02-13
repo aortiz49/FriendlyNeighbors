@@ -28,7 +28,7 @@ public class NotificationEntity extends BaseEntity implements Serializable{
     LOW,
     MEDIUM,
     HIGH
-    };
+    }
     
     /**
      * Represents the date notification was made

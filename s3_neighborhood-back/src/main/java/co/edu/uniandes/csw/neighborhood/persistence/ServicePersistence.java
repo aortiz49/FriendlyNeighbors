@@ -5,7 +5,6 @@
  */
 package co.edu.uniandes.csw.neighborhood.persistence;
 
-import co.edu.uniandes.csw.neighborhood.entities.NotificationEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ServiceEntity;
 import java.util.List;
 import java.util.logging.Logger;

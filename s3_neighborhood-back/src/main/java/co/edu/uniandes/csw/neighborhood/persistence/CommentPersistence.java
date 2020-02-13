@@ -2,7 +2,6 @@
 package co.edu.uniandes.csw.neighborhood.persistence;
 
 import co.edu.uniandes.csw.neighborhood.entities.CommentEntity;
-import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
