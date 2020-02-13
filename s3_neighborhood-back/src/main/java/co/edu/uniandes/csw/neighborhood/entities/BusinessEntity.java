@@ -57,7 +57,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     @PodamExclude
     @OneToOne(mappedBy = "business", fetch = FetchType.LAZY)
     private DashboardEntity dashboard;
-    
+
     /**
      * The neighborhood the business belongs to.
      */
@@ -98,10 +98,9 @@ public class BusinessEntity extends BaseEntity implements Serializable {
 //===================================================
 // Getters & Setters
 //===================================================
-
     /**
      * Returns the owner of the business.
-     * 
+     *
      * @return the business owner
      */
     public BusinessOwnerProfileEntity getOwner() {
@@ -110,8 +109,8 @@ public class BusinessEntity extends BaseEntity implements Serializable {
 
     /**
      * Sets the owner of the business.
-     * 
-     * @param pOwner the new business owner 
+     *
+     * @param pOwner the new business owner
      */
     public void setOwner(BusinessOwnerProfileEntity pOwner) {
         owner = pOwner;
@@ -119,7 +118,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
 
     /**
      * Returns the business' dashboard.
-     * 
+     *
      * @return the business' dashborad
      */
     public DashboardEntity getDashboard() {
@@ -128,7 +127,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
 
     /**
      * Sets the business' dashboard.
-     * 
+     *
      * @param pDashboard the new business dashboard
      */
     public void setDashboard(DashboardEntity pDashboard) {
@@ -137,7 +136,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
 
     /**
      * Returns the neighborhood the business is in.
-     * 
+     *
      * @return the business' neighborhood
      */
     public NeighborhoodEntity getNeighborhood() {
@@ -146,13 +145,13 @@ public class BusinessEntity extends BaseEntity implements Serializable {
 
     /**
      * Sets the neighborhood the busness is in.
-     * 
+     *
      * @param pNeighborhood the business' new neighborhood
      */
     public void setNeighborhood(NeighborhoodEntity pNeighborhood) {
         neighborhood = pNeighborhood;
     }
-      
+
     /**
      * Returns the name of the business.
      *

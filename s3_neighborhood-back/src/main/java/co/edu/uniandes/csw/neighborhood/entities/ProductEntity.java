@@ -11,8 +11,8 @@ import javax.persistence.ManyToOne;
 import uk.co.jemos.podam.common.PodamExclude;
 
 /**
- *
- * @author estudiante
+ * 
+ * @author kevin
  */
 @Entity
 class ProductEntity extends BaseEntity implements Serializable{

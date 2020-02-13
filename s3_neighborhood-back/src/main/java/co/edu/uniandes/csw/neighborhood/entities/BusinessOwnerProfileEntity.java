@@ -54,15 +54,14 @@ public class BusinessOwnerProfileEntity extends BaseEntity implements Serializab
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<BusinessEntity> businesses = new ArrayList<>();
-    
-    
+
     /**
      * The business owner's login.
      */
     @PodamExclude
     @OneToOne(mappedBy = "businessOwner", fetch = FetchType.LAZY)
     private LoginEntity login;
-       
+
 //===================================================
 // Attributes
 //===================================================
@@ -89,10 +88,9 @@ public class BusinessOwnerProfileEntity extends BaseEntity implements Serializab
 //===================================================
 // Getters & Setters
 //===================================================
-
     /**
-     * Returns the list of businesses owned by the owner. 
-     * 
+     * Returns the list of businesses owned by the owner.
+     *
      * @return the list of owned businesses
      */
     public List<BusinessEntity> getBusinesses() {
@@ -101,7 +99,7 @@ public class BusinessOwnerProfileEntity extends BaseEntity implements Serializab
 
     /**
      * Sets the list of businesses owned by the owner.
-     * 
+     *
      * @param pBusinesses the new list of owdned businesses
      */
     public void setBusinesses(List<BusinessEntity> pBusinesses) {
@@ -110,6 +108,7 @@ public class BusinessOwnerProfileEntity extends BaseEntity implements Serializab
 
     /**
      * Returns the business owner's login.
+     *
      * @return business owner's login
      */
     public LoginEntity getLogin() {
@@ -118,13 +117,13 @@ public class BusinessOwnerProfileEntity extends BaseEntity implements Serializab
 
     /**
      * Sets the business owner's login.
-     * 
+     *
      * @param pLogin the new business owner's login
      */
     public void setLogin(LoginEntity pLogin) {
         login = pLogin;
     }
-    
+
     /**
      * Returns the owner's email address.
      *
