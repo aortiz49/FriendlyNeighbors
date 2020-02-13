@@ -167,8 +167,5 @@ public class ServicePersistenceTest {
         servicePersistence.delete(entity.getId());
         ServiceEntity deleted = em.find(ServiceEntity.class, entity.getId());
         Assert.assertNull(deleted);
-    }
-    
-    
-    
+    }   
 }

@@ -10,13 +10,12 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import uk.co.jemos.podam.common.PodamExclude;
 
-
 @Entity
-public class EventEntity extends BaseEntity implements Serializable{
-       
+public class EventEntity extends BaseEntity implements Serializable {
+
     @PodamExclude
-       @ManyToOne
-       ResidentProfileEntity author;
+    @ManyToOne
+    ResidentProfileEntity author;
 
     public ResidentProfileEntity getAuthor() {
         return author;
@@ -25,6 +24,5 @@ public class EventEntity extends BaseEntity implements Serializable{
     public void setAuthor(ResidentProfileEntity author) {
         this.author = author;
     }
-       
-    
+
 }

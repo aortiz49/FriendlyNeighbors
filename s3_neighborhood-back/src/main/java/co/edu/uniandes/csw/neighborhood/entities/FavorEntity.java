@@ -20,29 +20,27 @@ import uk.co.jemos.podam.common.PodamStrategyValue;
  * @author v.cardonac1
  */
 @Entity
-public class FavorEntity extends BaseEntity implements Serializable{
+public class FavorEntity extends BaseEntity implements Serializable {
 
-    
-        @PodamExclude
-          @ManyToOne
-       private ResidentProfileEntity author;
-        
-        /**
+    @PodamExclude
+    @ManyToOne
+    private ResidentProfileEntity author;
+
+    /**
      * Represents the date favor was made
      */
     @Temporal(TemporalType.DATE)
     @PodamStrategyValue(DateStrategy.class)
     private Date datePosted;
-    
+
     private String title;
-    
+
     private String description;
-        
+
     private String type;
-    
+
     private int numberOfAssistants;
-    
-    
+
     /**
      * @return the datePosted
      */
@@ -112,7 +110,7 @@ public class FavorEntity extends BaseEntity implements Serializable{
     public void setNumberOfAssistants(int numberOfAssistants) {
         this.numberOfAssistants = numberOfAssistants;
     }
-    
+
     public ResidentProfileEntity getAuthor() {
         return author;
     }
@@ -120,6 +118,5 @@ public class FavorEntity extends BaseEntity implements Serializable{
     public void setAuthor(ResidentProfileEntity author) {
         this.author = author;
     }
-       
-    
+
 }

@@ -54,7 +54,7 @@ public class BusinessPersistence {
             BusinessPersistence.class.getName());
 
     /**
-     * The entity manager that will access the Business table.
+     * The entity manager that will access the business table.
      */
     @PersistenceContext(unitName = "neighborhoodPU")
     protected EntityManager em;
@@ -83,15 +83,15 @@ public class BusinessPersistence {
     /**
      * Returns all businesses in the database.
      *
-     * @return a list containing every business in the database. select u
-     * from BusinessEntity u" is akin to a "SELECT * from
-     * BusinessEntity" in SQL.
+     * @return a list containing every business in the database. 
+     * "select u from BusinessUntity u" is akin to: 
+     * "SELECT * from BusinessEntity" in SQL.
      */
     public List<BusinessEntity> findAll() {
         // log the consultation
-        LOGGER.log(Level.INFO, "Consulting all neighborhoods");
+        LOGGER.log(Level.INFO, "Consulting all businesses");
 
-        // Create a typed businessEntity query to find all businesses 
+        // Create a typed business entity query to find all businesses 
         // in the database. 
         TypedQuery<BusinessEntity> query = em.createQuery(
                 "select u from BusinessEntity u", BusinessEntity.class);
@@ -102,7 +102,7 @@ public class BusinessPersistence {
     /**
      * Looks for a business with the id given by the parameter.
      *
-     * @param pBusinessId the id corresponding to the business
+     * @param pBusinessID the id corresponding to the business
      * @return the found business
      */
     public BusinessEntity find(Long pBusinessId) {

@@ -16,43 +16,39 @@ import uk.co.jemos.podam.common.PodamExclude;
 import uk.co.jemos.podam.common.PodamStrategyValue;
 
 /**
- *This class represent a comment made in a post
+ * This class represent a comment made in a post
+ *
  * @author albayona
  */
-
 @Entity
-public class CommentEntity extends BaseEntity implements Serializable{
-    
-    
+public class CommentEntity extends BaseEntity implements Serializable {
+
     /**
      * Represents the date this comment was posted
      */
-   @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.DATE)
     @PodamStrategyValue(DateStrategy.class)
     private Date date;
 
     /**
-     * Represents the  text body shown in this post
+     * Represents the text body shown in this post
      */
     private String text;
-   
+
     /**
-    * Represents the author of this comment
-    */
-    
+     * Represents the author of this comment
+     */
     @PodamExclude
-   @ManyToOne
-  private  ResidentProfileEntity author;
-    
+    @ManyToOne
+    private ResidentProfileEntity author;
+
     /**
      * The post this comment belongs to.
      */
-        @PodamExclude
-   @ManyToOne
-  private  PostEntity post;
+    @PodamExclude
+    @ManyToOne
+    private PostEntity post;
 
-    
-    
     public Date getDate() {
         return date;
     }
@@ -85,7 +81,4 @@ public class CommentEntity extends BaseEntity implements Serializable{
         this.post = post;
     }
 
-    
-  
-   
 }

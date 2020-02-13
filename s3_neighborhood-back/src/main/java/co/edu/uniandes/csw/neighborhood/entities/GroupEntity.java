@@ -21,25 +21,23 @@ import uk.co.jemos.podam.common.PodamExclude;
 import uk.co.jemos.podam.common.PodamStrategyValue;
 
 /**
- *This class represent a set of neighbors with common interests 
+ * This class represent a set of neighbors with common interests
+ *
  * @author albayona
  */
-
 /**
- *This class represents a post made by a resident
+ * This class represents a post made by a resident
  */
 @Entity
-public class GroupEntity extends BaseEntity implements Serializable{
-    
+public class GroupEntity extends BaseEntity implements Serializable {
 
-    
     /**
      * Represents the date group was created
      */
     @Temporal(TemporalType.DATE)
     @PodamStrategyValue(DateStrategy.class)
     private Date dateCreated;
-    
+
     /**
      * Represents the name of this group
      */
@@ -49,14 +47,14 @@ public class GroupEntity extends BaseEntity implements Serializable{
      * Represents a description of this group
      */
     private String description;
-    
+
     /**
      * Represents a set of pictures of this group
      */
     private String[] picturesLinks;
-    
+
     /**
-     *Represents the residents who are members of this post
+     * Represents the residents who are members of this post
      */
     @PodamExclude
     @ManyToMany
@@ -65,14 +63,12 @@ public class GroupEntity extends BaseEntity implements Serializable{
     /**
      * Represents posts made for this group
      */
-     @PodamExclude
+    @PodamExclude
     @ManyToMany(
-        fetch = javax.persistence.FetchType.LAZY
+            fetch = javax.persistence.FetchType.LAZY
     )
     private List<PostEntity> posts = new ArrayList();
 
-     
-     
     public Date getDateCreated() {
         return dateCreated;
     }
@@ -121,6 +117,4 @@ public class GroupEntity extends BaseEntity implements Serializable{
         this.posts = posts;
     }
 
-     
-  
 }
