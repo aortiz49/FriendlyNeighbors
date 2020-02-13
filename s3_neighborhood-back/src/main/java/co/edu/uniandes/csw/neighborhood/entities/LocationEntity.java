@@ -15,7 +15,7 @@ import uk.co.jemos.podam.common.PodamExclude;
  * @author v.cardonac1
  */
 @Entity
-public class LocationEntity extends BaseEntity implements Serializable{
+  public class LocationEntity extends BaseEntity implements Serializable{
 
     /**
      * @return the neighborhood
