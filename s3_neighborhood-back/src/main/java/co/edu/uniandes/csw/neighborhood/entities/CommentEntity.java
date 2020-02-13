@@ -43,7 +43,16 @@ public class CommentEntity extends BaseEntity implements Serializable{
     @PodamExclude
    @ManyToOne
   private  ResidentProfileEntity author;
+    
+    /**
+     * The post this comment belongs to.
+     */
+        @PodamExclude
+   @ManyToOne
+  private  PostEntity post;
 
+    
+    
     public Date getDate() {
         return date;
     }
@@ -68,6 +77,15 @@ public class CommentEntity extends BaseEntity implements Serializable{
         this.author = author;
     }
 
+    public PostEntity getPost() {
+        return post;
+    }
+
+    public void setPost(PostEntity post) {
+        this.post = post;
+    }
+
+    
   
    
 }
