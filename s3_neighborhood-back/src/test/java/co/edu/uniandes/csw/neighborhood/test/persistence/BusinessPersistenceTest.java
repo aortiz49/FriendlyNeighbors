@@ -187,7 +187,7 @@ public class BusinessPersistenceTest {
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getAddress(), newEntity.getAddress());
         Assert.assertEquals(entity.getOpeningTime(), newEntity.getOpeningTime());
-        Assert.assertEquals(entity.getRating(), newEntity.getRating(),.0001);
+        Assert.assertEquals(entity.getRating(), newEntity.getRating(), .0001);
     }
 
     /**
@@ -220,7 +220,10 @@ public class BusinessPersistenceTest {
         // in the table that was modified
         Assert.assertEquals(newEntity.getAddress(), resp.getAddress());
         Assert.assertEquals(newEntity.getOpeningTime(), resp.getOpeningTime());
-        Assert.assertEquals(newEntity.getRating(), resp.getRating(),.0001);
+        Assert.assertEquals(newEntity.getClosingTime(), resp.getClosingTime());
+        Assert.assertEquals(newEntity.getPictures()[0], resp.getPictures()[0]);
+
+        Assert.assertEquals(newEntity.getRating(), resp.getRating(), .0001);
     }
 
     /**
@@ -233,11 +236,11 @@ public class BusinessPersistenceTest {
 
         // invokes the method to be tested from the persistence class
         businessPersistence.delete(entity.getId());
-        
+
         // tries to obtain the deleted entry
         BusinessEntity deleted = em.find(BusinessEntity.class,
                 entity.getId());
-        
+
         // verifies that the result is null, since it should have been deleted
         Assert.assertNull(deleted);
 

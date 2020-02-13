@@ -62,9 +62,9 @@ public class ResidentProfilePersistenceTest {
     private List<ResidentProfileEntity> data = new ArrayList<>();
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara.
-     * jar contains classes, DB descriptor and
-     * beans.xml file for dependencies injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
+     * contains classes, DB descriptor and beans.xml file for dependencies
+     * injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -76,7 +76,7 @@ public class ResidentProfilePersistenceTest {
     }
 
     /**
-     * Initial test configuration. 
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -97,7 +97,7 @@ public class ResidentProfilePersistenceTest {
     }
 
     /**
-     * Clears tables involved in tests 
+     * Clears tables involved in tests
      */
     private void clearData() {
         em.createQuery("delete from ResidentProfileEntity").executeUpdate();
@@ -131,11 +131,11 @@ public class ResidentProfilePersistenceTest {
 
         Assert.assertEquals(newEntity.getName(), entity.getName());
     }
-    
+
     /**
      * Test for retrieving all residents from DB.
      */
-        @Test
+    @Test
     public void findAllTest() {
         List<ResidentProfileEntity> list = residentPersistence.findAll();
         Assert.assertEquals(data.size(), list.size());
@@ -149,7 +149,7 @@ public class ResidentProfilePersistenceTest {
             Assert.assertTrue(found);
         }
     }
-    
+
     /**
      * Test for a query about a resident.
      */
@@ -160,9 +160,14 @@ public class ResidentProfilePersistenceTest {
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getName(), newEntity.getName());
         Assert.assertEquals(entity.getNickname(), newEntity.getNickname());
+        Assert.assertEquals(entity.getEmail(), newEntity.getEmail());
+        Assert.assertEquals(entity.getPhoneNumber(), newEntity.getPhoneNumber());
+        Assert.assertEquals(entity.getPreferences(), newEntity.getPreferences());
+        Assert.assertEquals(entity.getProofOfResidence(), newEntity.getProofOfResidence());
+
     }
 
-     /**
+    /**
      * Test for updating a resident.
      */
     @Test
@@ -179,8 +184,8 @@ public class ResidentProfilePersistenceTest {
 
         Assert.assertEquals(newEntity.getName(), resp.getName());
     }
-    
-     /**
+
+    /**
      * Test for deleting a resident.
      */
     @Test
@@ -190,6 +195,5 @@ public class ResidentProfilePersistenceTest {
         ResidentProfileEntity deleted = em.find(ResidentProfileEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
-    
-    
+
 }

@@ -7,7 +7,6 @@ package co.edu.uniandes.csw.neighborhood.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -61,11 +60,12 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
      */
     private String[] pictureLinks;
 
-    
     /**
      * An event a resident can attend.
      */
+    @ManyToOne
     private EventEntity event;
+
     /**
      * Represents favors requested by this resident
      */
@@ -88,13 +88,11 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
             cascade = CascadeType.PERSIST, orphanRemoval = true
     )
     private List<ServiceEntity> services = new ArrayList<>();
-    ;
-    
-        
+
     /**
-     * Represents notifications posted by this resident 
+     * Represents notifications posted by this resident
      */
-     @PodamExclude
+    @PodamExclude
     @OneToMany(
             mappedBy = "author",
             fetch = javax.persistence.FetchType.LAZY,

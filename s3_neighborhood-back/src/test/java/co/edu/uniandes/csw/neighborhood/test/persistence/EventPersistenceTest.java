@@ -219,6 +219,8 @@ public class EventPersistenceTest {
         // in the table that was modified
         Assert.assertEquals(newEntity.getTitle(), resp.getTitle());
         Assert.assertEquals(newEntity.getDescription(), resp.getDescription());
+        Assert.assertEquals(newEntity.getAvailability(), resp.getAvailability());
+
     }
 
     /**

@@ -95,7 +95,7 @@ public class EventEntity extends BaseEntity implements Serializable {
     private String description;
 
     /**
-     * The availability of the event.
+     * The availability of the event. How long the event will take place.
      */
     private String availability;
 
@@ -209,5 +209,25 @@ public class EventEntity extends BaseEntity implements Serializable {
     public void setDescription(String pDescription) {
         description = pDescription;
     }
+
+    /**
+     * Returns the avilability of the event.
+     * 
+     * @return the availability
+     */
+    public String getAvailability() {
+        return availability;
+    }
+
+    /**
+     * Sets the availability of the event. 
+     * 
+     * @param pAvailability the new availability
+     */
+    public void setAvailability(String pAvailability) {
+        availability = pAvailability;
+    }
+    
+    
 
 }
