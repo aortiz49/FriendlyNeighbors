@@ -70,7 +70,8 @@ public class BusinessOwnerProfilePersistence {
      * @return the created business owner profile with an id given by the
      * databse
      */
-    public BusinessOwnerProfileEntity create(BusinessOwnerProfileEntity pBusinessOwnerProfileEntity) {
+    public BusinessOwnerProfileEntity create(
+            BusinessOwnerProfileEntity pBusinessOwnerProfileEntity) {
         // logs a message
         LOGGER.log(Level.INFO, "Creating a new business owner profile");
 
@@ -95,7 +96,8 @@ public class BusinessOwnerProfilePersistence {
         // Create a typed businessOwnerProfileEntity query to find all business 
         // owner profiles in the database. 
         TypedQuery<BusinessOwnerProfileEntity> query = em.createQuery(
-                "select u from BusinessOwnerProfileEntity u", BusinessOwnerProfileEntity.class);
+                "select u from BusinessOwnerProfileEntity u", 
+                BusinessOwnerProfileEntity.class);
 
         return query.getResultList();
     }
@@ -111,7 +113,8 @@ public class BusinessOwnerProfilePersistence {
         LOGGER.log(Level.INFO, "Consulting business owner profile with id={0}",
                 pBusinessOwnerProfileId);
 
-        return em.find(BusinessOwnerProfileEntity.class, pBusinessOwnerProfileId);
+        return em.find(BusinessOwnerProfileEntity.class, 
+                pBusinessOwnerProfileId);
     }
 
     /**
@@ -122,7 +125,8 @@ public class BusinessOwnerProfilePersistence {
      * must use this update method.
      * @return the business owner profile with the updated changes
      */
-    public BusinessOwnerProfileEntity update(BusinessOwnerProfileEntity pBusinessOwnerProfileEntity) {
+    public BusinessOwnerProfileEntity update(BusinessOwnerProfileEntity 
+            pBusinessOwnerProfileEntity) {
         LOGGER.log(Level.INFO, "Updating business owner profile with id = {0}",
                 pBusinessOwnerProfileEntity.getId());
         return em.merge(pBusinessOwnerProfileEntity);
@@ -140,8 +144,8 @@ public class BusinessOwnerProfilePersistence {
     public void delete(Long pBusinessOwnerProfileId) {
         LOGGER.log(Level.INFO, "Deleting business owner profile with id = {0}",
                 pBusinessOwnerProfileId);
-        BusinessOwnerProfileEntity reviewEntity = em.find(BusinessOwnerProfileEntity.class,
-                pBusinessOwnerProfileId);
+        BusinessOwnerProfileEntity reviewEntity = em.find(
+                BusinessOwnerProfileEntity.class, pBusinessOwnerProfileId);
         em.remove(reviewEntity);
         LOGGER.log(Level.INFO,
                 "Exiting the deletion of business owner profile with id = {0}",
