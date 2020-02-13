@@ -7,7 +7,6 @@ package co.edu.uniandes.csw.neighborhood.entities;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import uk.co.jemos.podam.common.PodamExclude;
 
@@ -23,6 +22,12 @@ public class LoginEntity  extends BaseEntity implements Serializable{
     @OneToOne
     private ResidentProfileEntity resident;
     
+    private String userName;
+    
+    private String password;
+    
+    private String rol;
+ 
 
     public BusinessOwnerProfileEntity getBusinessOwner() {
         return businessOwner;
@@ -40,7 +45,29 @@ public class LoginEntity  extends BaseEntity implements Serializable{
         this.resident = resident;
     }
 
-        
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
         
         
 

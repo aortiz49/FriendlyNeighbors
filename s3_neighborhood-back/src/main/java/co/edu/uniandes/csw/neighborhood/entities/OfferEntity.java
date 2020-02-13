@@ -11,40 +11,36 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import uk.co.jemos.podam.common.PodamExclude;
 
 /**
  *
- * @author estudiante
+ * @author Carlos Figueredo
  */
 @Entity
-class DashboardEntity extends BaseEntity implements Serializable {
+public class OfferEntity extends BaseEntity implements Serializable{
     
     @PodamExclude
-    @OneToOne
+    @ManyToOne
     private BusinessEntity business;
     
     @PodamExclude
-    @OneToOne
-    private SaleEntity sale;
-    
-    @PodamExclude
-    @OneToMany(mappedBy = "dashboard", fetch = FetchType.LAZY,
+    @OneToMany(mappedBy = "offer", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ProductEntity> product = new ArrayList<>();
-    
-    private int totalRevenue;
-    //========================================================================
-    
-    public SaleEntity getSale() {
-        return sale;
-    }
 
-    public void setSale(SaleEntity sale) {
-        this.sale = sale;
-    }
+    
+    
+    private String duration;
+    
+    private String description;
+    
+    private String type;
+    //=========================================================================
+    // Methods
+    //=========================================================================
 
     public List<ProductEntity> getProduct() {
         return product;
@@ -53,7 +49,7 @@ class DashboardEntity extends BaseEntity implements Serializable {
     public void setProduct(List<ProductEntity> product) {
         this.product = product;
     }
-
+    
     public BusinessEntity getBusiness() {
         return business;
     }
@@ -62,16 +58,29 @@ class DashboardEntity extends BaseEntity implements Serializable {
         this.business = business;
     }
 
-    public int getTotalRevenue() {
-        return totalRevenue;
+    public String getDuration() {
+        return duration;
     }
 
-    public void setTotalRevenue(int totalRevenue) {
-        this.totalRevenue = totalRevenue;
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 
+    public String getDescription() {
+        return description;
+    }
 
-    
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
     
 
 }
