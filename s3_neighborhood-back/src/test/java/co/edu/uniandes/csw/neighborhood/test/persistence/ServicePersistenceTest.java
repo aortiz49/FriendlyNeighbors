@@ -136,7 +136,7 @@ public class ServicePersistenceTest {
         ServiceEntity entity = data.get(0);
         ServiceEntity newEntity = servicePersistence.find(entity.getId());
         Assert.assertNotNull(newEntity);
-        Assert.assertEquals(entity.getTitle(), newEntity.getTitle());
+        Assert.assertEquals(entity.getAuthor(), newEntity.getAuthor());
     }
 
      /**
