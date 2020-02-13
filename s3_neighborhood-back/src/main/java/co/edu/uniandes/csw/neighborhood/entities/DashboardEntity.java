@@ -20,7 +20,7 @@ import uk.co.jemos.podam.common.PodamExclude;
  * @author estudiante
  */
 @Entity
-class DashboardEntity extends BaseEntity implements Serializable {
+public class DashboardEntity extends BaseEntity implements Serializable {
     
     @PodamExclude
     @OneToOne
