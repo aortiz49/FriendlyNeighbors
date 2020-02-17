@@ -50,9 +50,9 @@ public class PostEntity extends BaseEntity implements Serializable{
     private String description;
     
     /**
-     * Represents the number of likes of the post
+     * Represents the number of numberOfLikes of the post
      */
-    private Integer likes;
+    private Integer numberOfLikes;
     
     /**
      *Represents the author of this post 
@@ -60,6 +60,13 @@ public class PostEntity extends BaseEntity implements Serializable{
     @PodamExclude
     @ManyToOne
     private ResidentProfileEntity author;
+    
+    /**
+     * The group that made the post.
+     */
+    @PodamExclude
+    @ManyToOne
+    private GroupEntity group;
 
     /**
      * Represents comments received in this post
@@ -84,8 +91,8 @@ public class PostEntity extends BaseEntity implements Serializable{
         return description;
     }
 
-    public Integer getLikes() {
-        return likes;
+    public Integer getNumberOfLikes() {
+        return numberOfLikes;
     }
 
     public ResidentProfileEntity getAuthor() {
@@ -108,8 +115,8 @@ public class PostEntity extends BaseEntity implements Serializable{
         this.description = description;
     }
 
-    public void setLikes(Integer likes) {
-        this.likes = likes;
+    public void setNumberOfLikes(Integer numberOfLikes) {
+        this.numberOfLikes = numberOfLikes;
     }
 
     public void setAuthor(ResidentProfileEntity author) {

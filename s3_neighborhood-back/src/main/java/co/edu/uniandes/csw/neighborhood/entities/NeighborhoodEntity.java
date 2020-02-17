@@ -68,7 +68,15 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
     @PodamExclude
     @OneToMany(mappedBy = "neighborhood", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<PlaceOfInterest> places = new ArrayList<>();
+    private List<LocationEntity> places = new ArrayList<>();
+    
+     /**
+     * The groups in the neighborhood.
+     */
+    @PodamExclude
+    @OneToMany(mappedBy = "neighborhood", fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<GroupEntity> groups = new ArrayList<>();
     
 //===================================================
 // Attributes
@@ -133,7 +141,7 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
      * 
      * @return the list of places of interest
      */
-    public List<PlaceOfInterest> getPlaces() {
+    public List<LocationEntity> getPlaces() {
         return places;
     }
 
@@ -142,7 +150,7 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
      * 
      * @param pPlaces the new list of places of interest 
      */
-    public void setPlaces(List<PlaceOfInterest> pPlaces) {
+    public void setPlaces(List<LocationEntity> pPlaces) {
         places = pPlaces;
     }
        

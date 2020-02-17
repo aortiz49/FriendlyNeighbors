@@ -141,7 +141,7 @@ public class LoginPersistenceTest {
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getUserName(), newEntity.getUserName());
         Assert.assertEquals(entity.getPassword(), newEntity.getPassword());
-        Assert.assertEquals(entity.getRol(), newEntity.getRol());
+        Assert.assertEquals(entity.getRole(), newEntity.getRole());
 
     }
     

@@ -84,6 +84,22 @@ public class BusinessOwnerProfileEntity extends BaseEntity implements Serializab
      * The owner's profile username.
      */
     private String userName;
+    
+     /**
+     * The owner's address.
+     */
+    private String address;
+    
+     /**
+     * The owner's profile preferences.
+     */
+    private String preferences;
+    
+     /**
+     * The owner's Id number.
+     */
+    private String idNumber;
+    
 
 //===================================================
 // Getters & Setters

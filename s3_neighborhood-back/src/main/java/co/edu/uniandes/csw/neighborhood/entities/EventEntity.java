@@ -44,13 +44,13 @@ import uk.co.jemos.podam.common.PodamStrategyValue;
 /**
  * Entity representing an event.
  *
- * @author kevin
+ * @author aortiz49
  */
 @Entity
 public class EventEntity extends BaseEntity implements Serializable {
-//===================================================
-// Relations
-//===================================================
+    //===================================================
+    // Relations
+    //===================================================
 
     /**
      * The host of the event.
@@ -60,11 +60,21 @@ public class EventEntity extends BaseEntity implements Serializable {
     private ResidentProfileEntity host;
 
     /**
+     * The location of the event.
+     */
+    @PodamExclude
+    @ManyToOne
+    private LocationEntity location;
+
+    /**
      * The residents attending the event.
      */
     @PodamExclude
-    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "event",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST,
+            orphanRemoval = true)
     private List<ResidentProfileEntity> attendees = new ArrayList<>();
 
     //===================================================
@@ -88,6 +98,16 @@ public class EventEntity extends BaseEntity implements Serializable {
      * The title of the event.
      */
     private String title;
+
+    /**
+     * The start time of the event.
+     */
+    private String startTime;
+
+    /**
+     * The end time of the event.
+     */
+    private String endTime;
 
     /**
      * The description of the event.
@@ -212,7 +232,7 @@ public class EventEntity extends BaseEntity implements Serializable {
 
     /**
      * Returns the avilability of the event.
-     * 
+     *
      * @return the availability
      */
     public String getAvailability() {
@@ -220,14 +240,12 @@ public class EventEntity extends BaseEntity implements Serializable {
     }
 
     /**
-     * Sets the availability of the event. 
-     * 
+     * Sets the availability of the event.
+     *
      * @param pAvailability the new availability
      */
     public void setAvailability(String pAvailability) {
         availability = pAvailability;
     }
-    
-    
 
 }

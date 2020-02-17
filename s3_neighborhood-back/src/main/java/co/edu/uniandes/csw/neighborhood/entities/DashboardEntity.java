@@ -52,14 +52,7 @@ public class DashboardEntity extends BaseEntity implements Serializable {
     private BusinessEntity business;
 
     /**
-     * The saleInformation information in the dashboard.
-     */
-    @PodamExclude
-    @OneToOne
-    private SaleEntity saleInformation;
-
-    /**
-     * The list of products sold.
+     * The list of products in stock.
      */
     @PodamExclude
     @OneToMany(mappedBy = "dashboard", fetch = FetchType.LAZY,
@@ -72,31 +65,14 @@ public class DashboardEntity extends BaseEntity implements Serializable {
     /**
      * The total revenue from the sold products.
      */
-    private int totalRevenue;
+    private Double totalRevenue;
 
 //===================================================
 // Getters & Setters
 //===================================================
+   
     /**
-     * Returns the saleInformation information.
-     *
-     * @return the saleInformation information
-     */
-    public SaleEntity getSaleInformation() {
-        return saleInformation;
-    }
-
-    /**
-     * Sets the saleInformation information. 
-     * 
-     * @param pSaleInformation the new saleInformation information.
-     */
-    public void setSaleInformation(SaleEntity pSaleInformation) {
-        saleInformation = pSaleInformation;
-    }
-
-    /**
-     * Returns the list of products sold.
+     * Returns the list of products in stock.
      * 
      * @return list of products sold
      */
@@ -105,7 +81,7 @@ public class DashboardEntity extends BaseEntity implements Serializable {
     }
 
     /**
-     * Sets the list of products sold.
+     * Sets the list of products in stock.
      * 
      * @param pProductList the new list of products sold
      */
@@ -136,7 +112,7 @@ public class DashboardEntity extends BaseEntity implements Serializable {
      * 
      * @return the total revenue
      */
-    public int getTotalRevenue() {
+    public Double getTotalRevenue() {
         return totalRevenue;
     }
 
@@ -145,7 +121,7 @@ public class DashboardEntity extends BaseEntity implements Serializable {
      * 
      * @param pTotalRevenue the new total revenue 
      */
-    public void setTotalRevenue(int pTotalRevenue) {
+    public void setTotalRevenue(Double pTotalRevenue) {
         totalRevenue = pTotalRevenue;
     }
 

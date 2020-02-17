@@ -77,10 +77,9 @@ public class ServiceEntity extends BaseEntity implements Serializable {
     /**
      * The availability of the service.
      */
-    private String availability;
+    private Boolean isAvailable;
 
-   
-
+ 
 //===================================================
 // Getters & Setters
 //===================================================
@@ -116,12 +115,12 @@ public class ServiceEntity extends BaseEntity implements Serializable {
         this.description = description;
     }
 
-    public String getAvailability() {
-        return availability;
+    public Boolean getAvailability() {
+        return isAvailable;
     }
 
-    public void setAvailability(String availability) {
-        this.availability = availability;
+    public void setAvailability(Boolean availability) {
+        this.isAvailable = availability;
     }
 
 }

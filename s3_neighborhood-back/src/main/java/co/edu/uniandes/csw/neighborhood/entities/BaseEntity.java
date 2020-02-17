@@ -37,7 +37,7 @@ import javax.persistence.MappedSuperclass;
  * should have. For example, all entities should be compared by ID when not
  * null, otherwise use the object equals method.
  *
- * @author ISIS2603
+ * @author ISIS2603 
  */
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {

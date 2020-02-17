@@ -26,7 +26,7 @@ public class LoginEntity  extends BaseEntity implements Serializable{
     
     private String password;
     
-    private String rol;
+    private String role;
  
 
     public BusinessOwnerProfileEntity getBusinessOwner() {
@@ -61,12 +61,12 @@ public class LoginEntity  extends BaseEntity implements Serializable{
         this.password = password;
     }
 
-    public String getRol() {
-        return rol;
+    public String getRole() {
+        return role;
     }
 
-    public void setRol(String rol) {
-        this.rol = rol;
+    public void setRole(String role) {
+        this.role = role;
     }
         
         

@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -49,11 +50,6 @@ public class GroupEntity extends BaseEntity implements Serializable {
     private String description;
 
     /**
-     * Represents a set of pictures of this group
-     */
-    private String[] picturesLinks;
-
-    /**
      * Represents the residents who are members of this post
      */
     @PodamExclude
@@ -61,14 +57,33 @@ public class GroupEntity extends BaseEntity implements Serializable {
     private List<ResidentProfileEntity> members = new ArrayList();
 
     /**
-     * Represents posts made for this group
+     * The neighborhood to which the group belongs to.
      */
     @PodamExclude
-    @ManyToMany(
+    @ManyToOne
+    private NeighborhoodEntity neighborhood;
+    
+     /**
+     * The posts made by the group.
+     */
+    @PodamExclude
+    @OneToMany(
+            mappedBy = "group",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST,
+            orphanRemoval = true)
+    private List<PostEntity> posts = new ArrayList<>();
+   
+    /**
+     * Represents events organized by the group.
+     */
+    @PodamExclude
+    @OneToMany(
             fetch = javax.persistence.FetchType.LAZY
     )
-    private List<PostEntity> posts = new ArrayList();
+    private List<EventEntity> events = new ArrayList();
 
+    
     public Date getDateCreated() {
         return dateCreated;
     }
@@ -79,10 +94,6 @@ public class GroupEntity extends BaseEntity implements Serializable {
 
     public String getDescription() {
         return description;
-    }
-
-    public String[] getPicturesLinks() {
-        return picturesLinks;
     }
 
     public List<ResidentProfileEntity> getMembers() {
@@ -103,10 +114,6 @@ public class GroupEntity extends BaseEntity implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public void setPicturesLinks(String[] picturesLinks) {
-        this.picturesLinks = picturesLinks;
     }
 
     public void setMembers(List<ResidentProfileEntity> members) {

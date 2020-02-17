@@ -7,9 +7,14 @@ package co.edu.uniandes.csw.neighborhood.entities;
 
 import co.edu.uniandes.csw.neighborhood.podam.DateStrategy;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import uk.co.jemos.podam.common.PodamExclude;
@@ -25,6 +30,18 @@ public class FavorEntity extends BaseEntity implements Serializable {
     @PodamExclude
     @ManyToOne
     private ResidentProfileEntity author;
+    
+     /**
+     * The residents who complete the favor.
+     */
+    @PodamExclude
+    @OneToMany(
+            mappedBy = "favor",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST,
+            orphanRemoval = true)
+    private List<ResidentProfileEntity> candidates = new ArrayList<>();
+
 
     /**
      * Represents the date favor was made
@@ -38,8 +55,8 @@ public class FavorEntity extends BaseEntity implements Serializable {
     private String description;
 
     private String type;
-
-    private int numberOfAssistants;
+    
+    private Boolean isHelpWanted;
 
     /**
      * @return the datePosted
@@ -97,20 +114,7 @@ public class FavorEntity extends BaseEntity implements Serializable {
         this.type = type;
     }
 
-    /**
-     * @return the numberOfAssistants
-     */
-    public int getNumberOfAssistants() {
-        return numberOfAssistants;
-    }
-
-    /**
-     * @param numberOfAssistants the numberOfAssistants to set
-     */
-    public void setNumberOfAssistants(int numberOfAssistants) {
-        this.numberOfAssistants = numberOfAssistants;
-    }
-
+  
     public ResidentProfileEntity getAuthor() {
         return author;
     }

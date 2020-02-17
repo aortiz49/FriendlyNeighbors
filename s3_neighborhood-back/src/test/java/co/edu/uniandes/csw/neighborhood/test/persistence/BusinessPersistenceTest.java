@@ -243,6 +243,6 @@ public class BusinessPersistenceTest {
 
         // verifies that the result is null, since it should have been deleted
         Assert.assertNull(deleted);
-
+        
     }
 }

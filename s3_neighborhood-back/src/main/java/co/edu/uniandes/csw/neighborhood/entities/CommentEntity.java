@@ -48,18 +48,6 @@ public class CommentEntity extends BaseEntity implements Serializable {
 // Relations
 //===================================================
     /**
-     * Represents the date this comment was posted.
-     */
-    @Temporal(TemporalType.DATE)
-    @PodamStrategyValue(DateStrategy.class)
-    private Date date;
-
-    /**
-     * The text body shown in this post.
-     */
-    private String text;
-
-    /**
      * The author of this comment.
      */
     @PodamExclude
@@ -72,6 +60,21 @@ public class CommentEntity extends BaseEntity implements Serializable {
     @PodamExclude
     @ManyToOne
     private PostEntity post;
+
+//===================================================
+// Attributes
+//===================================================
+    /**
+     * Represents the date this comment was posted.
+     */
+    @Temporal(TemporalType.DATE)
+    @PodamStrategyValue(DateStrategy.class)
+    private Date date;
+
+    /**
+     * The text body shown in this post.
+     */
+    private String text;
 
 //===================================================
 // Getters & Setters
@@ -123,7 +126,7 @@ public class CommentEntity extends BaseEntity implements Serializable {
 
     /**
      * Sets the text body of the comment.
-     * 
+     *
      * @param pText the new text body of the comment
      */
     public void setText(String pText) {
@@ -141,7 +144,7 @@ public class CommentEntity extends BaseEntity implements Serializable {
 
     /**
      * Sets the author of the post.
-     * 
+     *
      * @param pAuthor the new author of the post.
      */
     public void setAuthor(ResidentProfileEntity pAuthor) {

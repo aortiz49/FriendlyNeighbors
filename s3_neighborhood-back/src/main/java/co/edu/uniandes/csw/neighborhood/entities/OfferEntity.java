@@ -32,7 +32,7 @@ public class OfferEntity extends BaseEntity implements Serializable{
     private List<ProductEntity> product = new ArrayList<>();
 
     
-    
+   
     private String duration;
     
     private String description;

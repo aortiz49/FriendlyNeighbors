@@ -26,6 +26,7 @@ package co.edu.uniandes.csw.neighborhood.entities;
 // Imports
 //===================================================
 
+import java.io.File;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -36,7 +37,7 @@ import uk.co.jemos.podam.common.PodamExclude;
 /**
  * Enitity that represents a busuiness.
  *
- * @author aortiz49
+ * @author aortiz49 
  */
 @Entity
 public class BusinessEntity extends BaseEntity implements Serializable {
@@ -91,7 +92,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     private double rating;
 
     /**
-     * The pictures posted by the business.
+     * The names of pictures posted by the business.
      */
     private String[] pictures;
 
@@ -246,9 +247,9 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     }
 
     /**
-     * Returns an array containing the pictures the business has uploaded.
+     * Returns an array containing the picture names the business has uploaded.
      *
-     * @return business' pictures
+     * @return business' picture names
      */
     public String[] getPictures() {
         return pictures;

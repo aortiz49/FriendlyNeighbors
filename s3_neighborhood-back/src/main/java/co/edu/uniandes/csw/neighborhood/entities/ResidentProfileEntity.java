@@ -26,11 +26,6 @@ import uk.co.jemos.podam.common.PodamExclude;
 public class ResidentProfileEntity extends BaseEntity implements Serializable {
 
     /**
-     * Represents the name of this resident
-     */
-    private String name;
-
-    /**
      * Represents phone number of this resident
      */
     private String phoneNumber;
@@ -41,14 +36,29 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     private String email;
 
     /**
+     * Represents the name of this resident
+     */
+    private String name;
+
+    /**
      * Represents nickname of this resident
      */
     private String nickname;
 
     /**
+     * The resident's address.
+     */
+    private String address;
+
+    /**
      * Represents preferences of this resident
      */
     private String preferences;
+
+    /**
+     * The resident's Id number.
+     */
+    private String idNumber;
 
     /**
      * Represents a link to a proof of residence file of this resident
@@ -65,6 +75,12 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
      */
     @ManyToOne
     private EventEntity event;
+    
+    /**
+     * A favor a resident can sign up to complete.
+     */
+    @ManyToOne
+    private FavorEntity favor;
 
     /**
      * Represents favors requested by this resident
@@ -132,6 +148,17 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     @PodamExclude
     @ManyToMany(mappedBy = "members", fetch = FetchType.EAGER)
     private List<GroupEntity> groups = new ArrayList<>();
+    
+     /**
+     * Products purchased by the resident.
+     */
+    @PodamExclude
+    @OneToMany(
+            mappedBy = "buyer",
+            fetch = javax.persistence.FetchType.LAZY,
+            cascade = CascadeType.PERSIST, orphanRemoval = true
+    )
+    private List<ProductEntity> products = new ArrayList<>();
 
     /**
      * Represents the neighborhood of this resident

@@ -16,6 +16,7 @@ import uk.co.jemos.podam.common.PodamExclude;
  */
 @Entity
 class ProductEntity extends BaseEntity implements Serializable{
+    
     @PodamExclude
     @ManyToOne
     private OfferEntity offer;
@@ -23,6 +24,15 @@ class ProductEntity extends BaseEntity implements Serializable{
     @PodamExclude
     @ManyToOne
     private DashboardEntity dashboard;
+    
+    @PodamExclude
+    @ManyToOne
+    private ResidentProfileEntity buyer;
+
+    
+    private String description;
+    
+    private Double price;
 
     public DashboardEntity getDashboard() {
         return dashboard;

@@ -24,8 +24,12 @@ SOFTWARE.
 package co.edu.uniandes.csw.neighborhood.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import uk.co.jemos.podam.common.PodamExclude;
 
 /**
@@ -57,9 +61,27 @@ public class LocationEntity extends BaseEntity implements Serializable {
 
     private String closeTime;
 
+    private Boolean available;
+    
+    private Double latitude;
+    
+    private Double longitude;
+
     @PodamExclude
     @ManyToOne
     private NeighborhoodEntity neighborhood;
+
+    
+    /**
+     * Events
+     */
+    @PodamExclude
+    @OneToMany(
+            mappedBy = "location",
+            fetch = javax.persistence.FetchType.LAZY,
+            cascade = CascadeType.PERSIST, orphanRemoval = true
+    )
+    private List<EventEntity> events = new ArrayList<>();
 
     /**
      * @return the openTime
