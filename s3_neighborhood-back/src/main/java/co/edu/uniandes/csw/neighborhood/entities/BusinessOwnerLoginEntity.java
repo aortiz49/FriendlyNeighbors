@@ -49,17 +49,13 @@ public class BusinessOwnerLoginEntity extends BaseEntity implements Serializable
     @OneToOne
     private BusinessOwnerEntity businessOwner;
 
-    /**
-     * The resident profile login.
-     */
-    @PodamExclude
-    @OneToOne
-    private ResidentProfileEntity resident;
-
+  
     private String userName;
 
     private String password;
-
+    
+    private Boolean isActive;
+    
     private String governmentId;
 
 
@@ -67,17 +63,11 @@ public class BusinessOwnerLoginEntity extends BaseEntity implements Serializable
         return businessOwner;
     }
 
-    public ResidentProfileEntity getResident() {
-        return resident;
-    }
 
     public void setBusinessOwner(BusinessOwnerEntity businessOwner) {
         this.businessOwner = businessOwner;
     }
 
-    public void setResident(ResidentProfileEntity resident) {
-        this.resident = resident;
-    }
 
     public String getUserName() {
         return userName;
