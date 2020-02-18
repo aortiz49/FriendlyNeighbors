@@ -37,7 +37,7 @@ import uk.co.jemos.podam.common.PodamExclude;
 /**
  * Enitity that represents a busuiness.
  *
- * @author aortiz49 
+ * @author aortiz49
  */
 @Entity
 public class BusinessEntity extends BaseEntity implements Serializable {
@@ -92,9 +92,14 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     private double rating;
 
     /**
-     * The names of pictures posted by the business.
+     * The business' latitude.
      */
-    private String[] pictures;
+    private Double latitude;
+
+    /**
+     * The business' longitude.
+     */
+    private Double longitude;
 
 //===================================================
 // Getters & Setters
@@ -244,24 +249,6 @@ public class BusinessEntity extends BaseEntity implements Serializable {
      */
     public void setRating(double pRating) {
         rating = pRating;
-    }
-
-    /**
-     * Returns an array containing the picture names the business has uploaded.
-     *
-     * @return business' picture names
-     */
-    public String[] getPictures() {
-        return pictures;
-    }
-
-    /**
-     * Sets the array containing the pictures the business has uploaded.
-     *
-     * @param pPictures the new array of pictures of the business
-     */
-    public void setPictures(String[] pPictures) {
-        pictures = pPictures;
     }
 
 }

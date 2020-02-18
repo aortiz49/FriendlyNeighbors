@@ -221,8 +221,6 @@ public class BusinessPersistenceTest {
         Assert.assertEquals(newEntity.getAddress(), resp.getAddress());
         Assert.assertEquals(newEntity.getOpeningTime(), resp.getOpeningTime());
         Assert.assertEquals(newEntity.getClosingTime(), resp.getClosingTime());
-        Assert.assertEquals(newEntity.getPictures()[0], resp.getPictures()[0]);
-
         Assert.assertEquals(newEntity.getRating(), resp.getRating(), .0001);
     }
 
