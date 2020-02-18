@@ -5,7 +5,7 @@
  */
 package co.edu.uniandes.csw.neighborhood.persistence;
 
-import co.edu.uniandes.csw.neighborhood.entities.LoginEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentLoginEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,7 +32,7 @@ public class LoginPersistence {
      * @param le login object to be created in DB
      * @return returns the created entity with an id given by DB.
      */
-    public LoginEntity create(LoginEntity le){
+    public ResidentLoginEntity create(ResidentLoginEntity le){
         
         LOGGER.log(Level.INFO, "Creating a new Login");
 
@@ -46,10 +46,10 @@ public class LoginPersistence {
      *
      * @return a list with all logins found in DB.
      */
-    public List<LoginEntity> findAll() {
+    public List<ResidentLoginEntity> findAll() {
         LOGGER.log(Level.INFO, "Querying for all logins");
         
-        TypedQuery query = em.createQuery("select u from LoginEntity u", LoginEntity.class);
+        TypedQuery query = em.createQuery("select u from LoginEntity u", ResidentLoginEntity.class);
        
         return query.getResultList();
     }
@@ -59,11 +59,11 @@ public class LoginPersistence {
      * @param loginId: id from login to be found.
      * @return a login.
      */
-     public LoginEntity find(Long loginId) {
+     public ResidentLoginEntity find(Long loginId) {
         LOGGER.log(Level.INFO, "Querying for login with id={0}", loginId);
        
         
-        return em.find(LoginEntity.class, loginId);
+        return em.find(ResidentLoginEntity.class, loginId);
     }
      
     /**
@@ -72,7 +72,7 @@ public class LoginPersistence {
      * @param le: the modified login. Por
      * @return the updated login
      */
-    public LoginEntity update(LoginEntity le) {
+    public ResidentLoginEntity update(ResidentLoginEntity le) {
         LOGGER.log(Level.INFO, "Updating login with id={0}", le.getId());
         return em.merge(le);
     }
@@ -85,7 +85,7 @@ public class LoginPersistence {
     public void delete(Long loginId) {
 
         LOGGER.log(Level.INFO, "Deleting login wit id={0}", loginId);
-        LoginEntity loginEntity = em.find(LoginEntity.class, loginId);
+        ResidentLoginEntity loginEntity = em.find(ResidentLoginEntity.class, loginId);
         em.remove(loginEntity);
     }
 }

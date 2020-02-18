@@ -37,7 +37,7 @@ import uk.co.jemos.podam.common.PodamExclude;
  * @author cefigueredo
  */
 @Entity
-public class LoginEntity extends BaseEntity implements Serializable {
+public class ResidentLoginEntity extends BaseEntity implements Serializable {
 //===================================================
 // Relations
 //===================================================   
@@ -47,7 +47,7 @@ public class LoginEntity extends BaseEntity implements Serializable {
      */
     @PodamExclude
     @OneToOne
-    private BusinessOwnerProfileEntity businessOwner;
+    private BusinessOwnerEntity businessOwner;
 
     /**
      * The resident profile login.
@@ -59,10 +59,10 @@ public class LoginEntity extends BaseEntity implements Serializable {
     private String userName;
 
     private String password;
-
-    private String role;
-
-    public BusinessOwnerProfileEntity getBusinessOwner() {
+    
+    private String governmentId;
+    
+    public BusinessOwnerEntity getBusinessOwner() {
         return businessOwner;
     }
 
@@ -70,7 +70,7 @@ public class LoginEntity extends BaseEntity implements Serializable {
         return resident;
     }
 
-    public void setBusinessOwner(BusinessOwnerProfileEntity businessOwner) {
+    public void setBusinessOwner(BusinessOwnerEntity businessOwner) {
         this.businessOwner = businessOwner;
     }
 
@@ -92,14 +92,6 @@ public class LoginEntity extends BaseEntity implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
 }

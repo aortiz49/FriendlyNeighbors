@@ -28,6 +28,9 @@ class ProductEntity extends BaseEntity implements Serializable{
     @PodamExclude
     @ManyToOne
     private ResidentProfileEntity buyer;
+    
+    @PodamExclude
+    @ManyToOne BusinessEntity business;
 
     
     private String description;

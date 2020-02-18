@@ -62,6 +62,14 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
             cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ResidentProfileEntity> residents = new ArrayList<>();
     
+     /**
+     * The business owners in the neighborhood.
+     */
+    @PodamExclude
+    @OneToMany(mappedBy = "neighborhood", fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<BusinessOwnerEntity> businessOwners = new ArrayList<>();
+    
     /**
      * The places in the neighborhood.
      */

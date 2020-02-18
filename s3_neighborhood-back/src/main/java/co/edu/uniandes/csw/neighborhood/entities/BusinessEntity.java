@@ -26,11 +26,14 @@ package co.edu.uniandes.csw.neighborhood.entities;
 // Imports
 //===================================================
 
-import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import uk.co.jemos.podam.common.PodamExclude;
 
@@ -50,13 +53,13 @@ public class BusinessEntity extends BaseEntity implements Serializable {
      */
     @PodamExclude
     @ManyToOne
-    private BusinessOwnerProfileEntity owner;
+    private BusinessOwnerEntity owner;
 
     /**
      * The business' dashboard
      */
     @PodamExclude
-    @OneToOne(mappedBy = "business", fetch = FetchType.LAZY)
+    @ManyToOne
     private DashboardEntity dashboard;
 
     /**
@@ -66,9 +69,28 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     @ManyToOne
     private NeighborhoodEntity neighborhood;
 
+    /**
+     * The products the business sells.
+     */
+    @PodamExclude
+    @OneToMany(mappedBy = "business", fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<ProductEntity> products = new ArrayList<>();
+
+    /**
+     * The offers the business has on its products.
+     */
+    @PodamExclude
+    @OneToMany(mappedBy = "business", fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<OfferEntity> offers = new ArrayList<>();
+
 //===================================================
 // Attributes
 //===================================================
+    /**
+     * The name of the business
+     */
     private String name;
 
     /**
@@ -101,6 +123,16 @@ public class BusinessEntity extends BaseEntity implements Serializable {
      */
     private Double longitude;
 
+    /**
+     * The business' total revenue.
+     */
+    private Double totalRevenue;
+
+    /**
+     * The amount of products sold vs the amount of products in inventory.
+     */
+    private Double percentOfProductsSold;
+
 //===================================================
 // Getters & Setters
 //===================================================
@@ -109,7 +141,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
      *
      * @return the business owner
      */
-    public BusinessOwnerProfileEntity getOwner() {
+    public BusinessOwnerEntity getOwner() {
         return owner;
     }
 
@@ -118,7 +150,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
      *
      * @param pOwner the new business owner
      */
-    public void setOwner(BusinessOwnerProfileEntity pOwner) {
+    public void setOwner(BusinessOwnerEntity pOwner) {
         owner = pOwner;
     }
 
@@ -156,6 +188,42 @@ public class BusinessEntity extends BaseEntity implements Serializable {
      */
     public void setNeighborhood(NeighborhoodEntity pNeighborhood) {
         neighborhood = pNeighborhood;
+    }
+
+    /**
+     * Returns the list of products in the business.
+     *
+     * @return list of products
+     */
+    public List<ProductEntity> getProducts() {
+        return products;
+    }
+
+    /**
+     * Sets the list of products in the business.
+     *
+     * @param pProducts the new list of products
+     */
+    public void setProducts(List<ProductEntity> pProducts) {
+        products = pProducts;
+    }
+
+    /**
+     * Returns the list of offers the businesss has.
+     *
+     * @return the list of offers
+     */
+    public List<OfferEntity> getOffers() {
+        return offers;
+    }
+
+    /**
+     * Sets the list of offers the business has.
+     *
+     * @param pOffers the new list of offers
+     */
+    public void setOffers(List<OfferEntity> pOffers) {
+        offers = pOffers;
     }
 
     /**
@@ -249,6 +317,78 @@ public class BusinessEntity extends BaseEntity implements Serializable {
      */
     public void setRating(double pRating) {
         rating = pRating;
+    }
+
+    /**
+     * Returns the latitude of the business.
+     *
+     * @return the latitude
+     */
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    /**
+     * Sets the latitude of the business.
+     *
+     * @param pLatitude the new latitude
+     */
+    public void setLatitude(Double pLatitude) {
+        latitude = pLatitude;
+    }
+
+    /**
+     * Retuns the longitude of the business.
+     *
+     * @return the longitude
+     */
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    /**
+     * Sets the longitude of the business.
+     *
+     * @param pLongitude the new longitude
+     */
+    public void setLongitude(Double pLongitude) {
+        longitude = pLongitude;
+    }
+
+    /**
+     * Returns the total revenue of the business.
+     *
+     * @return the total revenue
+     */
+    public Double getTotalRevenue() {
+        return totalRevenue;
+    }
+
+    /**
+     * Sets the total revenue of the business.
+     *
+     * @param pTotalRevenue the new total revenue.
+     */
+    public void setTotalRevenue(Double pTotalRevenue) {
+        totalRevenue = pTotalRevenue;
+    }
+
+    /**
+     * Returns the percent of product sold at the business.
+     *
+     * @return the percent of products sol
+     */
+    public Double getPercentOfProductsSold() {
+        return percentOfProductsSold;
+    }
+
+    /**
+     * Sets the percent of products sold at the business.
+     *
+     * @param pPercentOfProductsSold the new percent of products sold
+     */
+    public void setPercentOfProductsSold(Double pPercentOfProductsSold) {
+        percentOfProductsSold = pPercentOfProductsSold;
     }
 
 }

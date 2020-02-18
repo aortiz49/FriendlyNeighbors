@@ -31,6 +31,7 @@ public class OfferEntity extends BaseEntity implements Serializable{
             cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ProductEntity> product = new ArrayList<>();
 
+
     
    
     private String duration;

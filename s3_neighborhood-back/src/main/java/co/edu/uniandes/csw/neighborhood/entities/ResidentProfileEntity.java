@@ -140,7 +140,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
      */
     @PodamExclude
     @OneToOne(mappedBy = "resident", fetch = FetchType.EAGER)
-    private LoginEntity login;
+    private ResidentLoginEntity login;
 
     /**
      * Represents groups this resident is part of
@@ -215,7 +215,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
         return events;
     }
 
-    public LoginEntity getLogin() {
+    public ResidentLoginEntity getLogin() {
         return login;
     }
 
@@ -271,7 +271,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
         this.events = events;
     }
 
-    public void setLogin(LoginEntity login) {
+    public void setLogin(ResidentLoginEntity login) {
         this.login = login;
     }
 

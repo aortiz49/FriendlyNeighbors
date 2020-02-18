@@ -5,7 +5,7 @@
  */
 package co.edu.uniandes.csw.neighborhood.test.persistence;
 
-import co.edu.uniandes.csw.neighborhood.entities.LoginEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentLoginEntity;
 import co.edu.uniandes.csw.neighborhood.persistence.LoginPersistence;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class LoginPersistenceTest {
     @Inject
     UserTransaction utx;
 
-    private List<LoginEntity> data = new ArrayList<>();
+    private List<ResidentLoginEntity> data = new ArrayList<>();
     
     /**
      * @return Returns jar which Arquillian will deploy embedded in Payara.
@@ -49,7 +49,7 @@ public class LoginPersistenceTest {
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addPackage(LoginEntity.class.getPackage())
+                .addPackage(ResidentLoginEntity.class.getPackage())
                 .addPackage(LoginPersistence.class.getPackage())
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
@@ -90,7 +90,7 @@ public class LoginPersistenceTest {
     private void insertData() {
         PodamFactory factory = new PodamFactoryImpl();
         for (int i = 0; i < 3; i++) {
-            LoginEntity entity = factory.manufacturePojo(LoginEntity.class);
+            ResidentLoginEntity entity = factory.manufacturePojo(ResidentLoginEntity.class);
 
             em.persist(entity);
             data.add(entity);
@@ -103,12 +103,12 @@ public class LoginPersistenceTest {
     @Test
     public void createLoginTest() {
         PodamFactory factory = new PodamFactoryImpl();
-        LoginEntity newEntity = factory.manufacturePojo(LoginEntity.class);
-        LoginEntity result = loginPersistence.create(newEntity);
+        ResidentLoginEntity newEntity = factory.manufacturePojo(ResidentLoginEntity.class);
+        ResidentLoginEntity result = loginPersistence.create(newEntity);
 
         Assert.assertNotNull(result);
 
-        LoginEntity entity = em.find(LoginEntity.class, result.getId());
+        ResidentLoginEntity entity = em.find(ResidentLoginEntity.class, result.getId());
 
         Assert.assertEquals(newEntity.getUserName(), entity.getUserName());
     }
@@ -118,11 +118,11 @@ public class LoginPersistenceTest {
      */
         @Test
     public void findAllTest() {
-        List<LoginEntity> list = loginPersistence.findAll();
+        List<ResidentLoginEntity> list = loginPersistence.findAll();
         Assert.assertEquals(data.size(), list.size());
-        for (LoginEntity ent : list) {
+        for (ResidentLoginEntity ent : list) {
             boolean found = false;
-            for (LoginEntity entity : data) {
+            for (ResidentLoginEntity entity : data) {
                 if (ent.getId().equals(entity.getId())) {
                     found = true;
                 }
@@ -136,12 +136,11 @@ public class LoginPersistenceTest {
      */
     @Test
     public void getLoginTest() {
-        LoginEntity entity = data.get(0);
-        LoginEntity newEntity = loginPersistence.find(entity.getId());
+        ResidentLoginEntity entity = data.get(0);
+        ResidentLoginEntity newEntity = loginPersistence.find(entity.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getUserName(), newEntity.getUserName());
         Assert.assertEquals(entity.getPassword(), newEntity.getPassword());
-        Assert.assertEquals(entity.getRole(), newEntity.getRole());
 
     }
     
@@ -150,15 +149,15 @@ public class LoginPersistenceTest {
      */
     @Test
     public void updateResidentTest() {
-        LoginEntity entity = data.get(0);
+        ResidentLoginEntity entity = data.get(0);
         PodamFactory factory = new PodamFactoryImpl();
-        LoginEntity newEntity = factory.manufacturePojo(LoginEntity.class);
+        ResidentLoginEntity newEntity = factory.manufacturePojo(ResidentLoginEntity.class);
 
         newEntity.setId(entity.getId());
 
         loginPersistence.update(newEntity);
 
-        LoginEntity resp = em.find(LoginEntity.class, entity.getId());
+        ResidentLoginEntity resp = em.find(ResidentLoginEntity.class, entity.getId());
 
         Assert.assertEquals(newEntity.getUserName(), resp.getUserName());
     }
@@ -168,9 +167,9 @@ public class LoginPersistenceTest {
      */
     @Test
     public void deleteAuthorTest() {
-        LoginEntity entity = data.get(0);
+        ResidentLoginEntity entity = data.get(0);
         loginPersistence.delete(entity.getId());
-        LoginEntity deleted = em.find(LoginEntity.class, entity.getId());
+        ResidentLoginEntity deleted = em.find(ResidentLoginEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
 }
