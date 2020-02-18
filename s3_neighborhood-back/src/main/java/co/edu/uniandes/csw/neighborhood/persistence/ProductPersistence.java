@@ -26,7 +26,7 @@ package co.edu.uniandes.csw.neighborhood.persistence;
 // Imports
 //===================================================
 
-import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ProductEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,25 +36,25 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
- * Class that manages the persistence for the Event. It connects via the
+ * Class that manages the persistence for the Product. It connects via the
  * Entity Manager in javax.persistance with a SQL database.
  *
  * @author kromero1
  */
 @Stateless
-public class EventPersistence {
+public class ProductPersistence {
 //===================================================
 // Attributes
 //===================================================
 
     /**
-     * Logger to log messages for the event persistence.
+     * Logger to log messages for the product persistence.
      */
     private static final Logger LOGGER = Logger.getLogger(
-            EventPersistence.class.getName());
+            ProductPersistence.class.getName());
 
     /**
-     * The entity manager that will access the Event table.
+     * The entity manager that will access the Product table.
      */
     @PersistenceContext(unitName = "neighborhoodPU")
     protected EntityManager em;
@@ -63,86 +63,86 @@ public class EventPersistence {
     // CRUD Methods
     //===================================================
     /**
-     * Persists a event in the database.
+     * Persists a product in the database.
      *
-     * @param pEventEntity event object to be created in the
+     * @param pProductEntity product object to be created in the
      * databse
-     * @return the created event with an id given by the databse
+     * @return the created product with an id given by the databse
      */
-    public EventEntity create(EventEntity pEventEntity) {
+    public ProductEntity create(ProductEntity pProductEntity) {
         // logs a message
-        LOGGER.log(Level.INFO, "Creating a new event");
+        LOGGER.log(Level.INFO, "Creating a new product");
 
         // makes the entity instance managed and persistent
-        em.persist(pEventEntity);
-        LOGGER.log(Level.INFO, "Event created");
+        em.persist(pProductEntity);
+        LOGGER.log(Level.INFO, "Product created");
 
-        return pEventEntity;
+        return pProductEntity;
     }
 
     /**
-     * Returns all eventss in the database.
+     * Returns all products in the database.
      *
-     * @return a list containing every event in the database. select u
-     * from EventEntity u" is akin to a "SELECT * from
-     * EventEntity" in SQL.
+     * @return a list containing every product in the database. select u
+     * from ProductEntity u" is akin to a "SELECT * from
+     * ProductEntity" in SQL.
      */
-    public List<EventEntity> findAll() {
+    public List<ProductEntity> findAll() {
         // log the consultation
-        LOGGER.log(Level.INFO, "Consulting all events");
+        LOGGER.log(Level.INFO, "Consulting all products");
 
-        // Create a typed event entity query to find all neighborhoods 
+        // Create a typed product entity query to find all Products 
         // in the database. 
-        TypedQuery<EventEntity> query = em.createQuery(
-                "select u from EventEntity u", EventEntity.class);
+        TypedQuery<ProductEntity> query = em.createQuery(
+                "select u from ProductEntity u", ProductEntity.class);
 
         return query.getResultList();
     }
 
     /**
-     * Looks for a event with the id given by the parameter.
+     * Looks for a product with the id given by the parameter.
      *
-     * @param pEventID the id corresponding to the event
-     * @return the found event
+     * @param pProductId the id corresponding to the product
+     * @return the found product
      */
-    public EventEntity find(Long pEventId) {
-        LOGGER.log(Level.INFO, "Consulting event with id={0}",
-                pEventId);
+    public ProductEntity find(Long pProductId) {
+        LOGGER.log(Level.INFO, "Consulting product with id={0}",
+                pProductId);
 
-        return em.find(EventEntity.class, pEventId);
+        return em.find(ProductEntity.class, pProductId);
     }
 
     /**
-     * Updates an event.
+     * Updates an product.
      *
-     * @param pEventEntity the event with the modifications. For
+     * @param pProductEntity the product with the modifications. For
      * example, the name could have changed. In that case, we must use this
      * update method.
-     * @return the event with the updated changes
+     * @return the product with the updated changes
      */
-    public EventEntity update(EventEntity pEventEntity) {
-        LOGGER.log(Level.INFO, "Updating event with id = {0}",
-                pEventEntity.getId());
-        return em.merge(pEventEntity);
+    public ProductEntity update(ProductEntity pProductEntity) {
+        LOGGER.log(Level.INFO, "Updating product with id = {0}",
+                pProductEntity.getId());
+        return em.merge(pProductEntity);
     }
 
     /**
-     * Deletes an event.
+     * Deletes an product.
      * <p>
      *
-     * Deletes the event with the associated Id.
+     * Deletes the product with the associated Id.
      *
-     * @param pEventId the id of the event to be deleted
+     * @param pProductId the id of the product to be deleted
      */
-    public void delete(Long pEventId) {
-        LOGGER.log(Level.INFO, "Deleting event with id = {0}",
-                pEventId);
-        EventEntity reviewEntity = em.find(EventEntity.class,
-                pEventId);
+    public void delete(Long pProductId) {
+        LOGGER.log(Level.INFO, "Deleting product with id = {0}",
+                pProductId);
+        ProductEntity reviewEntity = em.find(ProductEntity.class,
+                pProductId);
         em.remove(reviewEntity);
         LOGGER.log(Level.INFO,
-                "Exiting the deletion of event with id = {0}",
-                pEventId);
+                "Exiting the deletion of product with id = {0}",
+                pProductId);
     }
 
 }
