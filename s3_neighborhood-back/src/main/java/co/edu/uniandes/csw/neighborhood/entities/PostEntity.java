@@ -67,6 +67,13 @@ public class PostEntity extends BaseEntity implements Serializable{
     @PodamExclude
     @ManyToOne
     private ResidentProfileEntity author;
+
+    /**
+     * Represents the business author of this post 
+     */
+    @PodamExclude
+    @ManyToOne
+    private BusinessEntity business;
     
     /**
      * Represents the users this post is visible to
