@@ -26,7 +26,7 @@ package co.edu.uniandes.csw.neighborhood.persistence;
 // Imports
 //===================================================
 
-import co.edu.uniandes.csw.neighborhood.entities.BusinessOwnerProfileEntity;
+import co.edu.uniandes.csw.neighborhood.entities.BusinessOwnerEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +42,7 @@ import javax.persistence.TypedQuery;
  * @author aortiz49
  */
 @Stateless
-public class BusinessOwnerProfilePersistence {
+public class BusinessOwnerPersistence {
 //===================================================
 // Attributes
 //===================================================
@@ -50,8 +50,7 @@ public class BusinessOwnerProfilePersistence {
     /**
      * Logger to log messages for the business owner profile persistence.
      */
-    private static final Logger LOGGER = Logger.getLogger(
-            BusinessOwnerProfilePersistence.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(BusinessOwnerPersistence.class.getName());
 
     /**
      * The entity manager that will access the business owner profile table.
@@ -70,8 +69,8 @@ public class BusinessOwnerProfilePersistence {
      * @return the created business owner profile with an id given by the
      * databse
      */
-    public BusinessOwnerProfileEntity create(
-            BusinessOwnerProfileEntity pBusinessOwnerProfileEntity) {
+    public BusinessOwnerEntity create(
+            BusinessOwnerEntity pBusinessOwnerProfileEntity) {
         // logs a message
         LOGGER.log(Level.INFO, "Creating a new business owner profile");
 
@@ -86,18 +85,17 @@ public class BusinessOwnerProfilePersistence {
      * Returns all business owner profiles in the database.
      *
      * @return a list containing every business in the database. select u from
-     * BusinessOwnerProfileEntity u" is akin to a "SELECT * from
-     * BusinessOwnerProfileEntity" in SQL.
+ BusinessOwnerEntity u" is akin to a "SELECT * from
+ BusinessOwnerEntity" in SQL.
      */
-    public List<BusinessOwnerProfileEntity> findAll() {
+    public List<BusinessOwnerEntity> findAll() {
         // log the consultation
         LOGGER.log(Level.INFO, "Consulting all business owner profiles");
 
         // Create a typed businessOwnerProfileEntity query to find all business 
         // owner profiles in the database. 
-        TypedQuery<BusinessOwnerProfileEntity> query = em.createQuery(
-                "select u from BusinessOwnerProfileEntity u", 
-                BusinessOwnerProfileEntity.class);
+        TypedQuery<BusinessOwnerEntity> query = em.createQuery("select u from BusinessOwnerProfileEntity u", 
+                BusinessOwnerEntity.class);
 
         return query.getResultList();
     }
@@ -109,11 +107,11 @@ public class BusinessOwnerProfilePersistence {
      * profile
      * @return the found business owner profile
      */
-    public BusinessOwnerProfileEntity find(Long pBusinessOwnerProfileId) {
+    public BusinessOwnerEntity find(Long pBusinessOwnerProfileId) {
         LOGGER.log(Level.INFO, "Consulting business owner profile with id={0}",
                 pBusinessOwnerProfileId);
 
-        return em.find(BusinessOwnerProfileEntity.class, 
+        return em.find(BusinessOwnerEntity.class, 
                 pBusinessOwnerProfileId);
     }
 
@@ -125,7 +123,7 @@ public class BusinessOwnerProfilePersistence {
      * must use this update method.
      * @return the business owner profile with the updated changes
      */
-    public BusinessOwnerProfileEntity update(BusinessOwnerProfileEntity 
+    public BusinessOwnerEntity update(BusinessOwnerEntity 
             pBusinessOwnerProfileEntity) {
         LOGGER.log(Level.INFO, "Updating business owner profile with id = {0}",
                 pBusinessOwnerProfileEntity.getId());
@@ -144,8 +142,7 @@ public class BusinessOwnerProfilePersistence {
     public void delete(Long pBusinessOwnerProfileId) {
         LOGGER.log(Level.INFO, "Deleting business owner profile with id = {0}",
                 pBusinessOwnerProfileId);
-        BusinessOwnerProfileEntity reviewEntity = em.find(
-                BusinessOwnerProfileEntity.class, pBusinessOwnerProfileId);
+        BusinessOwnerEntity reviewEntity = em.find(BusinessOwnerEntity.class, pBusinessOwnerProfileId);
         em.remove(reviewEntity);
         LOGGER.log(Level.INFO,
                 "Exiting the deletion of business owner profile with id = {0}",

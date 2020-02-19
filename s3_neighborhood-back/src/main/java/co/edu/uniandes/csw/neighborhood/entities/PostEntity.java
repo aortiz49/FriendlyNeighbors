@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -31,13 +32,15 @@ import uk.co.jemos.podam.common.PodamStrategyValue;
 public class PostEntity extends BaseEntity implements Serializable{
     
 
-    
+//===================================================
+// Attributes
+//===================================================
     /**
      * Represents the date post was made
      */
     @Temporal(TemporalType.DATE)
     @PodamStrategyValue(DateStrategy.class)
-    private Date datePosted;
+    private Date publishDate;
     
     /**
      * Represents the title of the post
@@ -54,79 +57,152 @@ public class PostEntity extends BaseEntity implements Serializable{
      */
     private Integer numberOfLikes;
     
+//===================================================
+// Relations
+//===================================================
+        
     /**
-     *Represents the author of this post 
+     * Represents the author of this post 
      */
     @PodamExclude
     @ManyToOne
     private ResidentProfileEntity author;
     
     /**
-     * The group that made the post.
+     * Represents the users this post is visible to
      */
     @PodamExclude
-    @ManyToOne
-    private GroupEntity group;
+    @ManyToMany
+   private List<ResidentProfileEntity> viewers = new ArrayList();
 
     /**
      * Represents comments received in this post
      */
      @PodamExclude
     @OneToMany(
+        mappedBy = "post",
         fetch = javax.persistence.FetchType.LAZY,
-         cascade = CascadeType.PERSIST, orphanRemoval = true
-    )
+        cascade = CascadeType.PERSIST, orphanRemoval = true)
+     
     private List<CommentEntity> comments = new ArrayList();
 
      
-    public Date getDatePosted() {
-        return datePosted;
+     /**
+     * Represents the group this post is shared with
+     */
+    @PodamExclude
+    @ManyToOne
+   private GroupEntity group;
+     
+     
+//===================================================
+// Getters & Setters
+//===================================================  
+       /**
+     * Gets publishDate.
+     *
+     * @return value of publishDate
+     */
+    public Date getPublishDate() {
+        return publishDate;
     }
 
+    /**
+     * Gets title.
+     *
+     * @return value of title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Gets description.
+     *
+     * @return value of description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Gets numberOfLikes.
+     *
+     * @return value of numberOfLikes
+     */
     public Integer getNumberOfLikes() {
         return numberOfLikes;
     }
 
-    public ResidentProfileEntity getAuthor() {
-        return author;
+    /**
+     * Sets publishDate.
+     *
+     * @param publishDate value of publishDate
+     */
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
     }
 
-    public List<CommentEntity> getComments() {
-        return comments;
-    }
-
-    public void setDatePosted(Date datePosted) {
-        this.datePosted = datePosted;
-    }
-
+    /**
+     * Sets title.
+     *
+     * @param title value of title
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * Sets description.
+     *
+     * @param description value of description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Sets numberOfLikes.
+     *
+     * @param numberOfLikes value of numberOfLikes
+     */
     public void setNumberOfLikes(Integer numberOfLikes) {
         this.numberOfLikes = numberOfLikes;
     }
 
-    public void setAuthor(ResidentProfileEntity author) {
-        this.author = author;
+    /**
+     * Gets the author of this post
+     * @return the author of this post
+     */
+    public ResidentProfileEntity getAuthor() {
+        return author;
     }
 
-    public void setComments(List<CommentEntity> comments) {
-        this.comments = comments;
+    /**
+     * Gets the users this post is visible to
+     * @return the users this post is visible to
+     */
+    public List<ResidentProfileEntity> getViewers() {
+        return viewers;
     }
 
-   
+    /**
+     * Gets the comments of this post
+     * @return the comments of this post
+     */
+    public List<CommentEntity> getComments() {
+        return comments;
+    }
+
+    
+    /**
+     * Represents the group this post is shared with
+     * @return the group this post is shared with
+     */
+    public GroupEntity getGroup() {
+        return group;
+    }
+    
+    
     
 }

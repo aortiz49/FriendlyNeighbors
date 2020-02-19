@@ -13,6 +13,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -35,11 +36,7 @@ public class FavorEntity extends BaseEntity implements Serializable {
      * The residents who complete the favor.
      */
     @PodamExclude
-    @OneToMany(
-            mappedBy = "favor",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST,
-            orphanRemoval = true)
+    @ManyToMany
     private List<ResidentProfileEntity> candidates = new ArrayList<>();
 
 

@@ -34,6 +34,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -44,7 +45,7 @@ import uk.co.jemos.podam.common.PodamStrategyValue;
 /**
  * Entity representing an event.
  *
- * @author kromero1
+ * @author aortiz49
  */
 @Entity
 public class EventEntity extends BaseEntity implements Serializable {
@@ -67,22 +68,10 @@ public class EventEntity extends BaseEntity implements Serializable {
     private LocationEntity location;
 
     /**
-     *  The group hosting the event.
-     */
-    @PodamExclude
-    @ManyToOne
-    private GroupEntity group;
-    
-    
-    /**
      * The residents attending the event.
      */
     @PodamExclude
-    @OneToMany(
-            mappedBy = "event",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST,
-            orphanRemoval = true)
+    @ManyToMany          
     private List<ResidentProfileEntity> attendees = new ArrayList<>();
 
     //===================================================

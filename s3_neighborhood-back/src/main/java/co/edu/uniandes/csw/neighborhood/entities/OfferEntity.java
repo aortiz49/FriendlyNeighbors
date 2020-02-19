@@ -5,15 +5,21 @@
  */
 package co.edu.uniandes.csw.neighborhood.entities;
 
+import co.edu.uniandes.csw.neighborhood.podam.DateStrategy;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import uk.co.jemos.podam.common.PodamExclude;
+import uk.co.jemos.podam.common.PodamStrategyValue;
 
 /**
  *
@@ -22,65 +28,136 @@ import uk.co.jemos.podam.common.PodamExclude;
 @Entity
 public class OfferEntity extends BaseEntity implements Serializable{
     
+//===================================================
+// Attributes
+//===================================================
+    
+    /**
+     * Indicates how long this offer will be on
+     */   
+    private String duration;
+    
+    /**
+     * Indicates the discint applied to products in this offer
+     */
+    private double discountFactor;
+    
+     /**
+     * Represents the date this offer will begin
+     */
+    @Temporal(TemporalType.DATE)
+    @PodamStrategyValue(DateStrategy.class)
+    private Date startDate;
+    
+//===================================================
+// Relations
+//===================================================
+        
+    /**
+     * Represents the business that made this offer
+     */
     @PodamExclude
     @ManyToOne
     private BusinessEntity business;
     
+    /**
+     * Represents the products included in this offer
+     */
     @PodamExclude
-    @OneToMany(mappedBy = "offer", fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<ProductEntity> product = new ArrayList<>();
-
+    @ManyToMany
+    private List<ProductEntity> products = new ArrayList<>();
     
-   
-    private String duration;
     
-    private String description;
     
-    private String type;
-    //=========================================================================
-    // Methods
-    //=========================================================================
-
-    public List<ProductEntity> getProduct() {
-        return product;
-    }
-
-    public void setProduct(List<ProductEntity> product) {
-        this.product = product;
-    }
-    
-    public BusinessEntity getBusiness() {
-        return business;
-    }
-
-    public void setBusiness(BusinessEntity business) {
-        this.business = business;
-    }
-
+//===================================================
+// Getters & Setters
+//===================================================  
+    /**
+     * Gets duration.
+     *
+     * @return value of duration
+     */
     public String getDuration() {
         return duration;
     }
 
+    /**
+     * Gets discountFactor.
+     *
+     * @return value of discountFactor
+     */
+    public double getDiscountFactor() {
+        return discountFactor;
+    }
+
+    /**
+     * Gets startDate.
+     *
+     * @return value of startDate
+     */
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    /**
+     * Gets business
+     * @return business
+     */
+    public BusinessEntity getBusiness() {
+        return business;
+    }
+    /**
+     * Sets products
+     * @return products
+     */
+    public List<ProductEntity> getProducts() {
+        return products;
+    }
+    
+     /**
+     * Sets duration.
+     *
+     * @param duration value of duration
+     */
     public void setDuration(String duration) {
         this.duration = duration;
     }
 
-    public String getDescription() {
-        return description;
+    /**
+     * Sets discountFactor.
+     *
+     * @param discountFactor value of discountFactor
+     */
+    public void setDiscountFactor(double discountFactor) {
+        this.discountFactor = discountFactor;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    /**
+     * Sets startDate.
+     *
+     * @param startDate value of startDate
+     */
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
-    public String getType() {
-        return type;
+    /**
+     * Sets business
+     * @param business new business
+     */
+    public void setBusiness(BusinessEntity business) {
+        this.business = business;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    /**
+     * Sets products
+     * @param products new products 
+     */
+    public void setProducts(List<ProductEntity> products) {
+        this.products = products;
     }
+    
+    
     
 
 }

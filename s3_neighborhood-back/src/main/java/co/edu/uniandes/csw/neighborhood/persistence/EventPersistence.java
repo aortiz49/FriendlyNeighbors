@@ -39,7 +39,7 @@ import javax.persistence.TypedQuery;
  * Class that manages the persistence for the Event. It connects via the
  * Entity Manager in javax.persistance with a SQL database.
  *
- * @author kromero1
+ * @author aortiz49
  */
 @Stateless
 public class EventPersistence {

@@ -111,7 +111,7 @@ public class NotificationPersistenceTest {
 
         NotificationEntity entity = em.find(NotificationEntity.class, result.getId());
 
-        Assert.assertEquals(newEntity.getTitle(), entity.getTitle());
+        Assert.assertEquals(newEntity.getHeader(), entity.getHeader());
     }
     
     /**
@@ -140,8 +140,8 @@ public class NotificationPersistenceTest {
         NotificationEntity entity = data.get(0);
         NotificationEntity newEntity = notificationPersistence.find(entity.getId());
         Assert.assertNotNull(newEntity);
-        Assert.assertEquals(entity.getDatePosted(), newEntity.getDatePosted());
-        Assert.assertEquals(entity.getTitle(), newEntity.getTitle());
+        Assert.assertEquals(entity.getHeader(), newEntity.getHeader());
+        Assert.assertEquals(entity.getPublishDate(), newEntity.getPublishDate());
     }
 
      /**
@@ -159,7 +159,7 @@ public class NotificationPersistenceTest {
 
         NotificationEntity resp = em.find(NotificationEntity.class, entity.getId());
 
-        Assert.assertEquals(newEntity.getDatePosted(), resp.getDatePosted());
+        Assert.assertEquals(newEntity.getPublishDate(), resp.getPublishDate());
     }
     
      /**

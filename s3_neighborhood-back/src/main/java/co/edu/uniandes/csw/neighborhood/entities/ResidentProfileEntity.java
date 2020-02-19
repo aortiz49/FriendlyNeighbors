@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.xml.stream.events.Comment;
 import uk.co.jemos.podam.common.PodamExclude;
 
 /**
@@ -25,6 +26,9 @@ import uk.co.jemos.podam.common.PodamExclude;
 @Entity
 public class ResidentProfileEntity extends BaseEntity implements Serializable {
 
+//===================================================
+// Attributes
+//===================================================  
     /**
      * Represents phone number of this resident
      */
@@ -55,33 +59,31 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
      */
     private String preferences;
 
-    /**
-     * The resident's Id number.
-     */
-    private String idNumber;
 
     /**
      * Represents a link to a proof of residence file of this resident
      */
     private String proofOfResidence;
 
-    /**
-     * Represents pictures uploaded by this resident
-     */
-    private String[] pictureLinks;
 
-    /**
-     * An event a resident can attend.
-     */
-    @ManyToOne
-    private EventEntity event;
+//===================================================
+// Relations
+//===================================================
     
     /**
-     * A favor a resident can sign up to complete.
+     * Events a resident is signed up for.
      */
-    @ManyToOne
-    private FavorEntity favor;
+    @PodamExclude
+    @ManyToMany(mappedBy = "attendees", fetch = FetchType.EAGER)
+    private List<EventEntity> eventsToAttend = new ArrayList();
+    
+    /**
+     * Favors a resident is signed up to complete.
+     */
+    @ManyToMany(mappedBy = "candidates", fetch = FetchType.EAGER)
+    private List<FavorEntity> favorsToHelp = new ArrayList() ;
 
+   
     /**
      * Represents favors requested by this resident
      */
@@ -92,7 +94,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
             cascade = CascadeType.PERSIST, orphanRemoval = true
     )
 
-    private List<FavorEntity> favors = new ArrayList<>();
+    private List<FavorEntity> favorsRequested = new ArrayList<>();
 
     /**
      * Represents services offered by this resident
@@ -140,7 +142,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
      */
     @PodamExclude
     @OneToOne(mappedBy = "resident", fetch = FetchType.EAGER)
-    private LoginEntity login;
+    private ResidentLoginEntity login;
 
     /**
      * Represents groups this resident is part of
@@ -149,16 +151,13 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     @ManyToMany(mappedBy = "members", fetch = FetchType.EAGER)
     private List<GroupEntity> groups = new ArrayList<>();
     
-     /**
-     * Products purchased by the resident.
+      /**
+     * Represents comments posted by this resident
      */
     @PodamExclude
-    @OneToMany(
-            mappedBy = "buyer",
-            fetch = javax.persistence.FetchType.LAZY,
-            cascade = CascadeType.PERSIST, orphanRemoval = true
-    )
-    private List<ProductEntity> products = new ArrayList<>();
+    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
+    private List<CommentEntity> comments = new ArrayList<>();
+    
 
     /**
      * Represents the neighborhood of this resident
@@ -166,10 +165,6 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     @PodamExclude
     @ManyToOne
     private NeighborhoodEntity neighborhood;
-
-    public String getName() {
-        return name;
-    }
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -179,8 +174,16 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
         return email;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public String getNickname() {
         return nickname;
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     public String getPreferences() {
@@ -191,12 +194,16 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
         return proofOfResidence;
     }
 
-    public String[] getPictureLinks() {
-        return pictureLinks;
+    public List<EventEntity> getEventsToAttend() {
+        return eventsToAttend;
     }
 
-    public List<FavorEntity> getFavors() {
-        return favors;
+    public List<FavorEntity> getFavorsToHelp() {
+        return favorsToHelp;
+    }
+
+    public List<FavorEntity> getFavorsRequested() {
+        return favorsRequested;
     }
 
     public List<ServiceEntity> getServices() {
@@ -215,7 +222,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
         return events;
     }
 
-    public LoginEntity getLogin() {
+    public ResidentLoginEntity getLogin() {
         return login;
     }
 
@@ -223,8 +230,12 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
         return groups;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public List<CommentEntity> getComments() {
+        return comments;
+    }
+
+    public NeighborhoodEntity getNeighborhood() {
+        return neighborhood;
     }
 
     public void setPhoneNumber(String phoneNumber) {
@@ -235,8 +246,16 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
         this.email = email;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public void setPreferences(String preferences) {
@@ -247,12 +266,16 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
         this.proofOfResidence = proofOfResidence;
     }
 
-    public void setPictureLinks(String[] pictureLinks) {
-        this.pictureLinks = pictureLinks;
+    public void setEventsToAttend(List<EventEntity> eventsToAttend) {
+        this.eventsToAttend = eventsToAttend;
     }
 
-    public void setFavors(List<FavorEntity> favors) {
-        this.favors = favors;
+    public void setFavorsToHelp(List<FavorEntity> favorsToHelp) {
+        this.favorsToHelp = favorsToHelp;
+    }
+
+    public void setFavorsRequested(List<FavorEntity> favorsRequested) {
+        this.favorsRequested = favorsRequested;
     }
 
     public void setServices(List<ServiceEntity> services) {
@@ -271,7 +294,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
         this.events = events;
     }
 
-    public void setLogin(LoginEntity login) {
+    public void setLogin(ResidentLoginEntity login) {
         this.login = login;
     }
 
@@ -279,12 +302,13 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
         this.groups = groups;
     }
 
-    public NeighborhoodEntity getNeighborhood() {
-        return neighborhood;
+    public void setComments(List<CommentEntity> comments) {
+        this.comments = comments;
     }
 
     public void setNeighborhood(NeighborhoodEntity neighborhood) {
         this.neighborhood = neighborhood;
     }
 
+   
 }

@@ -39,41 +39,58 @@ import uk.co.jemos.podam.common.PodamExclude;
 @Entity
 public class LocationEntity extends BaseEntity implements Serializable {
 
+//===================================================
+// Attributes
+//===================================================  
     /**
-     * @return the neighborhood
+     * Represents the time this location is open from
      */
-    public NeighborhoodEntity getNeighborhood() {
-        return neighborhood;
-    }
-
-    /**
-     * @param neighborhood the neighborhood to set
-     */
-    public void setNeighborhood(NeighborhoodEntity neighborhood) {
-        this.neighborhood = neighborhood;
-    }
-
     private String openTime;
 
+    /**
+     * Represents the name of this location
+     */
     private String name;
-
+    
+    /**
+     * Represents the address of this location
+     */
     private String address;
-
+    
+    /**
+     * Represents the time this location closed from
+     */
     private String closeTime;
-
+        
+    /**
+     * Indicates if this this location is avalaible
+     */
     private Boolean available;
     
+     /**
+     * Indicates the latitute of this location 
+     */
     private Double latitude;
     
+     /**
+     * Indicates the longitude of this location 
+     */
     private Double longitude;
-
+    
+//===================================================
+// Relations
+//===================================================
+    
+    /**
+     * Indicates the neighborhood this location belongs to
+     */
     @PodamExclude
     @ManyToOne
     private NeighborhoodEntity neighborhood;
 
     
     /**
-     * Events
+     * Indicates the events this location will be used for
      */
     @PodamExclude
     @OneToMany(
@@ -81,62 +98,155 @@ public class LocationEntity extends BaseEntity implements Serializable {
             fetch = javax.persistence.FetchType.LAZY,
             cascade = CascadeType.PERSIST, orphanRemoval = true
     )
+    
     private List<EventEntity> events = new ArrayList<>();
 
     /**
-     * @return the openTime
+     * Gets the time this location is open from
+     * @return the time this location is open from
      */
     public String getOpenTime() {
         return openTime;
     }
 
     /**
-     * @param openTime the openTime to set
-     */
-    public void setOpenTime(String openTime) {
-        this.openTime = openTime;
-    }
-
-    /**
-     * @return the name
+     * Gets the name of this location
+     * @return the name of this location
      */
     public String getName() {
         return name;
     }
 
     /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * @return the address
+     * Gets the address of this location
+     * @return the address of this location
      */
     public String getAddress() {
         return address;
     }
 
     /**
-     * @param address the address to set
-     */
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    /**
-     * @return the closeTime
+     * Gets the time this location closed from
+     * @return the time this location closed from
      */
     public String getCloseTime() {
         return closeTime;
     }
 
     /**
-     * @param closeTime the closeTime to set
+     * Gets true  if this this location is avalaible
+     * @return true if this this location is avalaible
+     */
+    public Boolean getAvailable() {
+        return available;
+    }
+
+    /**
+     *  Gets the latitute of this location 
+     * @return the latitute of this location 
+     */
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    /**
+     *  Gets the longitude of this location 
+     * @return the longitude of this location 
+     */
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    /**
+     * Gets the neighborhood  this location belongs to
+     * @return
+     */
+    public NeighborhoodEntity getNeighborhood() {
+        return neighborhood;
+    }
+
+    /**
+     * Gets the events this location will be used for
+     * @return the events this location will be used for
+     */
+    public List<EventEntity> getEvents() {
+        return events;
+    }
+
+
+    /**
+     *Sets the time this location is open from
+     * @param openTime  the time this location is open from
+     */
+    public void setOpenTime(String openTime) {
+        this.openTime = openTime;
+    }
+
+    /**
+     * Sets the name of this location
+     * @param name the name of this location
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Sets the address of this location
+     * @param address the address of this location
+     */
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    /**
+     * Sets the time this location closed from
+     * @param closeTime the time this location closed from
      */
     public void setCloseTime(String closeTime) {
         this.closeTime = closeTime;
     }
 
+    /**
+     *Set true if this this location is avalaible
+     * @param available if this this location is avalaible
+     */
+    public void setAvailable(Boolean available) {
+        this.available = available;
+    }
+
+
+       /**
+     *  Sets the latitude of this location 
+     * @return the latitude of this location 
+     */
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+       /**
+     *  Sets the longitude of this location 
+     * @return the longitude of this location 
+     */
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    /**
+     * Sets the neighborhood  this location belongs to
+     * @param neighborhood 
+     */
+    public void setNeighborhood(NeighborhoodEntity neighborhood) {
+        this.neighborhood = neighborhood;
+    }
+
+    /**
+     * Sets the events this location will be used for
+     * @param events the events this location will be used for
+     */
+    public void setEvents(List<EventEntity> events) {
+        this.events = events;
+    }
+
+    
+    
 }

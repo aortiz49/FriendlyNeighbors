@@ -25,108 +25,171 @@ import uk.co.jemos.podam.common.PodamStrategyValue;
 @Entity
 public class NotificationEntity extends BaseEntity implements Serializable {
 
+//===================================================
+// Enumerations
+//===================================================
     enum Priority {
         LOW,
         MEDIUM,
         HIGH
     }
 
+//===================================================
+// Attributes
+//===================================================
+    
     /**
      * Represents the date notification was made
      */
     @Temporal(TemporalType.DATE)
     @PodamStrategyValue(DateStrategy.class)
-    private Date datePosted;
+    private Date publishDate;
 
-    private String title;
+    /**
+     * Represents the header of this notification
+     */
+    private String header;
 
+    /**
+     * Represents the description of this notification
+     */
     private String description;
 
-    private boolean isSeen;
+    /**
+     * Inicates if this notification has been seen by at least one user
+     */
+    private boolean seen;
 
+    /**
+     * Inicates the  priority of this  notification
+     */
     @Enumerated(EnumType.STRING)
     private Priority priority;
 
+
+//===================================================
+// Relations
+//===================================================
+    
+    /**
+     * Inicates the  sender of this  notification
+     */
     @PodamExclude
     @ManyToOne
     private ResidentProfileEntity author;
+    
+//===================================================
+// Getters & Setters
+//===================================================    
 
-    /**
-     * @return the datePosted
+       /**
+     * Gets publishDate.
+     *
+     * @return value of publishDate
      */
-    public Date getDatePosted() {
-        return datePosted;
+    public Date getPublishDate() {
+        return publishDate;
     }
 
     /**
-     * @param datePosted the datePosted to set
+     * Gets header.
+     *
+     * @return value of header
      */
-    public void setDatePosted(Date datePosted) {
-        this.datePosted = datePosted;
+    public String getHeader() {
+        return header;
     }
 
     /**
-     * @return the title
-     */
-    public String getTitle() {
-        return title;
-    }
-
-    /**
-     * @param title the title to set
-     */
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    /**
-     * @return the description
+     * Gets description.
+     *
+     * @return value of description
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     * @param description the description to set
+     * Gets isSeen.
+     *
+     * @return value of isSeen
      */
-    public void setDescription(String description) {
-        this.description = description;
+    public boolean isSeen() {
+        return seen;
     }
 
     /**
-     * @return the isSeen
-     */
-    public boolean isIsSeen() {
-        return isSeen;
-    }
-
-    /**
-     * @param isSeen the isSeen to set
-     */
-    public void setIsSeen(boolean isSeen) {
-        this.isSeen = isSeen;
-    }
-
-    /**
-     * @return the priority
+     * Gets priority.
+     *
+     * @return value of priority
      */
     public Priority getPriority() {
         return priority;
     }
 
     /**
-     * @param priority the priority to set
+     * Sets publishDate.
+     *
+     * @param publishDate value of publishDate
+     */
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
+    }
+
+    /**
+     * Sets header.
+     *
+     * @param header value of header
+     */
+    public void setHeader(String header) {
+        this.header = header;
+    }
+
+    /**
+     * Sets description.
+     *
+     * @param description value of description
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * Sets isSeen.
+     *
+     * @param isSeen value of isSeen
+     */
+    public void setSeen(boolean seen) {
+        this.seen = seen;
+    }
+
+    /**
+     * Sets priority.
+     *
+     * @param priority value of priority
      */
     public void setPriority(Priority priority) {
         this.priority = priority;
     }
 
-    public ResidentProfileEntity getAuthor() {
+    /**
+     * Gets the  sender of this  notification
+     * @return the  sender of this  notification
+     */
+    public ResidentProfileEntity getUserProfile() {
         return author;
     }
 
-    public void setAuthor(ResidentProfileEntity author) {
-        this.author = author;
+    /**
+     * Sets the  sender of this  notification
+     * @param userProfile the  sender of this  notification
+     */
+     
+    public void setUserProfile(ResidentProfileEntity userProfile) {
+        this.author = userProfile;
     }
-
+    
+    
+    
+    
 }

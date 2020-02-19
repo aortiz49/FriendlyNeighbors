@@ -159,7 +159,7 @@ public class PostPersistenceTest {
         PostEntity entity = data.get(0);
         PostEntity newEntity = postPersistence.find(entity.getId());
         Assert.assertNotNull(newEntity);
-        Assert.assertEquals(entity.getDatePosted(), newEntity.getDatePosted());
+        Assert.assertEquals(entity.getPublishDate(), newEntity.getPublishDate());
         Assert.assertEquals(entity.getTitle(), newEntity.getTitle());
     }
 
@@ -178,7 +178,7 @@ public class PostPersistenceTest {
 
         PostEntity resp = em.find(PostEntity.class, entity.getId());
 
-        Assert.assertEquals(newEntity.getDatePosted(), resp.getDatePosted());
+        Assert.assertEquals(newEntity.getPublishDate(), resp.getPublishDate());
     }
     
      /**

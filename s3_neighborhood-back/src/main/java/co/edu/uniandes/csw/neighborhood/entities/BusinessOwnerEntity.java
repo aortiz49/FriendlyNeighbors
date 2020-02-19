@@ -32,6 +32,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import uk.co.jemos.podam.common.PodamExclude;
@@ -42,7 +43,7 @@ import uk.co.jemos.podam.common.PodamExclude;
  * @author aortiz49
  */
 @Entity
-public class BusinessOwnerProfileEntity extends BaseEntity implements Serializable {
+public class BusinessOwnerEntity extends BaseEntity implements Serializable {
 //===================================================
 // Relations
 //=================================================== 
@@ -60,11 +61,37 @@ public class BusinessOwnerProfileEntity extends BaseEntity implements Serializab
      */
     @PodamExclude
     @OneToOne(mappedBy = "businessOwner", fetch = FetchType.LAZY)
-    private LoginEntity login;
+    private BusinessOwnerLoginEntity login;
+
+    /**
+     * The business owner's dashboard.
+     */
+    @PodamExclude
+    @OneToOne
+    private DashboardEntity dashboard;
+    
+        /**
+     * Represents the neighborhood of this owner
+     */
+    @PodamExclude
+    @ManyToOne
+    private NeighborhoodEntity neighborhood;
 
 //===================================================
 // Attributes
 //===================================================
+
+  
+    public DashboardEntity getDashboard() {
+        return dashboard;
+    }
+
+    public void setDashboard(DashboardEntity dashboard) {
+        this.dashboard = dashboard;
+    }
+    
+    
+    
     /**
      * The owner's email address.
      */
@@ -81,25 +108,19 @@ public class BusinessOwnerProfileEntity extends BaseEntity implements Serializab
     private String name;
 
     /**
-     * The owner's profile username.
-     */
-    private String userName;
-    
-     /**
      * The owner's address.
      */
     private String address;
-    
-     /**
+
+    /**
      * The owner's profile preferences.
      */
     private String preferences;
     
-     /**
-     * The owner's Id number.
+    /**
+     * The owner's nickname.
      */
-    private String idNumber;
-    
+    private String nickname;
 
 //===================================================
 // Getters & Setters
@@ -127,7 +148,7 @@ public class BusinessOwnerProfileEntity extends BaseEntity implements Serializab
      *
      * @return business owner's login
      */
-    public LoginEntity getLogin() {
+    public BusinessOwnerLoginEntity getLogin() {
         return login;
     }
 
@@ -136,7 +157,7 @@ public class BusinessOwnerProfileEntity extends BaseEntity implements Serializab
      *
      * @param pLogin the new business owner's login
      */
-    public void setLogin(LoginEntity pLogin) {
+    public void setLogin(BusinessOwnerLoginEntity pLogin) {
         login = pLogin;
     }
 
@@ -193,22 +214,6 @@ public class BusinessOwnerProfileEntity extends BaseEntity implements Serializab
     public void setName(String pName) {
         name = pName;
     }
-
-    /**
-     * Returns the owner's username.
-     *
-     * @return the owner's username
-     */
-    public String getUserName() {
-        return userName;
-    }
-
-    /**
-     * Sets the owner's username.
-     *
-     * @param pUserName the new owner's username
-     */
-    public void setUserName(String pUserName) {
-        userName = pUserName;
-    }
+    
+    
 }

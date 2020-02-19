@@ -1,7 +1,7 @@
 package co.edu.uniandes.csw.neighborhood.test.persistence;
 
-import co.edu.uniandes.csw.neighborhood.entities.BusinessOwnerProfileEntity;
-import co.edu.uniandes.csw.neighborhood.persistence.BusinessOwnerProfilePersistence;
+import co.edu.uniandes.csw.neighborhood.entities.BusinessOwnerEntity;
+import co.edu.uniandes.csw.neighborhood.persistence.BusinessOwnerPersistence;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,14 +27,14 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
  * @author aortiz49
  */
 @RunWith(Arquillian.class)
-public class BusinessOwnerProfilePersistenceTest {
+public class BusinessOwnerPersistenceTest {
 
     /**
      * The business owner profile persistence object to test. The container will
      * inject an instance of this class.
      */
     @Inject
-    private BusinessOwnerProfilePersistence businessOwnerProfilePersistence;
+    private BusinessOwnerPersistence businessOwnerProfilePersistence;
 
     /**
      * The entity manager that will verify data directly with the database.
@@ -51,7 +51,7 @@ public class BusinessOwnerProfilePersistenceTest {
     /**
      * An array containing the set of data used for the tests.
      */
-    private List<BusinessOwnerProfileEntity> data = new ArrayList<>();
+    private List<BusinessOwnerEntity> data = new ArrayList<>();
 
     /**
      * @return Returns jar which Arquillian will deploy embedded in Payara. jar
@@ -61,8 +61,8 @@ public class BusinessOwnerProfilePersistenceTest {
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addPackage(BusinessOwnerProfileEntity.class.getPackage())
-                .addPackage(BusinessOwnerProfilePersistence.class.getPackage())
+                .addPackage(BusinessOwnerEntity.class.getPackage())
+                .addPackage(BusinessOwnerPersistence.class.getPackage())
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
@@ -108,9 +108,9 @@ public class BusinessOwnerProfilePersistenceTest {
         PodamFactory factory = new PodamFactoryImpl();
 
         for (int i = 0; i < 3; i++) {
-            // 3 random BusinessOwnerProfileEntity objects will be created
-            BusinessOwnerProfileEntity entity
-                    = factory.manufacturePojo(BusinessOwnerProfileEntity.class);
+            // 3 random BusinessOwnerEntity objects will be created
+            BusinessOwnerEntity entity
+                    = factory.manufacturePojo(BusinessOwnerEntity.class);
 
             // add the data to the table
             em.persist(entity);
@@ -128,22 +128,22 @@ public class BusinessOwnerProfilePersistenceTest {
         // creates a factory to construct random objects    
         PodamFactory factory = new PodamFactoryImpl();
 
-        // uses the factory to create a ranbdom BusinessOwnerProfileEntity object
-        BusinessOwnerProfileEntity newEntity
-                = factory.manufacturePojo(BusinessOwnerProfileEntity.class);
+        // uses the factory to create a ranbdom BusinessOwnerEntity object
+        BusinessOwnerEntity newEntity
+                = factory.manufacturePojo(BusinessOwnerEntity.class);
 
         // invokes the method to be tested (create): it creates a table in the 
         // database. The parameter of this method is the newly created object from 
         // the podam factory which has an id associated to it. 
-        BusinessOwnerProfileEntity result = businessOwnerProfilePersistence.create(newEntity);
+        BusinessOwnerEntity result = businessOwnerProfilePersistence.create(newEntity);
 
         // verify that the created object is not null
         Assert.assertNotNull(result);
 
         // using the entity manager, it searches the database for the object 
         // matching the id of the newly created factory object
-        BusinessOwnerProfileEntity entity
-                = em.find(BusinessOwnerProfileEntity.class, result.getId());
+        BusinessOwnerEntity entity
+                = em.find(BusinessOwnerEntity.class, result.getId());
 
         // verifies that the object exists in the database
         Assert.assertNotNull(entity);
@@ -159,7 +159,7 @@ public class BusinessOwnerProfilePersistenceTest {
     @Test
     public void findAllTest() {
         // testing the findAll method of the persistence class
-        List<BusinessOwnerProfileEntity> list = businessOwnerProfilePersistence.findAll();
+        List<BusinessOwnerEntity> list = businessOwnerProfilePersistence.findAll();
 
         // verifies that the number of objects from findAll is the same as the
         // number of objects in the data list
@@ -167,9 +167,9 @@ public class BusinessOwnerProfilePersistenceTest {
 
         // for every element in the list, compare its id with the corresponding
         // id from the data set
-        for (BusinessOwnerProfileEntity ent : list) {
+        for (BusinessOwnerEntity ent : list) {
             boolean found = false;
-            for (BusinessOwnerProfileEntity entity : data) {
+            for (BusinessOwnerEntity entity : data) {
                 if (ent.getId().equals(entity.getId())) {
                     found = true;
                 }
@@ -184,11 +184,11 @@ public class BusinessOwnerProfilePersistenceTest {
     @Test
     public void getBusinessOwnerProfileTest() {
         // get the first bsuiness entity from the table 
-        BusinessOwnerProfileEntity entity = data.get(0);
+        BusinessOwnerEntity entity = data.get(0);
 
         // using the find method from the business owner profilepersistence, returns the 
         // business owner profileentity matching the id
-        BusinessOwnerProfileEntity newEntity = businessOwnerProfilePersistence.find(entity.getId());
+        BusinessOwnerEntity newEntity = businessOwnerProfilePersistence.find(entity.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getEmail(), newEntity.getEmail());
     }
@@ -199,15 +199,15 @@ public class BusinessOwnerProfilePersistenceTest {
     @Test
     public void updateBusinessOwnerProfileTest() {
         // gets the first business owner profileentity from the table
-        BusinessOwnerProfileEntity entity = data.get(0);
+        BusinessOwnerEntity entity = data.get(0);
 
         // creates a factory to construct random objects
         PodamFactory factory = new PodamFactoryImpl();
 
-        // uses the factory to create a random BusinessOwnerProfileEntity object named 
+        // uses the factory to create a random BusinessOwnerEntity object named 
         // newEntity
-        BusinessOwnerProfileEntity newEntity
-                = factory.manufacturePojo(BusinessOwnerProfileEntity.class);
+        BusinessOwnerEntity newEntity
+                = factory.manufacturePojo(BusinessOwnerEntity.class);
 
         // sets the id of the newEntity object to the id of the first entity in
         // the database table
@@ -218,7 +218,7 @@ public class BusinessOwnerProfilePersistenceTest {
         businessOwnerProfilePersistence.update(newEntity);
 
         // resp is the updated entity from the table
-        BusinessOwnerProfileEntity resp = em.find(BusinessOwnerProfileEntity.class, entity.getId());
+        BusinessOwnerEntity resp = em.find(BusinessOwnerEntity.class, entity.getId());
 
         // verifies that the new entity matches the values from the entity 
         // in the table that was modified
@@ -231,14 +231,14 @@ public class BusinessOwnerProfilePersistenceTest {
     @Test
     public void deleteBusinessOwnerProfileTest() {
         // gets the first business owner profileentity from the table
-        BusinessOwnerProfileEntity entity = data.get(0);
+        BusinessOwnerEntity entity = data.get(0);
 
         // invokes the method to be tested from the persistence class
         businessOwnerProfilePersistence.delete(entity.getId());
 
         // tries to obtain the deleted entry
-        BusinessOwnerProfileEntity deleted
-                = em.find(BusinessOwnerProfileEntity.class, entity.getId());
+        BusinessOwnerEntity deleted
+                = em.find(BusinessOwnerEntity.class, entity.getId());
 
         // verifies that the result is null, since it should have been deleted
         Assert.assertNull(deleted);

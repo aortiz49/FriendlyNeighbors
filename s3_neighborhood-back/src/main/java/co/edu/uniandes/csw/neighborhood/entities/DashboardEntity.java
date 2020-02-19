@@ -45,19 +45,12 @@ public class DashboardEntity extends BaseEntity implements Serializable {
 //===================================================
 
     /**
-     * The business associated with the dashboard.
-     */
-    @PodamExclude
-    @OneToOne
-    private BusinessEntity business;
-
-    /**
-     * The list of products in stock.
+     * The businesses associated with the dashboard.
      */
     @PodamExclude
     @OneToMany(mappedBy = "dashboard", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<ProductEntity> productList = new ArrayList<>();
+    private List<BusinessEntity> businesses = new ArrayList<>();
 
 //===================================================
 // Attributes
@@ -72,44 +65,26 @@ public class DashboardEntity extends BaseEntity implements Serializable {
 //===================================================
    
     /**
-     * Returns the list of products in stock.
-     * 
-     * @return list of products sold
-     */
-    public List<ProductEntity> getProductList() {
-        return productList;
-    }
-
-    /**
-     * Sets the list of products in stock.
-     * 
-     * @param pProductList the new list of products sold
-     */
-    public void setProductList(List<ProductEntity> pProductList) {
-        productList = pProductList;
-    }
-
-    /**
-     * Returns the business associated with the dashboard.
-     * 
+     * Returns the businesses associated with the dashboard.
+     *
      * @return the associated business
      */
-    public BusinessEntity getBusiness() {
-        return business;
+    public List<BusinessEntity> getBusiness() {
+        return businesses;
     }
 
     /**
-     * Sets the new business associated with the dashboard.
-     * 
-     * @param pBusiness the new associated business 
+     * Sets the new businesses associated with the dashboard.
+     *
+     * @param pBusiness the new associated business
      */
-    public void setBusiness(BusinessEntity pBusiness) {
-        business = pBusiness;
+    public void setBusiness(List<BusinessEntity> pBusinesses) {
+        businesses = pBusinesses;
     }
 
     /**
      * Returns the total revenue.
-     * 
+     *
      * @return the total revenue
      */
     public Double getTotalRevenue() {
@@ -118,8 +93,8 @@ public class DashboardEntity extends BaseEntity implements Serializable {
 
     /**
      * Sets the total revenue.
-     * 
-     * @param pTotalRevenue the new total revenue 
+     *
+     * @param pTotalRevenue the new total revenue
      */
     public void setTotalRevenue(Double pTotalRevenue) {
         totalRevenue = pTotalRevenue;

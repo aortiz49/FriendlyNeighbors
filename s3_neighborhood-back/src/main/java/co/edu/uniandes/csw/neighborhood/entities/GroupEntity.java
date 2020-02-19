@@ -73,18 +73,17 @@ public class GroupEntity extends BaseEntity implements Serializable {
             cascade = CascadeType.PERSIST,
             orphanRemoval = true)
     private List<PostEntity> posts = new ArrayList<>();
-   /**
-    * The event  made by group
-    */
+   
+    /**
+     * Represents events organized by the group.
+     */
     @PodamExclude
     @OneToMany(
-            mappedBy = "group",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST,
-            orphanRemoval = true)
-    private List<EventEntity> events = new ArrayList<>();
+            fetch = javax.persistence.FetchType.LAZY
+    )
+    private List<EventEntity> events = new ArrayList();
+
     
-        
     public Date getDateCreated() {
         return dateCreated;
     }
