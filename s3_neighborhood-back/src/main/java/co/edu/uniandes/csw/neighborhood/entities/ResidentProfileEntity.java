@@ -80,6 +80,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     /**
      * Favors a resident is signed up to complete.
      */
+    @PodamExclude
     @ManyToMany(mappedBy = "candidates", fetch = FetchType.EAGER)
     private List<FavorEntity> favorsToHelp = new ArrayList() ;
 
