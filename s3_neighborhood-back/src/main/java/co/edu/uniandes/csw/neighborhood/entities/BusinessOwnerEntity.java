@@ -69,13 +69,6 @@ public class BusinessOwnerEntity extends BaseEntity implements Serializable {
     @PodamExclude
     @OneToOne
     private DashboardEntity dashboard;
-    
-        /**
-     * Represents the neighborhood of this owner
-     */
-    @PodamExclude
-    @ManyToOne
-    private NeighborhoodEntity neighborhood;
 
 //===================================================
 // Attributes
@@ -97,15 +90,15 @@ public class BusinessOwnerEntity extends BaseEntity implements Serializable {
      */
     private String email;
 
+     /**
+     * The owner's name.
+     */
+    private String name;
+
     /**
      * The owner's phone number.
      */
     private String phoneNumber;
-
-    /**
-     * The owner's name.
-     */
-    private String name;
 
     /**
      * The owner's address.

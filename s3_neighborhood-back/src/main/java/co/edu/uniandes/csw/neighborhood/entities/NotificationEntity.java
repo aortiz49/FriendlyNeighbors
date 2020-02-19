@@ -77,15 +77,15 @@ public class NotificationEntity extends BaseEntity implements Serializable {
     @PodamExclude
     @ManyToOne
     private ResidentProfileEntity author;
-    
+
+    @PodamExclude
+    @ManyToOne
+    private BusinessEntity business;
 //===================================================
 // Getters & Setters
-//===================================================    
-
-       /**
-     * Gets publishDate.
-     *
-     * @return value of publishDate
+//=================================================== 
+    /**
+     * @return the datePosted
      */
     public Date getPublishDate() {
         return publishDate;

@@ -45,7 +45,7 @@ import uk.co.jemos.podam.common.PodamStrategyValue;
 /**
  * Entity representing an event.
  *
- * @author aortiz49
+ * @author kromero1
  */
 @Entity
 public class EventEntity extends BaseEntity implements Serializable {
@@ -66,6 +66,13 @@ public class EventEntity extends BaseEntity implements Serializable {
     @PodamExclude
     @ManyToOne
     private LocationEntity location;
+    
+     /**
+     * The group hosting the event.
+     */
+    @PodamExclude
+    @ManyToOne
+    private GroupEntity group;
 
     /**
      * The residents attending the event.

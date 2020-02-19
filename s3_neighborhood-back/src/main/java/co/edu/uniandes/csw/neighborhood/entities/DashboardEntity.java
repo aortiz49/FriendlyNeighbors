@@ -43,7 +43,13 @@ public class DashboardEntity extends BaseEntity implements Serializable {
 //===================================================
 // Imports
 //===================================================
-
+    /**
+     * The business owner.
+     */
+    @PodamExclude
+    @OneToOne(mappedBy = "dashboard", fetch = FetchType.LAZY)
+    private BusinessOwnerEntity owner;
+    
     /**
      * The businesses associated with the dashboard.
      */
