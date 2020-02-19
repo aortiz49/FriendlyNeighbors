@@ -84,6 +84,22 @@ public class BusinessEntity extends BaseEntity implements Serializable {
             cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<OfferEntity> offers = new ArrayList<>();
 
+    /**
+     * The posts the business publishes.
+     */
+    @PodamExclude
+    @OneToMany(mappedBy = "business", fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<PostEntity> posts = new ArrayList<>();
+
+     /**
+     * The notifications the business receives.
+     */
+    @PodamExclude
+    @OneToMany(mappedBy = "business", fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<NotificationEntity> notifications = new ArrayList<>();
+
 //===================================================
 // Attributes
 //===================================================

@@ -23,22 +23,23 @@ import uk.co.jemos.podam.common.PodamStrategyValue;
  *
  * @author albayona
  */
-
 /**
- *This class represents a post made by a resident
+ * This class represents a post made by a resident
  */
 @Entity
-public class PostEntity extends BaseEntity implements Serializable{
-    
+public class PostEntity extends BaseEntity implements Serializable {
 
-    
+    @PodamExclude
+    @ManyToOne
+    private BusinessEntity business;
+
     /**
      * Represents the date post was made
      */
     @Temporal(TemporalType.DATE)
     @PodamStrategyValue(DateStrategy.class)
     private Date datePosted;
-    
+
     /**
      * Represents the title of the post
      */
@@ -48,19 +49,19 @@ public class PostEntity extends BaseEntity implements Serializable{
      * Represents the main text body shown in the post
      */
     private String description;
-    
+
     /**
      * Represents the number of numberOfLikes of the post
      */
     private Integer numberOfLikes;
-    
+
     /**
-     *Represents the author of this post 
+     * Represents the author of this post
      */
     @PodamExclude
     @ManyToOne
     private ResidentProfileEntity author;
-    
+
     /**
      * The group that made the post.
      */
@@ -71,14 +72,13 @@ public class PostEntity extends BaseEntity implements Serializable{
     /**
      * Represents comments received in this post
      */
-     @PodamExclude
+    @PodamExclude
     @OneToMany(
-        fetch = javax.persistence.FetchType.LAZY,
-         cascade = CascadeType.PERSIST, orphanRemoval = true
+            fetch = javax.persistence.FetchType.LAZY,
+            cascade = CascadeType.PERSIST, orphanRemoval = true
     )
     private List<CommentEntity> comments = new ArrayList();
 
-     
     public Date getDatePosted() {
         return datePosted;
     }
@@ -127,6 +127,4 @@ public class PostEntity extends BaseEntity implements Serializable{
         this.comments = comments;
     }
 
-   
-    
 }

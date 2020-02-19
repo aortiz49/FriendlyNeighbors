@@ -11,6 +11,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import uk.co.jemos.podam.common.PodamExclude;
@@ -20,24 +21,20 @@ import uk.co.jemos.podam.common.PodamExclude;
  * @author Carlos Figueredo
  */
 @Entity
-public class OfferEntity extends BaseEntity implements Serializable{
-    
+public class OfferEntity extends BaseEntity implements Serializable {
+
     @PodamExclude
     @ManyToOne
     private BusinessEntity business;
-    
+
     @PodamExclude
-    @OneToMany(mappedBy = "offer", fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ManyToMany(mappedBy = "products", fetch = FetchType.EAGER)
     private List<ProductEntity> product = new ArrayList<>();
 
-
-    
-   
     private String duration;
-    
+
     private String description;
-    
+
     private String type;
     //=========================================================================
     // Methods
@@ -50,7 +47,7 @@ public class OfferEntity extends BaseEntity implements Serializable{
     public void setProduct(List<ProductEntity> product) {
         this.product = product;
     }
-    
+
     public BusinessEntity getBusiness() {
         return business;
     }
@@ -82,6 +79,5 @@ public class OfferEntity extends BaseEntity implements Serializable{
     public void setType(String type) {
         this.type = type;
     }
-    
 
 }

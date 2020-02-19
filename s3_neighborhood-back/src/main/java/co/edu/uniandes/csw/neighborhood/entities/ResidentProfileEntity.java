@@ -66,19 +66,16 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     private String proofOfResidence;
 
     /**
-     * Represents pictures uploaded by this resident
-     */
-    private String[] pictureLinks;
-
-    /**
      * An event a resident can attend.
      */
-    @ManyToOne
+    @PodamExclude
+    @ManyToMany
     private EventEntity event;
     
     /**
      * A favor a resident can sign up to complete.
      */
+    @PodamExclude
     @ManyToOne
     private FavorEntity favor;
 
@@ -149,17 +146,6 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     @ManyToMany(mappedBy = "members", fetch = FetchType.EAGER)
     private List<GroupEntity> groups = new ArrayList<>();
     
-     /**
-     * Products purchased by the resident.
-     */
-    @PodamExclude
-    @OneToMany(
-            mappedBy = "buyer",
-            fetch = javax.persistence.FetchType.LAZY,
-            cascade = CascadeType.PERSIST, orphanRemoval = true
-    )
-    private List<ProductEntity> products = new ArrayList<>();
-
     /**
      * Represents the neighborhood of this resident
      */
@@ -189,10 +175,6 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
 
     public String getProofOfResidence() {
         return proofOfResidence;
-    }
-
-    public String[] getPictureLinks() {
-        return pictureLinks;
     }
 
     public List<FavorEntity> getFavors() {
@@ -247,10 +229,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
         this.proofOfResidence = proofOfResidence;
     }
 
-    public void setPictureLinks(String[] pictureLinks) {
-        this.pictureLinks = pictureLinks;
-    }
-
+  
     public void setFavors(List<FavorEntity> favors) {
         this.favors = favors;
     }

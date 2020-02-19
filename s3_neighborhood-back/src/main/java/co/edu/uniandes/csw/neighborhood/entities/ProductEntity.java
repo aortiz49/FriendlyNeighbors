@@ -11,39 +11,23 @@ import javax.persistence.ManyToOne;
 import uk.co.jemos.podam.common.PodamExclude;
 
 /**
- * 
+ *
  * @author kevin
  */
 @Entity
-class ProductEntity extends BaseEntity implements Serializable{
-    
+class ProductEntity extends BaseEntity implements Serializable {
+
     @PodamExclude
     @ManyToOne
     private OfferEntity offer;
-    
-    @PodamExclude
-    @ManyToOne
-    private DashboardEntity dashboard;
-    
-    @PodamExclude
-    @ManyToOne
-    private ResidentProfileEntity buyer;
-    
-    @PodamExclude
-    @ManyToOne BusinessEntity business;
 
-    
+    @PodamExclude
+    @ManyToOne
+    private BusinessEntity business;
+
     private String description;
-    
+
     private Double price;
-
-    public DashboardEntity getDashboard() {
-        return dashboard;
-    }
-
-    public void setDashboard(DashboardEntity dashboard) {
-        this.dashboard = dashboard;
-    }
 
     public OfferEntity getOffer() {
         return offer;
@@ -52,5 +36,5 @@ class ProductEntity extends BaseEntity implements Serializable{
     public void setOffer(OfferEntity offer) {
         this.offer = offer;
     }
-    
+
 }
