@@ -127,4 +127,20 @@ public class GroupEntity extends BaseEntity implements Serializable {
         this.posts = posts;
     }
 
+    public NeighborhoodEntity getNeighborhood() {
+        return neighborhood;
+    }
+
+    public void setNeighborhood(NeighborhoodEntity neighborhood) {
+        this.neighborhood = neighborhood;
+    }
+
+    public List<EventEntity> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<EventEntity> events) {
+        this.events = events;
+    }
+
 }

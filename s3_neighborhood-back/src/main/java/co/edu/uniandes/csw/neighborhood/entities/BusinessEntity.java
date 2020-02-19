@@ -408,4 +408,28 @@ public class BusinessEntity extends BaseEntity implements Serializable {
         percentOfProductsSold = pPercentOfProductsSold;
     }
 
+    public List<PostEntity> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<PostEntity> posts) {
+        this.posts = posts;
+    }
+
+    public List<NotificationEntity> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<NotificationEntity> notifications) {
+        this.notifications = notifications;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+
 }

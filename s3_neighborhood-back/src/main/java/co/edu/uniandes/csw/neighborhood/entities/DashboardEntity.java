@@ -106,4 +106,20 @@ public class DashboardEntity extends BaseEntity implements Serializable {
         totalRevenue = pTotalRevenue;
     }
 
+    public BusinessOwnerEntity getOwner() {
+        return owner;
+    }
+
+    public void setOwner(BusinessOwnerEntity owner) {
+        this.owner = owner;
+    }
+
+    public List<BusinessEntity> getBusinesses() {
+        return businesses;
+    }
+
+    public void setBusinesses(List<BusinessEntity> businesses) {
+        this.businesses = businesses;
+    }
+
 }

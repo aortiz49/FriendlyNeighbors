@@ -6,7 +6,7 @@
 package co.edu.uniandes.csw.neighborhood.test.persistence;
 
 import co.edu.uniandes.csw.neighborhood.entities.ResidentLoginEntity;
-import co.edu.uniandes.csw.neighborhood.persistence.LoginPersistence;
+import co.edu.uniandes.csw.neighborhood.persistence.ResidentLoginPersistence;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -24,14 +24,14 @@ import org.junit.runner.RunWith;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 /**
- * Persistence test for LoginPersistenceTest
+ * Persistence test for ResidentLoginPersistenceTest
  *
  * @author Carlos Figueredo
  */
 @RunWith(Arquillian.class)
-public class LoginPersistenceTest {
+public class ResidentLoginPersistenceTest {
     @Inject
-    private LoginPersistence loginPersistence;
+    private ResidentLoginPersistence loginPersistence;
 
     @PersistenceContext
     private EntityManager em;
@@ -50,7 +50,7 @@ public class LoginPersistenceTest {
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
                 .addPackage(ResidentLoginEntity.class.getPackage())
-                .addPackage(LoginPersistence.class.getPackage())
+                .addPackage(ResidentLoginPersistence.class.getPackage())
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
@@ -81,7 +81,7 @@ public class LoginPersistenceTest {
      * Clears tables involved in tests 
      */
     private void clearData() {
-        em.createQuery("delete from LoginEntity").executeUpdate();
+        em.createQuery("delete from ResidentLoginEntity").executeUpdate();
     }
     
     /**

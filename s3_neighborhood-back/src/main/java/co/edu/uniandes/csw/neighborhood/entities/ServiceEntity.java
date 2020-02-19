@@ -123,4 +123,12 @@ public class ServiceEntity extends BaseEntity implements Serializable {
         this.isAvailable = availability;
     }
 
+    public Boolean getIsAvailable() {
+        return isAvailable;
+    }
+
+    public void setIsAvailable(Boolean isAvailable) {
+        this.isAvailable = isAvailable;
+    }
+
 }

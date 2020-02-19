@@ -208,4 +208,12 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
         numberOfResidents = pNumberOfResidents;
     }
 
+    public List<GroupEntity> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<GroupEntity> groups) {
+        this.groups = groups;
+    }
+
 }

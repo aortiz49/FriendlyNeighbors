@@ -94,7 +94,7 @@ public class BusinessOwnerPersistence {
 
         // Create a typed businessOwnerProfileEntity query to find all business 
         // owner profiles in the database. 
-        TypedQuery<BusinessOwnerEntity> query = em.createQuery("select u from BusinessOwnerProfileEntity u", 
+        TypedQuery<BusinessOwnerEntity> query = em.createQuery("select u from BusinessOwnerEntity u", 
                 BusinessOwnerEntity.class);
 
         return query.getResultList();

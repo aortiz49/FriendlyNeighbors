@@ -120,4 +120,20 @@ public class FavorEntity extends BaseEntity implements Serializable {
         this.author = author;
     }
 
+    public List<ResidentProfileEntity> getCandidates() {
+        return candidates;
+    }
+
+    public void setCandidates(List<ResidentProfileEntity> candidates) {
+        this.candidates = candidates;
+    }
+
+    public Boolean getIsHelpWanted() {
+        return isHelpWanted;
+    }
+
+    public void setIsHelpWanted(Boolean isHelpWanted) {
+        this.isHelpWanted = isHelpWanted;
+    }
+
 }

@@ -97,7 +97,7 @@ public class BusinessOwnerPersistenceTest {
      * Clears tables involved in tests
      */
     private void clearData() {
-        em.createQuery("delete from BusinessOwnerProfileEntity").executeUpdate();
+        em.createQuery("delete from BusinessOwnerEntity").executeUpdate();
     }
 
     /**

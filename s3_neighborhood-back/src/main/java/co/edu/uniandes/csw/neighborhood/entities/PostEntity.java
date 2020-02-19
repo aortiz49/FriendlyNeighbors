@@ -209,6 +209,14 @@ public class PostEntity extends BaseEntity implements Serializable{
     public GroupEntity getGroup() {
         return group;
     }
+
+    public BusinessEntity getBusiness() {
+        return business;
+    }
+
+    public void setBusiness(BusinessEntity business) {
+        this.business = business;
+    }
     
     
     

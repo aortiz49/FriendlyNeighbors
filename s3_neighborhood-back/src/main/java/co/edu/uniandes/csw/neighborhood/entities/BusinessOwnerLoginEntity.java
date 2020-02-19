@@ -84,4 +84,22 @@ public class BusinessOwnerLoginEntity extends BaseEntity implements Serializable
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public String getGovernmentId() {
+        return governmentId;
+    }
+
+    public void setGovernmentId(String governmentId) {
+        this.governmentId = governmentId;
+    }
+    
+    
 }

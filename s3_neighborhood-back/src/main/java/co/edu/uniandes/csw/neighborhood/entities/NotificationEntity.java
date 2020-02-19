@@ -188,6 +188,22 @@ public class NotificationEntity extends BaseEntity implements Serializable {
     public void setUserProfile(ResidentProfileEntity userProfile) {
         this.author = userProfile;
     }
+
+    public ResidentProfileEntity getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(ResidentProfileEntity author) {
+        this.author = author;
+    }
+
+    public BusinessEntity getBusiness() {
+        return business;
+    }
+
+    public void setBusiness(BusinessEntity business) {
+        this.business = business;
+    }
     
     
     
