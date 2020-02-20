@@ -42,6 +42,7 @@ import javax.inject.Inject;
  */
 @Stateless
 public class NeighborhoodLogic {
+
     //===================================================
     // Attributes
     //===================================================
@@ -50,42 +51,21 @@ public class NeighborhoodLogic {
      */
     private static final Logger LOGGER = Logger.getLogger(
             BusinessPersistence.class.getName());
-    
+
     @Inject
     private NeighborhoodPersistence persistence;
 
     public NeighborhoodEntity createNeighborhood(NeighborhoodEntity pNeighborhood) throws BusinessLogicException {
 
-        LOGGER.info("Starts the process of creating a neighborhood.");
-        if (neighborhoodExists(pNeighborhood.getId())) {
-            throw new BusinessLogicException("Ya existe una ciudad con ese id. No se puede crear. ");
+        LOGGER.info("Starting the process of creating a neighborhood:");
+        if ((persistence.find(pNeighborhood.getId())!=null)) {
+            throw new BusinessLogicException("A neighborhood already exists with that Id. ");
         }
         
-        if(pNeighborhood.getName())
-        
-        persistence.create(pNeighborhood);
-        LOGGER.info("Termina proceso de creación de ciudad");
+        LOGGER.info("Ending the processing of creating a neighborhood.");
         return pNeighborhood;
     }
 
-    
-    
-    
-    
-     /**
-      * Checks if there are neighborhoods matching the given id.
-      * 
-      * @param pNeighborhoodId the neighborhood id
-      * @return true if a neighborhood exists with the given id, false if otherwise
-      */
-    private boolean neighborhoodExists(Long pNeighborhoodId) {
-        NeighborhoodEntity hood = persistence.find(pNeighborhoodId);
-        if (hood == null) {
-            return false;
-        }
-        return true;
-    }
+  
 
-    
-    
 }

@@ -125,7 +125,6 @@ public class NeighborhoodLogicTest {
 
     @Test
     public void createCiudadTest() {
-
         
         try{
          // uses the factory to create a ranbdom NeighborhoodEntity object
