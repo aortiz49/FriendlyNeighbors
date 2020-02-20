@@ -60,7 +60,7 @@ public class BusinessOwnerEntity extends BaseEntity implements Serializable {
      * The business owner's login.
      */
     @PodamExclude
-    @OneToOne(mappedBy = "businessOwner", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy =   "businessOwner", fetch = FetchType.LAZY)
     private BusinessOwnerLoginEntity login;
 
     /**
