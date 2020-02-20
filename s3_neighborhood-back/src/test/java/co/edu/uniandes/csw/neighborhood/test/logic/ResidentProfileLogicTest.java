@@ -34,7 +34,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
  *
- * @author aortiz49
+ * @author albayona
  */
 @RunWith(Arquillian.class)
 public class ResidentProfileLogicTest {
