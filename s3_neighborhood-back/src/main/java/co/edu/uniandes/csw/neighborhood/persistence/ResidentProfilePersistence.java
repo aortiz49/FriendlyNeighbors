@@ -1,4 +1,3 @@
-
 package co.edu.uniandes.csw.neighborhood.persistence;
 
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
@@ -11,8 +10,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
- * This class handles persistence for ResidentProfileEntity. The connection is stablished  by Entity
- * Manager from javax.persistance to the SQL DB.
+ * This class handles persistence for ResidentProfileEntity. The connection is
+ * stablished by Entity Manager from javax.persistance to the SQL DB.
  *
  * @author albayona
  */
@@ -21,7 +20,7 @@ public class ResidentProfilePersistence {
 
     private static final Logger LOGGER = Logger.getLogger(ResidentProfilePersistence.class.getName());
 
-    @PersistenceContext(unitName = "neighborhoodPU" )
+    @PersistenceContext(unitName = "neighborhoodPU")
     protected EntityManager em;
 
     /**
@@ -45,13 +44,13 @@ public class ResidentProfilePersistence {
      */
     public List<ResidentProfileEntity> findAll() {
         LOGGER.log(Level.INFO, "Querying for all residents");
-        
+
         TypedQuery query = em.createQuery("select u from ResidentProfileEntity u", ResidentProfileEntity.class);
-       
+
         return query.getResultList();
     }
-    
-        /**
+
+    /**
      * Looks for a resident with the id given by argument
      *
      * @param residentId: id from resident to be found.
@@ -59,13 +58,11 @@ public class ResidentProfilePersistence {
      */
     public ResidentProfileEntity find(Long residentId) {
         LOGGER.log(Level.INFO, "Querying for resident with id={0}", residentId);
-       
-        
+
         return em.find(ResidentProfileEntity.class, residentId);
     }
 
-
-        /**
+    /**
      * Updates a resident with the modified resident given by argument.
      *
      * @param residentEntity: the modified resident. Por
@@ -75,8 +72,8 @@ public class ResidentProfilePersistence {
         LOGGER.log(Level.INFO, "Updating resident with id={0}", residentEntity.getId());
         return em.merge(residentEntity);
     }
-    
-        /**
+
+    /**
      * Deletes from DB a resident with the id given by argument
      *
      * @param residentId: id from resident to be deleted.
@@ -86,5 +83,31 @@ public class ResidentProfilePersistence {
         LOGGER.log(Level.INFO, "Deleting resident wit id={0}", residentId);
         ResidentProfileEntity residentEntity = em.find(ResidentProfileEntity.class, residentId);
         em.remove(residentEntity);
+    }
+    
+    
+
+    public ResidentProfileEntity findByEmail(String email) {
+
+        LOGGER.log(Level.INFO, "Querying for resident with email ", email);
+
+        TypedQuery query = em.createQuery("Select e From ResidentProfileEntity e where e.email = :email", ResidentProfileEntity.class);
+       
+        
+        query = query.setParameter("email", email);
+        
+        
+        List<ResidentProfileEntity> sameEmail = query.getResultList();
+        ResidentProfileEntity result;
+        if (sameEmail == null) {
+            result = null;
+        } else if (sameEmail.isEmpty()) {
+            result = null;
+        } else {
+            result = sameEmail.get(0);
+        }
+
+        
+        return result;
     }
 }
