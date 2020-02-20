@@ -195,5 +195,21 @@ public class ResidentProfilePersistenceTest {
         ResidentProfileEntity deleted = em.find(ResidentProfileEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
+    
+        @Test
+    public void getResidentByEmailTest() {
+        
+        ResidentProfileEntity entity = data.get(0);
+        ResidentProfileEntity newEntity = residentPersistence.findByEmail(entity.getEmail());
+        Assert.assertNotNull(newEntity);
+        Assert.assertEquals(entity.getName(), newEntity.getName());
+        Assert.assertEquals(entity.getNickname(), newEntity.getNickname());
+        Assert.assertEquals(entity.getEmail(), newEntity.getEmail());
+        Assert.assertEquals(entity.getPhoneNumber(), newEntity.getPhoneNumber());
+        Assert.assertEquals(entity.getPreferences(), newEntity.getPreferences());
+        Assert.assertEquals(entity.getProofOfResidence(), newEntity.getProofOfResidence());
+
+    }
+
 
 }
