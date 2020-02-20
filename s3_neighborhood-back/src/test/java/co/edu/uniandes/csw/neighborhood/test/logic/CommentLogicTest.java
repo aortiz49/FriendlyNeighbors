@@ -131,7 +131,7 @@ public class CommentLogicTest {
     public void createCommentTest() {
         
          // uses the factory to create a ranbdom NeighborhoodEntity object
-        CommentEntity newComment = factory.manufacturePojo(CommentEntity.class);
+          CommentEntity newComment = factory.manufacturePojo(CommentEntity.class);
                 
               
         // invokes the method to be tested (create): it creates a table in the 
