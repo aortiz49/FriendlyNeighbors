@@ -81,7 +81,6 @@ public class PostLogic {
     public PostEntity updatePost(PostEntity postEntity) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Starting update process for post with id ", postEntity.getId());
         
-        PostEntity original  = persistence.find(postEntity.getId());
 
          //must have a title
         if(postEntity.getTitle()== null){

@@ -1,28 +1,45 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+MIT License
+
+Copyright (c) 2017 Universidad de los Andes - ISIS2603
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.ejb;
 
+import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
+import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
+import co.edu.uniandes.csw.neighborhood.persistence.EventPersistence;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import co.edu.uniandes.csw.neighborhood.persistence.EventPersistence; 
-import co.edu.uniandes.csw.neighborhood.entities.EventEntity; 
-import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException; 
-
-
 /**
+ * Clase que implementa la conexion con la persistencia para la entidad de Book.
  *
  * @author kromero1
  */
 @Stateless
 public class EventLogic {
-
 
     private static final Logger LOGGER = Logger.getLogger(EventLogic.class.getName());
 
@@ -30,81 +47,87 @@ public class EventLogic {
     private EventPersistence persistence;
 
 
-      public EventEntity createEvent(EventEntity eventEntity) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Creation process for event has started");
+    /**
+     * Guardar un nuevo libro
+     *
+     * @param bookEntity La entidad de tipo libro del nuevo libro a persistir.
+     * @return La entidad luego de persistirla
+     * @throws BusinessLogicException Si el ISBN es inválido o ya existe en la
+     * persistencia.
+     */
+    public EventEntity createEvent(EventEntity bookEntity) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Inicia proceso de creación del libro");
+     
 
-        
-        if(eventEntity.getTitle()== null){
-            throw new BusinessLogicException("A Title has to be specified");
-        }
-
-         
-        if(eventEntity.getLocation()== null){
-            throw new BusinessLogicException("A venue has to be specified");
-        }
-        if(Integer.parseInt(eventEntity.getStartTime())> Integer.parseInt(eventEntity.getEndTime())){
-            throw new BusinessLogicException("cannot finish before starting the event");
-        }
-
-        persistence.create(eventEntity);
-        LOGGER.log(Level.INFO, "Creation process for event eneded");
-
-        return eventEntity;
+        persistence.create(bookEntity);
+        LOGGER.log(Level.INFO, "Termina proceso de creación del libro");
+        return bookEntity;
     }
 
-
-
-    public void deleteEvent(Long id) {
-
-        LOGGER.log(Level.INFO, "Starting deleting process for event with id = {0}", id);
-        persistence.delete(id);
-        LOGGER.log(Level.INFO, "Ended deleting process for event with id = {0}", id);
-    }
-
-
+    /**
+     * Devuelve todos los libros que hay en la base de datos.
+     *
+     * @return Lista de entidades de tipo libro.
+     */
     public List<EventEntity> getEvents() {
-
-        LOGGER.log(Level.INFO, "Starting querying process for all events");
-        List<EventEntity> residents = persistence.findAll();
-        LOGGER.log(Level.INFO, "Ended querying process for all events");
-        return residents;
+        LOGGER.log(Level.INFO, "Inicia proceso de consultar todos los libros");
+        List<EventEntity> books = persistence.findAll();
+        LOGGER.log(Level.INFO, "Termina proceso de consultar todos los libros");
+        return books;
     }
 
-    public EventEntity getEvent(Long id) {
-        LOGGER.log(Level.INFO, "Starting querying process for event with id ", id);
-        EventEntity resident = persistence.find(id);
-        LOGGER.log(Level.INFO, "Ended querying process for  event with id", id);
-        return resident;
+    /**
+     * Busca un libro por ID
+     *
+     * @param booksId El id del libro a buscar
+     * @return El libro encontrado, null si no lo encuentra.
+     */
+    public EventEntity getBook(Long booksId) {
+        LOGGER.log(Level.INFO, "Inicia proceso de consultar el libro con id = {0}", booksId);
+        EventEntity bookEntity = persistence.find(booksId);
+        if (bookEntity == null) {
+            LOGGER.log(Level.SEVERE, "El libro con el id = {0} no existe", booksId);
+        }
+        LOGGER.log(Level.INFO, "Termina proceso de consultar el libro con id = {0}", booksId);
+        return bookEntity;
     }
 
+    /**
+     * Actualizar un libro por ID
+     *
+     * @param booksId El ID del libro a actualizar
+     * @param bookEntity La entidad del libro con los cambios deseados
+     * @return La entidad del libro luego de actualizarla
+     * @throws BusinessLogicException Si el IBN de la actualización es inválido
+     */
+    public EventEntity updateBook(Long booksId, EventEntity bookEntity) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Inicia proceso de actualizar el libro con id = {0}", booksId);
 
-
-
-    public EventEntity updateEvent(EventEntity eventEntity) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Starting update process for event with id ", eventEntity.getId());
-
-        EventEntity original  = persistence.find(eventEntity.getId());
-
-         
-        if(eventEntity.getTitle()== null){
-            throw new BusinessLogicException("A text has to be specified");
-        }
-
-         //must have a date
-        if(eventEntity.getLocation()== null){
-            throw new BusinessLogicException("A venue has to be specified");
-        }
-        
-        if(Integer.parseInt(eventEntity.getStartTime())> Integer.parseInt(eventEntity.getEndTime())){
-            throw new BusinessLogicException("cannot finish before starting the event");
-        }
-
-        EventEntity modified = persistence.update(eventEntity);
-        LOGGER.log(Level.INFO, "Ended update process for event with id ", eventEntity.getId());
-        return modified;
+        EventEntity newEntity = persistence.update(bookEntity);
+        LOGGER.log(Level.INFO, "Termina proceso de actualizar el libro con id = {0}", bookEntity.getId());
+        return newEntity;
     }
 
+    /**
+     * Eliminar un libro por ID
+     *
+     * @param booksId El ID del libro a eliminar
+     * @throws BusinessLogicException si el libro tiene autores asociados
+     */
+    public void deleteBook(Long booksId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Inicia proceso de borrar el libro con id = {0}", booksId);
 
+        persistence.delete(booksId);
+        LOGGER.log(Level.INFO, "Termina proceso de borrar el libro con id = {0}", booksId);
+    }
 
-
+    /**
+     * Verifica que el ISBN no sea invalido.
+     *
+     * @param isbn a verificar
+     * @return true si el ISBN es valido.
+     */
+    private boolean validateISBN(String isbn) {
+        return !(isbn == null || isbn.isEmpty());
+    }
 }
