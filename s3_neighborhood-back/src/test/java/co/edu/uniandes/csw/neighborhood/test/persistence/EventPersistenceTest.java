@@ -23,7 +23,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 /**
  * Persistence test for Event
  *
- * @author albayona
+ * @author kromero1
  */
 @RunWith(Arquillian.class)
 public class EventPersistenceTest {

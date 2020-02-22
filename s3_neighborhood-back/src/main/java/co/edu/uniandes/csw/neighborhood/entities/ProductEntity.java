@@ -19,7 +19,7 @@ import uk.co.jemos.podam.common.PodamExclude;
  * @author kevin
  */
 @Entity
-class ProductEntity extends BaseEntity implements Serializable{
+public class ProductEntity extends BaseEntity implements Serializable{
     
 //===================================================
 // Attributes

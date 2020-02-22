@@ -36,7 +36,7 @@ import javax.inject.Inject;
 /**
  * Clase que implementa la conexion con la persistencia para la entidad de Book.
  *
- * @author ISIS2603
+ * @author kromero1
  */
 @Stateless
 public class EventLogic {
