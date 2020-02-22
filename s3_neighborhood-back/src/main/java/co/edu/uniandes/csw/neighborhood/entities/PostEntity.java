@@ -85,11 +85,12 @@ public class PostEntity extends BaseEntity implements Serializable{
     /**
      * Represents comments received in this post
      */
-     @PodamExclude
+    @PodamExclude
     @OneToMany(
-        mappedBy = "post",
-        fetch = javax.persistence.FetchType.LAZY,
-        cascade = CascadeType.PERSIST, orphanRemoval = true)
+            mappedBy = "post",
+            fetch = javax.persistence.FetchType.LAZY,
+            cascade = CascadeType.ALL, orphanRemoval = true
+    )
      
     private List<CommentEntity> comments = new ArrayList();
 
@@ -216,6 +217,22 @@ public class PostEntity extends BaseEntity implements Serializable{
 
     public void setBusiness(BusinessEntity business) {
         this.business = business;
+    }
+
+    public void setAuthor(ResidentProfileEntity author) {
+        this.author = author;
+    }
+
+    public void setViewers(List<ResidentProfileEntity> viewers) {
+        this.viewers = viewers;
+    }
+
+    public void setComments(List<CommentEntity> comments) {
+        this.comments = comments;
+    }
+
+    public void setGroup(GroupEntity group) {
+        this.group = group;
     }
     
     

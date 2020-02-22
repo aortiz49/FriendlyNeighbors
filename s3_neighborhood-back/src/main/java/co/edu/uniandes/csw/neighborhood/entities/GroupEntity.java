@@ -32,6 +32,10 @@ import uk.co.jemos.podam.common.PodamStrategyValue;
 @Entity
 public class GroupEntity extends BaseEntity implements Serializable {
 
+    
+//===================================================
+// Attributes
+//===================================================
     /**
      * Represents the date group was created
      */
@@ -49,6 +53,10 @@ public class GroupEntity extends BaseEntity implements Serializable {
      */
     private String description;
 
+    
+//===================================================
+// Relations
+//===================================================
     /**
      * Represents the residents who are members of this post
      */
@@ -70,22 +78,10 @@ public class GroupEntity extends BaseEntity implements Serializable {
     @OneToMany(
             mappedBy = "group",
             fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST,
+            cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<PostEntity> posts = new ArrayList<>();
     
-    /**
-     * Represents events organized by the group.
-     */
-    @PodamExclude
-    @OneToMany(
-            mappedBy = "group",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST,
-            orphanRemoval = true
-    )
-    private List<EventEntity> events = new ArrayList();
-
     
     public Date getDateCreated() {
         return dateCreated;
@@ -135,12 +131,6 @@ public class GroupEntity extends BaseEntity implements Serializable {
         this.neighborhood = neighborhood;
     }
 
-    public List<EventEntity> getEvents() {
-        return events;
-    }
 
-    public void setEvents(List<EventEntity> events) {
-        this.events = events;
-    }
 
 }

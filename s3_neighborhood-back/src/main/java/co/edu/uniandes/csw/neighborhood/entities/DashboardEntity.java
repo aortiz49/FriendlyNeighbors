@@ -55,7 +55,7 @@ public class DashboardEntity extends BaseEntity implements Serializable {
      */
     @PodamExclude
     @OneToMany(mappedBy = "dashboard", fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST, orphanRemoval = true)
+            cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BusinessEntity> businesses = new ArrayList<>();
 
 //===================================================

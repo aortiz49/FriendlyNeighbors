@@ -96,7 +96,7 @@ public class LocationEntity extends BaseEntity implements Serializable {
     @OneToMany(
             mappedBy = "location",
             fetch = javax.persistence.FetchType.LAZY,
-            cascade = CascadeType.PERSIST, orphanRemoval = true
+            cascade = CascadeType.ALL, orphanRemoval = true
     )
     
     private List<EventEntity> events = new ArrayList<>();

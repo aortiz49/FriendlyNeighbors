@@ -11,91 +11,69 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import co.edu.uniandes.csw.neighborhood.persistence.PostPersistence; 
-import co.edu.uniandes.csw.neighborhood.entities.PostEntity; 
+import co.edu.uniandes.csw.neighborhood.persistence.FavorPersistence; 
+import co.edu.uniandes.csw.neighborhood.entities.FavorEntity; 
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException; 
 
 
 /**
  *
- * @author albayona
+ * @author  * @author 
+
  */
 @Stateless
-public class PostLogic {
+public class FavorLogic {
 
    
-    private static final Logger LOGGER = Logger.getLogger(PostLogic.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(FavorLogic.class.getName());
     
     @Inject
-    private PostPersistence persistence;
+    private FavorPersistence persistence;
 
     
-      public PostEntity createPost(PostEntity postEntity) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Creation process for post has started");
+      public FavorEntity createFavor(FavorEntity favorEntity) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Creation process for favor has started");
         
-         //must have a title
-        if(postEntity.getTitle()== null){
-            throw new BusinessLogicException("A title has to be specified");
-        }
-        
-         //must have a description
-        if(postEntity.getDescription()== null){
-            throw new BusinessLogicException("A description has to be specified");
-        }
-       
 
-        persistence.create(postEntity);
-        LOGGER.log(Level.INFO, "Creation process for post eneded");
+        persistence.create(favorEntity);
+        LOGGER.log(Level.INFO, "Creation process for favor eneded");
         
-        return postEntity;
+        return favorEntity;
     }
     
    
 
-    public void deletePost(Long id) {
+    public void deleteFavor(Long id) {
         
-        LOGGER.log(Level.INFO, "Starting deleting process for post with id = {0}", id);
+        LOGGER.log(Level.INFO, "Starting deleting process for favor with id = {0}", id);
         persistence.delete(id);
-        LOGGER.log(Level.INFO, "Ended deleting process for post with id = {0}", id);
+        LOGGER.log(Level.INFO, "Ended deleting process for favor with id = {0}", id);
     }
 
 
-    public List<PostEntity> getPosts() {
+    public List<FavorEntity> getFavors() {
         
-        LOGGER.log(Level.INFO, "Starting querying process for all posts");
-        List<PostEntity> residents = persistence.findAll();
-        LOGGER.log(Level.INFO, "Ended querying process for all posts");
+        LOGGER.log(Level.INFO, "Starting querying process for all favors");
+        List<FavorEntity> residents = persistence.findAll();
+        LOGGER.log(Level.INFO, "Ended querying process for all favors");
         return residents;
     }
 
-    public PostEntity getPost(Long id) {
-        LOGGER.log(Level.INFO, "Starting querying process for post with id ", id);
-        PostEntity resident = persistence.find(id);
-        LOGGER.log(Level.INFO, "Ended querying process for  post with id", id);
+    public FavorEntity getFavor(Long id) {
+        LOGGER.log(Level.INFO, "Starting querying process for favor with id ", id);
+        FavorEntity resident = persistence.find(id);
+        LOGGER.log(Level.INFO, "Ended querying process for  favor with id", id);
         return resident;
     }
 
-    
-    
+      
 
-    public PostEntity updatePost(PostEntity postEntity) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Starting update process for post with id ", postEntity.getId());
+    public FavorEntity updateFavor(FavorEntity favorEntity) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Starting update process for favor with id ", favorEntity.getId());
         
-        PostEntity original  = persistence.find(postEntity.getId());
 
-         //must have a title
-        if(postEntity.getTitle()== null){
-            throw new BusinessLogicException("A title has to be specified");
-        }
-        
-         //must have a description
-        if(postEntity.getDescription()== null){
-            throw new BusinessLogicException("A description has to be specified");
-        }
-       
-
-        PostEntity modified = persistence.update(postEntity);
-        LOGGER.log(Level.INFO, "Ended update process for post with id ", postEntity.getId());
+        FavorEntity modified = persistence.update(favorEntity);
+        LOGGER.log(Level.INFO, "Ended update process for favor with id ", favorEntity.getId());
         return modified;
     }
 

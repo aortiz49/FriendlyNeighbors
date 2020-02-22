@@ -1,8 +1,8 @@
 
 package co.edu.uniandes.csw.neighborhood.test.persistence;
 
-import co.edu.uniandes.csw.neighborhood.entities.CommentEntity;
-import co.edu.uniandes.csw.neighborhood.persistence.CommentPersistence;
+import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
+import co.edu.uniandes.csw.neighborhood.persistence.EventPersistence;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -21,15 +21,15 @@ import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
- * Persistence test for Comment
+ * Persistence test for Event
  *
  * @author albayona
  */
 @RunWith(Arquillian.class)
-public class CommentPersistenceTest {
+public class EventPersistenceTest {
 
     @Inject
-    private CommentPersistence commentPersistence;
+    private EventPersistence eventPersistence;
 
     @PersistenceContext
     private EntityManager em;
@@ -37,7 +37,7 @@ public class CommentPersistenceTest {
     @Inject
     UserTransaction utx;
 
-    private List<CommentEntity> data = new ArrayList<>();
+    private List<EventEntity> data = new ArrayList<>();
 
     /**
      * @return Returns jar which Arquillian will deploy embedded in Payara.
@@ -47,8 +47,8 @@ public class CommentPersistenceTest {
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addPackage(CommentEntity.class.getPackage())
-                .addPackage(CommentPersistence.class.getPackage())
+                .addPackage(EventEntity.class.getPackage())
+                .addPackage(EventPersistence.class.getPackage())
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
@@ -78,7 +78,7 @@ public class CommentPersistenceTest {
      * Clears tables involved in tests 
      */
     private void clearData() {
-        em.createQuery("delete from CommentEntity").executeUpdate();
+        em.createQuery("delete from EventEntity").executeUpdate();
     }
 
     /**
@@ -87,7 +87,7 @@ public class CommentPersistenceTest {
     private void insertData() {
         PodamFactory factory = new PodamFactoryImpl();
         for (int i = 0; i < 3; i++) {
-            CommentEntity entity = factory.manufacturePojo(CommentEntity.class);
+            EventEntity entity = factory.manufacturePojo(EventEntity.class);
 
             em.persist(entity);
             data.add(entity);
@@ -95,31 +95,31 @@ public class CommentPersistenceTest {
     }
 
     /**
-     * Creating test for Comment.
+     * Creating test for Event.
      */
     @Test
-    public void createCommentTest() {
+    public void createEventTest() {
         PodamFactory factory = new PodamFactoryImpl();
-        CommentEntity newEntity = factory.manufacturePojo(CommentEntity.class);
-        CommentEntity result = commentPersistence.create(newEntity);
+        EventEntity newEntity = factory.manufacturePojo(EventEntity.class);
+        EventEntity result = eventPersistence.create(newEntity);
 
         Assert.assertNotNull(result);
 
-        CommentEntity entity = em.find(CommentEntity.class, result.getId());
+        EventEntity entity = em.find(EventEntity.class, result.getId());
 
-        Assert.assertEquals(newEntity.getText(), entity.getText());
+        Assert.assertEquals(newEntity.getId(), entity.getId());
     }
     
      /**
-     * Test for retrieving all comments from DB.
+     * Test for retrieving all events from DB.
      */
         @Test
     public void findAllTest() {
-        List<CommentEntity> list = commentPersistence.findAll();
+        List<EventEntity> list = eventPersistence.findAll();
         Assert.assertEquals(data.size(), list.size());
-        for (CommentEntity ent : list) {
+        for (EventEntity ent : list) {
             boolean found = false;
-            for (CommentEntity entity : data) {
+            for (EventEntity entity : data) {
                 if (ent.getId().equals(entity.getId())) {
                     found = true;
                 }
@@ -129,43 +129,42 @@ public class CommentPersistenceTest {
     }
     
     /**
-     * Test for a query about a Comment.
+     * Test for a query about a Event.
      */
     @Test
-    public void getCommentTest() {
-        CommentEntity entity = data.get(0);
-        CommentEntity newEntity = commentPersistence.find(entity.getId());
+    public void getEventTest() {
+        EventEntity entity = data.get(0);
+        EventEntity newEntity = eventPersistence.find(entity.getId());
         Assert.assertNotNull(newEntity);
-        Assert.assertEquals(entity.getDate(), newEntity.getDate());
-        Assert.assertEquals(entity.getText(), newEntity.getText());
+        Assert.assertEquals(entity.getId(), newEntity.getId());
     }
 
      /**
-     * Test for updating a Comment.
+     * Test for updating a Event.
      */
     @Test
-    public void updateCommentTest() {
-        CommentEntity entity = data.get(0);
+    public void updateEventTest() {
+        EventEntity entity = data.get(0);
         PodamFactory factory = new PodamFactoryImpl();
-        CommentEntity newEntity = factory.manufacturePojo(CommentEntity.class);
+        EventEntity newEntity = factory.manufacturePojo(EventEntity.class);
 
         newEntity.setId(entity.getId());
 
-        commentPersistence.update(newEntity);
+        eventPersistence.update(newEntity);
 
-        CommentEntity resp = em.find(CommentEntity.class, entity.getId());
+        EventEntity resp = em.find(EventEntity.class, entity.getId());
 
-        Assert.assertEquals(newEntity.getDate(), resp.getDate());
+        Assert.assertEquals(newEntity.getId(), resp.getId());
     }
     
      /**
-     * Test for deleting a Comment.
+     * Test for deleting a Event.
      */
     @Test
-    public void deleteCommentTest() {
-        CommentEntity entity = data.get(0);
-        commentPersistence.delete(entity.getId());
-        CommentEntity deleted = em.find(CommentEntity.class, entity.getId());
+    public void deleteEventTest() {
+        EventEntity entity = data.get(0);
+        eventPersistence.delete(entity.getId());
+        EventEntity deleted = em.find(EventEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
     

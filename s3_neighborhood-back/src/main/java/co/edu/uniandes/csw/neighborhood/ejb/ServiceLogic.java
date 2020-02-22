@@ -11,91 +11,69 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import co.edu.uniandes.csw.neighborhood.persistence.PostPersistence; 
-import co.edu.uniandes.csw.neighborhood.entities.PostEntity; 
+import co.edu.uniandes.csw.neighborhood.persistence.ServicePersistence; 
+import co.edu.uniandes.csw.neighborhood.entities.ServiceEntity; 
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException; 
 
 
 /**
  *
- * @author albayona
+ * @author  * @author 
+
  */
 @Stateless
-public class PostLogic {
+public class ServiceLogic {
 
    
-    private static final Logger LOGGER = Logger.getLogger(PostLogic.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ServiceLogic.class.getName());
     
     @Inject
-    private PostPersistence persistence;
+    private ServicePersistence persistence;
 
     
-      public PostEntity createPost(PostEntity postEntity) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Creation process for post has started");
+      public ServiceEntity createService(ServiceEntity serviceEntity) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Creation process for service has started");
         
-         //must have a title
-        if(postEntity.getTitle()== null){
-            throw new BusinessLogicException("A title has to be specified");
-        }
-        
-         //must have a description
-        if(postEntity.getDescription()== null){
-            throw new BusinessLogicException("A description has to be specified");
-        }
-       
 
-        persistence.create(postEntity);
-        LOGGER.log(Level.INFO, "Creation process for post eneded");
+        persistence.create(serviceEntity);
+        LOGGER.log(Level.INFO, "Creation process for service eneded");
         
-        return postEntity;
+        return serviceEntity;
     }
     
    
 
-    public void deletePost(Long id) {
+    public void deleteService(Long id) {
         
-        LOGGER.log(Level.INFO, "Starting deleting process for post with id = {0}", id);
+        LOGGER.log(Level.INFO, "Starting deleting process for service with id = {0}", id);
         persistence.delete(id);
-        LOGGER.log(Level.INFO, "Ended deleting process for post with id = {0}", id);
+        LOGGER.log(Level.INFO, "Ended deleting process for service with id = {0}", id);
     }
 
 
-    public List<PostEntity> getPosts() {
+    public List<ServiceEntity> getServices() {
         
-        LOGGER.log(Level.INFO, "Starting querying process for all posts");
-        List<PostEntity> residents = persistence.findAll();
-        LOGGER.log(Level.INFO, "Ended querying process for all posts");
+        LOGGER.log(Level.INFO, "Starting querying process for all services");
+        List<ServiceEntity> residents = persistence.findAll();
+        LOGGER.log(Level.INFO, "Ended querying process for all services");
         return residents;
     }
 
-    public PostEntity getPost(Long id) {
-        LOGGER.log(Level.INFO, "Starting querying process for post with id ", id);
-        PostEntity resident = persistence.find(id);
-        LOGGER.log(Level.INFO, "Ended querying process for  post with id", id);
+    public ServiceEntity getService(Long id) {
+        LOGGER.log(Level.INFO, "Starting querying process for service with id ", id);
+        ServiceEntity resident = persistence.find(id);
+        LOGGER.log(Level.INFO, "Ended querying process for  service with id", id);
         return resident;
     }
 
-    
-    
+      
 
-    public PostEntity updatePost(PostEntity postEntity) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Starting update process for post with id ", postEntity.getId());
+    public ServiceEntity updateService(ServiceEntity serviceEntity) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Starting update process for service with id ", serviceEntity.getId());
         
-        PostEntity original  = persistence.find(postEntity.getId());
 
-         //must have a title
-        if(postEntity.getTitle()== null){
-            throw new BusinessLogicException("A title has to be specified");
-        }
-        
-         //must have a description
-        if(postEntity.getDescription()== null){
-            throw new BusinessLogicException("A description has to be specified");
-        }
-       
-
-        PostEntity modified = persistence.update(postEntity);
-        LOGGER.log(Level.INFO, "Ended update process for post with id ", postEntity.getId());
+        ServiceEntity modified = persistence.update(serviceEntity);
+        LOGGER.log(Level.INFO, "Ended update process for service with id ", serviceEntity.getId());
         return modified;
     }
 

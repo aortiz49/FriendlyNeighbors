@@ -70,12 +70,14 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
 // Relations
 //===================================================
     
+    
+    
     /**
      * Events a resident is signed up for.
      */
     @PodamExclude
-    @ManyToMany(mappedBy = "attendees", fetch = FetchType.EAGER)
-    private List<EventEntity> eventsToAttend = new ArrayList();
+    @ManyToMany(mappedBy = "attendees")
+    private List<EventEntity> eventsToAttend = new ArrayList<>();
     
     /**
      * Favors a resident is signed up to complete.
@@ -83,8 +85,15 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     @PodamExclude
     @ManyToMany(mappedBy = "candidates", fetch = FetchType.EAGER)
     private List<FavorEntity> favorsToHelp = new ArrayList() ;
+    
+        /**
+     * Posts shared with this resident.
+     */
+    @PodamExclude
+    @ManyToMany(mappedBy = "viewers", fetch = FetchType.EAGER)
+    private List<PostEntity> postsToView = new ArrayList() ;
 
-   
+  
     /**
      * Represents favors requested by this resident
      */
@@ -92,7 +101,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     @OneToMany(
             mappedBy = "author",
             fetch = javax.persistence.FetchType.LAZY,
-            cascade = CascadeType.PERSIST, orphanRemoval = true
+            cascade = CascadeType.ALL, orphanRemoval = true
     )
 
     private List<FavorEntity> favorsRequested = new ArrayList<>();
@@ -104,7 +113,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     @OneToMany(
             mappedBy = "author",
             fetch = javax.persistence.FetchType.LAZY,
-            cascade = CascadeType.PERSIST, orphanRemoval = true
+            cascade = CascadeType.ALL, orphanRemoval = true
     )
     private List<ServiceEntity> services = new ArrayList<>();
 
@@ -115,7 +124,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     @OneToMany(
             mappedBy = "author",
             fetch = javax.persistence.FetchType.LAZY,
-            cascade = CascadeType.PERSIST, orphanRemoval = true
+            cascade = CascadeType.ALL, orphanRemoval = true
     )
     private List<NotificationEntity> notifications = new ArrayList<>();
 
@@ -124,7 +133,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
      */
     @PodamExclude
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST, orphanRemoval = true)
+            cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostEntity> posts = new ArrayList<>();
 
     /**
@@ -134,7 +143,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     @OneToMany(
             mappedBy = "host",
             fetch = javax.persistence.FetchType.LAZY,
-            cascade = CascadeType.PERSIST, orphanRemoval = true
+            cascade = CascadeType.ALL, orphanRemoval = true
     )
     private List<EventEntity> events = new ArrayList<>();
 
@@ -214,6 +223,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     public List<NotificationEntity> getNotifications() {
         return notifications;
     }
+    
 
     public List<PostEntity> getPosts() {
         return posts;
@@ -310,6 +320,15 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     public void setNeighborhood(NeighborhoodEntity neighborhood) {
         this.neighborhood = neighborhood;
     }
+
+    public List<PostEntity> getPostsToView() {
+        return postsToView;
+    }
+
+    public void setPostsToView(List<PostEntity> postsToView) {
+        this.postsToView = postsToView;
+    }
+
 
    
 }

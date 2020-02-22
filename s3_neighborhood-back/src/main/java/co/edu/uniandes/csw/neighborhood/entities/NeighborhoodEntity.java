@@ -51,7 +51,7 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
      */
     @PodamExclude
     @OneToMany(mappedBy = "neighborhood", fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST, orphanRemoval = true)
+            cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BusinessEntity> businesses = new ArrayList<>(); 
     
     /**
@@ -59,7 +59,7 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
      */
     @PodamExclude
     @OneToMany(mappedBy = "neighborhood", fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST, orphanRemoval = true)
+            cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ResidentProfileEntity> residents = new ArrayList<>();
      
     /**
@@ -67,7 +67,7 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
      */
     @PodamExclude
     @OneToMany(mappedBy = "neighborhood", fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST, orphanRemoval = true)
+            cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LocationEntity> places = new ArrayList<>();
     
      /**
@@ -75,7 +75,7 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
      */
     @PodamExclude
     @OneToMany(mappedBy = "neighborhood", fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST, orphanRemoval = true)
+            cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GroupEntity> groups = new ArrayList<>();
     
 //===================================================
