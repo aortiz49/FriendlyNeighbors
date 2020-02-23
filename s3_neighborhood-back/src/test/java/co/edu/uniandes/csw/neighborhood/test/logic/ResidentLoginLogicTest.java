@@ -133,8 +133,9 @@ public class ResidentLoginLogicTest {
         // the podam factory which has an id associated to it. 
         ResidentLoginEntity result = null;
             try {
+                newResidentLogin.setPassword("Password4$");
                 result = residentLoginLogic.createResidentLogin(newResidentLogin);
-                result.setPassword("Password4$");
+                
             } catch (BusinessLogicException ex) {
                 Logger.getLogger(ResidentLoginLogicTest.class.getName()).log(Level.SEVERE, null, ex);
             }
