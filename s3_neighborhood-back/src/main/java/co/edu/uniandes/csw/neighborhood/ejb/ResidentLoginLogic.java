@@ -47,25 +47,25 @@ public class ResidentLoginLogic {
             throw new BusinessLogicException("A password has to be specified");
         }
         // Password must be at least 6 characters long
-        if(residentLoginEntity.getPassword().length()>5){
+        if(residentLoginEntity.getPassword().length()<6){
             throw new BusinessLogicException("Password must be at least 6 characters long");
         }
         // Password must be at most 12 characters long
-        if(residentLoginEntity.getPassword().length()<13){
+        if(residentLoginEntity.getPassword().length()>12){
             throw new BusinessLogicException("Password must be at most 12 characters long");
         }
         String passValue = String.valueOf(residentLoginEntity.getPassword());
         
         // At least one capital letter
-        if (!passValue.matches("[A-Z]")){
+        if (!passValue.matches(".*[A-Z].*")){
             throw new BusinessLogicException("Password must contain at least one capital letter.");
         }
         // At least one number
-        if (!passValue.matches("[0-9]")){
+        if (!passValue.matches(".*[0-9].*")){
             throw new BusinessLogicException("Password must contain at least one number.");
         }
         // At least one special character
-        if (!passValue.matches("[@#$%^&+=]")){
+        if (!passValue.matches(".*[@#$%^&+=].*")){
             throw new BusinessLogicException("Password must contain at least one special character.");
         }
                 
@@ -124,25 +124,25 @@ public class ResidentLoginLogic {
             throw new BusinessLogicException("A password has to be specified");
         }
         // Password must be at least 6 characters long
-        if(residentLoginEntity.getPassword().length()>5){
+        if(residentLoginEntity.getPassword().length()<6){
             throw new BusinessLogicException("Password must be at least 6 characters long");
         }
         // Password must be at most 12 characters long
-        if(residentLoginEntity.getPassword().length()<13){
+        if(residentLoginEntity.getPassword().length()>12){
             throw new BusinessLogicException("Password must be at most 12 characters long");
         }
         String passValue = String.valueOf(residentLoginEntity.getPassword());
         
         // At least one capital letter
-        if (!passValue.matches("[A-Z]")){
+        if (!passValue.matches(".*[A-Z].*")){
             throw new BusinessLogicException("Password must contain at least one capital letter.");
         }
         // At least one number
-        if (!passValue.matches("[0-9]")){
+        if (!passValue.matches(".*[0-9].*")){
             throw new BusinessLogicException("Password must contain at least one number.");
         }
         // At least one special character
-        if (!passValue.matches("[@#$%^&+=]")){
+        if (!passValue.matches(".*[@#$%^&+=].*")){
             throw new BusinessLogicException("Password must contain at least one special character.");
         }
                 

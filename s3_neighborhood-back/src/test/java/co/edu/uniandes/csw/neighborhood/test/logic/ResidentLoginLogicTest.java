@@ -134,6 +134,7 @@ public class ResidentLoginLogicTest {
         ResidentLoginEntity result = null;
             try {
                 result = residentLoginLogic.createResidentLogin(newResidentLogin);
+                result.setPassword("Password4$");
             } catch (BusinessLogicException ex) {
                 Logger.getLogger(ResidentLoginLogicTest.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -190,6 +191,8 @@ public class ResidentLoginLogicTest {
             ResidentLoginEntity entity = data.get(0);
             ResidentLoginEntity pojoEntity = factory.manufacturePojo(ResidentLoginEntity.class);
             pojoEntity.setId(entity.getId());
+            pojoEntity.setPassword("Password5$");
+            
             residentLoginLogic.updateResidentLogin(pojoEntity);
             ResidentLoginEntity resp = em.find(ResidentLoginEntity.class, entity.getId());
             Assert.assertEquals(pojoEntity.getId(), resp.getId());

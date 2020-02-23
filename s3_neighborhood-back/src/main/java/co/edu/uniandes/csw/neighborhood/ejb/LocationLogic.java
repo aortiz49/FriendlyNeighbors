@@ -54,12 +54,6 @@ public class LocationLogic {
             throw new BusinessLogicException("An open time has to be specified");
         }
 
-        // Neightborhood must exist
-        NeighborhoodEntity neightborhood = neighborhoodPersistence.find(locationEntity.getNeighborhood().getId());
-        if (neightborhood == null) {
-            throw new BusinessLogicException("There is no such neightborhood: \"" + locationEntity.getNeighborhood().getName()+ "\"");   
-        }
-        
         persistence.create(locationEntity);
         LOGGER.log(Level.INFO, "Creation process for location eneded");
         
@@ -113,11 +107,6 @@ public class LocationLogic {
         // OpenTime can not be null
         if(locationEntity.getOpenTime()==null){
             throw new BusinessLogicException("An open time has to be specified");
-        }
-        // Neightborhood must exist
-        NeighborhoodEntity neightborhood = neighborhoodPersistence.find(locationEntity.getNeighborhood().getId());
-        if (neightborhood == null) {
-            throw new BusinessLogicException("There is no such neightborhood: \"" + locationEntity.getNeighborhood().getName()+ "\"");   
         }
         
         LocationEntity modified = persistence.update(locationEntity);

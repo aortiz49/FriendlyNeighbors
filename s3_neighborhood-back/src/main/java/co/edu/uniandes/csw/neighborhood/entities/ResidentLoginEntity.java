@@ -38,6 +38,41 @@ import uk.co.jemos.podam.common.PodamExclude;
  */
 @Entity
 public class ResidentLoginEntity extends BaseEntity implements Serializable {
+
+    /**
+     * @param resident the resident to set
+     */
+    public void setResident(ResidentProfileEntity resident) {
+        this.resident = resident;
+    }
+
+    /**
+     * @param userName the userName to set
+     */
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * @param governmentId the governmentId to set
+     */
+    public void setGovernmentId(String governmentId) {
+        this.governmentId = governmentId;
+    }
+
+    /**
+     * @param isActive the isActive to set
+     */
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
 //===================================================
 // Relations
 //===================================================   
@@ -51,6 +86,7 @@ public class ResidentLoginEntity extends BaseEntity implements Serializable {
 
     private String userName;
 
+    @PodamExclude
     private String password;
     
     private String governmentId;
