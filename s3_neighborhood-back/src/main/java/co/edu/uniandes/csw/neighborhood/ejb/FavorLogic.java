@@ -34,7 +34,26 @@ public class FavorLogic {
       public FavorEntity createFavor(FavorEntity favorEntity) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creation process for favor has started");
         
-
+         //must have a title
+        if(favorEntity.getTitle()== null){
+            throw new BusinessLogicException("A title has to be specified");
+        }
+        
+         //must have a description
+        if(favorEntity.getDescription()== null){
+            throw new BusinessLogicException("A description has to be specified");
+        }
+        
+        //must have a type
+        if(favorEntity.getType()== null){
+            throw new BusinessLogicException("A type has to be specified");
+        }
+        
+        //must have a date
+        if(favorEntity.getDatePosted()== null){
+            throw new BusinessLogicException("A date has to be specified");
+        }
+        
         persistence.create(favorEntity);
         LOGGER.log(Level.INFO, "Creation process for favor eneded");
         
@@ -71,7 +90,26 @@ public class FavorLogic {
     public FavorEntity updateFavor(FavorEntity favorEntity) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Starting update process for favor with id ", favorEntity.getId());
         
-
+         //must have a title
+        if(favorEntity.getTitle()== null){
+            throw new BusinessLogicException("A title has to be specified");
+        }
+        
+         //must have a description
+        if(favorEntity.getDescription()== null){
+            throw new BusinessLogicException("A description has to be specified");
+        }
+        
+        //must have a type
+        if(favorEntity.getType()== null){
+            throw new BusinessLogicException("A type has to be specified");
+        }
+        
+        //must have a date
+        if(favorEntity.getDatePosted()== null){
+            throw new BusinessLogicException("A date has to be specified");
+        }
+        
         FavorEntity modified = persistence.update(favorEntity);
         LOGGER.log(Level.INFO, "Ended update process for favor with id ", favorEntity.getId());
         return modified;
