@@ -37,6 +37,7 @@ public class ProductEntity extends BaseEntity implements Serializable{
     /**
      * The price of this product
      */
+    @PodamExclude
     private Double price;
 
     /**
@@ -47,6 +48,7 @@ public class ProductEntity extends BaseEntity implements Serializable{
      /**
      * The number of times this product can be sold at a time
      */
+    @PodamExclude
     private Integer maxSaleQuantity;
 
         
@@ -64,7 +66,7 @@ public class ProductEntity extends BaseEntity implements Serializable{
      */
     @PodamExclude
     @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
-    private List<OfferEntity> offers = new ArrayList();
+    private List<OfferEntity> offers = new ArrayList<>();
     
 
     /**

@@ -39,13 +39,10 @@ public class ProductLogic {
         }
 
          
-        if(productEntity.getPrice()== 0){
+        if(productEntity.getPrice()<= 0){
             throw new BusinessLogicException(" the price cannot be 0");
         }
-        
-        if(productEntity.getPrice()== 0){
-            throw new BusinessLogicException(" the price cannot be 0");
-        }
+
         if(productEntity.getMaxSaleQuantity()<0){
             throw new BusinessLogicException(" the amount cannot be less than 0");
         }
@@ -90,18 +87,15 @@ public class ProductLogic {
         ProductEntity original  = persistence.find(productEntity.getId());
 
          
-          if(productEntity.getName()== null){
+        if(productEntity.getName()== null){
             throw new BusinessLogicException("A Title has to be specified");
         }
 
          
-        if(productEntity.getPrice()== 0){
+        if(productEntity.getPrice()<= 0){
             throw new BusinessLogicException(" the price cannot be 0");
         }
-        
-        if(productEntity.getPrice()== 0){
-            throw new BusinessLogicException(" the price cannot be 0");
-        }
+
         if(productEntity.getMaxSaleQuantity()<0){
             throw new BusinessLogicException(" the amount cannot be less than 0");
         }
