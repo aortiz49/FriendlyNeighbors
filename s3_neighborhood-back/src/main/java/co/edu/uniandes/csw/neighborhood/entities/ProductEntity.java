@@ -37,7 +37,6 @@ public class ProductEntity extends BaseEntity implements Serializable{
     /**
      * The price of this product
      */
-    @PodamExclude
     private Double price;
 
     /**
@@ -48,7 +47,6 @@ public class ProductEntity extends BaseEntity implements Serializable{
      /**
      * The number of times this product can be sold at a time
      */
-    @PodamExclude
     private Integer maxSaleQuantity;
 
         
@@ -73,7 +71,7 @@ public class ProductEntity extends BaseEntity implements Serializable{
      * Represents the bussunes this product belongs to
      */    
     @PodamExclude
-    @ManyToOne BusinessEntity business;
+    @ManyToOne private BusinessEntity business;
     
 //===================================================
 // Getters & Setters

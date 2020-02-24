@@ -34,7 +34,7 @@ public class OfferProductLogic {
         LOGGER.log(Level.INFO, "Trying to associate product with offer with id = {0}", offerId);
         ProductEntity productEntity = productPersistence.find(productId);
         OfferEntity offerEntity = offerPersistence.find(offerId);
-        productEntity.getOffers().add(offerEntity);
+        offerEntity.getProducts().add(productEntity);
         
         LOGGER.log(Level.INFO, "Product is associated with offer with id = {0}", offerId);
         return productPersistence.find(productId);
