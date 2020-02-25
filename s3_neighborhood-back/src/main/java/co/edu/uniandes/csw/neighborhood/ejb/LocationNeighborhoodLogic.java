@@ -36,7 +36,7 @@ public class LocationNeighborhoodLogic {
         LocationEntity locationEntity = locationPersistence.find(locationId);
         NeighborhoodEntity neighborhoodEntity = neighborhoodPersistence.find(neighborhoodId);
         
-        neighborhoodEntity.getPlaces().add(locationEntity);
+        locationEntity.setNeighborhood(neighborhoodEntity);
         LOGGER.log(Level.INFO, "Location is associatedd with neighborhood with id = {0}", neighborhoodId);
         return locationPersistence.find(locationId);
     }
@@ -61,11 +61,17 @@ public class LocationNeighborhoodLogic {
     public List<LocationEntity> replaceLocations(List<LocationEntity> locations, Long neighborhoodId){
         LOGGER.log(Level.INFO, "Trying to replace locations related to neighborhood with id = {0}", neighborhoodId);
         NeighborhoodEntity neighborhoodEntity = neighborhoodPersistence.find(neighborhoodId);
-        
-        for(LocationEntity location: locations){
-            if(location.getNeighborhood() != neighborhoodEntity){
-                location.setNeighborhood(neighborhoodEntity);
+        List<LocationEntity> locationsList = locationPersistence.findAll();
+        for(LocationEntity location: locationsList){
+            
+            if(locations.contains(location)){
+                if(location.getNeighborhood() != neighborhoodEntity){
+                    location.setNeighborhood(neighborhoodEntity);
+                }
+            } else{
+                location.setNeighborhood(null);
             }
+
         }
         neighborhoodEntity.setPlaces(locations);
         LOGGER.log(Level.INFO, "Ended trying to replace locations related to neighborhood with id = {0}", neighborhoodId);
