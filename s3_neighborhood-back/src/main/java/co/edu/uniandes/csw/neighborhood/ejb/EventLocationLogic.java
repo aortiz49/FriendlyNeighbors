@@ -42,8 +42,7 @@ public class EventLocationLogic {
         LOGGER.log(Level.INFO, "Trying to add event with id - {0}", eventId);
         LocationEntity locationEntity = locationPersistence.find(locationId);
         EventEntity eventEntity = eventPersistence.find(eventId);
-        
-        locationEntity.getEvents().add(eventEntity);
+        eventEntity.setLocation(locationEntity);
         LOGGER.log(Level.INFO, "Event is associatedd with location with id = {0}", locationId);
         return eventPersistence.find(eventId);
     }
@@ -88,11 +87,15 @@ public class EventLocationLogic {
     public List<EventEntity> replaceEvents(Long locationId, List<EventEntity> events){
         LOGGER.log(Level.INFO, "Trying to replace events related to location with id = {0}", locationId);
         LocationEntity locationEntity = locationPersistence.find(locationId);
-
-        for(EventEntity event: events){
+        List<EventEntity> eventsList = eventPersistence.findAll();
+        for(EventEntity event: eventsList){
+            if(events.contains(event)){
                 if(event.getLocation() != locationEntity){
                     event.setLocation(locationEntity);
                 }
+            } else{
+                event.setLocation(null);
+            }    
         }
         locationEntity.setEvents(events);
         LOGGER.log(Level.INFO, "Ended trying to replace events related to location con id = {0}", locationId);
