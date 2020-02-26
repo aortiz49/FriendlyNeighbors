@@ -34,7 +34,7 @@ import uk.co.jemos.podam.common.PodamExclude;
 /**
  * Entity that represents a Login.
  *
- * @author cefigueredo
+ * @author aortiz49
  */
 @Entity
 public class BusinessOwnerLoginEntity extends BaseEntity implements Serializable {
@@ -49,56 +49,124 @@ public class BusinessOwnerLoginEntity extends BaseEntity implements Serializable
     @OneToOne
     private BusinessOwnerEntity businessOwner;
 
-  
+//===================================================
+// Relations
+//===================================================   
+
+    /**
+     * The business owner's user name
+     */
     private String userName;
 
+    /**
+     * The business owner's password
+     */
     private String password;
     
+    /**
+     * Indicates if the business owner's account is active or not
+     */
     private Boolean isActive;
     
+    /**
+     * The business owner's identification number
+     */
     private String governmentId;
 
+//===================================================
+// Getters & Setters
+//===================================================   
 
+    /**
+     * Returns the business owner. 
+     * 
+     * @return the business owner. 
+     */
     public BusinessOwnerEntity getBusinessOwner() {
         return businessOwner;
     }
 
 
-    public void setBusinessOwner(BusinessOwnerEntity businessOwner) {
-        this.businessOwner = businessOwner;
+    /**
+     * Sets the new business owner. 
+     * 
+     * @param pBusinessOwner the new business owner
+     */
+    public void setBusinessOwner(BusinessOwnerEntity pBusinessOwner) {
+        businessOwner = pBusinessOwner;
     }
 
 
+    /**
+     * Returns the business owner's user name
+     * 
+     * @return the user name
+     */
     public String getUserName() {
         return userName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    /**
+     * Sets the business owner's new user name
+     * 
+     * @param pUserName the new user name
+     */
+    public void setUserName(String pUserName) {
+        userName = pUserName;
     }
 
+    /**
+     * Returns the business owner's password
+     * 
+     * @return the password
+     */
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    /**
+     * Sets the business owner's new password
+     * 
+     * @param pPassword the new passsword
+     */
+    public void setPassword(String pPassword) {
+        password = pPassword;
     }
 
+    /**
+     * Checks if the business owner's account is active.
+     * 
+     * @return True if the account is active
+     */
     public Boolean getIsActive() {
         return isActive;
     }
 
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
+    /**
+     * Sets the business owner's new account status  
+     * 
+     * @param pIsActive sets the account status
+     */
+    public void setIsActive(Boolean pIsActive) {
+        isActive = pIsActive;
     }
 
+    /**
+     * Returns the business owner's government id.
+     * 
+     * @return the government id
+     */
     public String getGovernmentId() {
         return governmentId;
     }
 
-    public void setGovernmentId(String governmentId) {
-        this.governmentId = governmentId;
+    /**
+     * Sets the business owner's new government id
+     * 
+     * @param pGovernmentId the new government id
+     */
+    public void setGovernmentId(String pGovernmentId) {
+        governmentId = pGovernmentId;
     }
     
     

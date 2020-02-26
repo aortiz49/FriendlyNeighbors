@@ -225,6 +225,7 @@ public class BusinessOwnerPersistenceTest {
         Assert.assertEquals(newEntity.getEmail(), resp.getEmail());
     }
 
+    
     /**
      * Test for deleting a BusinessOwnerProfile.
      */

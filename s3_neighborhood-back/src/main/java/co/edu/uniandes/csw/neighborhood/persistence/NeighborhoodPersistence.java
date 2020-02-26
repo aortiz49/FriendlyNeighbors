@@ -27,6 +27,7 @@ package co.edu.uniandes.csw.neighborhood.persistence;
 //===================================================
 
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,15 +44,14 @@ import javax.persistence.TypedQuery;
  */
 @Stateless
 public class NeighborhoodPersistence {
-//===================================================
-// Attributes
-//===================================================
+    //===================================================
+    // Attributes
+    //===================================================
 
     /**
      * Logger to log messages for the neighborhood persistence.
      */
-    private static final Logger LOGGER = Logger.getLogger(
-            NeighborhoodPersistence.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(NeighborhoodPersistence.class.getName());
 
     /**
      * The entity manager that will access the Neighborhood table.
@@ -62,11 +62,12 @@ public class NeighborhoodPersistence {
     //===================================================
     // CRUD Methods
     //===================================================
+
     /**
      * Persists a neighborhood in the database.
      *
      * @param pNeighborhoodEntity neighborhood object to be created in the
-     * databse
+     *                            databse
      * @return the created neighborhood with an id given by the databse
      */
     public NeighborhoodEntity create(NeighborhoodEntity pNeighborhoodEntity) {
@@ -93,8 +94,8 @@ public class NeighborhoodPersistence {
 
         // Create a typed neighborhood entity query to find all neighborhoods 
         // in the database. 
-        TypedQuery<NeighborhoodEntity> query = em.createQuery(
-                "select u from NeighborhoodEntity u", NeighborhoodEntity.class);
+        TypedQuery<NeighborhoodEntity> query =
+                em.createQuery("select u from NeighborhoodEntity u", NeighborhoodEntity.class);
 
         return query.getResultList();
     }
@@ -106,43 +107,74 @@ public class NeighborhoodPersistence {
      * @return the found neighborhood
      */
     public NeighborhoodEntity find(Long pNeighborhoodId) {
-        LOGGER.log(Level.INFO, "Consulting neighborhood with id={0}",
-                pNeighborhoodId);
+        LOGGER.log(Level.INFO, "Consulting neighborhood with id={0}", pNeighborhoodId);
 
         return em.find(NeighborhoodEntity.class, pNeighborhoodId);
+    }
+
+    /**
+     * Looks for a neighborhood with the name given by the parameter. 
+     * 
+     * @param pNeighborhoodName the name corresponding to the neighborhood.
+     * @return  the found neighborhood
+     */
+    public NeighborhoodEntity findByName(String pNeighborhoodName) {
+
+        LOGGER.log(Level.INFO, "Consulting neighborhood with name ", pNeighborhoodName);
+
+        TypedQuery query =
+                em.createQuery("Select x From ResidentProfileEntity x where x.name = :pNeighborhoodName",
+                               NeighborhoodEntity.class);
+
+        // Sets the parameter where the name will be searched
+        query = query.setParameter("name", pNeighborhoodName);
+
+
+        List<NeighborhoodEntity> sameNameList = query.getResultList();
+        NeighborhoodEntity result;
+        
+        if (sameNameList == null) {
+            result = null;
+        }
+        
+        else if (sameNameList.isEmpty()) {
+            result = null;
+        }
+        else {
+            result = sameNameList.get(0);
+        }
+
+        return result;
     }
 
     /**
      * Updates a neighborhood.
      *
      * @param pNeighborhoodEntity the neighborhood with the modifications. For
-     * example, the name could have changed. In that case, we must use this
-     * update method.
+     *                            example, the name could have changed. In that case, we must use
+     *                            this
+     *                            update method.
      * @return the neighborhood with the updated changes
      */
     public NeighborhoodEntity update(NeighborhoodEntity pNeighborhoodEntity) {
-        LOGGER.log(Level.INFO, "Updating neighborhood with id = {0}",
-                pNeighborhoodEntity.getId());
+        LOGGER.log(Level.INFO, "Updating neighborhood with id = {0}", pNeighborhoodEntity.getId());
         return em.merge(pNeighborhoodEntity);
     }
 
     /**
      * Deletes a neighborhood.
      * <p>
-     *
+     * <p>
      * Deletes the neighborhood with the associated Id.
      *
      * @param pNeighborhoodId the id of the neighborhood to be deleted
      */
     public void delete(Long pNeighborhoodId) {
-        LOGGER.log(Level.INFO, "Deleting neighborhood with id = {0}",
-                pNeighborhoodId);
-        NeighborhoodEntity reviewEntity = em.find(NeighborhoodEntity.class,
-                pNeighborhoodId);
+        LOGGER.log(Level.INFO, "Deleting neighborhood with id = {0}", pNeighborhoodId);
+        NeighborhoodEntity reviewEntity = em.find(NeighborhoodEntity.class, pNeighborhoodId);
         em.remove(reviewEntity);
-        LOGGER.log(Level.INFO,
-                "Exiting the deletion of neighborhood with id = {0}",
-                pNeighborhoodId);
+        LOGGER.log(Level.INFO, "Exiting the deletion of neighborhood with id = {0}",
+                   pNeighborhoodId);
     }
 
 }

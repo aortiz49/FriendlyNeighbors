@@ -20,7 +20,7 @@ public class GroupPersistence {
 
     private static final Logger LOGGER = Logger.getLogger(GroupPersistence.class.getName());
 
-    @PersistenceContext(unitName = "neighborhoodPU" )
+    @PersistenceContext(unitName = "neighborhoodPU")
     protected EntityManager em;
 
     /**
@@ -37,7 +37,6 @@ public class GroupPersistence {
         return groupEntity;
     }
 
-    
     /**
      * Returns all groups from DB.
      *
@@ -45,13 +44,13 @@ public class GroupPersistence {
      */
     public List<GroupEntity> findAll() {
         LOGGER.log(Level.INFO, "Querying for all groups");
-        
+
         TypedQuery query = em.createQuery("select u from GroupEntity u", GroupEntity.class);
-       
+
         return query.getResultList();
     }
-    
-        /**
+
+    /**
      * Looks for a group with the id given by argument
      *
      * @param groupId: id from group to be found.
@@ -59,24 +58,22 @@ public class GroupPersistence {
      */
     public GroupEntity find(Long groupId) {
         LOGGER.log(Level.INFO, "Querying for group with id={0}", groupId);
-       
-        
+
         return em.find(GroupEntity.class, groupId);
     }
 
-
-        /**
+    /**
      * Updates a group with the modified group given by argument.
      *
-     * @param groupEntity: the modified group. 
+     * @param groupEntity: the modified group.
      * @return the updated group
      */
     public GroupEntity update(GroupEntity groupEntity) {
         LOGGER.log(Level.INFO, "Updating group with id={0}", groupEntity.getId());
         return em.merge(groupEntity);
     }
-    
-        /**
+
+    /**
      * Deletes from DB a group with the id given by argument
      *
      * @param groupId: id from group to be deleted.
