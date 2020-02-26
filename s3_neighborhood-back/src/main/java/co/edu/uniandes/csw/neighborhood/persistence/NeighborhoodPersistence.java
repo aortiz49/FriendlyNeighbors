@@ -103,7 +103,7 @@ public class NeighborhoodPersistence {
     /**
      * Looks for a neighborhood with the id given by the parameter.
      *
-     * @param pNeighborhoodID the id corresponding to the neighborhood
+     * @param pNeighborhoodId the id corresponding to the neighborhood
      * @return the found neighborhood
      */
     public NeighborhoodEntity find(Long pNeighborhoodId) {

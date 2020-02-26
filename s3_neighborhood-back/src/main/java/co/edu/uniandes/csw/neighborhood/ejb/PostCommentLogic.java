@@ -122,7 +122,7 @@ public class PostCommentLogic {
      * Removes a comment from a post. Comment is no longer in DB
      *
      * @param postId Id from post
-     * @param commentId Id from comment     
+     * @param eventId Id from comment     
      */
     public void removeComment(Long postId, Long eventId) {
          LOGGER.log(Level.INFO, "Trying to delete a comment from post con id = {0}", postId);

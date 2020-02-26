@@ -34,12 +34,10 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OneToMany;
 import uk.co.jemos.podam.common.PodamExclude;
 
 /**
- * Enitity that represents a busuiness.
+ * Entity that represents a business.
  *
  * @author aortiz49
  */
@@ -57,7 +55,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     private BusinessOwnerEntity owner;
 
     /**
-     * The business' dashboard
+     * The business's dashboard
      */
     @PodamExclude
     @ManyToOne
@@ -94,7 +92,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
             cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostEntity> posts = new ArrayList<>();
 
-     /**
+    /**
      * The notifications the business receives.
      */
     @PodamExclude
@@ -131,17 +129,17 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     private double rating;
 
     /**
-     * The business' latitude.
+     * The business's latitude.
      */
     private Double latitude;
 
     /**
-     * The business' longitude.
+     * The business's longitude.s
      */
     private Double longitude;
 
     /**
-     * The business' total revenue.
+     * The business's total revenue.
      */
     private Double totalRevenue;
 
@@ -172,16 +170,16 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     }
 
     /**
-     * Returns the business' dashboard.
+     * Returns the business's dashboard.
      *
-     * @return the business' dashborad
+     * @return the business's dashboard
      */
     public DashboardEntity getDashboard() {
         return dashboard;
     }
 
     /**
-     * Sets the business' dashboard.
+     * Sets the business's dashboard.
      *
      * @param pDashboard the new business dashboard
      */
@@ -192,16 +190,16 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     /**
      * Returns the neighborhood the business is in.
      *
-     * @return the business' neighborhood
+     * @return the business's neighborhood
      */
     public NeighborhoodEntity getNeighborhood() {
         return neighborhood;
     }
 
     /**
-     * Sets the neighborhood the busness is in.
+     * Sets the neighborhood the business is in.
      *
-     * @param pNeighborhood the business' new neighborhood
+     * @param pNeighborhood the business's new neighborhood
      */
     public void setNeighborhood(NeighborhoodEntity pNeighborhood) {
         neighborhood = pNeighborhood;
@@ -226,7 +224,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     }
 
     /**
-     * Returns the list of offers the businesss has.
+     * Returns the list of offers the business has.
      *
      * @return the list of offers
      */
@@ -246,7 +244,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     /**
      * Returns the name of the business.
      *
-     * @return business' name
+     * @return business's name
      */
     public String getName() {
         return name;
@@ -264,7 +262,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     /**
      * Returns the address of the business.
      *
-     * @return the business' address
+     * @return the business's address
      */
     public String getAddress() {
         return address;
@@ -289,7 +287,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     }
 
     /**
-     * Sets the opening time of the businss.
+     * Sets the opening time of the business.
      *
      * @param pOpeningTime the new opening time of the business
      */
@@ -316,21 +314,22 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     }
 
     /**
-     * Returns the business' rating.
+     * Returns the business's rating.
      *
-     * @return the business' rating
+     * @return the business's rating
      */
     public double getRating() {
         return rating;
     }
 
     /**
-     * Sets the business' rating.
+     * Sets the business's rating.
      * <p>
      * The rating is on a scale from 1 to 5, set by a resident of the
      * neighborhood.
+     * </p>
      *
-     * @param pRating
+     * @param pRating the new business's rating
      */
     public void setRating(double pRating) {
         rating = pRating;
@@ -355,7 +354,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     }
 
     /**
-     * Retuns the longitude of the business.
+     * Returns the longitude of the business.
      *
      * @return the longitude
      */
@@ -423,13 +422,5 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     public void setNotifications(List<NotificationEntity> notifications) {
         this.notifications = notifications;
     }
-    
-    
-    
-    
-    
-    
-    
-    
 
 }

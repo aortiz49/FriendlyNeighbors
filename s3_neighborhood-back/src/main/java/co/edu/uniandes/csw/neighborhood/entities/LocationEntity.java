@@ -51,36 +51,35 @@ public class LocationEntity extends BaseEntity implements Serializable {
      * Represents the name of this location
      */
     private String name;
-    
+
     /**
      * Represents the address of this location
      */
     private String address;
-    
+
     /**
      * Represents the time this location closed from
      */
     private String closeTime;
-        
+
     /**
      * Indicates if this this location is avalaible
      */
     private Boolean available;
-    
-     /**
-     * Indicates the latitute of this location 
+
+    /**
+     * Indicates the latitute of this location
      */
     private Double latitude;
-    
-     /**
-     * Indicates the longitude of this location 
+
+    /**
+     * Indicates the longitude of this location
      */
     private Double longitude;
-    
+
 //===================================================
 // Relations
 //===================================================
-    
     /**
      * Indicates the neighborhood this location belongs to
      */
@@ -88,7 +87,6 @@ public class LocationEntity extends BaseEntity implements Serializable {
     @ManyToOne
     private NeighborhoodEntity neighborhood;
 
-    
     /**
      * Indicates the events this location will be used for
      */
@@ -98,11 +96,12 @@ public class LocationEntity extends BaseEntity implements Serializable {
             fetch = javax.persistence.FetchType.LAZY,
             cascade = CascadeType.ALL, orphanRemoval = true
     )
-    
+
     private List<EventEntity> events = new ArrayList<>();
 
     /**
      * Gets the time this location is open from
+     *
      * @return the time this location is open from
      */
     public String getOpenTime() {
@@ -111,6 +110,7 @@ public class LocationEntity extends BaseEntity implements Serializable {
 
     /**
      * Gets the name of this location
+     *
      * @return the name of this location
      */
     public String getName() {
@@ -119,6 +119,7 @@ public class LocationEntity extends BaseEntity implements Serializable {
 
     /**
      * Gets the address of this location
+     *
      * @return the address of this location
      */
     public String getAddress() {
@@ -127,6 +128,7 @@ public class LocationEntity extends BaseEntity implements Serializable {
 
     /**
      * Gets the time this location closed from
+     *
      * @return the time this location closed from
      */
     public String getCloseTime() {
@@ -134,7 +136,8 @@ public class LocationEntity extends BaseEntity implements Serializable {
     }
 
     /**
-     * Gets true  if this this location is avalaible
+     * Gets true if this this location is avalaible
+     *
      * @return true if this this location is avalaible
      */
     public Boolean getAvailable() {
@@ -142,24 +145,27 @@ public class LocationEntity extends BaseEntity implements Serializable {
     }
 
     /**
-     *  Gets the latitute of this location 
-     * @return the latitute of this location 
+     * Gets the latitude of this location
+     *
+     * @return the latitude of this location
      */
     public Double getLatitude() {
         return latitude;
     }
 
     /**
-     *  Gets the longitude of this location 
-     * @return the longitude of this location 
+     * Gets the longitude of this location
+     *
+     * @return the longitude of this location
      */
     public Double getLongitude() {
         return longitude;
     }
 
     /**
-     * Gets the neighborhood  this location belongs to
-     * @return
+     * Gets the neighborhood this location belongs to
+     *
+     * @return the neighborhood
      */
     public NeighborhoodEntity getNeighborhood() {
         return neighborhood;
@@ -167,16 +173,17 @@ public class LocationEntity extends BaseEntity implements Serializable {
 
     /**
      * Gets the events this location will be used for
+     *
      * @return the events this location will be used for
      */
     public List<EventEntity> getEvents() {
         return events;
     }
 
-
     /**
-     *Sets the time this location is open from
-     * @param openTime  the time this location is open from
+     * Sets the time this location is open from
+     *
+     * @param openTime the time this location is open from
      */
     public void setOpenTime(String openTime) {
         this.openTime = openTime;
@@ -184,6 +191,7 @@ public class LocationEntity extends BaseEntity implements Serializable {
 
     /**
      * Sets the name of this location
+     *
      * @param name the name of this location
      */
     public void setName(String name) {
@@ -192,6 +200,7 @@ public class LocationEntity extends BaseEntity implements Serializable {
 
     /**
      * Sets the address of this location
+     *
      * @param address the address of this location
      */
     public void setAddress(String address) {
@@ -200,6 +209,7 @@ public class LocationEntity extends BaseEntity implements Serializable {
 
     /**
      * Sets the time this location closed from
+     *
      * @param closeTime the time this location closed from
      */
     public void setCloseTime(String closeTime) {
@@ -207,33 +217,36 @@ public class LocationEntity extends BaseEntity implements Serializable {
     }
 
     /**
-     *Set true if this this location is avalaible
-     * @param available if this this location is avalaible
+     * Set true if this this location is avalaible
+     *
+     * @param available if this this location is available
      */
     public void setAvailable(Boolean available) {
         this.available = available;
     }
 
-
-       /**
-     *  Sets the latitude of this location 
-     * @return the latitude of this location 
+    /**
+     * Sets the latitude of this location
+     *
+     * @param latitude the latitude of this location
      */
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-       /**
-     *  Sets the longitude of this location 
-     * @return the longitude of this location 
+    /**
+     * Sets the longitude of this location
+     *
+     * @param longitude the latitude of this location
      */
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
     /**
-     * Sets the neighborhood  this location belongs to
-     * @param neighborhood 
+     * Sets the neighborhood this location belongs to
+     *
+     * @param neighborhood
      */
     public void setNeighborhood(NeighborhoodEntity neighborhood) {
         this.neighborhood = neighborhood;
@@ -241,12 +254,11 @@ public class LocationEntity extends BaseEntity implements Serializable {
 
     /**
      * Sets the events this location will be used for
+     *
      * @param events the events this location will be used for
      */
     public void setEvents(List<EventEntity> events) {
         this.events = events;
     }
 
-    
-    
 }

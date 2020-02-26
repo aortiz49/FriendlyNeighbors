@@ -102,7 +102,7 @@ public class ProductPersistence {
     /**
      * Looks for a product with the id given by the parameter.
      *
-     * @param pProductID the id corresponding to the product
+     * @param pProductId the id corresponding to the product
      * @return the found product
      */
     public ProductEntity find(Long pProductId) {

@@ -98,7 +98,5 @@ public class CommentLogic {
         return modified;
     }
 
-    
-
-
+  
 }

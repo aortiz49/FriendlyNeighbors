@@ -146,7 +146,7 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
     }
 
     /**
-     * Sets the list of places of interest int he neighborhood
+     * Sets the list of places of interest in the neighborhood
      * 
      * @param pPlaces the new list of places of interest 
      */
@@ -175,7 +175,7 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
     /**
      * Returns the name of the municipality the neighborhood is in.
      *
-     * @return
+     * @return the municipality name
      */
     public String getMunicipality() {
         return municipality;

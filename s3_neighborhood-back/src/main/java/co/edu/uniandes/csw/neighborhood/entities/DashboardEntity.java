@@ -82,7 +82,7 @@ public class DashboardEntity extends BaseEntity implements Serializable {
     /**
      * Sets the new businesses associated with the dashboard.
      *
-     * @param pBusiness the new associated business
+     * @param pBusinesses the new associated business
      */
     public void setBusiness(List<BusinessEntity> pBusinesses) {
         businesses = pBusinesses;

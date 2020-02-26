@@ -142,8 +142,9 @@ public class ResidentProfileLogic {
     /**
      * Updates a resident
      *
-     * @param resident to be updated
+     * @param residentEntity to be updated
      * @return the entity with the updated resident 
+     * @throws BusinessLogicException exception
      */
     public ResidentProfileEntity updateResident(ResidentProfileEntity residentEntity) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Starting update process for resident with id ", residentEntity.getId());

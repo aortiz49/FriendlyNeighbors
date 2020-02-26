@@ -65,9 +65,8 @@ public class BusinessPersistence {
     /**
      * Persists a business in the database.
      *
-     * @param pBusinessEntity business object to be created in the
-     * databse
-     * @return the created business with an id given by the databse
+     * @param pBusinessEntity business object to be created in the database
+     * @return the created business with an id given by the database
      */
     public BusinessEntity create(BusinessEntity pBusinessEntity) {
         // logs a message
@@ -83,9 +82,8 @@ public class BusinessPersistence {
     /**
      * Returns all businesses in the database.
      *
-     * @return a list containing every business in the database. 
-     * "select u from BusinessUntity u" is akin to: 
-     * "SELECT * from BusinessEntity" in SQL.
+     * @return a list containing every business in the database. "select u from
+     * BusinessUntity u" is akin to: "SELECT * from BusinessEntity" in SQL.
      */
     public List<BusinessEntity> findAll() {
         // log the consultation
@@ -102,7 +100,7 @@ public class BusinessPersistence {
     /**
      * Looks for a business with the id given by the parameter.
      *
-     * @param pBusinessID the id corresponding to the business
+     * @param pBusinessId the id corresponding to the business
      * @return the found business
      */
     public BusinessEntity find(Long pBusinessId) {
@@ -115,9 +113,9 @@ public class BusinessPersistence {
     /**
      * Updates a business.
      *
-     * @param pBusinessEntity the business with the modifications. For
-     * example, the name could have changed. In that case, we must use this
-     * update method.
+     * @param pBusinessEntity the business with the modifications. For example,
+     * the name could have changed. In that case, we must use this update
+     * method.
      * @return the business with the updated changes
      */
     public BusinessEntity update(BusinessEntity pBusinessEntity) {

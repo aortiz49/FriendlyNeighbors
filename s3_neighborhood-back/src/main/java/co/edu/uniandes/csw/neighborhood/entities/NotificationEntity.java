@@ -56,12 +56,12 @@ public class NotificationEntity extends BaseEntity implements Serializable {
     private String description;
 
     /**
-     * Inicates if this notification has been seen by at least one user
+     * Indicates if this notification has been seen by at least one user
      */
     private boolean seen;
 
     /**
-     * Inicates the  priority of this  notification
+     * Indicates the  priority of this  notification
      */
     @Enumerated(EnumType.STRING)
     private Priority priority;
@@ -72,7 +72,7 @@ public class NotificationEntity extends BaseEntity implements Serializable {
 //===================================================
     
     /**
-     * Inicates the  sender of this  notification
+     * Indicates the  sender of this  notification
      */
     @PodamExclude
     @ManyToOne
@@ -157,7 +157,7 @@ public class NotificationEntity extends BaseEntity implements Serializable {
     /**
      * Sets isSeen.
      *
-     * @param isSeen value of isSeen
+     * @param seen value of isSeen
      */
     public void setSeen(boolean seen) {
         this.seen = seen;

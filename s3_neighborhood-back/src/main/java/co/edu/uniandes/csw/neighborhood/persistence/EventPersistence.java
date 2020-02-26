@@ -98,7 +98,7 @@ public class EventPersistence {
     /**
      * Looks for a event with the id given by the parameter.
      *
-     * @param pEventID the id corresponding to the event
+     * @param pEventId the id corresponding to the event
      * @return the found event
      */
     public EventEntity find(Long pEventId) {
