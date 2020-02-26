@@ -38,11 +38,26 @@ public class GroupLogic {
             throw new BusinessLogicException("A name has to be specified");
         }
         
-         //must have a category
-        if(groupEntity.getName()== null){
-            throw new BusinessLogicException("A name has to be specified");
+         //must have a description
+        if(groupEntity.getDescription()== null){
+            throw new BusinessLogicException("A description has to be specified");
         }
        
+       //must have a creation date
+        if(groupEntity.getDateCreated()== null){
+            throw new BusinessLogicException("A creation date has to be specified");
+        }
+        
+         //must have a creation date
+        if(groupEntity.getDateCreated()== null){
+            throw new BusinessLogicException("A creation date has to be specified");
+        }
+        
+        
+                 //must have a description
+        if(groupEntity.getDescription()== null){
+            throw new BusinessLogicException("A name has to be specified");
+        }
 
         persistence.create(groupEntity);
         LOGGER.log(Level.INFO, "Creation process for group eneded");
@@ -75,20 +90,33 @@ public class GroupLogic {
         return resident;
     }
 
-    
-    
-
+     /**
+     * Updates a group
+     *
+     * @param groupEntity to be updated
+     * @return the entity with the updated group 
+     */
     public GroupEntity updateGroup(GroupEntity groupEntity) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Starting update process for group with id ", groupEntity.getId());
 
-       //must have a name
+         //must have a name
         if(groupEntity.getName()== null){
             throw new BusinessLogicException("A name has to be specified");
         }
         
-         //must have a category
-        if(groupEntity.getName()== null){
-            throw new BusinessLogicException("A name has to be specified");
+         //must have a description
+        if(groupEntity.getDescription()== null){
+            throw new BusinessLogicException("A description has to be specified");
+        }
+       
+       //must have a creation date
+        if(groupEntity.getDateCreated()== null){
+            throw new BusinessLogicException("A creation date has to be specified");
+        }
+        
+         //must have a creation date
+        if(groupEntity.getDateCreated()== null){
+            throw new BusinessLogicException("A creation date has to be specified");
         }
         
 

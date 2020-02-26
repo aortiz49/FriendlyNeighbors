@@ -42,7 +42,6 @@ public class PostLogic {
         if(postEntity.getDescription()== null){
             throw new BusinessLogicException("A description has to be specified");
         }
-       
 
         persistence.create(postEntity);
         LOGGER.log(Level.INFO, "Creation process for post eneded");

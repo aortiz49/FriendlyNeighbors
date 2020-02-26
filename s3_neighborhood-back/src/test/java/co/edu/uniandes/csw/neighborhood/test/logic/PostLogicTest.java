@@ -9,8 +9,10 @@ import co.edu.uniandes.csw.neighborhood.ejb.PostLogic;
 import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
 
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
+import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -43,6 +45,12 @@ public class PostLogicTest {
 
     @Inject
     private PostLogic postLogic;
+   
+    @Inject
+    private NeighborhoodPersistence neighPersistence;
+    
+    @Inject
+    private ResidentProfilePersistence residentPersistence;
     
     /**
      * The entity manager that will verify data directly with the database.
@@ -128,10 +136,23 @@ public class PostLogicTest {
     @Test
     public void createPostTest() {
         
+        
+        NeighborhoodEntity neigh   = factory.manufacturePojo(NeighborhoodEntity.class);
+        neighPersistence.create(neigh);
+        
+        ResidentProfileEntity resident = factory.manufacturePojo(ResidentProfileEntity.class);        
+        resident.setNeighborhood(neigh);
+        
+        residentPersistence.create(resident);
+        
+
          // uses the factory to create a ranbdom NeighborhoodEntity object
         PostEntity newPost = factory.manufacturePojo(PostEntity.class);
+        newPost.setAuthor(resident);
                 
-              
+        
+        
+        
         // invokes the method to be tested (create): it creates a table in the 
         // database. The parameter of this method is the newly created object from 
         // the podam factory which has an id associated to it. 

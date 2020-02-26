@@ -57,9 +57,11 @@ public class CommentEntity extends BaseEntity implements Serializable {
     /**
      * The post the comment belongs to.
      */
+
     @PodamExclude
     @ManyToOne
     private PostEntity post;
+    
 
 //===================================================
 // Attributes
@@ -79,76 +81,39 @@ public class CommentEntity extends BaseEntity implements Serializable {
 //===================================================
 // Getters & Setters
 //===================================================
-    /**
-     * Returns the post the comment belongs to.
-     *
-     * @return the post the comment beongs to
-     */
-    public PostEntity getPost() {
-        return post;
-    }
 
-    /**
-     * Sets the post the comment belongs to.
-     *
-     * @param pPost the new post the comment belongs to
-     */
-    public void setPost(PostEntity pPost) {
-        this.post = post;
-    }
-
-    /**
-     * Returns the date on which the comment was posted.
-     *
-     * @return the date this comment was posted
-     */
-    public Date getDate() {
-        return date;
-    }
-
-    /**
-     * Sets the date on which the comment was posted
-     *
-     * @param pDate new date on which the comment was posted
-     */
-    public void setDate(Date pDate) {
-        date = pDate;
-    }
-
-    /**
-     * Returns the text body of the comment.
-     *
-     * @return the text body of the comment
-     */
-    public String getText() {
-        return text;
-    }
-
-    /**
-     * Sets the text body of the comment.
-     *
-     * @param pText the new text body of the comment
-     */
-    public void setText(String pText) {
-        text = pText;
-    }
-
-    /**
-     * Returns the author of the post.
-     *
-     * @return the author of the post.
-     */
     public ResidentProfileEntity getAuthor() {
         return author;
     }
 
-    /**
-     * Sets the author of the post.
-     *
-     * @param pAuthor the new author of the post.
-     */
-    public void setAuthor(ResidentProfileEntity pAuthor) {
-        author = pAuthor;
+    public PostEntity getPost() {
+        return post;
     }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setAuthor(ResidentProfileEntity author) {
+        this.author = author;
+    }
+
+    public void setPost(PostEntity post) {
+        this.post = post;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    
 
 }

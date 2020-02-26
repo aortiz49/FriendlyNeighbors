@@ -106,121 +106,65 @@ public class PostEntity extends BaseEntity implements Serializable{
 //===================================================
 // Getters & Setters
 //===================================================  
-       /**
-     * Gets publishDate.
-     *
-     * @return value of publishDate
-     */
+
     public Date getPublishDate() {
         return publishDate;
     }
 
-    /**
-     * Gets title.
-     *
-     * @return value of title
-     */
     public String getTitle() {
         return title;
     }
 
-    /**
-     * Gets description.
-     *
-     * @return value of description
-     */
     public String getDescription() {
         return description;
     }
 
-    /**
-     * Gets numberOfLikes.
-     *
-     * @return value of numberOfLikes
-     */
     public Integer getNumberOfLikes() {
         return numberOfLikes;
     }
 
-    /**
-     * Sets publishDate.
-     *
-     * @param publishDate value of publishDate
-     */
-    public void setPublishDate(Date publishDate) {
-        this.publishDate = publishDate;
-    }
-
-    /**
-     * Sets title.
-     *
-     * @param title value of title
-     */
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    /**
-     * Sets description.
-     *
-     * @param description value of description
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Sets numberOfLikes.
-     *
-     * @param numberOfLikes value of numberOfLikes
-     */
-    public void setNumberOfLikes(Integer numberOfLikes) {
-        this.numberOfLikes = numberOfLikes;
-    }
-
-    /**
-     * Gets the author of this post
-     * @return the author of this post
-     */
     public ResidentProfileEntity getAuthor() {
         return author;
-    }
-
-    /**
-     * Gets the users this post is visible to
-     * @return the users this post is visible to
-     */
-    public List<ResidentProfileEntity> getViewers() {
-        return viewers;
-    }
-
-    /**
-     * Gets the comments of this post
-     * @return the comments of this post
-     */
-    public List<CommentEntity> getComments() {
-        return comments;
-    }
-
-    
-    /**
-     * Represents the group this post is shared with
-     * @return the group this post is shared with
-     */
-    public GroupEntity getGroup() {
-        return group;
     }
 
     public BusinessEntity getBusiness() {
         return business;
     }
 
-    public void setBusiness(BusinessEntity business) {
-        this.business = business;
+    public List<ResidentProfileEntity> getViewers() {
+        return viewers;
+    }
+
+    public List<CommentEntity> getComments() {
+        return comments;
+    }
+
+    public GroupEntity getGroup() {
+        return group;
+    }
+
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setNumberOfLikes(Integer numberOfLikes) {
+        this.numberOfLikes = numberOfLikes;
     }
 
     public void setAuthor(ResidentProfileEntity author) {
         this.author = author;
+    }
+
+    public void setBusiness(BusinessEntity business) {
+        this.business = business;
     }
 
     public void setViewers(List<ResidentProfileEntity> viewers) {
@@ -234,6 +178,10 @@ public class PostEntity extends BaseEntity implements Serializable{
     public void setGroup(GroupEntity group) {
         this.group = group;
     }
+
+    
+    
+    
     
     
     
