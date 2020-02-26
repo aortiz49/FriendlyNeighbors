@@ -19,6 +19,7 @@ import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 /**
  *
  * @author albayona
+
  */
 @Stateless
 public class CommentLogic {
@@ -32,18 +33,18 @@ public class CommentLogic {
     
       public CommentEntity createComment(CommentEntity commentEntity) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creation process for comment has started");
-        
+
          //must have a text
         if(commentEntity.getText()== null){
             throw new BusinessLogicException("A text has to be specified");
         }
         
-         //must have a date
+        //must have a date
         if(commentEntity.getDate()== null){
             throw new BusinessLogicException("A date has to be specified");
         }
-       
-
+        
+        
         persistence.create(commentEntity);
         LOGGER.log(Level.INFO, "Creation process for comment eneded");
         
@@ -75,24 +76,21 @@ public class CommentLogic {
         return resident;
     }
 
-    
-    
+      
 
     public CommentEntity updateComment(CommentEntity commentEntity) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Starting update process for comment with id ", commentEntity.getId());
         
-        CommentEntity original  = persistence.find(commentEntity.getId());
-
          //must have a text
         if(commentEntity.getText()== null){
             throw new BusinessLogicException("A text has to be specified");
         }
         
-         //must have a date
+        //must have a date
         if(commentEntity.getDate()== null){
             throw new BusinessLogicException("A date has to be specified");
         }
-
+        
         CommentEntity modified = persistence.update(commentEntity);
         LOGGER.log(Level.INFO, "Ended update process for comment with id ", commentEntity.getId());
         return modified;

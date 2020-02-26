@@ -38,9 +38,9 @@ import javax.inject.Inject;
  * @author albayona
  */
 @Stateless
-public class PostCommentLogic {
+public class PostComment {
 
-    private static final Logger LOGGER = Logger.getLogger(PostCommentLogic.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(PostComment.class.getName());
 
     @Inject
     private CommentPersistence commentPersistence;
@@ -49,85 +49,85 @@ public class PostCommentLogic {
     private PostPersistence postPersistence;
 
     /**
-     * Associates a comment with a post
+     * Associates a comment with a resident
      *
-     * @param postId ID from post entity
-     * @param commentId ID from comment entity
+     * @param residentId ID from resident entity
+     * @param eventId ID from comment entity
      * @return associated comment entity
      */
-    public CommentEntity associateCommentToResident(Long commentId, Long postId) {
-       LOGGER.log(Level.INFO, "Trying to add comment to post with id = {0}", postId);
-        PostEntity PostEntity = postPersistence.find(postId);
+    public CommentEntity associateCommentToResident(Long commentId, Long residentId) {
+       LOGGER.log(Level.INFO, "Trying to add comment to resident with id = {0}", residentId);
+        PostEntity PostEntity = postPersistence.find(residentId);
         CommentEntity CommentEntity = commentPersistence.find(commentId);
         CommentEntity.setPost(PostEntity);
-      LOGGER.log(Level.INFO, "Comment is associated with post with id = {0}", postId);
+      LOGGER.log(Level.INFO, "Comment is associated with resident with id = {0}", residentId);
         return CommentEntity;
     }
 
     /**
     /**
-     * Gets a collection of comments entities associated with a post 
-     * @param postId ID from post entity
-     * @return collection of comment entities associated with a post 
+     * Gets a collection of comments entities associated with a resident 
+     * @param residentId ID from resident entity
+     * @return collection of comment entities associated with a resident 
      */
-    public List<CommentEntity> getComments(Long postId) {
-          LOGGER.log(Level.INFO, "Gets all comments belonging to post with id = {0}", postId);
-        return postPersistence.find(postId).getComments();
+    public List<CommentEntity> getComments(Long residentId) {
+          LOGGER.log(Level.INFO, "Gets all comments belonging to resident with id = {0}", residentId);
+        return postPersistence.find(residentId).getComments();
     }
 
  /**
-     * Gets a comment entity associated with  a post
+     * Gets a comment entity associated with  a resident
      *
-     * @param postId Id from post
+     * @param residentId Id from resident
      * @param commentId Id from associated entity
      * @return associated entity
      * @throws BusinessLogicException If event is not associated 
      */
-    public CommentEntity getComment(Long postId, Long commentId) throws BusinessLogicException {
-              LOGGER.log(Level.INFO, "Finding event with id = {0} from post with = " + postId, commentId);
-        List<CommentEntity> comments = postPersistence.find(postId).getComments();
+    public CommentEntity getComment(Long residentId, Long commentId) throws BusinessLogicException {
+              LOGGER.log(Level.INFO, "Finding event with id = {0} from resident with = " + residentId, commentId);
+        List<CommentEntity> comments = postPersistence.find(residentId).getComments();
         CommentEntity CommentEntity = commentPersistence.find(commentId);
         int index = comments.indexOf(CommentEntity);
-            LOGGER.log(Level.INFO, "Finish query about event with id = {0} from post with = " + postId, commentId);
+            LOGGER.log(Level.INFO, "Finish query about event with id = {0} from resident with = " + residentId, commentId);
         if (index >= 0) {
             return comments.get(index);
         }
-        throw new BusinessLogicException("Comment is no associated with post");
+        throw new BusinessLogicException("Comment is not associated with resident");
     }
 
 
   /**
-     * Replaces comments associated with a post
+     * Replaces comments associated with a resident
      *
-     * @param postId Id from post
-     * @param comments Collection of comment to associate with post
-     * @return A new collection associated to post
+     * @param residentId Id from resident
+     * @param comments Collection of comment to associate with resident
+     * @return A new collection associated to resident
      */
-    public List<CommentEntity> replaceComments(Long postId, List<CommentEntity> comments) {
-       LOGGER.log(Level.INFO, "Trying to replace comments related to post con id = {0}", postId);
-        PostEntity post = postPersistence.find(postId);
+    public List<CommentEntity> replaceComments(Long residentId, List<CommentEntity> comments) {
+       LOGGER.log(Level.INFO, "Trying to replace comments related to resident con id = {0}", residentId);
+        PostEntity resident = postPersistence.find(residentId);
         List<CommentEntity> commentList = commentPersistence.findAll();
         for (CommentEntity comment : commentList) {
             if (comments.contains(comment)) {
-                comment.setPost(post);
-            } else if (comment.getAuthor()!= null && comment.getAuthor().equals(post)) {
+                comment.setPost(resident);
+            } else if (comment.getAuthor()!= null && comment.getAuthor().equals(resident)) {
                 comment.setAuthor(null);
             }
         }
-        LOGGER.log(Level.INFO, "Ended trying to replace comments related to post con id = {0}", postId);
+        LOGGER.log(Level.INFO, "Ended trying to replace comments related to resident con id = {0}", residentId);
         return comments;
     }
     
     /**
-     * Removes a comment from a post. Comment is no longer in DB
+     * Removes a comment from a resident. Comment is no longer in DB
      *
-     * @param postId Id from post
+     * @param residentId Id from resident
      * @param eventId Id from comment     
      */
-    public void removeComment(Long postId, Long eventId) {
-         LOGGER.log(Level.INFO, "Trying to delete a comment from post con id = {0}", postId);
-      commentPersistence.delete(postId);
+    public void removeComment(Long residentId, Long eventId) {
+         LOGGER.log(Level.INFO, "Trying to delete a comment from resident con id = {0}", residentId);
+      commentPersistence.delete(residentId);
 
-       LOGGER.log(Level.INFO, "Finished removing a comment from post con id = {0}", postId);
+       LOGGER.log(Level.INFO, "Finished removing a comment from resident con id = {0}", residentId);
         }
 }

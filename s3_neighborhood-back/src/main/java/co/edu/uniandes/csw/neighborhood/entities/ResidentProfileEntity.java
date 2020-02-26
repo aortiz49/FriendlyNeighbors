@@ -175,6 +175,8 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     @PodamExclude
     @ManyToOne
     private NeighborhoodEntity neighborhood;
+    
+    
 
     public String getPhoneNumber() {
         return phoneNumber;

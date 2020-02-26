@@ -55,6 +55,8 @@ public class FavorEntity extends BaseEntity implements Serializable {
     
     private Boolean isHelpWanted;
 
+      
+    
     /**
      * @return the datePosted
      */
@@ -135,5 +137,6 @@ public class FavorEntity extends BaseEntity implements Serializable {
     public void setIsHelpWanted(Boolean isHelpWanted) {
         this.isHelpWanted = isHelpWanted;
     }
+    
 
 }
