@@ -50,7 +50,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
  * @author albayona
  */
 @RunWith(Arquillian.class)
-public class PostCommentLogicTest {
+public class CommentPostLogicTest {
 
     private PodamFactory factory = new PodamFactoryImpl();
 
