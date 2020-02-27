@@ -15,7 +15,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.xml.stream.events.Comment;
 import uk.co.jemos.podam.common.PodamExclude;
 
 /**
@@ -59,41 +58,35 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
      */
     private String preferences;
 
-
     /**
      * Represents a link to a proof of residence file of this resident
      */
     private String proofOfResidence;
 
-
 //===================================================
 // Relations
 //===================================================
-    
-    
-    
     /**
      * Events a resident is signed up for.
      */
     @PodamExclude
     @ManyToMany(mappedBy = "attendees")
     private List<EventEntity> eventsToAttend = new ArrayList<>();
-    
+
     /**
      * Favors a resident is signed up to complete.
      */
     @PodamExclude
     @ManyToMany(mappedBy = "candidates", fetch = FetchType.EAGER)
-    private List<FavorEntity> favorsToHelp = new ArrayList() ;
-    
-        /**
+    private List<FavorEntity> favorsToHelp = new ArrayList();
+
+    /**
      * Posts shared with this resident.
      */
     @PodamExclude
     @ManyToMany(mappedBy = "viewers", fetch = FetchType.EAGER)
-    private List<PostEntity> postsToView = new ArrayList() ;
+    private List<PostEntity> postsToView = new ArrayList();
 
-  
     /**
      * Represents favors requested by this resident
      */
@@ -160,14 +153,20 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     @PodamExclude
     @ManyToMany(mappedBy = "members", fetch = FetchType.EAGER)
     private List<GroupEntity> groups = new ArrayList<>();
-    
-      /**
+
+    /**
      * Represents comments posted by this resident
      */
     @PodamExclude
     @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
     private List<CommentEntity> comments = new ArrayList<>();
     
+    /**
+     * Represents businesses owned by this resident
+     */
+    @PodamExclude
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    private List<BusinessEntity> businesses = new ArrayList<>();
 
     /**
      * Represents the neighborhood of this resident
@@ -175,8 +174,6 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     @PodamExclude
     @ManyToOne
     private NeighborhoodEntity neighborhood;
-    
-    
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -225,7 +222,6 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     public List<NotificationEntity> getNotifications() {
         return notifications;
     }
-    
 
     public List<PostEntity> getPosts() {
         return posts;
@@ -331,6 +327,4 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
         this.postsToView = postsToView;
     }
 
-
-   
 }

@@ -27,13 +27,8 @@ package co.edu.uniandes.csw.neighborhood.entities;
 //===================================================
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import uk.co.jemos.podam.common.PodamExclude;
 
 /**
@@ -48,58 +43,21 @@ public class BusinessEntity extends BaseEntity implements Serializable {
 //===================================================
 
     /**
-     * The owner of the business.
-     */
-    @PodamExclude
-    @ManyToOne
-    private BusinessOwnerEntity owner;
-
-    /**
-     * The business's dashboard
-     */
-    @PodamExclude
-    @ManyToOne
-    private DashboardEntity dashboard;
-
-    /**
      * The neighborhood the business belongs to.
      */
     @PodamExclude
     @ManyToOne
     private NeighborhoodEntity neighborhood;
-
-    /**
-     * The products the business sells.
+    
+     /**
+     * The resident the business belongs to.
      */
     @PodamExclude
-    @OneToMany(mappedBy = "business", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductEntity> products = new ArrayList<>();
+    @ManyToOne
+    private ResidentProfileEntity owner;
 
-    /**
-     * The offers the business has on its products.
-     */
-    @PodamExclude
-    @OneToMany(mappedBy = "business", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OfferEntity> offers = new ArrayList<>();
 
-    /**
-     * The posts the business publishes.
-     */
-    @PodamExclude
-    @OneToMany(mappedBy = "business", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostEntity> posts = new ArrayList<>();
-
-    /**
-     * The notifications the business receives.
-     */
-    @PodamExclude
-    @OneToMany(mappedBy = "business", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<NotificationEntity> notifications = new ArrayList<>();
-
+ 
 //===================================================
 // Attributes
 //===================================================
@@ -151,96 +109,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
 //===================================================
 // Getters & Setters
 //===================================================
-    /**
-     * Returns the owner of the business.
-     *
-     * @return the business owner
-     */
-    public BusinessOwnerEntity getOwner() {
-        return owner;
-    }
-
-    /**
-     * Sets the owner of the business.
-     *
-     * @param pOwner the new business owner
-     */
-    public void setOwner(BusinessOwnerEntity pOwner) {
-        owner = pOwner;
-    }
-
-    /**
-     * Returns the business's dashboard.
-     *
-     * @return the business's dashboard
-     */
-    public DashboardEntity getDashboard() {
-        return dashboard;
-    }
-
-    /**
-     * Sets the business's dashboard.
-     *
-     * @param pDashboard the new business dashboard
-     */
-    public void setDashboard(DashboardEntity pDashboard) {
-        dashboard = pDashboard;
-    }
-
-    /**
-     * Returns the neighborhood the business is in.
-     *
-     * @return the business's neighborhood
-     */
-    public NeighborhoodEntity getNeighborhood() {
-        return neighborhood;
-    }
-
-    /**
-     * Sets the neighborhood the business is in.
-     *
-     * @param pNeighborhood the business's new neighborhood
-     */
-    public void setNeighborhood(NeighborhoodEntity pNeighborhood) {
-        neighborhood = pNeighborhood;
-    }
-
-    /**
-     * Returns the list of products in the business.
-     *
-     * @return list of products
-     */
-    public List<ProductEntity> getProducts() {
-        return products;
-    }
-
-    /**
-     * Sets the list of products in the business.
-     *
-     * @param pProducts the new list of products
-     */
-    public void setProducts(List<ProductEntity> pProducts) {
-        products = pProducts;
-    }
-
-    /**
-     * Returns the list of offers the business has.
-     *
-     * @return the list of offers
-     */
-    public List<OfferEntity> getOffers() {
-        return offers;
-    }
-
-    /**
-     * Sets the list of offers the business has.
-     *
-     * @param pOffers the new list of offers
-     */
-    public void setOffers(List<OfferEntity> pOffers) {
-        offers = pOffers;
-    }
-
+   
     /**
      * Returns the name of the business.
      *
@@ -405,22 +274,6 @@ public class BusinessEntity extends BaseEntity implements Serializable {
      */
     public void setPercentOfProductsSold(Double pPercentOfProductsSold) {
         percentOfProductsSold = pPercentOfProductsSold;
-    }
-
-    public List<PostEntity> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<PostEntity> posts) {
-        this.posts = posts;
-    }
-
-    public List<NotificationEntity> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(List<NotificationEntity> notifications) {
-        this.notifications = notifications;
     }
 
 }
