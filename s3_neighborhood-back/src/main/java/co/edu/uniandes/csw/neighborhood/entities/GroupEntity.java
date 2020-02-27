@@ -81,56 +81,91 @@ public class GroupEntity extends BaseEntity implements Serializable {
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<PostEntity> posts = new ArrayList<>();
-    
-    
+
+    /**
+     * @return the dateCreated
+     */
     public Date getDateCreated() {
         return dateCreated;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public List<ResidentProfileEntity> getMembers() {
-        return members;
-    }
-
-    public List<PostEntity> getPosts() {
-        return posts;
-    }
-
+    /**
+     * @param dateCreated the dateCreated to set
+     */
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
     }
 
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * @return the members
+     */
+    public List<ResidentProfileEntity> getMembers() {
+        return members;
+    }
+
+    /**
+     * @param members the members to set
+     */
     public void setMembers(List<ResidentProfileEntity> members) {
         this.members = members;
     }
 
-    public void setPosts(List<PostEntity> posts) {
-        this.posts = posts;
-    }
-
+    /**
+     * @return the neighborhood
+     */
     public NeighborhoodEntity getNeighborhood() {
         return neighborhood;
     }
 
+    /**
+     * @param neighborhood the neighborhood to set
+     */
     public void setNeighborhood(NeighborhoodEntity neighborhood) {
         this.neighborhood = neighborhood;
     }
 
+    /**
+     * @return the posts
+     */
+    public List<PostEntity> getPosts() {
+        return posts;
+    }
+
+    /**
+     * @param posts the posts to set
+     */
+    public void setPosts(List<PostEntity> posts) {
+        this.posts = posts;
+    }
+    
 
 
 }

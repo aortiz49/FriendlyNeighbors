@@ -21,47 +21,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package co.edu.uniandes.csw.neighborhood.entities;
+package co.edu.uniandes.csw.neighborhood.dtos;
 //===================================================
 // Imports
-//===================================================
 
-import co.edu.uniandes.csw.neighborhood.podam.DateStrategy;
+import co.edu.uniandes.csw.neighborhood.entities.CommentEntity;
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import uk.co.jemos.podam.common.PodamExclude;
-import uk.co.jemos.podam.common.PodamStrategyValue;
 
+//===================================================
 /**
  * This class represents a comment made in a post
  *
  * @author albayona
  */
-@Entity
-public class CommentEntity extends BaseEntity implements Serializable {
-
-//===================================================
-// Relations
-//===================================================
-    /**
-     * The author of this comment.
-     */
-    @PodamExclude
-    @ManyToOne
-    private ResidentProfileEntity author;
-
-    /**
-     * The post the comment belongs to.
-     */
-
-    @PodamExclude
-    @ManyToOne
-    private PostEntity post;
-    
+public class CommentDTO implements Serializable {
 
 //===================================================
 // Attributes
@@ -69,8 +43,6 @@ public class CommentEntity extends BaseEntity implements Serializable {
     /**
      * Represents the date this comment was posted.
      */
-    @Temporal(TemporalType.DATE)
-    @PodamStrategyValue(DateStrategy.class)
     private Date date;
 
     /**
@@ -78,36 +50,31 @@ public class CommentEntity extends BaseEntity implements Serializable {
      */
     private String text;
 
-//===================================================
-// Getters & Setters
-//===================================================
-
     /**
-     * @return the author
+     * Creates a comment DTO from a comment entity.
+     *
+     * @param entityComment entity from which DTO is to be created
+     *
      */
-    public ResidentProfileEntity getAuthor() {
-        return author;
+    public CommentDTO(CommentEntity entityComment) {
+        this.date = entityComment.getDate();
+        this.text = entityComment.getText();
+
     }
 
     /**
-     * @param author the author to set
+     * Converts a comment DTO to a comment entity.
+     *
+     * @return new comment entity
+     *
      */
-    public void setAuthor(ResidentProfileEntity author) {
-        this.author = author;
-    }
+    public CommentEntity toEntity() {
+        CommentEntity commentEntity = new CommentEntity();
 
-    /**
-     * @return the post
-     */
-    public PostEntity getPost() {
-        return post;
-    }
+        commentEntity.setDate(getDate());
+        commentEntity.setText(getText());
 
-    /**
-     * @param post the post to set
-     */
-    public void setPost(PostEntity post) {
-        this.post = post;
+        return commentEntity;
     }
 
     /**
@@ -139,5 +106,6 @@ public class CommentEntity extends BaseEntity implements Serializable {
     }
 
     
-
+    
+    
 }

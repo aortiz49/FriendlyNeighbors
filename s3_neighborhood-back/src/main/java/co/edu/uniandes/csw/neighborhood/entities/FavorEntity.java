@@ -55,6 +55,7 @@ public class FavorEntity extends BaseEntity implements Serializable {
     
     private Boolean isHelpWanted;
 
+
       
     
     /**

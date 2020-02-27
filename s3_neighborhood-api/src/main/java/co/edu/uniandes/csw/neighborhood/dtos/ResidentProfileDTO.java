@@ -1,0 +1,188 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package co.edu.uniandes.csw.neighborhood.dtos;
+
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
+import java.io.Serializable;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+
+/**
+ * This class represent a resident in a neighborhood
+ *
+ * @author albayona
+ */
+
+public class ResidentProfileDTO  implements Serializable {
+
+//===================================================
+// Attributes
+//===================================================  
+    /**
+     * Represents phone number of this resident
+     */
+    private String phoneNumber;
+
+    /**
+     * Represents email of this resident
+     */
+    private String email;
+
+    /**
+     * Represents the name of this resident
+     */
+    private String name;
+
+    /**
+     * Represents nickname of this resident
+     */
+    private String nickname;
+
+    /**
+     * The resident's address.
+     */
+    private String address;
+
+    /**
+     * Represents preferences of this resident
+     */
+    private String preferences;
+
+    public ResidentProfileDTO() {
+    }
+
+
+    
+       /**
+     * Creates a resident DTO from a resident entity.
+     *
+     * @param residentEntity entity from which DTO is to be created
+     *
+     */
+    public ResidentProfileDTO(ResidentProfileEntity residentEntity) {
+        if (residentEntity != null) {
+        this.phoneNumber = residentEntity.getPhoneNumber();
+        this.email = residentEntity.getEmail();
+        this.name = residentEntity.getName();
+        this.nickname = residentEntity.getNickname();
+        this.address = residentEntity.getAddress();
+        this.preferences = residentEntity.getPreferences();
+             
+        }
+    } 
+    
+                 
+        
+    
+
+    /**
+     * Converts a resident DTO to a resident entity.
+     *
+     * @return new resident entity
+     *
+     */
+    public ResidentProfileEntity toEntity() {
+        ResidentProfileEntity residentEntity = new ResidentProfileEntity();
+	residentEntity.setPhoneNumber(getPhoneNumber());
+	residentEntity.setEmail(getEmail());
+	residentEntity.setName(getName());
+	residentEntity.setNickname(getNickname());
+	residentEntity.setAddress(getAddress());
+	residentEntity.setPreferences(getPreferences());
+        return residentEntity;
+    }
+
+    /**
+     * @return the phoneNumber
+     */
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    /**
+     * @param phoneNumber the phoneNumber to set
+     */
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    /**
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @return the nickname
+     */
+    public String getNickname() {
+        return nickname;
+    }
+
+    /**
+     * @param nickname the nickname to set
+     */
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    /**
+     * @return the address
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * @param address the address to set
+     */
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    /**
+     * @return the preferences
+     */
+    public String getPreferences() {
+        return preferences;
+    }
+
+    /**
+     * @param preferences the preferences to set
+     */
+    public void setPreferences(String preferences) {
+        this.preferences = preferences;
+    }
+    
+        @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+    }
+
+}
