@@ -111,6 +111,33 @@ public class BusinessPersistence {
     }
 
     /**
+     * Finds a business by name.
+     *
+     * @param pName the name of the business to 
+     * @return null if the business doesn't exist. If the business exists, return the first one
+     */
+    public BusinessEntity findByName(String pName) {
+        LOGGER.log(Level.INFO, "Consulting business by name ", pName);
+
+        // creates a query to search for books with the name given by the parameter. ":pName" is a placeholder that must be replaced
+        TypedQuery query = em.createQuery("Select e From BusinessEntity e where e.name = :pName", BusinessEntity.class);
+        
+        // the "pName" placeholder is replaced with the name of the parameter
+        query = query.setParameter("pName", pName);
+
+        // invokes the query and returns a list of results
+        List<BusinessEntity> sameName = query.getResultList();
+        BusinessEntity result;
+        if (sameName == null || sameName.isEmpty()) {
+            result = null;
+        } else {
+            result = sameName.get(0);
+        }
+        LOGGER.log(Level.INFO, "Exiting consultation of business by name ", pName);
+        return result;
+    }
+
+    /**
      * Updates a business.
      *
      * @param pBusinessEntity the business with the modifications. For example,
