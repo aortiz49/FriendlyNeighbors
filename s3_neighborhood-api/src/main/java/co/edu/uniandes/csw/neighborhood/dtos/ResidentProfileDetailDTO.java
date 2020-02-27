@@ -63,10 +63,7 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
      */
     private List<EventDTO> events;
 
-    /**
-     * Represents events posted by this resident
-     */
-    private ResidentLoginDTO login;
+
 
     /**
      * Represents groups this resident is part of
@@ -78,10 +75,7 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
      */
     private List<CommentDTO> comments;
 
-    /**
-     * Represents the neighborhood of this resident
-     */
-    private NeighborhoodDTO neighborhood;
+
 
     /**
      * Creates a detailed resident DTO from a resident entity, including its
@@ -104,9 +98,7 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
             events = new ArrayList<>();
             groups = new ArrayList<>();
             comments = new ArrayList<>();
-            
-            login = new LoginDTO(residentEntity.getLogin());
-            neighborhood = new NeighborhoodDTO(residentEntity.getNeighborhood());
+           
 
             for (EventEntity entityEvent : residentEntity.getEventsToAttend()) {
                 eventsToAttend.add(new EventDTO(entityEvent));
@@ -220,9 +212,7 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
             residentEntity.setGroups(groupsE);
         }
         
-        residentEntity.setLogin(login.toEntity());
-        
-         residentEntity.setNeighborhood(neighborhood.toEntity());
+
                
         return residentEntity;
     }
@@ -347,20 +337,6 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
     }
 
     /**
-     * @return the login
-     */
-    public ResidentLoginDTO getLogin() {
-        return login;
-    }
-
-    /**
-     * @param login the login to set
-     */
-    public void setLogin(ResidentLoginDTO login) {
-        this.login = login;
-    }
-
-    /**
      * @return the groups
      */
     public List<GroupDTO> getGroups() {
@@ -388,17 +364,5 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
         this.comments = comments;
     }
 
-    /**
-     * @return the neighborhood
-     */
-    public NeighborhoodDTO getNeighborhood() {
-        return neighborhood;
-    }
 
-    /**
-     * @param neighborhood the neighborhood to set
-     */
-    public void setNeighborhood(NeighborhoodDTO neighborhood) {
-        this.neighborhood = neighborhood;
-    }
 }

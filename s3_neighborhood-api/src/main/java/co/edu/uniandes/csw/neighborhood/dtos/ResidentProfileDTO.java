@@ -10,14 +10,12 @@ import java.io.Serializable;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-
 /**
  * This class represent a resident in a neighborhood
  *
  * @author albayona
  */
-
-public class ResidentProfileDTO  implements Serializable {
+public class ResidentProfileDTO implements Serializable {
 
 //===================================================
 // Attributes
@@ -52,12 +50,20 @@ public class ResidentProfileDTO  implements Serializable {
      */
     private String preferences;
 
+    /**
+     * Represents events posted by this resident
+     */
+    private ResidentLoginDTO login;
+
+    /**
+     * Represents the neighborhood of this resident
+     */
+    private NeighborhoodDTO neighborhood;
+
     public ResidentProfileDTO() {
     }
 
-
-    
-       /**
+    /**
      * Creates a resident DTO from a resident entity.
      *
      * @param residentEntity entity from which DTO is to be created
@@ -65,19 +71,16 @@ public class ResidentProfileDTO  implements Serializable {
      */
     public ResidentProfileDTO(ResidentProfileEntity residentEntity) {
         if (residentEntity != null) {
-        this.phoneNumber = residentEntity.getPhoneNumber();
-        this.email = residentEntity.getEmail();
-        this.name = residentEntity.getName();
-        this.nickname = residentEntity.getNickname();
-        this.address = residentEntity.getAddress();
-        this.preferences = residentEntity.getPreferences();
-             
+            this.phoneNumber = residentEntity.getPhoneNumber();
+            this.email = residentEntity.getEmail();
+            this.name = residentEntity.getName();
+            this.nickname = residentEntity.getNickname();
+            this.address = residentEntity.getAddress();
+            this.preferences = residentEntity.getPreferences();
+            this.login = new LoginDTO(residentEntity.getLogin());
+            this.neighborhood = new NeighborhoodDTO(residentEntity.getNeighborhood());
         }
-    } 
-    
-                 
-        
-    
+    }
 
     /**
      * Converts a resident DTO to a resident entity.
@@ -87,12 +90,15 @@ public class ResidentProfileDTO  implements Serializable {
      */
     public ResidentProfileEntity toEntity() {
         ResidentProfileEntity residentEntity = new ResidentProfileEntity();
-	residentEntity.setPhoneNumber(getPhoneNumber());
-	residentEntity.setEmail(getEmail());
-	residentEntity.setName(getName());
-	residentEntity.setNickname(getNickname());
-	residentEntity.setAddress(getAddress());
-	residentEntity.setPreferences(getPreferences());
+        residentEntity.setPhoneNumber(getPhoneNumber());
+        residentEntity.setEmail(getEmail());
+        residentEntity.setName(getName());
+        residentEntity.setNickname(getNickname());
+        residentEntity.setAddress(getAddress());
+        residentEntity.setPreferences(getPreferences());
+        residentEntity.setLogin(getLogin().toEntity());
+        residentEntity.setNeighborhood(getNeighborhood().toEntity());
+        
         return residentEntity;
     }
 
@@ -179,10 +185,36 @@ public class ResidentProfileDTO  implements Serializable {
     public void setPreferences(String preferences) {
         this.preferences = preferences;
     }
-    
-        @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+
+    /**
+     * @return the login
+     */
+    public ResidentLoginDTO getLogin() {
+        return login;
     }
 
+    /**
+     * @param login the login to set
+     */
+    public void setLogin(ResidentLoginDTO login) {
+        this.login = login;
+    }
+
+    /**
+     * @return the neighborhood
+     */
+    public NeighborhoodDTO getNeighborhood() {
+        return neighborhood;
+    }
+
+    /**
+     * @param neighborhood the neighborhood to set
+     */
+    public void setNeighborhood(NeighborhoodDTO neighborhood) {
+        this.neighborhood = neighborhood;
+    }
+
+    
+    
+    
 }

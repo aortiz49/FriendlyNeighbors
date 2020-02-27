@@ -27,10 +27,6 @@ public class GroupDetailDTO extends GroupDTO implements Serializable {
      */
     private List<ResidentProfileDTO> members = new ArrayList();
 
-    /**
-     * The neighborhood to which the group belongs to.
-     */
-    private NeighborhoodDTO neighborhood;
     
      /**
      * The posts made by the group.
@@ -52,7 +48,7 @@ public class GroupDetailDTO extends GroupDTO implements Serializable {
 
             posts = new ArrayList<>();
             members = new ArrayList<>();
-            neighborhood = new NeighborhoodDTO(groupEntity.getNeighborhood());
+
 
           
             for (PostEntity entityPost : groupEntity.getPosts()) {
@@ -91,9 +87,7 @@ public class GroupDetailDTO extends GroupDTO implements Serializable {
             }
             groupEntity.setPosts(postsE);
         }
-        
-       groupEntity.setNeighborhood(getNeighborhood().toEntity());
-    
+            
             
         return groupEntity;
     }
@@ -110,20 +104,6 @@ public class GroupDetailDTO extends GroupDTO implements Serializable {
      */
     public void setMembers(List<ResidentProfileDTO> members) {
         this.members = members;
-    }
-
-    /**
-     * @return the neighborhood
-     */
-    public NeighborhoodDTO getNeighborhood() {
-        return neighborhood;
-    }
-
-    /**
-     * @param neighborhood the neighborhood to set
-     */
-    public void setNeighborhood(NeighborhoodDTO neighborhood) {
-        this.neighborhood = neighborhood;
     }
 
     /**

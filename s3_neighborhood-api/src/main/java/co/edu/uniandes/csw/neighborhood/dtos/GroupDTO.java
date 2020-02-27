@@ -5,15 +5,12 @@ import java.util.Date;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-
 /**
  * This class represent a group in a neighborhood
  *
  * @author albayona
  */
-
 public class GroupDTO {
-   
 
 //===================================================
 // Attributes
@@ -33,11 +30,15 @@ public class GroupDTO {
      */
     private String description;
 
+    /**
+     * The neighborhood to which the group belongs to.
+     */
+    private NeighborhoodDTO neighborhood;
+
     public GroupDTO() {
     }
 
-            
-       /**
+    /**
      * Creates a group DTO from a group entity.
      *
      * @param entityGroup entity from which DTO is to be created
@@ -47,28 +48,24 @@ public class GroupDTO {
         this.dateCreated = entityGroup.getDateCreated();
         this.name = entityGroup.getName();
         this.description = entityGroup.getDescription();
-        
+        this.neighborhood = new NeighborhoodDTO(entityGroup.getNeighborhood());
     }
-    
+
     /**
      * Converts a group DTO to a group entity.
      *
      * @return new group entity
      *
      */
-   public GroupEntity toEntity() {
-       GroupEntity  groupEntity = new GroupEntity();
-       
-       groupEntity.setDateCreated(getDateCreated());
+    public GroupEntity toEntity() {
+        GroupEntity groupEntity = new GroupEntity();
+
+        groupEntity.setDateCreated(getDateCreated());
         groupEntity.setName(getName());
         groupEntity.setDescription(getDescription());
-        
+        groupEntity.setNeighborhood(getNeighborhood().toEntity());
         return groupEntity;
     }
-   
-   
-    
- 
 
     /**
      * @return the dateCreated
@@ -111,10 +108,22 @@ public class GroupDTO {
     public void setDescription(String description) {
         this.description = description;
     }
-    
-     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+
+    /**
+     * @return the neighborhood
+     */
+    public NeighborhoodDTO getNeighborhood() {
+        return neighborhood;
     }
+
+    /**
+     * @param neighborhood the neighborhood to set
+     */
+    public void setNeighborhood(NeighborhoodDTO neighborhood) {
+        this.neighborhood = neighborhood;
+    }
+
+
     
+
 }

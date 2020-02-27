@@ -51,6 +51,16 @@ public class CommentDTO implements Serializable {
     private String text;
 
     /**
+     * The author of this comment.
+     */
+    private ResidentProfileDTO author;
+
+    /**
+     * The post the comment belongs to.
+     */
+    private PostDTO post;
+
+    /**
      * Creates a comment DTO from a comment entity.
      *
      * @param entityComment entity from which DTO is to be created
@@ -59,7 +69,8 @@ public class CommentDTO implements Serializable {
     public CommentDTO(CommentEntity entityComment) {
         this.date = entityComment.getDate();
         this.text = entityComment.getText();
-
+        this.post = new PostDTO(entityComment.getPost());
+        this.author = new ResidentProfileDTO(entityComment.getAuthor());
     }
 
     /**
@@ -73,6 +84,8 @@ public class CommentDTO implements Serializable {
 
         commentEntity.setDate(getDate());
         commentEntity.setText(getText());
+        commentEntity.setAuthor(author.toEntity());
+        commentEntity.setPost(post.toEntity());
 
         return commentEntity;
     }
@@ -105,7 +118,4 @@ public class CommentDTO implements Serializable {
         this.text = text;
     }
 
-    
-    
-    
 }
