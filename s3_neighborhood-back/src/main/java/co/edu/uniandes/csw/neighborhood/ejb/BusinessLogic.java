@@ -79,12 +79,15 @@ public class BusinessLogic {
      * @throws BusinessLogicException if the new business violates the business
      * rules
      */
-    public BusinessEntity createBusiness(NeighborhoodEntity pNeighborhoodEntity, BusinessEntity pBusinessEntity) throws BusinessLogicException {
+    public BusinessEntity createBusiness(BusinessEntity pBusinessEntity) throws BusinessLogicException {
 
         // starts the logger for CREATE
         LOGGER.log(Level.INFO, "Begin business creation process");
 
+        // verify business rules for creating a new business
+        verifyBusinessRules(pBusinessEntity);
         
+        // create the business
         BusinessEntity createdEntity = businessPersistence.create(pBusinessEntity);
 
         // ends the logger for CREATE
@@ -160,14 +163,34 @@ public class BusinessLogic {
     private boolean verifyBusinessRules(BusinessEntity pBusinessEntity) throws BusinessLogicException {
         boolean valid = true;
 
-      
-            if (businessPersistence.find(pBusinessEntity.getId()) != null) {
-                valid = false;
-                throw new BusinessLogicException("Business already exists!");
-            }
-        
+        // the neighborhood the potential business belongs to 
+        NeighborhoodEntity businessNeighborhood = pBusinessEntity.getNeighborhood();
 
+        // 1. The neighborhood to which the business will be added to must already exist
+        if (neighborhoodPersistence.find(businessNeighborhood.getId()) == null) {
+            throw new BusinessLogicException("The business's neighborhood doesn't exist!");
+        }
+
+        // 2. The neighborhood the potential business belongs to cannot be null
+        if (businessNeighborhood == null) {
+            throw new BusinessLogicException("The business must belong to a neighborhood!");
+        }
+
+        // 3. No two businesses can have the same name
+        if (businessPersistence.findByName(pBusinessEntity.getName()) != null) {
+            throw new BusinessLogicException("The neighborhood already has a business with that name!");
+        }
+
+        // 4. The address of the business cannot be null
+        if (pBusinessEntity.getAddress() == null) {
+            throw new BusinessLogicException("The business address cannot be null!");
+        }
+
+        // 4. The name of the business cannot be null
+        if (pBusinessEntity.getName() == null) {
+            throw new BusinessLogicException("The business name cannot be null!");
+        }
         return valid;
-
+ 
     }
 }
