@@ -215,5 +215,7 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
     public void setGroups(List<GroupEntity> groups) {
         this.groups = groups;
     }
+    
+    
 
 }

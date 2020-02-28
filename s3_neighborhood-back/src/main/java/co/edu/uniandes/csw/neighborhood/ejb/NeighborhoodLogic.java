@@ -26,11 +26,13 @@ package co.edu.uniandes.csw.neighborhood.ejb;
 //===================================================
 // Imports
 //===================================================
-import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
-import co.edu.uniandes.csw.neighborhood.persistence.BusinessPersistence;
-import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
 import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
+import co.edu.uniandes.csw.neighborhood.entities.GroupEntity;
+import co.edu.uniandes.csw.neighborhood.entities.LocationEntity;
+import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
+import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -39,8 +41,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 /**
- * Class the implements the connection with the businessPersistence for the
- * Business entity.
+ * Class the implements the connection with the businessPersistence for the Business entity.
  *
  * @author aortiz49
  */
@@ -69,17 +70,16 @@ public class NeighborhoodLogic {
      *
      * @param pBusinessEntity the Neighborhood entity
      * @return the neighborhood entity after it is persisted
-     * @throws BusinessLogicException if the new neighborhood violates the business
-     * rules
+     * @throws BusinessLogicException if the new neighborhood violates the business rules
      */
-    public NeighborhoodEntity createBusiness(NeighborhoodEntity pNeighborhoodEntity) throws BusinessLogicException{
+    public NeighborhoodEntity createNeighborhood(NeighborhoodEntity pNeighborhoodEntity) throws BusinessLogicException {
 
         // starts the logger for CREATE
         LOGGER.log(Level.INFO, "Begin neighborhood creation process");
 
         // verify business rules for creating a new business
         verifyBusinessRules(pNeighborhoodEntity);
-        
+
         // create the neighborhood
         NeighborhoodEntity createdEntity = neighborhoodPersistence.create(pNeighborhoodEntity);
 
@@ -89,60 +89,78 @@ public class NeighborhoodLogic {
     }
 
     /**
-     * Devuelve todos los libros que hay en la base de datos.
+     * Returns all the neighborhoods in the database.
      *
-     * @return Lista de entidades de tipo libro.
+     * @return list of neighborhoods
      */
-    public List<NeighborhoodEntity> getBooks() {
-        LOGGER.log(Level.INFO, "Inicia proceso de consultar todos los libros");
+    public List<NeighborhoodEntity> getNeighborhoods() {
+        LOGGER.log(Level.INFO, "Begin consulting all neighborhood");
         List<NeighborhoodEntity> neighborhoods = neighborhoodPersistence.findAll();
-        LOGGER.log(Level.INFO, "Termina proceso de consultar todos los libros");
+        LOGGER.log(Level.INFO, "End consulting all neighborhood");
         return neighborhoods;
     }
 
     /**
-     * Busca un libro por ID
+     * Finds a neighborhood by name.
      *
-     * @param booksId El id del libro a buscar
-     * @return El libro encontrado, null si no lo encuentra.
+     * @return the found neighborhood, null if not found
      */
-    public NeighborhoodEntity getBook(Long booksId) {
-        LOGGER.log(Level.INFO, "Inicia proceso de consultar el libro con id = {0}", booksId);
-        NeighborhoodEntity bookEntity = neighborhoodPersistence.find(booksId);
+    public NeighborhoodEntity getNeighborhood(String pName) {
+        LOGGER.log(Level.INFO, "Begin search for neighborhood with name = {0}", pName);
+        NeighborhoodEntity bookEntity = neighborhoodPersistence.findByName(pName);
         if (bookEntity == null) {
-            LOGGER.log(Level.SEVERE, "El libro con el id = {0} no existe", booksId);
+            LOGGER.log(Level.SEVERE, "The neighborhood with name = {0} doesn't exist", pName);
         }
-        LOGGER.log(Level.INFO, "Termina proceso de consultar el libro con id = {0}", booksId);
+        LOGGER.log(Level.INFO, "End search for neighborhood with name = {0}", pName);
         return bookEntity;
     }
 
     /**
-     * Actualizar un libro por ID
+     * Update a neighborhood with a given name.
      *
-     * @param booksId El ID del libro a actualizar
-     * @param bookEntity La entidad del libro con los cambios deseados
-     * @return La entidad del libro luego de actualizarla
-     * @throws BusinessLogicException Si el IBN de la actualización es inválido
+     * @param pNeighborhoodId the Id of the neighborhood to update
+     * @param pNeighborhood the new neighborhood
+     * @return the neighborhood entity after the update
+     * @throws BusinessLogicException if the new neighborhood violates the business rules
      */
-    public NeighborhoodEntity updateBook(Long booksId,NeighborhoodEntity bookEntity) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Inicia proceso de actualizar el libro con id = {0}", booksId);
+    public NeighborhoodEntity updateNeighborhood(Long pNeighborhoodId, NeighborhoodEntity pNeighborhood) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Begin the update process for neighborhood with id = {0}", pNeighborhoodId);
 
-        NeighborhoodEntity newEntity = neighborhoodPersistence.update(bookEntity);
-        LOGGER.log(Level.INFO, "Termina proceso de actualizar el libro con id = {0}", bookEntity.getId());
+        // verify business rules for updated neighborhood
+        verifyBusinessRules(pNeighborhood);
+
+        // update neighborhood
+        NeighborhoodEntity newEntity = neighborhoodPersistence.update(pNeighborhood);
+        LOGGER.log(Level.INFO, "End the update process for neighborhood with id = {0}", pNeighborhood.getName());
         return newEntity;
     }
 
     /**
-     * Eliminar un libro por ID
+     * Delete a neighborhood by ID.
      *
-     * @param booksId El ID del libro a eliminar
-     * @throws BusinessLogicException si el libro tiene autores asociados
+     * @param neighborhoodID the id of the neighborhood to delete.
+     * @throws BusinessLogicException if the neighborhood has businesses, groups, locations, or
+     * residents associated to it
      */
-    public void deleteBook(Long booksId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Inicia proceso de borrar el libro con id = {0}", booksId);
+    public void deleteNeighborhood(Long neighborhoodID) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Begin the deletion process for neighborhood with id = {0}", neighborhoodID);
 
-        neighborhoodPersistence.delete(booksId);
-        LOGGER.log(Level.INFO, "Termina proceso de borrar el libro con id = {0}", booksId);
+        List<ResidentProfileEntity> residents = neighborhoodPersistence.find(neighborhoodID).getResidents();
+        List<BusinessEntity> businesses = neighborhoodPersistence.find(neighborhoodID).getBusinesses();
+        List<LocationEntity> locations = neighborhoodPersistence.find(neighborhoodID).getPlaces();
+        List<GroupEntity> groups = neighborhoodPersistence.find(neighborhoodID).getGroups();
+
+        // if there are entities associated to the neighborhood, do not delete
+        if (!residents.isEmpty() || !businesses.isEmpty()
+                || !locations.isEmpty() | !groups.isEmpty()) {
+            throw new BusinessLogicException(
+                    "Cannot delete the neighborhood! It has entities associated to it!");
+        }
+
+        // if there are no entities associated to the neighborhood, safely delete
+        neighborhoodPersistence.delete(neighborhoodID);
+
+        LOGGER.log(Level.INFO, "End the update process for neighborhood with id = {0}", neighborhoodID);
     }
 
     /**
@@ -150,18 +168,25 @@ public class NeighborhoodLogic {
      *
      * @param pNeighborhoodEntity neighborhood to verify
      * @return true if the neighborhood is valid. False otherwise
-     * @throws BusinessLogicException if the neighborhood doesn't satisfy the
-     * business rules
+     * @throws BusinessLogicException if the neighborhood doesn't satisfy the business rules
      */
-    private boolean verifyBusinessRules(NeighborhoodEntity pNeighborhoodEntity) throws BusinessLogicException {
+    private boolean verifyBusinessRules(NeighborhoodEntity pNeighborhoodEntity)
+            throws BusinessLogicException {
+
         boolean valid = true;
-      
+
         // 1. The neighborhood's name cannot be null
-        if (pNeighborhoodEntity.getName()==null){
-            throw new BusinessLogicException("The neighborhood's name cannot be null");
+        if (pNeighborhoodEntity.getName() == null) {
+            throw new BusinessLogicException("The neighborhood's name cannot be null!");
+        }
+
+        // 2. The neighborhood cannot already exist
+        if (neighborhoodPersistence.find(pNeighborhoodEntity.getId()) != null) {
+            throw new BusinessLogicException("The neighborhood already exists!");
+
         }
 
         return valid;
- 
+
     }
 }
