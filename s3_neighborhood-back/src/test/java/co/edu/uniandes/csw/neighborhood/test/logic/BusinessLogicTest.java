@@ -28,7 +28,10 @@ package co.edu.uniandes.csw.neighborhood.test.logic;
 //===================================================
 import co.edu.uniandes.csw.neighborhood.ejb.BusinessLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.FavorLogic;
+import co.edu.uniandes.csw.neighborhood.ejb.ResidentLoginLogic;
+import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
 import co.edu.uniandes.csw.neighborhood.entities.FavorEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentLoginEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
 import java.util.ArrayList;
@@ -71,13 +74,38 @@ public class BusinessLogicTest {
      */
     @Inject
     private BusinessLogic businessLogic;
+    
+    /**
+     * Entity manager to communicate with the database.
+     */
+    @PersistenceContext
+    private EntityManager em;
+    
+     /**
+     * The UserTransaction used to directly manipulate data in the database.
+     */
+    @Inject
+    UserTransaction utx;
+
+    /**
+     * An array containing the set of data used for the tests.
+     */
+    private List<BusinessEntity> data = new ArrayList<>();
+
 
 //===================================================
 // Tests
 //===================================================
-    @Test
-    public void test(){
-        System.out.println("co.edu.uniandes.csw.neighborhood.test.logic.BusinessLogicTest.test()");
+    
+    // configurations to deploy the test
+    @Deployment
+    public static JavaArchive createDeployment() {
+        return ShrinkWrap.create(JavaArchive.class)
+                .addPackage(ResidentLoginEntity.class.getPackage())
+                .addPackage(BusinessLogic.class.getPackage())
+                .addPackage(NeighborhoodPersistence.class.getPackage())
+                .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
+                .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
     
 }
