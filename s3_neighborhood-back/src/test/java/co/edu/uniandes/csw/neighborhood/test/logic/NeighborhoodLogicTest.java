@@ -26,19 +26,12 @@ package co.edu.uniandes.csw.neighborhood.test.logic;
 //===================================================
 // Imports
 //===================================================
-import co.edu.uniandes.csw.neighborhood.ejb.BusinessLogic;
-import co.edu.uniandes.csw.neighborhood.ejb.FavorLogic;
-import co.edu.uniandes.csw.neighborhood.ejb.ResidentLoginLogic;
-import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
-import co.edu.uniandes.csw.neighborhood.entities.FavorEntity;
-import co.edu.uniandes.csw.neighborhood.entities.ResidentLoginEntity;
-import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
+import co.edu.uniandes.csw.neighborhood.ejb.NeighborhoodLogic;
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -55,34 +48,34 @@ import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
- * Runs tests for BusinessLogic.
+ * Runs tests for NeighborhoodLogic.
  *
  * @author aortiz49
  */
 @RunWith(Arquillian.class)
-public class BusinessLogicTest {
+public class NeighborhoodLogicTest {
 //===================================================
 // Attributes
 //===================================================
 
     /**
-     * Creates BusinessEntity POJOs.
+     * Creates NeighborhoodEntity POJOs.
      */
     private PodamFactory factory = new PodamFactoryImpl();
 
     /**
-     * Injects BusinessLogic objects.
+     * Injects NeighborhoodLogic objects.
      */
     @Inject
-    private BusinessLogic businessLogic;
-    
+    private NeighborhoodLogic neighborhoodLogic;
+
     /**
      * Entity manager to communicate with the database.
      */
     @PersistenceContext
     private EntityManager em;
-    
-     /**
+
+    /**
      * The UserTransaction used to directly manipulate data in the database.
      */
     @Inject
@@ -91,26 +84,24 @@ public class BusinessLogicTest {
     /**
      * An array containing the set of data used for the tests.
      */
-    private List<BusinessEntity> data = new ArrayList<>();
-
+    private List<NeighborhoodEntity> data = new ArrayList<>();
 
 //===================================================
 // Tests
 //===================================================
-    
     // configurations to deploy the test
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addPackage(ResidentLoginEntity.class.getPackage())
-                .addPackage(BusinessLogic.class.getPackage())
+                .addPackage(NeighborhoodEntity.class.getPackage())
+                .addPackage(NeighborhoodLogic.class.getPackage())
                 .addPackage(NeighborhoodPersistence.class.getPackage())
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
-    
-        /**
-     * Initial test configuration. 
+
+    /**
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -128,32 +119,56 @@ public class BusinessLogicTest {
             }
         }
     }
+
     /**
      * Clears tables involved in tests
      */
     private void clearData() {
-        em.createQuery("delete from BusinessEntity").executeUpdate();
+        em.createQuery("delete from NeighborhoodEntity").executeUpdate();
     }
 
-
-        /**
-     * Inserts initial data for correct test operation
+    /**
+     * Inserts the initial data for the tests.
      */
     private void insertData() {
-        BusinessEntity favor = factory.manufacturePojo(BusinessEntity.class);
-        
         for (int i = 0; i < 3; i++) {
-            BusinessEntity entity = factory.manufacturePojo(BusinessEntity.class);
-   
-          
-           
-            em.persist(entity);
-            data.add(entity);
-           
+            NeighborhoodEntity neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+            em.persist(neighborhood);
+            data.add(neighborhood);
         }
     }
+
+    /**
+     * Test to create a Neighborhood.
+     *
+     * @throws BusinessLogicException if the business wasn't created properly
+     */
     @Test
-    public void testing(){
-        System.out.println("co.edu.uniandes.csw.neighborhood.test.logic.BusinessLogicTest.testing()");
+    public void createNeighborhoodTest() {
+
+        try {
+            // generate a random neighborhood
+            NeighborhoodEntity newEntity = factory.manufacturePojo(NeighborhoodEntity.class);
+
+            // create the neighborhood and persist it in the database
+            NeighborhoodEntity result = neighborhoodLogic.createBusiness(newEntity);
+            Assert.assertNotNull(result);
+
+            // find the neighborhood in the database
+            NeighborhoodEntity entity = em.find(NeighborhoodEntity.class, result.getId());
+            Assert.assertEquals(newEntity.getId(), entity.getId());
+            Assert.assertEquals(newEntity.getName(), entity.getName());
+
+            // create a neighborhood with a null name
+            NeighborhoodEntity failedEntity = factory.manufacturePojo(NeighborhoodEntity.class);
+            failedEntity.setName(null);
+
+            // created neighborhood should fail and throw the exception
+            neighborhoodLogic.createBusiness(failedEntity);
+        } catch (BusinessLogicException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
+
 }
