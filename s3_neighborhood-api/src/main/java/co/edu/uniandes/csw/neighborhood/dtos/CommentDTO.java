@@ -40,6 +40,12 @@ public class CommentDTO implements Serializable {
 //===================================================
 // Attributes
 //===================================================
+       /**
+     * Represents id for this comment
+     */
+    private Long Id;
+    
+    
     /**
      * Represents the date this comment was posted.
      */
@@ -67,6 +73,7 @@ public class CommentDTO implements Serializable {
      *
      */
     public CommentDTO(CommentEntity entityComment) {
+        this.Id = entityComment.getId();
         this.date = entityComment.getDate();
         this.text = entityComment.getText();
         this.post = new PostDTO(entityComment.getPost());
@@ -117,5 +124,20 @@ public class CommentDTO implements Serializable {
     public void setText(String text) {
         this.text = text;
     }
+
+    /**
+     * @return the Id
+     */
+    public Long getId() {
+        return Id;
+    }
+
+    /**
+     * @param Id the Id to set
+     */
+    public void setId(Long Id) {
+        this.Id = Id;
+    }
+    
 
 }

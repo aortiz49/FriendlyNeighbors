@@ -20,6 +20,12 @@ public class ResidentProfileDTO implements Serializable {
 //===================================================
 // Attributes
 //===================================================  
+        /**
+     * Represents id for this resident
+     */
+    private Long Id;
+    
+    
     /**
      * Represents phone number of this resident
      */
@@ -71,6 +77,7 @@ public class ResidentProfileDTO implements Serializable {
      */
     public ResidentProfileDTO(ResidentProfileEntity residentEntity) {
         if (residentEntity != null) {
+            this.Id = residentEntity.getId();
             this.phoneNumber = residentEntity.getPhoneNumber();
             this.email = residentEntity.getEmail();
             this.name = residentEntity.getName();
@@ -90,6 +97,7 @@ public class ResidentProfileDTO implements Serializable {
      */
     public ResidentProfileEntity toEntity() {
         ResidentProfileEntity residentEntity = new ResidentProfileEntity();
+        residentEntity.setId(getId());
         residentEntity.setPhoneNumber(getPhoneNumber());
         residentEntity.setEmail(getEmail());
         residentEntity.setName(getName());
@@ -100,6 +108,20 @@ public class ResidentProfileDTO implements Serializable {
         residentEntity.setNeighborhood(getNeighborhood().toEntity());
         
         return residentEntity;
+    }
+
+    /**
+     * @return the Id
+     */
+    public Long getId() {
+        return Id;
+    }
+
+    /**
+     * @param Id the Id to set
+     */
+    public void setId(Long Id) {
+        this.Id = Id;
     }
 
     /**
@@ -214,7 +236,7 @@ public class ResidentProfileDTO implements Serializable {
         this.neighborhood = neighborhood;
     }
 
-    
+ 
     
     
 }

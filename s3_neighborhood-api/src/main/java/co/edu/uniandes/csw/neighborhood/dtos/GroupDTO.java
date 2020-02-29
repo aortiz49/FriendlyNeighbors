@@ -16,6 +16,10 @@ public class GroupDTO {
 // Attributes
 //===================================================
     /**
+     * Represents id for this group
+     */
+    private long Id;
+    /**
      * Represents the date group was created
      */
     private Date dateCreated;
@@ -45,6 +49,7 @@ public class GroupDTO {
      *
      */
     public GroupDTO(GroupEntity entityGroup) {
+        this.Id = entityGroup.getId();
         this.dateCreated = entityGroup.getDateCreated();
         this.name = entityGroup.getName();
         this.description = entityGroup.getDescription();
@@ -60,6 +65,7 @@ public class GroupDTO {
     public GroupEntity toEntity() {
         GroupEntity groupEntity = new GroupEntity();
 
+        groupEntity.setId(getId());
         groupEntity.setDateCreated(getDateCreated());
         groupEntity.setName(getName());
         groupEntity.setDescription(getDescription());
@@ -121,6 +127,20 @@ public class GroupDTO {
      */
     public void setNeighborhood(NeighborhoodDTO neighborhood) {
         this.neighborhood = neighborhood;
+    }
+
+    /**
+     * @return the Id
+     */
+    public long getId() {
+        return Id;
+    }
+
+    /**
+     * @param Id the Id to set
+     */
+    public void setId(long Id) {
+        this.Id = Id;
     }
 
 
