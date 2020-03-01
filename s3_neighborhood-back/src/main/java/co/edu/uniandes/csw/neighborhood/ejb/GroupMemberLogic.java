@@ -75,7 +75,7 @@ public class GroupMemberLogic {
    List<ResidentProfileEntity> members = groupsPersistence.find(groupsId).getMembers();
         ResidentProfileEntity memberResidentProfiles = memberPersistence.find(memberId);
         int index = members.indexOf(memberResidentProfiles);
-       LOGGER.log(Level.INFO, "Finish query about member with id = {0} from groups with = " + groupsId, memberId);
+       LOGGER.log(Level.INFO, "Finished query about member with id = {0} from groups with = " + groupsId, memberId);
         if (index >= 0) {
             return members.get(index);
         }
@@ -103,7 +103,7 @@ public class GroupMemberLogic {
             }
         }
         groupsEntity.setMembers(members);
-       LOGGER.log(Level.INFO, "Ended trying to replace members related to groups con id = {0}", groupsId);
+       LOGGER.log(Level.INFO, "Ended replacing members related to groups con id = {0}", groupsId);
            return groupsEntity.getMembers();
     }
 

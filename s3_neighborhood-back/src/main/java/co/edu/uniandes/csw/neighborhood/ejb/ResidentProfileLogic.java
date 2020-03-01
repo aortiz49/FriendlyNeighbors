@@ -43,7 +43,7 @@ public class ResidentProfileLogic {
     public ResidentProfileEntity createResident(ResidentProfileEntity residentEntity) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creation process for resident has started");
         
-                    //1a. E-mail cannot be null 
+        //1a. E-mail cannot be null 
         if(residentEntity.getEmail() == null){
             throw new BusinessLogicException("An e-mail has to be specified");
         }
@@ -73,17 +73,6 @@ public class ResidentProfileLogic {
         //4. The user must provide a mobile number
         if(residentEntity.getPhoneNumber()== null){
             throw new BusinessLogicException("A phone has to be specified");
-        }
-
-        //4. The user neightborhood must exist
-        if(residentEntity.getNeighborhood()== null){
-            throw new BusinessLogicException("A user must have a neightborhood");
-        }
-        //5. Neightborhood must exist
-        NeighborhoodEntity neightborhood = neighborhoodPersistence.find(residentEntity.getNeighborhood().getId());
-        if (neightborhood == null) {
-            throw new BusinessLogicException("There is no such neightborhood: \"" + residentEntity.getNeighborhood().getName()+ "\"");
-            
         }
     }
 

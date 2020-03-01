@@ -21,6 +21,11 @@ public class ResidentProfileDTO implements Serializable {
 // Attributes
 //===================================================  
     /**
+     * Represents id for this resident
+     */
+    private Long id;
+
+    /**
      * Represents phone number of this resident
      */
     private String phoneNumber;
@@ -59,7 +64,13 @@ public class ResidentProfileDTO implements Serializable {
      * Represents the neighborhood of this resident
      */
     private NeighborhoodDTO neighborhood;
+    
+        /**
+     * Represents the proof of residence for this resident
+     */
+    private String proofOfResidence;
 
+    
     public ResidentProfileDTO() {
     }
 
@@ -71,11 +82,13 @@ public class ResidentProfileDTO implements Serializable {
      */
     public ResidentProfileDTO(ResidentProfileEntity residentEntity) {
         if (residentEntity != null) {
+            this.id = residentEntity.getId();
             this.phoneNumber = residentEntity.getPhoneNumber();
             this.email = residentEntity.getEmail();
             this.name = residentEntity.getName();
             this.nickname = residentEntity.getNickname();
             this.address = residentEntity.getAddress();
+            this.proofOfResidence = residentEntity.getProofOfResidence();
             this.preferences = residentEntity.getPreferences();
             this.login = new LoginDTO(residentEntity.getLogin());
             this.neighborhood = new NeighborhoodDTO(residentEntity.getNeighborhood());
@@ -90,16 +103,37 @@ public class ResidentProfileDTO implements Serializable {
      */
     public ResidentProfileEntity toEntity() {
         ResidentProfileEntity residentEntity = new ResidentProfileEntity();
+        residentEntity.setId(getId());
         residentEntity.setPhoneNumber(getPhoneNumber());
         residentEntity.setEmail(getEmail());
         residentEntity.setName(getName());
         residentEntity.setNickname(getNickname());
         residentEntity.setAddress(getAddress());
         residentEntity.setPreferences(getPreferences());
-        residentEntity.setLogin(getLogin().toEntity());
-        residentEntity.setNeighborhood(getNeighborhood().toEntity());
-        
+        residentEntity.setProofOfResidence(getProofOfResidence());
+
+        if (login != null) {
+            residentEntity.setLogin(getLogin().toEntity());
+        }
+        if (neighborhood != null) {
+            residentEntity.setNeighborhood(getNeighborhood().toEntity());
+        }
+
         return residentEntity;
+    }
+
+    /**
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * @param Id the id to set
+     */
+    public void setId(Long Id) {
+        this.id = Id;
     }
 
     /**
@@ -214,7 +248,21 @@ public class ResidentProfileDTO implements Serializable {
         this.neighborhood = neighborhood;
     }
 
+    /**
+     * @return the proofOfResidence
+     */
+    public String getProofOfResidence() {
+        return proofOfResidence;
+    }
+
+    /**
+     * @param proofOfResidence the proofOfResidence to set
+     */
+    public void setProofOfResidence(String proofOfResidence) {
+        this.proofOfResidence = proofOfResidence;
+    }
+
+
     
-    
-    
+
 }

@@ -11,14 +11,14 @@ public class NeighborhoodDTO {
 
 
     NeighborhoodDTO(NeighborhoodEntity neighborhood) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  
     }
     
     
    
 
     NeighborhoodEntity toEntity() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+          return new NeighborhoodEntity();
     }
     
     

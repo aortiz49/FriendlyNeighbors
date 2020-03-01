@@ -14,11 +14,11 @@ import co.edu.uniandes.csw.neighborhood.entities.NotificationEntity;
 class NotificationDTO {
 
     NotificationDTO(NotificationEntity entityNotification) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
     }
 
     NotificationEntity toEntity() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         return new NotificationEntity();
     }
     
 }
