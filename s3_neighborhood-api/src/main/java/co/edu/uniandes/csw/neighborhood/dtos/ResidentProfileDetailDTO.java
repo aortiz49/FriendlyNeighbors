@@ -75,8 +75,11 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
      */
     private List<CommentDTO> comments;
 
+    public ResidentProfileDetailDTO() {
+        super();
+    }
 
-
+    
     /**
      * Creates a detailed resident DTO from a resident entity, including its
      * relations.

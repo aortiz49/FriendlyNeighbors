@@ -5,6 +5,7 @@
  */
 package co.edu.uniandes.csw.neighborhood.resources;
 
+import co.edu.uniandes.csw.neighborhood.dtos.ResidentLoginDetailDTO;
 import co.edu.uniandes.csw.neighborhood.dtos.ResidentProfileDTO;
 import co.edu.uniandes.csw.neighborhood.dtos.ResidentProfileDetailDTO;
 import co.edu.uniandes.csw.neighborhood.ejb.ResidentProfileLogic;
@@ -34,7 +35,7 @@ import javax.ws.rs.WebApplicationException;
  * @author albayons
  * @version 1.0
  */
-@Path("/residents")
+@Path("residents")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
@@ -53,11 +54,15 @@ public class ResidentProfileResource {
      * @return JSON {@link ResidentProfileDTO} - Auto-generated resident to be persisted
      */
     @POST
-    public ResidentProfileDTO createResident(ResidentProfileDTO resident) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Creating resident resource: input: {0}", resident);
+    public ResidentProfileDTO createResident(ResidentProfileDTO resident) throws BusinessLogicException   {
+        LOGGER.log(Level.INFO, "Creating resident from resource: input: {0}", resident);
+        
+
         ResidentProfileDTO residentDTO = new ResidentProfileDTO(residentLogic.createResident(resident.toEntity()));
-        LOGGER.log(Level.INFO, "AuthorResource createAuthor: output: {0}", residentDTO);
-        return residentDTO;
+
+       
+        LOGGER.log(Level.INFO, "Created resident from resource: output: {0}", residentDTO);
+        return resident;
     }
 
     /**
@@ -68,9 +73,9 @@ public class ResidentProfileResource {
     @GET
     public List<ResidentProfileDetailDTO> getResidents() {
         LOGGER.info("Looking for all residents from resources: input: void");
-        List<ResidentProfileDetailDTO> listaAuthors = listEntity2DTO(residentLogic.getResidents());
-        LOGGER.log(Level.INFO, "Ended looking for all residents from resources: output: {0}", listaAuthors);
-        return listaAuthors;
+        List<ResidentProfileDetailDTO> residents = listEntity2DTO(residentLogic.getResidents());
+        LOGGER.log(Level.INFO, "Ended looking for all residents from resources: output: {0}", residents);
+        return residents;
     }
 
     /**
@@ -87,7 +92,7 @@ public class ResidentProfileResource {
         LOGGER.log(Level.INFO, "Looking for  resident from resource: input: {0}", residentsId);
         ResidentProfileEntity residentEntity = residentLogic.getResident(residentsId);
         if (residentEntity == null) {
-            throw new WebApplicationException("El recurso /authors/" + residentsId + " no existe.", 404);
+            throw new WebApplicationException("Resource /residents/" + residentsId + " does not exist.", 404);
         }
         ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO(residentEntity);
         LOGGER.log(Level.INFO, "Ended looking for resident from resource: output: {0}", detailDTO);
@@ -107,54 +112,38 @@ public class ResidentProfileResource {
      */
     @PUT
     @Path("{residentsId: \\d+}")
-    public ResidentProfileDetailDTO updateResident(@PathParam("residentsId") Long residentId, ResidentProfileDetailDTO resident) {
-        LOGGER.log(Level.INFO, "Updating resident from resource: input: authorsId: {0} , author: {1}", new Object[]{residentId, resident});
-        resident.setId(residentId);
-        if (residentLogic.getResident(residentId) == null) {
-            throw new WebApplicationException("Resource /residents/" + residentId + " does not exist.", 404);
+    public ResidentProfileDetailDTO updateAuthor(@PathParam("residentsId") Long residentsId, ResidentProfileDetailDTO resident) throws BusinessLogicException  {
+        LOGGER.log(Level.INFO, "Updating resident from resource: input: authorsId: {0} , author: {1}", new Object[]{residentsId, resident});
+        resident.setId(residentsId);
+        if (residentLogic.getResident(residentsId) == null) {
+            throw new WebApplicationException("El recurso /authors/" + residentsId + " no existe.", 404);
         }
-        ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO( resident.toEntity());
-        LOGGER.log(Level.INFO, "Ended updating for resident from resource: output: {0}", detailDTO);
+        ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO(residentLogic.updateResident(resident.toEntity()));
+        LOGGER.log(Level.INFO, "Ended updating resident from resource: output: {0}", detailDTO);
+       
         return detailDTO;
     }
+
 
     /**
      * Deletes the resident with the associated id received in URL
      *
      * @param residentsId id from resident to be deleted
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
-     * Error de lógica que se genera cuando no se encuentra el autor a borrar.
+     * Logic error if not found
      */
     @DELETE
     @Path("{residentsId: \\d+}")
-    public void deleteResident(@PathParam("authorsId") Long residentsId)  {
+    public void deleteResident(@PathParam("residentsId") Long residentsId)  {
         LOGGER.log(Level.INFO, "Deleting resident from resource: input: {0}", residentsId);
         if (residentLogic.getResident(residentsId) == null) {
-            throw new WebApplicationException("El recurso /authors/" + residentsId + " no existe.", 404);
+            throw new WebApplicationException("Resource /residents/" + residentsId + " does not exist.", 404);
         }
         residentLogic.deleteResident(residentsId);
         LOGGER.info("Resident deleted from resource: output: void");
     }
 
-//    /**
-//     * Conexión con el servicio de libros para un autor.
-//     * {@link AuthorBooksResource}
-//     *
-//     * Este método conecta la ruta de /authors con las rutas de /books que
-//     * dependen del autor, es una redirección al servicio que maneja el segmento
-//     * de la URL que se encarga de los libros.
-//     *
-//     * @param authorsId El ID del autor con respecto al cual se accede al
-//     * servicio.
-//     * @return El servicio de Libros para ese autor en paricular.
-//     */
-//    @Path("{authorsId: \\d+}/books")
-//    public Class<AuthorBooksResource> getAuthorBooksResource(@PathParam("authorsId") Long authorsId) {
-//        if (residentLogic.getAuthor(authorsId) == null) {
-//            throw new WebApplicationException("El recurso /authors/" + authorsId + " no existe.", 404);
-//        }
-//        return AuthorBooksResource.class;
-//    }
+
 
     /**
      * Converts an entity list to a DTO list for residents.
@@ -168,5 +157,23 @@ public class ResidentProfileResource {
             list.add(new ResidentProfileDetailDTO(entity));
         }
         return list;
+    }
+    
+        /**
+     *
+     * Connects /residents route with /membershipGroups route which are dependent of resident
+     * resource, by redirecting to the service managing the URL segment in
+     * charge of the members
+     *
+     * @param residentsId id from resident from which the resource is being accessed
+     * @return groups resource from the specified resident
+     */
+
+    @Path("{membersId: \\d+}/membershipGroups")
+    public Class<MemberGroupResource> getMemberGroupResource(@PathParam("membersId") Long residentsId) {
+        if (residentLogic.getResident(residentsId) == null) {
+            throw new WebApplicationException("Resource /residents/" + residentsId + " does not exist.", 404);
+        }
+        return MemberGroupResource.class;
     }
 }
