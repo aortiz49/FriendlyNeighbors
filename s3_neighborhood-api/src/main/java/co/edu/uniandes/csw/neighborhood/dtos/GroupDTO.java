@@ -1,7 +1,9 @@
 package co.edu.uniandes.csw.neighborhood.dtos;
 
+import co.edu.uniandes.csw.neighborhood.adapters.DateAdapter;
 import co.edu.uniandes.csw.neighborhood.entities.GroupEntity;
 import java.util.Date;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -18,10 +20,11 @@ public class GroupDTO {
     /**
      * Represents id for this group
      */
-    private long Id;
+    private long id;
     /**
      * Represents the date group was created
      */
+     @XmlJavaTypeAdapter(DateAdapter.class)
     private Date dateCreated;
 
     /**
@@ -40,6 +43,7 @@ public class GroupDTO {
     private NeighborhoodDTO neighborhood;
 
     public GroupDTO() {
+        super();
     }
 
     /**
@@ -49,7 +53,7 @@ public class GroupDTO {
      *
      */
     public GroupDTO(GroupEntity entityGroup) {
-        this.Id = entityGroup.getId();
+        this.id = entityGroup.getId();
         this.dateCreated = entityGroup.getDateCreated();
         this.name = entityGroup.getName();
         this.description = entityGroup.getDescription();
@@ -69,7 +73,9 @@ public class GroupDTO {
         groupEntity.setDateCreated(getDateCreated());
         groupEntity.setName(getName());
         groupEntity.setDescription(getDescription());
-        groupEntity.setNeighborhood(getNeighborhood().toEntity());
+        
+        if(neighborhood != null) groupEntity.setNeighborhood(getNeighborhood().toEntity());
+      
         return groupEntity;
     }
 
@@ -130,17 +136,17 @@ public class GroupDTO {
     }
 
     /**
-     * @return the Id
+     * @return the id
      */
     public long getId() {
-        return Id;
+        return id;
     }
 
     /**
-     * @param Id the Id to set
+     * @param Id the id to set
      */
     public void setId(long Id) {
-        this.Id = Id;
+        this.id = Id;
     }
 
 

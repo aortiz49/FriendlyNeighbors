@@ -121,7 +121,7 @@ public class MemberGroupLogicTest {
     public void addGroupTest() throws BusinessLogicException {
         GroupEntity newGroup = factory.manufacturePojo(GroupEntity.class);
         groupLogic.createGroup(newGroup);
-        GroupEntity groupEntity = memberGroupLogic.associateGroupToAttenddee(member.getId(), newGroup.getId());
+        GroupEntity groupEntity = memberGroupLogic.associateGroupToMember(member.getId(), newGroup.getId());
         Assert.assertNotNull(groupEntity);
 
         Assert.assertEquals(groupEntity.getId(), newGroup.getId());

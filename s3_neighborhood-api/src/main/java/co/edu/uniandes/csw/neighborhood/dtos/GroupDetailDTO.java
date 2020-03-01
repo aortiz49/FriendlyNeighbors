@@ -33,6 +33,11 @@ public class GroupDetailDTO extends GroupDTO implements Serializable {
      */
     private List<PostDTO> posts = new ArrayList<>();
 
+    public GroupDetailDTO() {
+        super();
+    }
+
+    
     
     
     /**

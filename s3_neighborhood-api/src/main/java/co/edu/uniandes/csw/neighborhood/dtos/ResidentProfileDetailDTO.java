@@ -29,7 +29,7 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
     private List<EventDTO> eventsToAttend;
 
     /**
-     * Favors a resident is signed up to complete.
+     * Favors  a resident is signed up to complete.
      */
     private List<FavorDTO> favorsToHelp;
 
@@ -75,8 +75,11 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
      */
     private List<CommentDTO> comments;
 
+    public ResidentProfileDetailDTO() {
+        super();
+    }
 
-
+    
     /**
      * Creates a detailed resident DTO from a resident entity, including its
      * relations.

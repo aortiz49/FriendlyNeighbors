@@ -40,7 +40,7 @@ public class MemberGroupLogic {
      * @param groupId ID from group entity
      * @return associated group entity
      */
-    public GroupEntity associateGroupToAttenddee(Long memberId, Long groupId) {
+    public GroupEntity associateGroupToMember(Long memberId, Long groupId) {
        LOGGER.log(Level.INFO, "Trying to associate group with member with id = {0}", memberId);
          ResidentProfileEntity memberEntity = memberPersistence.find(memberId);
         GroupEntity groupEntity = groupPersistence.find(groupId);
