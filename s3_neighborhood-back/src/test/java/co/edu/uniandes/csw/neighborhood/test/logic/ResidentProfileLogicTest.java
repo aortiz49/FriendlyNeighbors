@@ -175,7 +175,7 @@ public class ResidentProfileLogicTest {
     @Test(expected = BusinessLogicException.class)
     public void createResidentsWithSameEmail() throws BusinessLogicException {
         ResidentProfileEntity newEntity = factory.manufacturePojo(ResidentProfileEntity.class);
-        newEntity.setName(data.get(0).getName());
+        newEntity.setEmail(data.get(0).getEmail());
         residentLogic.createResident(newEntity);
     }
 
