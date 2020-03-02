@@ -78,7 +78,7 @@ public class NeighborhoodLogic {
         LOGGER.log(Level.INFO, "Begin neighborhood creation process");
 
         // verify business rules for creating a new business
-        verifyBusinessRules(pNeighborhoodEntity);
+        verifyCreationBusinessRules(pNeighborhoodEntity);
 
         // create the neighborhood
         NeighborhoodEntity createdEntity = neighborhoodPersistence.create(pNeighborhoodEntity);
@@ -101,11 +101,26 @@ public class NeighborhoodLogic {
     }
 
     /**
+     * Finds a neighborhood by ID.
+     *
+     * @return the found neighborhood, null if not found
+     */
+    public NeighborhoodEntity getNeighborhood(Long pId) {
+        LOGGER.log(Level.INFO, "Begin search for neighborhood with Id = {0}", pId);
+        NeighborhoodEntity bookEntity = neighborhoodPersistence.find(pId);
+        if (bookEntity == null) {
+            LOGGER.log(Level.SEVERE, "The neighborhood with Id = {0} doesn't exist", pId);
+        }
+        LOGGER.log(Level.INFO, "End search for neighborhood with Id = {0}", pId);
+        return bookEntity;
+    }
+
+    /**
      * Finds a neighborhood by name.
      *
      * @return the found neighborhood, null if not found
      */
-    public NeighborhoodEntity getNeighborhood(String pName) {
+    public NeighborhoodEntity getNeighborhoodByName(String pName) {
         LOGGER.log(Level.INFO, "Begin search for neighborhood with name = {0}", pName);
         NeighborhoodEntity bookEntity = neighborhoodPersistence.findByName(pName);
         if (bookEntity == null) {
@@ -125,9 +140,6 @@ public class NeighborhoodLogic {
      */
     public NeighborhoodEntity updateNeighborhood(Long pNeighborhoodId, NeighborhoodEntity pNeighborhood) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Begin the update process for neighborhood with id = {0}", pNeighborhoodId);
-
-        // verify business rules for updated neighborhood
-        verifyBusinessRules(pNeighborhood);
 
         // update neighborhood
         NeighborhoodEntity newEntity = neighborhoodPersistence.update(pNeighborhood);
@@ -164,13 +176,13 @@ public class NeighborhoodLogic {
     }
 
     /**
-     * Verifies that the the neighborhood is valid.
+     * Verifies that the neighborhood is valid.
      *
      * @param pNeighborhoodEntity neighborhood to verify
      * @return true if the neighborhood is valid. False otherwise
      * @throws BusinessLogicException if the neighborhood doesn't satisfy the business rules
      */
-    private boolean verifyBusinessRules(NeighborhoodEntity pNeighborhoodEntity)
+    private boolean verifyCreationBusinessRules(NeighborhoodEntity pNeighborhoodEntity)
             throws BusinessLogicException {
 
         boolean valid = true;
@@ -180,13 +192,18 @@ public class NeighborhoodLogic {
             throw new BusinessLogicException("The neighborhood's name cannot be null!");
         }
 
-        // 2. The neighborhood cannot already exist
+        // 2. The neighborhood cannot already exist with the same name
+        if (neighborhoodPersistence.findByName(pNeighborhoodEntity.getName()) != null) {
+            throw new BusinessLogicException("The neighborhood with this name already exists!");
+        }
+
+        // 3. The neighborhood cannot already exist
         if (neighborhoodPersistence.find(pNeighborhoodEntity.getId()) != null) {
             throw new BusinessLogicException("The neighborhood already exists!");
-
         }
 
         return valid;
 
     }
+
 }

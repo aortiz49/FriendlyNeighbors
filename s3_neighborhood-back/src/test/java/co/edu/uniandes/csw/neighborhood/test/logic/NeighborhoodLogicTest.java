@@ -99,6 +99,8 @@ public class NeighborhoodLogicTest {
         return ShrinkWrap.create(JavaArchive.class)
                 .addPackage(NeighborhoodEntity.class.getPackage())
                 .addPackage(NeighborhoodLogic.class.getPackage())
+                .addPackage(ResidentProfilePersistence.class.getPackage())
+                .addPackage(ResidentProfileEntity.class.getPackage())
                 .addPackage(NeighborhoodPersistence.class.getPackage())
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
@@ -128,8 +130,9 @@ public class NeighborhoodLogicTest {
      * Clears tables involved in tests
      */
     private void clearData() {
-        em.createQuery("delete from NeighborhoodEntity").executeUpdate();
         em.createQuery("delete from ResidentProfileEntity").executeUpdate();
+
+        em.createQuery("delete from NeighborhoodEntity").executeUpdate();
     }
 
     /**
@@ -221,7 +224,7 @@ public class NeighborhoodLogicTest {
      * Tests to update a neighborhood.
      */
     @Test
-    public void updatePostTest() throws BusinessLogicException {
+    public void updateNeighborhoodTest() throws BusinessLogicException {
 
         try {
             // get first neighborhood from generated data set
@@ -271,15 +274,24 @@ public class NeighborhoodLogicTest {
      * Tests the deletion of a neighborhood with residents.
      *
      */
-    
+    @Test(expected = BusinessLogicException.class)
     public void deleteNeighborhoodWithResidentsTests() throws BusinessLogicException {
         // attempt to delete a neighborhood with resident
-        
-        NeighborhoodEntity neighborhood = data.get(2);
+
+        NeighborhoodEntity neighborhood = data.get(0);
         ResidentProfileEntity resident = factory.manufacturePojo(ResidentProfileEntity.class);
-        resident.setNeighborhood(neighborhood); 
+        em.persist(resident);
+
+        resident.setNeighborhood(neighborhood);
+
+        neighborhood.setResidents(new ArrayList<>());
         neighborhood.getResidents().add(resident);
-        neighborhoodLogic.deleteNeighborhood(data.get(2).getId());
+
+        NeighborhoodEntity found = em.find(NeighborhoodEntity.class, neighborhood.getId());
+        Assert.assertNotNull(found);
+
+        neighborhoodLogic.updateNeighborhood(neighborhood.getId(), neighborhood);
+        neighborhoodLogic.deleteNeighborhood(neighborhood.getId());
 
     }
 
