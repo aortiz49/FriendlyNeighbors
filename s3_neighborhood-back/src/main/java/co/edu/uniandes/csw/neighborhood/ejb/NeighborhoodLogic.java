@@ -51,6 +51,36 @@ public class NeighborhoodLogic {
 //===================================================
 // Attributes
 //===================================================
+    
+    /**
+     * Enumeration for the valid locality names
+     */
+    private enum LocalityNames {
+        USAQUÉN,
+        CHAPINERO,
+        SANTA_FE,
+        SAN_CRISTÓBAL,
+        USME,
+        TUNJUELITO,
+        BOSA,
+        KENNEDY,
+        FONTIBÓN,
+        ENGATIVÁ,
+        SUBA,
+        BARRIOS_UNIDOS,
+        TEUSAQUILLO,
+        LOS_MÁRTIRES,
+        ANTONIO_NARIÑO,
+        PUENTE_ARANDA,
+        LA_CANDELARIA,
+        RAFAEL_URIBE_URIBE,
+        CIUDAD_BOLÍVAR,
+        SUMAPAZ
+    }
+
+//===================================================
+// Attributes
+//===================================================
     /**
      * The logger used to send activity messages to the user.
      */
