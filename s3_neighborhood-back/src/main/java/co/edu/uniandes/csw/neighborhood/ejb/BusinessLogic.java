@@ -82,16 +82,16 @@ public class BusinessLogic {
     public BusinessEntity createBusiness(BusinessEntity pBusinessEntity) throws BusinessLogicException {
 
         // starts the logger for CREATE
-        LOGGER.log(Level.INFO, "Begin business creation process");
+        LOGGER.log(Level.INFO, "Begin creating a business");
 
         // verify business rules for creating a new business
-        verifyBusinessRules(pBusinessEntity);
+        verifyBusinessCreationRules(pBusinessEntity);
         
         // create the business
         BusinessEntity createdEntity = businessPersistence.create(pBusinessEntity);
 
         // ends the logger for CREATE
-        LOGGER.log(Level.INFO, "End business creation process");
+        LOGGER.log(Level.INFO, "End creating a businss");
         return createdEntity;
     }
 
@@ -160,7 +160,7 @@ public class BusinessLogic {
      * @throws BusinessLogicException if the business doesn't satisfy the
      * business rules
      */
-    private boolean verifyBusinessRules(BusinessEntity pBusinessEntity) throws BusinessLogicException {
+    private boolean verifyBusinessCreationRules(BusinessEntity pBusinessEntity) throws BusinessLogicException {
         boolean valid = true;
 
         // the neighborhood the potential business belongs to 
@@ -186,10 +186,11 @@ public class BusinessLogic {
             throw new BusinessLogicException("The business address cannot be null!");
         }
 
-        // 4. The name of the business cannot be null
+        // 5. The name of the business cannot be null
         if (pBusinessEntity.getName() == null) {
             throw new BusinessLogicException("The business name cannot be null!");
         }
+                
         return valid;
  
     }

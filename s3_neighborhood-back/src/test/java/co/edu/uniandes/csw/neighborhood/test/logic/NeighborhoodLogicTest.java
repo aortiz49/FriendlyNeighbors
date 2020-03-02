@@ -145,7 +145,7 @@ public class NeighborhoodLogicTest {
      */
     private void insertData() {
 
-        // creates the three neighborhoods with empty residents, groups, and businesses, and locations 
+        // creates the five neighborhoods with empty residents, groups, and businesses, and locations 
         for (int i = 0; i < 5; i++) {
             NeighborhoodEntity entity = factory.manufacturePojo(NeighborhoodEntity.class);
             em.persist(entity);
