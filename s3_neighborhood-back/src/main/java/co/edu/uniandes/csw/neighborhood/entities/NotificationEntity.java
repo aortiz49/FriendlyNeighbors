@@ -177,7 +177,7 @@ public class NotificationEntity extends BaseEntity implements Serializable {
      * @return the  sender of this  notification
      */
     public ResidentProfileEntity getUserProfile() {
-        return author;
+        return getAuthor();
     }
 
     /**
@@ -186,7 +186,7 @@ public class NotificationEntity extends BaseEntity implements Serializable {
      */
      
     public void setUserProfile(ResidentProfileEntity userProfile) {
-        this.author = userProfile;
+        this.setAuthor(userProfile);
     }
 
     public ResidentProfileEntity getAuthor() {
