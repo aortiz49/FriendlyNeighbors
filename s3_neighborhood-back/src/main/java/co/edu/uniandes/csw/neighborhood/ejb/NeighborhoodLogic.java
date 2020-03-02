@@ -124,9 +124,9 @@ public class NeighborhoodLogic {
      * @return list of neighborhoods
      */
     public List<NeighborhoodEntity> getNeighborhoods() {
-        LOGGER.log(Level.INFO, "Begin consulting all neighborhood");
+        LOGGER.log(Level.INFO, "Begin consulting all neighborhoods");
         List<NeighborhoodEntity> neighborhoods = neighborhoodPersistence.findAll();
-        LOGGER.log(Level.INFO, "End consulting all neighborhood");
+        LOGGER.log(Level.INFO, "End consulting all neighborhoods");
         return neighborhoods;
     }
 

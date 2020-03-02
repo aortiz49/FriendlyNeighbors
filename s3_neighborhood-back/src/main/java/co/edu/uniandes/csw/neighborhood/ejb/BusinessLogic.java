@@ -39,8 +39,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 /**
- * Class the implements the connection with the businessPersistence for the
- * Business entity.
+ * Class the implements the connection with the businessPersistence for the Business entity.
  *
  * @author aortiz49
  */
@@ -73,11 +72,9 @@ public class BusinessLogic {
     /**
      * Creates and persists a new business
      *
-     * @param pBusinessEntity the entity of type Business of the new business to
-     * be persisted.
+     * @param pBusinessEntity the entity of type Business of the new business to be persisted.
      * @return the business entity after it is persisted
-     * @throws BusinessLogicException if the new business violates the business
-     * rules
+     * @throws BusinessLogicException if the new business violates the business rules
      */
     public BusinessEntity createBusiness(BusinessEntity pBusinessEntity) throws BusinessLogicException {
 
@@ -86,7 +83,7 @@ public class BusinessLogic {
 
         // verify business rules for creating a new business
         verifyBusinessCreationRules(pBusinessEntity);
-        
+
         // create the business
         BusinessEntity createdEntity = businessPersistence.create(pBusinessEntity);
 
@@ -96,60 +93,74 @@ public class BusinessLogic {
     }
 
     /**
-     * Devuelve todos los libros que hay en la base de datos.
+     * Returns all the businesses in the database.
      *
-     * @return Lista de entidades de tipo libro.
+     * @return list of businesses
      */
-    public List<BusinessEntity> getBooks() {
-        LOGGER.log(Level.INFO, "Inicia proceso de consultar todos los libros");
-        List<BusinessEntity> books = businessPersistence.findAll();
-        LOGGER.log(Level.INFO, "Termina proceso de consultar todos los libros");
-        return books;
+    public List<BusinessEntity> getBusinesses() {
+        LOGGER.log(Level.INFO, "Begin consulting all businesses");
+        List<BusinessEntity> businesses = businessPersistence.findAll();
+        LOGGER.log(Level.INFO, "End consulting all businesses");
+        return businesses;
     }
 
     /**
-     * Busca un libro por ID
+     * Finds a business by ID.
      *
-     * @param booksId El id del libro a buscar
-     * @return El libro encontrado, null si no lo encuentra.
+     * @return the found business, null if not found
      */
-    public BusinessEntity getBook(Long booksId) {
-        LOGGER.log(Level.INFO, "Inicia proceso de consultar el libro con id = {0}", booksId);
-        BusinessEntity bookEntity = businessPersistence.find(booksId);
-        if (bookEntity == null) {
-            LOGGER.log(Level.SEVERE, "El libro con el id = {0} no existe", booksId);
+    public BusinessEntity getBusiness(Long pId) {
+        LOGGER.log(Level.INFO, "Begin search for business with Id = {0}", pId);
+        BusinessEntity entity = businessPersistence.find(pId);
+        if (entity == null) {
+            LOGGER.log(Level.SEVERE, "The business with Id = {0} doesn't exist", pId);
         }
-        LOGGER.log(Level.INFO, "Termina proceso de consultar el libro con id = {0}", booksId);
-        return bookEntity;
+        LOGGER.log(Level.INFO, "End search for bsiness with Id = {0}", pId);
+        return entity;
     }
 
     /**
-     * Actualizar un libro por ID
+     * Finds a business by name.
      *
-     * @param booksId El ID del libro a actualizar
-     * @param bookEntity La entidad del libro con los cambios deseados
-     * @return La entidad del libro luego de actualizarla
-     * @throws BusinessLogicException Si el IBN de la actualización es inválido
+     * @return the found business, null if not found
      */
-    public BusinessEntity updateBook(Long booksId, BusinessEntity bookEntity) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Inicia proceso de actualizar el libro con id = {0}", booksId);
+    public BusinessEntity getBusinessByName(String pName) {
+        LOGGER.log(Level.INFO, "Begin search for business with name = {0}", pName);
+        BusinessEntity businessEntity = businessPersistence.findByName(pName);
+        if (businessEntity == null) {
+            LOGGER.log(Level.SEVERE, "The business with name = {0} doesn't exist", pName);
+        }
+        LOGGER.log(Level.INFO, "End search for business with name = {0}", pName);
+        return businessEntity;
+    }
 
-        BusinessEntity newEntity = businessPersistence.update(bookEntity);
-        LOGGER.log(Level.INFO, "Termina proceso de actualizar el libro con id = {0}", bookEntity.getId());
+    /**
+     * Update a business with a given Id.
+     *
+     * @param pBusinessId the Id of the business to update
+     * @param pBusiness the new business
+     * @return the business entity after the update
+     * @throws BusinessLogicException if the new business violates the business rules
+     */
+    public BusinessEntity updateBusiness(Long pId, BusinessEntity pBusiness) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Begin the update process for business with id = {0}", pId);
+
+        // update neighborhood
+        BusinessEntity newEntity = businessPersistence.update(pBusiness);
+        LOGGER.log(Level.INFO, "End the update process for business with id = {0}", pBusiness.getName());
         return newEntity;
     }
 
     /**
-     * Eliminar un libro por ID
+     * Deletes a business by ID. 
      *
-     * @param booksId El ID del libro a eliminar
-     * @throws BusinessLogicException si el libro tiene autores asociados
+     * @param businessId the ID of the book to be deleted
+     * 
      */
-    public void deleteBook(Long booksId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Inicia proceso de borrar el libro con id = {0}", booksId);
-
-        businessPersistence.delete(booksId);
-        LOGGER.log(Level.INFO, "Termina proceso de borrar el libro con id = {0}", booksId);
+    public void deleteBusiness(Long businessId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Begin the delete process for business with id = {0}", businessId);
+        businessPersistence.delete(businessId);
+        LOGGER.log(Level.INFO, "End the delete process for business with id = {0}", businessId);
     }
 
     /**
@@ -157,8 +168,7 @@ public class BusinessLogic {
      *
      * @param pBusinessEntity business to verify
      * @return true if the business is valid. False otherwise
-     * @throws BusinessLogicException if the business doesn't satisfy the
-     * business rules
+     * @throws BusinessLogicException if the business doesn't satisfy the business rules
      */
     private boolean verifyBusinessCreationRules(BusinessEntity pBusinessEntity) throws BusinessLogicException {
         boolean valid = true;
@@ -166,32 +176,24 @@ public class BusinessLogic {
         // the neighborhood the potential business belongs to 
         NeighborhoodEntity businessNeighborhood = pBusinessEntity.getNeighborhood();
 
-        // 1. The neighborhood to which the business will be added to must already exist
-        if (neighborhoodPersistence.find(businessNeighborhood.getId()) == null) {
-            throw new BusinessLogicException("The business's neighborhood doesn't exist!");
-        }
-
-        // 2. The neighborhood the potential business belongs to cannot be null
+        // 1. The business must have a neighborhood
         if (businessNeighborhood == null) {
-            throw new BusinessLogicException("The business must belong to a neighborhood!");
-        }
-
-        // 3. No two businesses can have the same name
-        if (businessPersistence.findByName(pBusinessEntity.getName()) != null) {
+            throw new BusinessLogicException("The business must have a neighborhood!");
+        } // 2. The neighborhood to which the business will be added to must already exist
+        else if (neighborhoodPersistence.find(businessNeighborhood.getId()) == null) {
+            throw new BusinessLogicException("The business's neighborhood doesn't exist!");
+        } // 3. No two businesses can have the same name
+        else if (businessPersistence.findByName(pBusinessEntity.getName()) != null) {
             throw new BusinessLogicException("The neighborhood already has a business with that name!");
-        }
-
-        // 4. The address of the business cannot be null
-        if (pBusinessEntity.getAddress() == null) {
+        } // 4. The address of the business cannot be null
+        else if (pBusinessEntity.getAddress() == null) {
             throw new BusinessLogicException("The business address cannot be null!");
-        }
-
-        // 5. The name of the business cannot be null
-        if (pBusinessEntity.getName() == null) {
+        } // 5. The name of the business cannot be null
+        else if (pBusinessEntity.getName() == null) {
             throw new BusinessLogicException("The business name cannot be null!");
         }
-                
+
         return valid;
- 
+
     }
 }

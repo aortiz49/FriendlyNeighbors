@@ -144,32 +144,25 @@ public class BusinessLogicTest {
      * Inserts the initial data for the tests.
      */
     private void insertData() {
-        NeighborhoodEntity neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
-        neighborhood.setName("Salitre");
-        em.persist(neighborhood);
 
         // creates 3 businesses 
         for (int i = 0; i < 3; i++) {
             BusinessEntity entity = factory.manufacturePojo(BusinessEntity.class);
             em.persist(entity);
-            entity.setNeighborhood(neighborhood);
             data.add(entity);
         }
 
-        // select the first business
-        BusinessEntity business0 = data.get(0);
+        // creates the neighborhood where the business is located
+        NeighborhoodEntity neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        neighborhood.setName("Salitre");
+        em.persist(neighborhood);
 
-        // set the name of the owner 
-        ResidentProfileEntity owner = factory.manufacturePojo(ResidentProfileEntity.class);
-        owner.setName("Andy");
-        owner.setNeighborhood(neighborhood);
-        em.persist(owner);
+        // add the business to the neighborhood
+        neighborhood.getBusinesses().add(data.get(0));
 
-        business0.setOwner(owner);
-        
-        NeighborhoodEntity en = em.find(NeighborhoodEntity.class,business0.getNeighborhood().getId());
-           
-        System.out.println("co.edu.uniandes.csw.neighborhood.test.logic.BusinessLogicTest.insertData()");
+        // add the neighborhood to the business
+        data.get(0).setNeighborhood(neighborhood);
+
     }
 
     /**
@@ -183,7 +176,7 @@ public class BusinessLogicTest {
 
         // sets the neighborhood
         newEntity.setNeighborhood(data.get(0).getNeighborhood());
-        
+
         // sets the owner
         newEntity.setOwner(data.get(0).getOwner());
 
@@ -195,6 +188,140 @@ public class BusinessLogicTest {
         BusinessEntity entity = em.find(BusinessEntity.class, result.getId());
         Assert.assertEquals(newEntity.getId(), entity.getId());
         Assert.assertEquals(newEntity.getName(), entity.getName());
+    }
+
+    /**
+     * Tests the creation of a Business with no neighborhood.
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createBusinessNoNeighborhoodTest() throws BusinessLogicException {
+
+        // creates a random business
+        BusinessEntity newEntity = factory.manufacturePojo(BusinessEntity.class);
+
+        // persist the created business, should not be null
+        BusinessEntity result = businessLogic.createBusiness(newEntity);
+    }
+
+    /**
+     * Tests the creation of a Business with non-existent neighborhood.
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createBusinessNonexistentNeighborhoodTest() throws BusinessLogicException {
+
+        // creates a random business
+        BusinessEntity newEntity = factory.manufacturePojo(BusinessEntity.class);
+
+        // change neighborhood id to one who doesn't exist in the system
+        NeighborhoodEntity neigh = data.get(0).getNeighborhood();
+        neigh.setId(11123L);
+        newEntity.setNeighborhood(neigh);
+
+        // persist the created business, should not finish
+        BusinessEntity result = businessLogic.createBusiness(newEntity);
+    }
+
+    /**
+     * Tests the creation of a Business with the same name.
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createBusinessSameNameLogicException() throws BusinessLogicException {
+
+        // creates a random business
+        BusinessEntity newEntity = factory.manufacturePojo(BusinessEntity.class);
+
+        // change business name to existingbusiness
+        newEntity.setName(data.get(0).getName());
+
+        // persist the created business, should not finish
+        BusinessEntity result = businessLogic.createBusiness(newEntity);
+    }
+
+    /**
+     * Returns all the businesses in the database.
+     *
+     * @return list of businesses
+     */
+    @Test
+    public void getBusinessesTest() {
+        List<BusinessEntity> list = businessLogic.getBusinesses();
+        Assert.assertEquals(data.size(), list.size());
+
+        for (BusinessEntity entity : list) {
+            boolean found = false;
+            for (BusinessEntity storedEntity : data) {
+                if (entity.getId().equals(storedEntity.getId())) {
+                    found = true;
+                }
+            }
+            Assert.assertTrue(found);
+        }
+    }
+
+    /**
+     * Finds a business by Id.
+     *
+     * @return the found business, null if not found
+     */
+    @Test
+    public void getBusinessTest() {
+        BusinessEntity entity = data.get(0);
+        BusinessEntity resultEntity = businessLogic.getBusiness(entity.getId());
+        Assert.assertNotNull(resultEntity);
+        Assert.assertEquals(entity.getId(), resultEntity.getId());
+        Assert.assertEquals(entity.getName(), resultEntity.getName());
+    }
+
+    /**
+     * Finds a business by name.
+     *
+     * @return the found business, null if not found
+     */
+    @Test
+    public void getNeighborhoodByNameTest() {
+        BusinessEntity entity = data.get(0);
+        BusinessEntity resultEntity = businessLogic.getBusinessByName(entity.getName());
+        Assert.assertNotNull(resultEntity);
+        Assert.assertEquals(entity.getId(), resultEntity.getId());
+        Assert.assertEquals(entity.getName(), resultEntity.getName());
+    }
+
+    /**
+     * Tests to update a business.
+     */
+    @Test
+    public void updateBusinessTest() throws BusinessLogicException {
+        // get first business from generated data set
+        BusinessEntity entity = data.get(0);
+
+        // generate a random business
+        BusinessEntity newEntity = factory.manufacturePojo(BusinessEntity.class);
+
+        // set the id of the random business to the id of the first one from the data set
+        newEntity.setId(entity.getId());
+
+        // update the business with the new information
+        businessLogic.updateBusiness(entity.getId(), newEntity);
+
+        // find the business in the database
+        BusinessEntity resp = em.find(BusinessEntity.class, entity.getId());
+
+        // make sure they are equal
+        Assert.assertEquals(newEntity.getId(), resp.getId());
+        Assert.assertEquals(newEntity.getName(), resp.getName());
+    }
+
+    /**
+     * Tests the deletion of a business.
+     *
+     */
+    public void deleteBusinessTest() throws BusinessLogicException {
+        // get first business from generated data set
+        BusinessEntity entity = data.get(0);
+
+        // delete the business
+        businessLogic.deleteBusiness(entity.getId());
+
     }
 
 }
