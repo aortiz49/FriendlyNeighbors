@@ -71,7 +71,7 @@ public class NotificationDTO {
         this.seen = entityNotification.isSeen();
     }
 
-    NotificationEntity toEntity() {
+    public NotificationEntity toEntity() {
         NotificationEntity notificationEntity = new NotificationEntity();
         
         if(author!=null) notificationEntity.setAuthor(getAuthor().toEntity());
