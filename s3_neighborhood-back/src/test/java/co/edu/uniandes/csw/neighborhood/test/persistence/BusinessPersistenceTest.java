@@ -174,7 +174,7 @@ public class BusinessPersistenceTest {
     }
 
     /**
-     * Test to consult a Business bye name.
+     * Test to consult a Business by name.
      */
     @Test
     public void findBusinessByNameTest() {
