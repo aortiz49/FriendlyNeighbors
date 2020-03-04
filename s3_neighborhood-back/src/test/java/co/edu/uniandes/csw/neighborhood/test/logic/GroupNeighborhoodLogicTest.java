@@ -26,9 +26,9 @@ package co.edu.uniandes.csw.neighborhood.test.logic;
 // Imports
 //===================================================
 
-import co.edu.uniandes.csw.neighborhood.ejb.ResidentProfileNeighborhoodLogic;
+import co.edu.uniandes.csw.neighborhood.ejb.GroupNeighborhoodLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.NeighborhoodLogic;
-import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
+import co.edu.uniandes.csw.neighborhood.entities.GroupEntity;
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
@@ -50,12 +50,12 @@ import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
- * Tests the ResidentProfileNeighborhoodLogic.
+ * Tests the GroupNeighborhoodLogic.
  *
  * @author aortiz49
  */
 @RunWith(Arquillian.class)
-public class ResidentProfileNeighborhoodLogicTest {
+public class GroupNeighborhoodLogicTest {
 //===================================================
 // Attributes
 //===================================================
@@ -66,10 +66,10 @@ public class ResidentProfileNeighborhoodLogicTest {
     private PodamFactory factory = new PodamFactoryImpl();
 
     /**
-     * Dependency injection for resident/neighborhood logic.
+     * Dependency injection for group/neighborhood logic.
      */
     @Inject
-    private ResidentProfileNeighborhoodLogic residentNeighborhoodLogic;
+    private GroupNeighborhoodLogic groupNeighborhoodLogic;
 
     /**
      * Entity manager to communicate with the database.
@@ -89,9 +89,9 @@ public class ResidentProfileNeighborhoodLogicTest {
     private List<NeighborhoodEntity> testHoods = new ArrayList<NeighborhoodEntity>();
 
     /**
-     * List of residents to be used in the tests.
+     * List of groups to be used in the tests.
      */
-    private List<ResidentProfileEntity> testPeeps = new ArrayList<ResidentProfileEntity>();
+    private List<GroupEntity> testPeeps = new ArrayList<GroupEntity>();
 //===================================================
 // Test Setup
 //===================================================
@@ -134,7 +134,7 @@ public class ResidentProfileNeighborhoodLogicTest {
      * Clears tables involved in tests
      */
     private void clearData() {
-        em.createQuery("delete from ResidentProfileEntity").executeUpdate();
+        em.createQuery("delete from GroupEntity").executeUpdate();
         em.createQuery("delete from NeighborhoodEntity").executeUpdate();
 
     }
@@ -151,14 +151,14 @@ public class ResidentProfileNeighborhoodLogicTest {
             testHoods.add(neigh);
         }
 
-        // creates 3 random residentes
+        // creates 3 random groups
         for (int i = 0; i < 3; i++) {
-            ResidentProfileEntity buss = factory.manufacturePojo(ResidentProfileEntity.class);
+            GroupEntity buss = factory.manufacturePojo(GroupEntity.class);
             em.persist(buss);
             testPeeps.add(buss);
         }
 
-        // associates residentes to a neighborhood
+        // associates groups to a neighborhood
         testPeeps.get(0).setNeighborhood(testHoods.get(0));
         testPeeps.get(2).setNeighborhood(testHoods.get(0));
 
@@ -168,35 +168,35 @@ public class ResidentProfileNeighborhoodLogicTest {
 //===================================================
 
     /**
-     * Tests the association of a resident with a neighborhood.
+     * Tests the association of a group with a neighborhood.
      *
      * @throws BusinessLogicException if the association fails
      */
     @Test
-    public void addResidentProfileToNeighborhoodTest() throws BusinessLogicException {
+    public void addGroupToNeighborhoodTest() throws BusinessLogicException {
         // gets the second random neighborhood from the list
         NeighborhoodEntity neighborhood = testHoods.get(0);
 
-        // gets the second random resident from the list, since the first has an associated 
-        // resident already
-        ResidentProfileEntity resident = testPeeps.get(1);
+        // gets the second random group from the list, since the first has an associated 
+        // group already
+        GroupEntity group = testPeeps.get(1);
 
-        // add the resident to the neighborhood
-        ResidentProfileEntity response = residentNeighborhoodLogic.addResidentProfileToNeighborhood(
-                resident.getId(), neighborhood.getId());
+        // add the group to the neighborhood
+        GroupEntity response = groupNeighborhoodLogic.addGroupToNeighborhood(
+                group.getId(), neighborhood.getId());
 
         Assert.assertNotNull(response);
-        Assert.assertEquals(resident.getId(), response.getId());
+        Assert.assertEquals(group.getId(), response.getId());
     }
 
     /**
-     * Tests the consultation of all resident entities associated with a neighborhood.
+     * Tests the consultation of all group entities associated with a neighborhood.
      */
     @Test
-    public void getResidentProfileesTest() {
-        List<ResidentProfileEntity> list = residentNeighborhoodLogic.getResidentProfilees(testHoods.get(0).getId());
+    public void getGroupsTest() {
+        List<GroupEntity> list = groupNeighborhoodLogic.getGroups(testHoods.get(0).getId());
 
-        // checks that there are two residentes associated to the neighborhood
+        // checks that there are two groups associated to the neighborhood
         Assert.assertEquals(2, list.size());
 
         // checks that the name of the associated neighborhood matches
@@ -204,42 +204,42 @@ public class ResidentProfileNeighborhoodLogicTest {
     }
 
     /**
-     * Tests the consultation of a resident entity associated with a neighborhood.
+     * Tests the consultation of a group entity associated with a neighborhood.
      *
-     * @throws BusinessLogicException if the resident is not found
+     * @throws BusinessLogicException if the group is not found
      */
     @Test
-    public void getResidentProfileTest() throws BusinessLogicException {
+    public void getGroupTest() throws BusinessLogicException {
 
-        // gets the first resident from the list
-        ResidentProfileEntity resident = testPeeps.get(0);
+        // gets the first group from the list
+        GroupEntity group = testPeeps.get(0);
 
         // gets the first neighborhood from the list
         NeighborhoodEntity neighborhood = testHoods.get(0);
 
-        // get the resident from the neighborhood
-        ResidentProfileEntity response = residentNeighborhoodLogic.getResidentProfile(neighborhood.getId(), resident.getId());
+        // get the group from the neighborhood
+        GroupEntity response = groupNeighborhoodLogic.getGroup(neighborhood.getId(), group.getId());
 
-        Assert.assertEquals(resident.getId(), response.getId());
+        Assert.assertEquals(group.getId(), response.getId());
 
     }
 
     /**
-     * Tests the removal of a resident from the neighborhood. 
+     * Tests the removal of a group from the neighborhood. 
      */
     @Test
-    public void removeResidentProfileTest() {
+    public void removeGroupTest() {
         // gets the first neighborhood from the list. 
-        // (Uses em.find because the persisted neighborhood contains the added residentes)
+        // (Uses em.find because the persisted neighborhood contains the added groups)
         NeighborhoodEntity neighborhood = em.find(NeighborhoodEntity.class,testHoods.get(0).getId());
         
-        // get the first associated resident
-        ResidentProfileEntity resident = testPeeps.get(0);
+        // get the first associated group
+        GroupEntity group = testPeeps.get(0);
         
-        // gets the list of residentes in the neighborhood
-        List<ResidentProfileEntity> list = neighborhood.getResidents();
+        // gets the list of groups in the neighborhood
+        List<GroupEntity> list = neighborhood.getGroups();
         
-        residentNeighborhoodLogic.removeResidentProfile(neighborhood.getId(), resident.getId());
+        groupNeighborhoodLogic.removeGroup(neighborhood.getId(), group.getId());
         Assert.assertEquals(1, list.size());
 
     }
