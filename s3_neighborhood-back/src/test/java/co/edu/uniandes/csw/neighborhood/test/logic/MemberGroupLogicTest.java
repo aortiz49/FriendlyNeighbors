@@ -109,6 +109,7 @@ public class MemberGroupLogicTest {
             data.add(entity);
             member.getGroups().add(entity);
         }
+        
     }
 
     /**
