@@ -32,7 +32,6 @@ import uk.co.jemos.podam.common.PodamStrategyValue;
 @Entity
 public class GroupEntity extends BaseEntity implements Serializable {
 
-    
 //===================================================
 // Attributes
 //===================================================
@@ -53,16 +52,15 @@ public class GroupEntity extends BaseEntity implements Serializable {
      */
     private String description;
 
-    
 //===================================================
 // Relations
 //===================================================
     /**
-     * Represents the residents who are members of this post
+     * Represents the residents who are members of this post.
      */
     @PodamExclude
     @ManyToMany
-    private List<ResidentProfileEntity> members = new ArrayList();
+    private List<ResidentProfileEntity> members = new ArrayList<>();
 
     /**
      * The neighborhood to which the group belongs to.
@@ -70,8 +68,15 @@ public class GroupEntity extends BaseEntity implements Serializable {
     @PodamExclude
     @ManyToOne
     private NeighborhoodEntity neighborhood;
-    
-     /**
+
+    /**
+     * Represents the events attended by the group.
+     */
+    @PodamExclude
+    @ManyToMany
+    private List<EventEntity> events = new ArrayList<>();
+
+    /**
      * The posts made by the group.
      */
     @PodamExclude
@@ -165,7 +170,15 @@ public class GroupEntity extends BaseEntity implements Serializable {
     public void setPosts(List<PostEntity> posts) {
         this.posts = posts;
     }
-    
 
+    public List<EventEntity> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<EventEntity> events) {
+        this.events = events;
+    }
+    
+    
 
 }

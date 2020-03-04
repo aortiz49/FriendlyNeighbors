@@ -31,7 +31,7 @@ public class GroupLogic {
     public GroupEntity createGroup(GroupEntity groupEntity) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creation process for group has started");
 
-         // the neighborhood the potential group belongs to 
+        // the neighborhood the potential group belongs to 
         NeighborhoodEntity businessNeighborhood = groupEntity.getNeighborhood();
 
         // the group must have a neighborhood
@@ -62,8 +62,6 @@ public class GroupLogic {
         if (groupEntity.getDescription() == null) {
             throw new BusinessLogicException("A name has to be specified");
         }
-        
-        
 
         persistence.create(groupEntity);
         LOGGER.log(Level.INFO, "Creation process for group eneded");

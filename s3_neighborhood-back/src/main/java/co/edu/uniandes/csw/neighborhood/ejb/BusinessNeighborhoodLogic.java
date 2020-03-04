@@ -53,9 +53,6 @@ public class BusinessNeighborhoodLogic {
      */
     private static final Logger LOGGER = Logger.getLogger(BusinessNeighborhoodLogic.class.getName());
 
-    @Inject
-    private NeighborhoodLogic residentLogic;
-
     /**
      * Dependency injection for neighborhood persistence.
      */
