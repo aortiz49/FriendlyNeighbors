@@ -34,7 +34,7 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-/** 
+/**
  * @author albayona
  */
 @Stateless
@@ -56,47 +56,47 @@ public class ServiceResidentProfileLogic {
      * @return associated service entity
      */
     public ServiceEntity associateServiceToResident(Long serviceId, Long residentId) {
-       LOGGER.log(Level.INFO, "Trying to add service to resident with id = {0}", residentId);
+        LOGGER.log(Level.INFO, "Trying to add service to resident with id = {0}", residentId);
         ResidentProfileEntity ResidentProfileEntity = residentPersistence.find(residentId);
         ServiceEntity ServiceEntity = servicePersistence.find(serviceId);
         ServiceEntity.setAuthor(ResidentProfileEntity);
-      LOGGER.log(Level.INFO, "Service is associated with resident with id = {0}", residentId);
+        LOGGER.log(Level.INFO, "Service is associated with resident with id = {0}", residentId);
         return ServiceEntity;
     }
 
     /**
-    /**
-     * Gets a collection of services entities associated with a resident 
+     * /**
+     * Gets a collection of services entities associated with a resident
+     *
      * @param residentId ID from resident entity
-     * @return collection of service entities associated with a resident 
+     * @return collection of service entities associated with a resident
      */
     public List<ServiceEntity> getServices(Long residentId) {
-          LOGGER.log(Level.INFO, "Gets all services belonging to resident with id = {0}", residentId);
+        LOGGER.log(Level.INFO, "Gets all services belonging to resident with id = {0}", residentId);
         return residentPersistence.find(residentId).getServices();
     }
 
- /**
-     * Gets a service entity associated with  a resident
+    /**
+     * Gets a service entity associated with a resident
      *
      * @param residentId Id from resident
      * @param serviceId Id from associated entity
      * @return associated entity
-     * @throws BusinessLogicException If event is not associated 
+     * @throws BusinessLogicException If event is not associated
      */
     public ServiceEntity getService(Long residentId, Long serviceId) throws BusinessLogicException {
-              LOGGER.log(Level.INFO, "Finding event with id = {0} from resident with = " + residentId, serviceId);
+        LOGGER.log(Level.INFO, "Finding event with id = {0} from resident with = " + residentId, serviceId);
         List<ServiceEntity> services = residentPersistence.find(residentId).getServices();
         ServiceEntity ServiceEntity = servicePersistence.find(serviceId);
         int index = services.indexOf(ServiceEntity);
-            LOGGER.log(Level.INFO, "Finish query about event with id = {0} from resident with = " + residentId, serviceId);
+        LOGGER.log(Level.INFO, "Finish query about event with id = {0} from resident with = " + residentId, serviceId);
         if (index >= 0) {
             return services.get(index);
         }
         throw new BusinessLogicException("Service is no associated with resident");
     }
 
-
-  /**
+    /**
      * Replaces services associated with a resident
      *
      * @param residentId Id from resident
@@ -104,30 +104,30 @@ public class ServiceResidentProfileLogic {
      * @return A new collection associated to resident
      */
     public List<ServiceEntity> replaceServices(Long residentId, List<ServiceEntity> services) {
-       LOGGER.log(Level.INFO, "Trying to replace services related to resident con id = {0}", residentId);
+        LOGGER.log(Level.INFO, "Trying to replace services related to resident con id = {0}", residentId);
         ResidentProfileEntity resident = residentPersistence.find(residentId);
         List<ServiceEntity> serviceList = servicePersistence.findAll();
         for (ServiceEntity service : serviceList) {
             if (services.contains(service)) {
                 service.setAuthor(resident);
-            } else if (service.getAuthor()!= null && service.getAuthor().equals(resident)) {
+            } else if (service.getAuthor() != null && service.getAuthor().equals(resident)) {
                 service.setAuthor(null);
             }
         }
         LOGGER.log(Level.INFO, "Ended trying to replace services related to resident con id = {0}", residentId);
         return services;
     }
-    
+
     /**
      * Removes a service from a resident. Service is no longer in DB
      *
      * @param residentId Id from resident
-     * @param eventId Id from service     
+     * @param eventId Id from service
      */
     public void removeService(Long residentId, Long eventId) {
-         LOGGER.log(Level.INFO, "Trying to delete a service from resident con id = {0}", residentId);
-      servicePersistence.delete(residentId);
+        LOGGER.log(Level.INFO, "Trying to delete a service from resident con id = {0}", residentId);
+        servicePersistence.delete(residentId);
 
-       LOGGER.log(Level.INFO, "Finished removing a service from resident con id = {0}", residentId);
-        }
+        LOGGER.log(Level.INFO, "Finished removing a service from resident con id = {0}", residentId);
+    }
 }

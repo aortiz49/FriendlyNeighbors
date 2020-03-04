@@ -53,6 +53,9 @@ public class BusinessNeighborhoodLogic {
      */
     private static final Logger LOGGER = Logger.getLogger(BusinessNeighborhoodLogic.class.getName());
 
+    @Inject
+    private NeighborhoodLogic residentLogic;
+
     /**
      * Dependency injection for neighborhood persistence.
      */
@@ -74,23 +77,37 @@ public class BusinessNeighborhoodLogic {
      * @param pBusinessId business id
      * @param pNeighborhoodId neighborhood id
      * @return the business instance that was associated to the neighborhood
+     * @throws BusinessLogicException when the neighborhood or business don't exist
      */
-    public BusinessEntity addBusinessToNeighborhood(Long pBusinessId, Long pNeighborhoodId) {
+    public BusinessEntity addBusinessToNeighborhood(Long pBusinessId, Long pNeighborhoodId) throws BusinessLogicException {
 
         // creates the logger
-        LOGGER.log(Level.INFO, "Start association between business and neighborhood with id = {0}", pNeighborhoodId);
+        LOGGER.log(Level.INFO, "Start association between business and neighborhood with id = {0}", pBusinessId);
 
         // finds existing neighborhood
         NeighborhoodEntity neighborhoodEntity = neighborhoodPersistence.find(pNeighborhoodId);
 
+        // neighborhood must exist
+        if (neighborhoodEntity == null) {
+            throw new BusinessLogicException("The neighborhood must exist.");
+        }
+
         // finds existing business
         BusinessEntity businessEntity = businessPersistence.find(pBusinessId);
+
+        // business must exist
+        if (businessEntity == null) {
+            throw new BusinessLogicException("The business must exist.");
+        }
 
         // set neighborhood of thr business
         businessEntity.setNeighborhood(neighborhoodEntity);
 
-        LOGGER.log(Level.INFO, "End association between business and neighborhood with id = {0}", pNeighborhoodId);
-        return businessPersistence.find(pNeighborhoodId);
+        // add the business to the neighborhood
+        neighborhoodEntity.getBusinesses().add(businessEntity);
+
+        LOGGER.log(Level.INFO, "End association between business and neighborhood with id = {0}", pBusinessId);
+        return businessEntity;
     }
 
     /**
@@ -128,10 +145,11 @@ public class BusinessNeighborhoodLogic {
         // logs end
         LOGGER.log(Level.INFO, "Finish business query with id = {0} from neighborhood with = " + pBusinessId, pNeighborhoodId);
 
-        // if the index
-        if (index == 0) {
-            throw new BusinessLogicException("Business is not associated with resident");
+        // if the index doesn't exist
+        if (index == -1) {
+            throw new BusinessLogicException("Business is not associated with the neighborhood");
         }
+
         return businesses.get(index);
     }
 
@@ -182,7 +200,7 @@ public class BusinessNeighborhoodLogic {
     public void removeBusiness(Long pNeighborhoodId, Long pBusinessId) {
         LOGGER.log(Level.INFO, "Start removing a business from neighborhood with id = {0}", pBusinessId);
 
-        // removes the business from the 
+        // removes the business from the database
         businessPersistence.delete(pBusinessId);
 
         LOGGER.log(Level.INFO, "Finished removing a business from neighborhood con id = {0}", pBusinessId);

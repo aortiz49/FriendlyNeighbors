@@ -30,6 +30,8 @@ import co.edu.uniandes.csw.neighborhood.ejb.BusinessNeighborhoodLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.NeighborhoodLogic;
 import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ServiceEntity;
+import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -106,7 +108,6 @@ public class BusinessNeighborhoodLogicTest {
                 .addPackage(NeighborhoodEntity.class.getPackage())
                 .addPackage(NeighborhoodLogic.class.getPackage())
                 .addPackage(NeighborhoodPersistence.class.getPackage())
-                .addPackage(BusinessNeighborhoodLogic.class.getPackage())
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
@@ -135,8 +136,9 @@ public class BusinessNeighborhoodLogicTest {
      * Clears tables involved in tests
      */
     private void clearData() {
-        em.createQuery("delete from NeighborhoodEntity").executeUpdate();
         em.createQuery("delete from BusinessEntity").executeUpdate();
+        em.createQuery("delete from NeighborhoodEntity").executeUpdate();
+
     }
 
     /**
@@ -158,8 +160,9 @@ public class BusinessNeighborhoodLogicTest {
             testJoints.add(buss);
         }
 
-        // associates a business to a neighborhood
+        // associates businesses to a neighborhood
         testJoints.get(0).setNeighborhood(testHoods.get(0));
+        testJoints.get(2).setNeighborhood(testHoods.get(0));
 
     }
 //===================================================
@@ -167,11 +170,13 @@ public class BusinessNeighborhoodLogicTest {
 //===================================================
 
     /**
-     * Test to associate a business with a neighborhood.
+     * Tests the association of a business with a neighborhood.
+     *
+     * @throws BusinessLogicException if the association fails
      */
     @Test
-    public void addBusinessToNeighborhoodTest() throws InvocationTargetException {
-        // gets the first random neighborhood from the list
+    public void addBusinessToNeighborhoodTest() throws BusinessLogicException {
+        // gets the second random neighborhood from the list
         NeighborhoodEntity neighborhood = testHoods.get(0);
 
         // gets the second random business from the list, since the first has an associated 
@@ -181,10 +186,64 @@ public class BusinessNeighborhoodLogicTest {
         // add the business to the neighborhood
         BusinessEntity response = businessNeighborhoodLogic.addBusinessToNeighborhood(
                 business.getId(), neighborhood.getId());
-        
-       
+
         Assert.assertNotNull(response);
         Assert.assertEquals(business.getId(), response.getId());
+    }
+
+    /**
+     * Tests the consultation of all business entities associated with a neighborhood.
+     */
+    @Test
+    public void getBusinessesTest() {
+        List<BusinessEntity> list = businessNeighborhoodLogic.getBusinesses(testHoods.get(0).getId());
+
+        // checks that there are two businesses associated to the neighborhood
+        Assert.assertEquals(2, list.size());
+
+        // checks that the name of the associated neighborhood matches
+        Assert.assertEquals(list.get(0).getNeighborhood().getName(), testHoods.get(0).getName());
+    }
+
+    /**
+     * Tests the consultation of a business entity associated with a neighborhood.
+     *
+     * @throws BusinessLogicException if the business is not found
+     */
+    @Test
+    public void getBusinessTest() throws BusinessLogicException {
+
+        // gets the first business from the list
+        BusinessEntity business = testJoints.get(0);
+
+        // gets the first neighborhood from the list
+        NeighborhoodEntity neighborhood = testHoods.get(0);
+
+        // get the business from the neighborhood
+        BusinessEntity response = businessNeighborhoodLogic.getBusiness(neighborhood.getId(), business.getId());
+
+        Assert.assertEquals(business.getId(), response.getId());
+
+    }
+
+    /**
+     * Tests the removal of a business from the neighborhood. 
+     */
+    @Test
+    public void removeBusinessTest() {
+        // gets the first neighborhood from the list. 
+        // (Uses em.find because the persisted neighborhood contains the added businesses)
+        NeighborhoodEntity neighborhood = em.find(NeighborhoodEntity.class,testHoods.get(0).getId());
+        
+        // get the first associated business
+        BusinessEntity business = testJoints.get(0);
+        
+        // gets the list of businesses in the neighborhood
+        List<BusinessEntity> list = neighborhood.getBusinesses();
+        
+        businessNeighborhoodLogic.removeBusiness(neighborhood.getId(), business.getId());
+        Assert.assertEquals(1, list.size());
+
     }
 
 }

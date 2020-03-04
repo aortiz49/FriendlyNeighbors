@@ -6,7 +6,6 @@
  */
 package co.edu.uniandes.csw.neighborhood.ejb;
 
-
 import co.edu.uniandes.csw.neighborhood.entities.GroupEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
@@ -43,23 +42,24 @@ public class GroupMemberLogic {
      * @return associated member entity
      */
     public ResidentProfileEntity associateResidentProfileToResident(Long groupsId, Long memberId) {
-       LOGGER.log(Level.INFO, "Trying to add member to groups with id = {0}", groupsId);
-         GroupEntity groupsEntity = groupsPersistence.find(groupsId);
+        LOGGER.log(Level.INFO, "Trying to add member to groups with id = {0}", groupsId);
+        GroupEntity groupsEntity = groupsPersistence.find(groupsId);
         ResidentProfileEntity memberEntity = memberPersistence.find(memberId);
         groupsEntity.getMembers().add(memberEntity);
-        
+
         LOGGER.log(Level.INFO, "Resident is associated with groups with id = {0}", groupsId);
-       return memberPersistence.find(memberId);
+        return memberPersistence.find(memberId);
     }
 
     /**
-     * Gets a collection of member entities associated with an groups 
+     * Gets a collection of member entities associated with an groups
+     *
      * @param groupsId ID from groups entity
-     * @return collection of member entities associated with an groups 
+     * @return collection of member entities associated with an groups
      */
     public List<ResidentProfileEntity> getResidentProfiles(Long groupsId) {
-       LOGGER.log(Level.INFO, "Gets all members belonging to groups with id = {0}", groupsId);
-            return groupsPersistence.find(groupsId).getMembers();
+        LOGGER.log(Level.INFO, "Gets all members belonging to groups with id = {0}", groupsId);
+        return groupsPersistence.find(groupsId).getMembers();
     }
 
     /**
@@ -68,14 +68,14 @@ public class GroupMemberLogic {
      * @param groupsId Id from groups
      * @param memberId Id from associated entity
      * @return associated member entity
-     * @throws BusinessLogicException If member is not associated 
+     * @throws BusinessLogicException If member is not associated
      */
     public ResidentProfileEntity getResidentProfile(Long groupsId, Long memberId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Finding member with id = {0} from groups with = " + groupsId, memberId);
-   List<ResidentProfileEntity> members = groupsPersistence.find(groupsId).getMembers();
+        List<ResidentProfileEntity> members = groupsPersistence.find(groupsId).getMembers();
         ResidentProfileEntity memberResidentProfiles = memberPersistence.find(memberId);
         int index = members.indexOf(memberResidentProfiles);
-       LOGGER.log(Level.INFO, "Finished query about member with id = {0} from groups with = " + groupsId, memberId);
+        LOGGER.log(Level.INFO, "Finished query about member with id = {0} from groups with = " + groupsId, memberId);
         if (index >= 0) {
             return members.get(index);
         }
@@ -91,7 +91,7 @@ public class GroupMemberLogic {
      */
     public List<ResidentProfileEntity> replaceResidentProfiles(Long groupsId, List<ResidentProfileEntity> members) {
         LOGGER.log(Level.INFO, "Trying to replace members related to groups con id = {0}", groupsId);
-          GroupEntity groupsEntity = groupsPersistence.find(groupsId);
+        GroupEntity groupsEntity = groupsPersistence.find(groupsId);
         List<ResidentProfileEntity> memberList = memberPersistence.findAll();
         for (ResidentProfileEntity member : memberList) {
             if (members.contains(member)) {
@@ -103,22 +103,22 @@ public class GroupMemberLogic {
             }
         }
         groupsEntity.setMembers(members);
-       LOGGER.log(Level.INFO, "Ended replacing members related to groups con id = {0}", groupsId);
-           return groupsEntity.getMembers();
+        LOGGER.log(Level.INFO, "Ended replacing members related to groups con id = {0}", groupsId);
+        return groupsEntity.getMembers();
     }
 
     /**
      * Unlinks a member from a groups
      *
      * @param groupsId Id from groups
-     * @param memberId Id from member     
+     * @param memberId Id from member
      */
     public void removeResidentProfile(Long groupsId, Long memberId) {
-         LOGGER.log(Level.INFO, "Trying to delete an member from groups con id = {0}", groupsId);
-       ResidentProfileEntity memberEntity = memberPersistence.find(memberId);
+        LOGGER.log(Level.INFO, "Trying to delete an member from groups con id = {0}", groupsId);
+        ResidentProfileEntity memberEntity = memberPersistence.find(memberId);
         GroupEntity groupsEntity = groupsPersistence.find(groupsId);
         groupsEntity.getMembers().remove(memberEntity);
-       LOGGER.log(Level.INFO, "Finished removing an member from groups con id = {0}", groupsId);
-        }
-    
+        LOGGER.log(Level.INFO, "Finished removing an member from groups con id = {0}", groupsId);
+    }
+
 }
