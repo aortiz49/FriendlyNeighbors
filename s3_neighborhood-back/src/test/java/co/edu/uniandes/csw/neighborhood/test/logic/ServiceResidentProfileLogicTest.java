@@ -67,12 +67,11 @@ public class ServiceResidentProfileLogicTest {
 
     private List<ResidentProfileEntity> data = new ArrayList<ResidentProfileEntity>();
 
-    private List<ServiceEntity> servicesData = new ArrayList();
+    private List<ServiceEntity> servicesData = new ArrayList<ServiceEntity>();
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
-     * contains classes, DB descriptor and beans.xml file for dependencies
-     * injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
+     * descriptor and beans.xml file for dependencies injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -84,8 +83,8 @@ public class ServiceResidentProfileLogicTest {
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
 
-   /**
-     * Initial test configuration. 
+    /**
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -104,7 +103,7 @@ public class ServiceResidentProfileLogicTest {
         }
     }
 
-       /**
+    /**
      * Clears tables involved in tests
      */
     private void clearData() {
@@ -112,7 +111,7 @@ public class ServiceResidentProfileLogicTest {
         em.createQuery("delete from ResidentProfileEntity").executeUpdate();
     }
 
-        /**
+    /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
@@ -132,7 +131,7 @@ public class ServiceResidentProfileLogicTest {
     }
 
     /**
-     * Test to associate a service with a resident 
+     * Test to associate a service with a resident
      *
      *
      * @throws BusinessLogicException
@@ -174,7 +173,7 @@ public class ServiceResidentProfileLogicTest {
     }
 
     /**
-     * Test for getting a service from a non-author user 
+     * Test for getting a service from a non-author user
      *
      * @throws BusinessLogicException
      */

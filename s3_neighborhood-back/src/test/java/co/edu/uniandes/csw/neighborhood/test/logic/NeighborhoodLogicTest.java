@@ -65,7 +65,7 @@ public class NeighborhoodLogicTest {
 //===================================================
 
     /**
-     * Creates NeighborhoodEntity POJOs.
+     * Factory that creates entity POJOs.
      */
     private PodamFactory factory = new PodamFactoryImpl();
 
@@ -108,7 +108,9 @@ public class NeighborhoodLogicTest {
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
-
+//===================================================
+// Test Setup
+//===================================================
     /**
      * Initial test configuration.
      */
@@ -186,7 +188,9 @@ public class NeighborhoodLogicTest {
         neighborhood3.getGroups().add(withGroup);
 
     }
-
+//===================================================
+// Tests
+//===================================================
     /**
      * Tests the creation of a Neighborhood.
      */
