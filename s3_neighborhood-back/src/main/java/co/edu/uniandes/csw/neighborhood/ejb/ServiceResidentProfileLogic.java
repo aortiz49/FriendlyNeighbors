@@ -118,15 +118,16 @@ public class ServiceResidentProfileLogic {
         return services;
     }
 
-    /**
+   /**
      * Removes a service from a resident. Service is no longer in DB
      *
-     * @param serviceId Id from resident
-     */
-    public void removeService(Long serviceId) {
-        LOGGER.log(Level.INFO, "Trying to delete a service from resident with id = {0}", serviceId);
-        servicePersistence.delete(serviceId);
 
-        LOGGER.log(Level.INFO, "Finished removing a service from resident with id = {0}", serviceId);
-    }
+     * @param serviceId Id from service     
+     */
+    public void removeService(Long residentID, Long serviceId) throws BusinessLogicException {
+         LOGGER.log(Level.INFO, "Trying to delete a service from resident with id = {0}", serviceId);
+      servicePersistence.delete(getService(residentID, serviceId).getId());
+
+       LOGGER.log(Level.INFO, "Finished removing a service from resident with id = {0}", serviceId);
+        }
 }

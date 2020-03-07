@@ -118,16 +118,19 @@ public class PostResidentProfileLogic {
         return posts;
     }
     
-    /**
+   
+
+
+   /**
      * Removes a post from a resident. Post is no longer in DB
      *
-     * @param residentId Id from resident
-     * @param eventId Id from post     
-     */
-    public void removePost(Long residentId, Long eventId) {
-         LOGGER.log(Level.INFO, "Trying to delete a post from resident with id = {0}", residentId);
-      postPersistence.delete(residentId);
 
-       LOGGER.log(Level.INFO, "Finished removing a post from resident with id = {0}", residentId);
+     * @param postId Id from post     
+     */
+    public void removePost(Long residentID, Long postId) throws BusinessLogicException {
+         LOGGER.log(Level.INFO, "Trying to delete a post from resident with id = {0}", postId);
+      postPersistence.delete(getPost(residentID, postId).getId());
+
+       LOGGER.log(Level.INFO, "Finished removing a post from resident with id = {0}", postId);
         }
 }

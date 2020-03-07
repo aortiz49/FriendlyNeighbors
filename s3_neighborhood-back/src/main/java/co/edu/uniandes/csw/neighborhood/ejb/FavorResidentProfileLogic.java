@@ -124,9 +124,9 @@ public class FavorResidentProfileLogic {
 
      * @param favorId Id from favor     
      */
-    public void removeFavor(Long favorId) {
+    public void removeFavor(Long residentID, Long favorId) throws BusinessLogicException {
          LOGGER.log(Level.INFO, "Trying to delete a favor from resident with id = {0}", favorId);
-      favorPersistence.delete(favorId);
+      favorPersistence.delete(getFavor(residentID, favorId).getId());
 
        LOGGER.log(Level.INFO, "Finished removing a favor from resident with id = {0}", favorId);
         }

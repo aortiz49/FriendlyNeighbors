@@ -118,15 +118,19 @@ public class EventResidentProfileLogic {
         return events;
     }
     
-    /**
+   
+
+
+   /**
      * Removes a event from a resident. Event is no longer in DB
      *
+
      * @param eventId Id from event     
      */
-    public void removeEvent(Long eventId) {
-         LOGGER.log(Level.INFO, "Trying to delete a event with id = {0}", eventId);
-      eventPersistence.delete(eventId);
+    public void removeEvent(Long residentID, Long eventId) throws BusinessLogicException {
+         LOGGER.log(Level.INFO, "Trying to delete a event from resident with id = {0}", eventId);
+      eventPersistence.delete(getEvent(residentID, eventId).getId());
 
-       LOGGER.log(Level.INFO, "Finished removing a event with id = {0}", eventId);
+       LOGGER.log(Level.INFO, "Finished removing a event from resident with id = {0}", eventId);
         }
 }
