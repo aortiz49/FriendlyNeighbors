@@ -131,21 +131,6 @@ public class CommentResidentProfileLogicTest {
         }
     }
 
-    /**
-     * Test to associate a comment with a resident
-     *
-     *
-     * @throws BusinessLogicException
-     */
-    @Test
-    public void addCommentsTest() {
-        ResidentProfileEntity entity = data.get(0);
-        CommentEntity commentEntity = commentsData.get(1);
-        CommentEntity response = residentCommentLogic.associateCommentToResident(commentEntity.getId(), entity.getId());
-
-        Assert.assertNotNull(response);
-        Assert.assertEquals(commentEntity.getId(), response.getId());
-    }
 
     /**
      * Test for getting a collection of comment entities associated with a resident

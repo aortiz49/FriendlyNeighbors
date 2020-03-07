@@ -48,7 +48,7 @@ public class CommentResidentProfileLogic {
     @Inject
     private ResidentProfilePersistence residentPersistence;
 
-    /**
+ /**
      * Associates a comment with a resident
      *
      * @param residentId ID from resident entity

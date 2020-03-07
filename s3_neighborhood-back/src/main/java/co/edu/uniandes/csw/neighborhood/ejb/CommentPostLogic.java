@@ -1,18 +1,14 @@
 /*
 MIT License
-
 Copyright (c) 2017 Universidad de los Andes - ISIS2603
-
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
-
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
-
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,9 +21,11 @@ package co.edu.uniandes.csw.neighborhood.ejb;
 
 import co.edu.uniandes.csw.neighborhood.entities.CommentEntity;
 import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.PostPersistence;
 import co.edu.uniandes.csw.neighborhood.persistence.CommentPersistence;
+import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,9 +45,12 @@ public class CommentPostLogic {
 
     @Inject
     private PostPersistence postPersistence;
-    
+
     @Inject
     private CommentResidentProfileLogic commentResidentLogic;
+
+    @Inject
+    CommentResidentProfileLogic commentResident;
 
     /**
      * Associates a comment with a post
@@ -63,9 +64,9 @@ public class CommentPostLogic {
         PostEntity PostEntity = postPersistence.find(postId);
         CommentEntity CommentEntity = commentPersistence.find(commentId);
         CommentEntity.setPost(PostEntity);
-       
+
         commentResidentLogic.associateCommentToResident(commentId, PostEntity.getAuthor().getId());
-                
+
         LOGGER.log(Level.INFO, "Comment is associated with post with id = {0}", postId);
         return CommentEntity;
     }
@@ -130,10 +131,10 @@ public class CommentPostLogic {
      * @param postId Id from post
      * @param commentId Id from comment
      */
-    public void removeComment(Long commentId) {
-        LOGGER.log(Level.INFO, "Trying to delete a comment with id = {0}", commentId);
-        commentPersistence.delete(commentId);
-        
-        LOGGER.log(Level.INFO, "Finished removing a comment with id = {0}", commentId);
+    public void removeComment(Long postID, Long commentId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Trying to delete a comment from post with id = {0}", postID);
+        commentPersistence.delete(getComment(postID, commentId).getId());
+
+        LOGGER.log(Level.INFO, "Finished removing a comment from post with id = {0}", postID);
     }
 }
