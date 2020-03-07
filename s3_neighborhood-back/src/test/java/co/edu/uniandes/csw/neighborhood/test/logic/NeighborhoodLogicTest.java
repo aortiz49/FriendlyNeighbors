@@ -96,8 +96,9 @@ public class NeighborhoodLogicTest {
      *
      * Configures the test.
      *
-     * @return the jar that Arquillian will deploy on the embedded Payara server. It contains the
-     * classes, the database descriptor, and the beans.xml to resolve injection dependencies.
+     * @return the jar that Arquillian will deploy on the embedded Payara
+     * server. It contains the classes, the database descriptor, and the
+     * beans.xml to resolve injection dependencies.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -111,6 +112,7 @@ public class NeighborhoodLogicTest {
 //===================================================
 // Test Setup
 //===================================================
+
     /**
      * Initial test configuration.
      */
@@ -191,6 +193,7 @@ public class NeighborhoodLogicTest {
 //===================================================
 // Tests
 //===================================================
+
     /**
      * Tests the creation of a Neighborhood.
      */

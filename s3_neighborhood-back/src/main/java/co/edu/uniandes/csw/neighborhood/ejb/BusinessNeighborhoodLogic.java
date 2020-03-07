@@ -200,6 +200,6 @@ public class BusinessNeighborhoodLogic {
         // removes the business from the database
         businessPersistence.delete(pBusinessId);
 
-        LOGGER.log(Level.INFO, "Finished removing a business from neighborhood con id = {0}", pBusinessId);
+        LOGGER.log(Level.INFO, "Finished removing a business from neighborhood with id = {0}", pBusinessId);
     }
 }

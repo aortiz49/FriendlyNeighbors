@@ -200,6 +200,6 @@ public class ResidentProfileNeighborhoodLogic {
         // removes the resident from the database
         residentPersistence.delete(pResidentProfileId);
 
-        LOGGER.log(Level.INFO, "Finished removing a resident from neighborhood con id = {0}", pResidentProfileId);
+        LOGGER.log(Level.INFO, "Finished removing a resident from neighborhood with id = {0}", pResidentProfileId);
     }
 }

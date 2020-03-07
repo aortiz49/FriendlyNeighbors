@@ -47,7 +47,7 @@ import java.util.logging.Logger;
 import javax.ws.rs.WebApplicationException;
 
 /**
- * Class implementing resource "members/{id}/groups".
+ * Class implementing resource "resident/{id}/membershipGroups".
  *
  * @author albayona
  * @version 1.0

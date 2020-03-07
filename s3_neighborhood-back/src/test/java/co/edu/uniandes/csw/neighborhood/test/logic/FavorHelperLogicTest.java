@@ -36,8 +36,7 @@ public class FavorHelperLogicTest {
 
     @Inject
     private ResidentProfileLogic helperLogic;
-    
-        
+
     @Inject
     private NeighborhoodPersistence neighPersistence;
 
@@ -67,7 +66,7 @@ public class FavorHelperLogicTest {
     }
 
     /**
-     * Initial test configuration. 
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -86,7 +85,6 @@ public class FavorHelperLogicTest {
         }
     }
 
-
     /**
      * Clears tables involved in tests
      */
@@ -95,8 +93,7 @@ public class FavorHelperLogicTest {
         em.createQuery("delete from ResidentProfileEntity").executeUpdate();
     }
 
-
-        /**
+    /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
@@ -107,8 +104,7 @@ public class FavorHelperLogicTest {
 
         for (int i = 0; i < 3; i++) {
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
-   
-            
+
             entity.setFavorsToHelp(new ArrayList<>());
             entity.getFavorsToHelp().add(favor);
             em.persist(entity);
@@ -118,7 +114,7 @@ public class FavorHelperLogicTest {
     }
 
     /**
-     * Test to associate a helper with an favor 
+     * Test to associate a helper with an favor
      *
      *
      * @throws BusinessLogicException
@@ -126,30 +122,26 @@ public class FavorHelperLogicTest {
     @Test
     public void addResidentTest() throws BusinessLogicException {
         ResidentProfileEntity newResidentProfile = factory.manufacturePojo(ResidentProfileEntity.class);
-       
-            
-        NeighborhoodEntity neigh   = factory.manufacturePojo(NeighborhoodEntity.class);
+
+        NeighborhoodEntity neigh = factory.manufacturePojo(NeighborhoodEntity.class);
         neighPersistence.create(neigh);
-                   
+
         newResidentProfile.setNeighborhood(neigh);
-        
 
         helperLogic.createResident(newResidentProfile);
-              
-        ResidentProfileEntity helperEntity = favorResidentProfileLogic.associateResidentProfileToResident(favor.getId(), newResidentProfile.getId());
+
+        ResidentProfileEntity helperEntity = favorResidentProfileLogic.associateResidentProfileToFavor(favor.getId(), newResidentProfile.getId());
         Assert.assertNotNull(helperEntity);
 
         Assert.assertEquals(helperEntity.getId(), newResidentProfile.getId());
         Assert.assertEquals(helperEntity.getAddress(), newResidentProfile.getAddress());
 
-
         ResidentProfileEntity lastResident = favorResidentProfileLogic.getResidentProfile(favor.getId(), newResidentProfile.getId());
 
         Assert.assertEquals(lastResident.getId(), newResidentProfile.getId());
 
-
     }
-    
+
     /**
      * Test for getting a collection of helper entities associated with an favor
      */
@@ -186,15 +178,15 @@ public class FavorHelperLogicTest {
      * @throws BusinessLogicException
      */
     @Test
-	
+
     public void replaceResidentProfilesTest() throws BusinessLogicException {
         List<ResidentProfileEntity> newCollection = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
             entity.setFavorsToHelp(new ArrayList<>());
             entity.getFavorsToHelp().add(favor);
-            
-            NeighborhoodEntity neigh   = factory.manufacturePojo(NeighborhoodEntity.class);
+
+            NeighborhoodEntity neigh = factory.manufacturePojo(NeighborhoodEntity.class);
             neighPersistence.create(neigh);
 
             entity.setNeighborhood(neigh);
@@ -221,5 +213,4 @@ public class FavorHelperLogicTest {
         Assert.assertTrue(favorResidentProfileLogic.getResidentProfiles(favor.getId()).isEmpty());
     }
 
-   
 }

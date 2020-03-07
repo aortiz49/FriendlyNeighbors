@@ -24,8 +24,8 @@ SOFTWARE.
 package co.edu.uniandes.csw.neighborhood.test.logic;
 
 import co.edu.uniandes.csw.neighborhood.ejb.ResidentProfileLogic;
-import co.edu.uniandes.csw.neighborhood.ejb.PostResidentProfileLogic;
-import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
+import co.edu.uniandes.csw.neighborhood.ejb.CommentResidentProfileLogic;
+import co.edu.uniandes.csw.neighborhood.entities.CommentEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
@@ -50,14 +50,14 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
  * @author albayona
  */
 @RunWith(Arquillian.class)
-public class PostResidentProfileLogicTest {
+public class CommentResidentProfileLogicTest {
 
     private PodamFactory factory = new PodamFactoryImpl();
 
     @Inject
     private ResidentProfileLogic residentLogic;
     @Inject
-    private PostResidentProfileLogic residentPostLogic;
+    private CommentResidentProfileLogic residentCommentLogic;
 
     @PersistenceContext
     private EntityManager em;
@@ -67,7 +67,7 @@ public class PostResidentProfileLogicTest {
 
     private List<ResidentProfileEntity> data = new ArrayList<ResidentProfileEntity>();
 
-    private List<PostEntity> postsData = new ArrayList();
+    private List<CommentEntity> commentsData = new ArrayList();
 
     /**
      * @return Returns jar which Arquillian will deploy embedded in Payara. jar
@@ -108,7 +108,7 @@ public class PostResidentProfileLogicTest {
      * Clears tables involved in tests
      */
     private void clearData() {
-        em.createQuery("delete from PostEntity").executeUpdate();
+        em.createQuery("delete from CommentEntity").executeUpdate();
         em.createQuery("delete from ResidentProfileEntity").executeUpdate();
     }
 
@@ -117,72 +117,72 @@ public class PostResidentProfileLogicTest {
      */
     private void insertData() {
         for (int i = 0; i < 3; i++) {
-            PostEntity posts = factory.manufacturePojo(PostEntity.class);
-            em.persist(posts);
-            postsData.add(posts);
+            CommentEntity comments = factory.manufacturePojo(CommentEntity.class);
+            em.persist(comments);
+            commentsData.add(comments);
         }
         for (int i = 0; i < 3; i++) {
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
             em.persist(entity);
             data.add(entity);
             if (i == 0) {
-                postsData.get(i).setAuthor(entity);
+                commentsData.get(i).setAuthor(entity);
             }
         }
     }
 
     /**
-     * Test to associate a post with a resident
+     * Test to associate a comment with a resident
      *
      *
      * @throws BusinessLogicException
      */
     @Test
-    public void addPostsTest() {
+    public void addCommentsTest() {
         ResidentProfileEntity entity = data.get(0);
-        PostEntity postEntity = postsData.get(1);
-        PostEntity response = residentPostLogic.associatePostToResident(postEntity.getId(), entity.getId());
+        CommentEntity commentEntity = commentsData.get(1);
+        CommentEntity response = residentCommentLogic.associateCommentToResident(commentEntity.getId(), entity.getId());
 
         Assert.assertNotNull(response);
-        Assert.assertEquals(postEntity.getId(), response.getId());
+        Assert.assertEquals(commentEntity.getId(), response.getId());
     }
 
     /**
-     * Test for getting a collection of post entities associated with a resident
+     * Test for getting a collection of comment entities associated with a resident
      */
     @Test
-    public void getPostsTest() {
-        List<PostEntity> list = residentPostLogic.getPosts(data.get(0).getId());
+    public void getCommentsTest() {
+        List<CommentEntity> list = residentCommentLogic.getComments(data.get(0).getId());
 
         Assert.assertEquals(1, list.size());
     }
 
     /**
-     * Test for getting a post entity associated with a resident
+     * Test for getting a comment entity associated with a resident
      *
      * @throws BusinessLogicException
      */
     @Test
-    public void getPostTest() throws BusinessLogicException {
+    public void getCommentTest() throws BusinessLogicException {
         ResidentProfileEntity entity = data.get(0);
-        PostEntity postEntity = postsData.get(0);
-        PostEntity response = residentPostLogic.getPost(entity.getId(), postEntity.getId());
+        CommentEntity commentEntity = commentsData.get(0);
+        CommentEntity response = residentCommentLogic.getComment(entity.getId(), commentEntity.getId());
 
-        Assert.assertEquals(postEntity.getId(), response.getId());
-        Assert.assertEquals(postEntity.getDescription(), response.getDescription());
+        Assert.assertEquals(commentEntity.getId(), response.getId());
+        Assert.assertEquals(commentEntity.getText(), response.getText());
 
     }
 
     /**
-     * Test for getting a post from a non-author user
+     * Test for getting a comment from a non-author user
      *
      * @throws BusinessLogicException
      */
     @Test(expected = BusinessLogicException.class)
-    public void getNonRealatedPostTest() throws BusinessLogicException {
+    public void getNonRealatedCommentTest() throws BusinessLogicException {
         ResidentProfileEntity entity = data.get(0);
-        PostEntity postEntity = postsData.get(1);
-        residentPostLogic.getPost(entity.getId(), postEntity.getId());
+        CommentEntity commentEntity = commentsData.get(1);
+        residentCommentLogic.getComment(entity.getId(), commentEntity.getId());
     }
 
 }

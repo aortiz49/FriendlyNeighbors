@@ -50,8 +50,9 @@ public class EventAttendeeLogicTest {
     private List<ResidentProfileEntity> data = new ArrayList<>();
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
-     * descriptor and beans.xml file for dependencies injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
+     * contains classes, DB descriptor and beans.xml file for dependencies
+     * injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -129,7 +130,7 @@ public class EventAttendeeLogicTest {
 
         residentLogic.createResident(newResidentProfile);
 
-        ResidentProfileEntity residentEntity = eventResidentProfileLogic.associateResidentProfileToResident(event.getId(), newResidentProfile.getId());
+        ResidentProfileEntity residentEntity = eventResidentProfileLogic.associateResidentProfileToEvent(event.getId(), newResidentProfile.getId());
         Assert.assertNotNull(residentEntity);
 
         Assert.assertEquals(residentEntity.getId(), newResidentProfile.getId());
@@ -142,7 +143,8 @@ public class EventAttendeeLogicTest {
     }
 
     /**
-     * Test for getting a collection of resident entities associated with an event
+     * Test for getting a collection of resident entities associated with an
+     * event
      */
     @Test
     public void getResidentProfilesTest() {

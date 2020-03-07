@@ -97,8 +97,9 @@ public class GroupNeighborhoodLogicTest {
 //===================================================
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
-     * descriptor and beans.xml file for dependencies injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
+     * contains classes, DB descriptor and beans.xml file for dependencies
+     * injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -190,7 +191,8 @@ public class GroupNeighborhoodLogicTest {
     }
 
     /**
-     * Tests the consultation of all group entities associated with a neighborhood.
+     * Tests the consultation of all group entities associated with a
+     * neighborhood.
      */
     @Test
     public void getGroupsTest() {
@@ -225,20 +227,20 @@ public class GroupNeighborhoodLogicTest {
     }
 
     /**
-     * Tests the removal of a group from the neighborhood. 
+     * Tests the removal of a group from the neighborhood.
      */
     @Test
     public void removeGroupTest() {
         // gets the first neighborhood from the list. 
         // (Uses em.find because the persisted neighborhood contains the added groups)
-        NeighborhoodEntity neighborhood = em.find(NeighborhoodEntity.class,testHoods.get(0).getId());
-        
+        NeighborhoodEntity neighborhood = em.find(NeighborhoodEntity.class, testHoods.get(0).getId());
+
         // get the first associated group
         GroupEntity group = testPeeps.get(0);
-        
+
         // gets the list of groups in the neighborhood
         List<GroupEntity> list = neighborhood.getGroups();
-        
+
         groupNeighborhoodLogic.removeGroup(neighborhood.getId(), group.getId());
         Assert.assertEquals(1, list.size());
 

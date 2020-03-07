@@ -41,7 +41,7 @@ public class GroupMemberLogic {
      * @param memberId ID from member entity
      * @return associated member entity
      */
-    public ResidentProfileEntity associateResidentProfileToResident(Long groupsId, Long memberId) {
+    public ResidentProfileEntity associateMemberToGroup(Long groupsId, Long memberId) {
         LOGGER.log(Level.INFO, "Trying to add member to groups with id = {0}", groupsId);
         GroupEntity groupsEntity = groupsPersistence.find(groupsId);
         ResidentProfileEntity memberEntity = memberPersistence.find(memberId);
@@ -90,7 +90,7 @@ public class GroupMemberLogic {
      * @return A new collection associated to groups
      */
     public List<ResidentProfileEntity> replaceResidentProfiles(Long groupsId, List<ResidentProfileEntity> members) {
-        LOGGER.log(Level.INFO, "Trying to replace members related to groups con id = {0}", groupsId);
+        LOGGER.log(Level.INFO, "Trying to replace members related to groups with id = {0}", groupsId);
         GroupEntity groupsEntity = groupsPersistence.find(groupsId);
         List<ResidentProfileEntity> memberList = memberPersistence.findAll();
         for (ResidentProfileEntity member : memberList) {
@@ -103,7 +103,7 @@ public class GroupMemberLogic {
             }
         }
         groupsEntity.setMembers(members);
-        LOGGER.log(Level.INFO, "Ended replacing members related to groups con id = {0}", groupsId);
+        LOGGER.log(Level.INFO, "Ended replacing members related to groups with id = {0}", groupsId);
         return groupsEntity.getMembers();
     }
 
@@ -114,11 +114,11 @@ public class GroupMemberLogic {
      * @param memberId Id from member
      */
     public void removeResidentProfile(Long groupsId, Long memberId) {
-        LOGGER.log(Level.INFO, "Trying to delete an member from groups con id = {0}", groupsId);
+        LOGGER.log(Level.INFO, "Trying to delete an member from groups with id = {0}", groupsId);
         ResidentProfileEntity memberEntity = memberPersistence.find(memberId);
         GroupEntity groupsEntity = groupsPersistence.find(groupsId);
         groupsEntity.getMembers().remove(memberEntity);
-        LOGGER.log(Level.INFO, "Finished removing an member from groups con id = {0}", groupsId);
+        LOGGER.log(Level.INFO, "Finished removing an member from groups with id = {0}", groupsId);
     }
 
 }

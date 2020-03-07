@@ -204,6 +204,6 @@ public class EventGroupLogic {
         // removes the event from the database
         eventPersistence.delete(pEventId);
 
-        LOGGER.log(Level.INFO, "Finished removing a event from group con id = {0}", pEventId);
+        LOGGER.log(Level.INFO, "Finished removing a event from group with id = {0}", pEventId);
     }
 }

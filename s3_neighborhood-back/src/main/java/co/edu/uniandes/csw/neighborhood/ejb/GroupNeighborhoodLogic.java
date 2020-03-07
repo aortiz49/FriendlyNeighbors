@@ -200,6 +200,6 @@ public class GroupNeighborhoodLogic {
         // removes the group from the database
         groupPersistence.delete(pGroupId);
 
-        LOGGER.log(Level.INFO, "Finished removing a group from neighborhood con id = {0}", pGroupId);
+        LOGGER.log(Level.INFO, "Finished removing a group from neighborhood with id = {0}", pGroupId);
     }
 }

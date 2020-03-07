@@ -24,7 +24,7 @@ SOFTWARE.
 package co.edu.uniandes.csw.neighborhood.test.logic;
 
 import co.edu.uniandes.csw.neighborhood.ejb.PostLogic;
-import co.edu.uniandes.csw.neighborhood.ejb.PostComment;
+import co.edu.uniandes.csw.neighborhood.ejb.CommentPostLogic;
 import co.edu.uniandes.csw.neighborhood.entities.CommentEntity;
 import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
@@ -57,7 +57,7 @@ public class CommentPostLogicTest {
     @Inject
     private PostLogic residentLogic;
     @Inject
-    private PostComment residentCommentLogic;
+    private CommentPostLogic residentCommentLogic;
 
     @PersistenceContext
     private EntityManager em;
@@ -141,7 +141,7 @@ public class CommentPostLogicTest {
     public void addCommentsTest() {
         PostEntity entity = data.get(0);
         CommentEntity commentEntity = commentsData.get(1);
-        CommentEntity response = residentCommentLogic.associateCommentToResident(commentEntity.getId(), entity.getId());
+        CommentEntity response = residentCommentLogic.associateCommentToPost(commentEntity.getId(), entity.getId());
 
         Assert.assertNotNull(response);
         Assert.assertEquals(commentEntity.getId(), response.getId());

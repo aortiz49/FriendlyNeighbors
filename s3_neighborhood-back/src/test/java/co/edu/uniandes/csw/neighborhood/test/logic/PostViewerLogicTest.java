@@ -36,8 +36,7 @@ public class PostViewerLogicTest {
 
     @Inject
     private ResidentProfileLogic viewerLogic;
-    
-        
+
     @Inject
     private NeighborhoodPersistence neighPersistence;
 
@@ -67,7 +66,7 @@ public class PostViewerLogicTest {
     }
 
     /**
-     * Initial test configuration. 
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -86,7 +85,6 @@ public class PostViewerLogicTest {
         }
     }
 
-
     /**
      * Clears tables involved in tests
      */
@@ -95,8 +93,7 @@ public class PostViewerLogicTest {
         em.createQuery("delete from ResidentProfileEntity").executeUpdate();
     }
 
-
-        /**
+    /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
@@ -107,8 +104,7 @@ public class PostViewerLogicTest {
 
         for (int i = 0; i < 3; i++) {
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
-   
-            
+
             entity.setPostsToView(new ArrayList<>());
             entity.getPostsToView().add(post);
             em.persist(entity);
@@ -118,7 +114,7 @@ public class PostViewerLogicTest {
     }
 
     /**
-     * Test to associate a viewer with an post 
+     * Test to associate a viewer with a post
      *
      *
      * @throws BusinessLogicException
@@ -126,32 +122,28 @@ public class PostViewerLogicTest {
     @Test
     public void addResidentTest() throws BusinessLogicException {
         ResidentProfileEntity newResidentProfile = factory.manufacturePojo(ResidentProfileEntity.class);
-       
-            
-        NeighborhoodEntity neigh   = factory.manufacturePojo(NeighborhoodEntity.class);
+
+        NeighborhoodEntity neigh = factory.manufacturePojo(NeighborhoodEntity.class);
         neighPersistence.create(neigh);
-                   
+
         newResidentProfile.setNeighborhood(neigh);
-        
 
         viewerLogic.createResident(newResidentProfile);
-              
-        ResidentProfileEntity viewerEntity = postResidentProfileLogic.associateResidentProfileToResident(post.getId(), newResidentProfile.getId());
+
+        ResidentProfileEntity viewerEntity = postResidentProfileLogic.associateResidentProfileToPost(post.getId(), newResidentProfile.getId());
         Assert.assertNotNull(viewerEntity);
 
         Assert.assertEquals(viewerEntity.getId(), newResidentProfile.getId());
         Assert.assertEquals(viewerEntity.getAddress(), newResidentProfile.getAddress());
 
-
         ResidentProfileEntity lastResident = postResidentProfileLogic.getResidentProfile(post.getId(), newResidentProfile.getId());
 
         Assert.assertEquals(lastResident.getId(), newResidentProfile.getId());
 
-
     }
-    
+
     /**
-     * Test for getting a collection of viewer entities associated with an post
+     * Test for getting a collection of viewer entities associated with a post
      */
     @Test
     public void getResidentProfilesTest() {
@@ -165,7 +157,7 @@ public class PostViewerLogicTest {
     }
 
     /**
-     * Test for getting a viewer entity associated with an post
+     * Test for getting a viewer entity associated with a post
      *
      * @throws BusinessLogicException
      */
@@ -181,20 +173,20 @@ public class PostViewerLogicTest {
     }
 
     /**
-     * Test for replacing viewers associated with an post
+     * Test for replacing viewers associated with a post
      *
      * @throws BusinessLogicException
      */
     @Test
-	
+
     public void replaceResidentProfilesTest() throws BusinessLogicException {
         List<ResidentProfileEntity> newCollection = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
             entity.setPostsToView(new ArrayList<>());
             entity.getPostsToView().add(post);
-            
-            NeighborhoodEntity neigh   = factory.manufacturePojo(NeighborhoodEntity.class);
+
+            NeighborhoodEntity neigh = factory.manufacturePojo(NeighborhoodEntity.class);
             neighPersistence.create(neigh);
 
             entity.setNeighborhood(neigh);
@@ -210,7 +202,7 @@ public class PostViewerLogicTest {
     }
 
     /**
-     * Test for removing a viewer from an post
+     * Test for removing a viewer from a post
      *
      */
     @Test
@@ -221,5 +213,4 @@ public class PostViewerLogicTest {
         Assert.assertTrue(postResidentProfileLogic.getResidentProfiles(post.getId()).isEmpty());
     }
 
-   
 }

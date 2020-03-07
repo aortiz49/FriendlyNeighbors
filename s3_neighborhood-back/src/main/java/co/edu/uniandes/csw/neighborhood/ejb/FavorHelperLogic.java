@@ -42,7 +42,7 @@ public class FavorHelperLogic {
      * @param helperId ID from helper entity
      * @return associated helper entity
      */
-    public ResidentProfileEntity associateResidentProfileToResident(Long favorId, Long helperId) {
+    public ResidentProfileEntity associateResidentProfileToFavor(Long favorId, Long helperId) {
        LOGGER.log(Level.INFO, "Trying to add helper to favor with id = {0}", favorId);
          FavorEntity favorEntity = favorPersistence.find(favorId);
         ResidentProfileEntity helperEntity = helperPersistence.find(helperId);
@@ -90,7 +90,7 @@ public class FavorHelperLogic {
      * @return A new collection associated to favor
      */
     public List<ResidentProfileEntity> replaceResidentProfiles(Long favorId, List<ResidentProfileEntity> helpers) {
-        LOGGER.log(Level.INFO, "Trying to replace helpers related to favor con id = {0}", favorId);
+        LOGGER.log(Level.INFO, "Trying to replace helpers related to favor with id = {0}", favorId);
           FavorEntity favorEntity = favorPersistence.find(favorId);
         List<ResidentProfileEntity> helperList = helperPersistence.findAll();
         for (ResidentProfileEntity helper : helperList) {
@@ -103,7 +103,7 @@ public class FavorHelperLogic {
             }
         }
         favorEntity.setCandidates(helpers);
-       LOGGER.log(Level.INFO, "Ended trying to replace helpers related to favor con id = {0}", favorId);
+       LOGGER.log(Level.INFO, "Ended trying to replace helpers related to favor with id = {0}", favorId);
            return favorEntity.getCandidates();
     }
 
@@ -114,11 +114,11 @@ public class FavorHelperLogic {
      * @param helperId Id from helper     
      */
     public void removeResidentProfile(Long favorId, Long helperId) {
-         LOGGER.log(Level.INFO, "Trying to delete an helper from favor con id = {0}", favorId);
+         LOGGER.log(Level.INFO, "Trying to delete an helper from favor with id = {0}", favorId);
        ResidentProfileEntity helperEntity = helperPersistence.find(helperId);
         FavorEntity favorEntity = favorPersistence.find(favorId);
         favorEntity.getCandidates().remove(helperEntity);
-       LOGGER.log(Level.INFO, "Finished removing an helper from favor con id = {0}", favorId);
+       LOGGER.log(Level.INFO, "Finished removing an helper from favor with id = {0}", favorId);
         }
     
 }

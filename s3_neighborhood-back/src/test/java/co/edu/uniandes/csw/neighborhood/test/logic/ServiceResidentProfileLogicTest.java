@@ -70,8 +70,9 @@ public class ServiceResidentProfileLogicTest {
     private List<ServiceEntity> servicesData = new ArrayList<ServiceEntity>();
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
-     * descriptor and beans.xml file for dependencies injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
+     * contains classes, DB descriptor and beans.xml file for dependencies
+     * injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -147,7 +148,8 @@ public class ServiceResidentProfileLogicTest {
     }
 
     /**
-     * Test for getting a collection of service entities associated with a resident
+     * Test for getting a collection of service entities associated with a
+     * resident
      */
     @Test
     public void getServicesTest() {

@@ -196,6 +196,9 @@ public class ResidentProfilePersistenceTest {
         Assert.assertNull(deleted);
     }
     
+    /**
+     * Test for finding a resident by email
+     */
         @Test
     public void getResidentByEmailTest() {
         

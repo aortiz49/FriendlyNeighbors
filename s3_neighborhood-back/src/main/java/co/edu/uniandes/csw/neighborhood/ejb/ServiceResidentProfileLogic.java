@@ -82,14 +82,14 @@ public class ServiceResidentProfileLogic {
      * @param residentId Id from resident
      * @param serviceId Id from associated entity
      * @return associated entity
-     * @throws BusinessLogicException If event is not associated
+     * @throws BusinessLogicException If service is not associated
      */
     public ServiceEntity getService(Long residentId, Long serviceId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Finding event with id = {0} from resident with = " + residentId, serviceId);
+        LOGGER.log(Level.INFO, "Finding service with id = {0} from resident with = " + residentId, serviceId);
         List<ServiceEntity> services = residentPersistence.find(residentId).getServices();
         ServiceEntity ServiceEntity = servicePersistence.find(serviceId);
         int index = services.indexOf(ServiceEntity);
-        LOGGER.log(Level.INFO, "Finish query about event with id = {0} from resident with = " + residentId, serviceId);
+        LOGGER.log(Level.INFO, "Finish query about service with id = {0} from resident with = " + residentId, serviceId);
         if (index >= 0) {
             return services.get(index);
         }
@@ -104,7 +104,7 @@ public class ServiceResidentProfileLogic {
      * @return A new collection associated to resident
      */
     public List<ServiceEntity> replaceServices(Long residentId, List<ServiceEntity> services) {
-        LOGGER.log(Level.INFO, "Trying to replace services related to resident con id = {0}", residentId);
+        LOGGER.log(Level.INFO, "Trying to replace services related to resident with id = {0}", residentId);
         ResidentProfileEntity resident = residentPersistence.find(residentId);
         List<ServiceEntity> serviceList = servicePersistence.findAll();
         for (ServiceEntity service : serviceList) {
@@ -114,20 +114,19 @@ public class ServiceResidentProfileLogic {
                 service.setAuthor(null);
             }
         }
-        LOGGER.log(Level.INFO, "Ended trying to replace services related to resident con id = {0}", residentId);
+        LOGGER.log(Level.INFO, "Ended trying to replace services related to resident with id = {0}", residentId);
         return services;
     }
 
     /**
      * Removes a service from a resident. Service is no longer in DB
      *
-     * @param residentId Id from resident
-     * @param eventId Id from service
+     * @param serviceId Id from resident
      */
-    public void removeService(Long residentId, Long eventId) {
-        LOGGER.log(Level.INFO, "Trying to delete a service from resident con id = {0}", residentId);
-        servicePersistence.delete(residentId);
+    public void removeService(Long serviceId) {
+        LOGGER.log(Level.INFO, "Trying to delete a service from resident with id = {0}", serviceId);
+        servicePersistence.delete(serviceId);
 
-        LOGGER.log(Level.INFO, "Finished removing a service from resident con id = {0}", residentId);
+        LOGGER.log(Level.INFO, "Finished removing a service from resident with id = {0}", serviceId);
     }
 }

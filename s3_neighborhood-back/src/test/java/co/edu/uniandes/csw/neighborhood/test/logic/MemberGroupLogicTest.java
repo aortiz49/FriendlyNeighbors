@@ -63,7 +63,7 @@ public class MemberGroupLogicTest {
     }
 
     /**
-     * Initial test configuration. 
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -82,8 +82,7 @@ public class MemberGroupLogicTest {
         }
     }
 
-
-       /**
+    /**
      * Clears tables involved in tests
      */
     private void clearData() {
@@ -91,8 +90,7 @@ public class MemberGroupLogicTest {
         em.createQuery("delete from GroupEntity").executeUpdate();
     }
 
-
-        /**
+    /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
@@ -112,7 +110,7 @@ public class MemberGroupLogicTest {
     }
 
     /**
-     * Test to associate an group with a member 
+     * Test to associate an group with a member
      *
      *
      * @throws BusinessLogicException
@@ -127,14 +125,12 @@ public class MemberGroupLogicTest {
         Assert.assertEquals(groupEntity.getId(), newGroup.getId());
         Assert.assertEquals(groupEntity.getDescription(), newGroup.getDescription());
 
-
         GroupEntity lastGroup = memberGroupLogic.getGroup(member.getId(), newGroup.getId());
 
         Assert.assertEquals(lastGroup.getId(), newGroup.getId());
 
-
     }
-    
+
     /**
      * Test for getting a collection of group entities associated with a member
      */
@@ -171,7 +167,7 @@ public class MemberGroupLogicTest {
      * @throws BusinessLogicException
      */
     @Test
-	
+
     public void replaceGroupsTest() throws BusinessLogicException {
         List<GroupEntity> newCollection = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -200,5 +196,4 @@ public class MemberGroupLogicTest {
         Assert.assertTrue(memberGroupLogic.getGroups(member.getId()).isEmpty());
     }
 
-   
 }

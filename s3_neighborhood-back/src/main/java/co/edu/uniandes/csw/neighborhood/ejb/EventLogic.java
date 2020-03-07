@@ -83,12 +83,12 @@ public class EventLogic {
      * @return El libro encontrado, null si no lo encuentra.
      */
     public EventEntity getBook(Long booksId) {
-        LOGGER.log(Level.INFO, "Inicia proceso de consultar el libro con id = {0}", booksId);
+        LOGGER.log(Level.INFO, "Inicia proceso de consultar el libro with id = {0}", booksId);
         EventEntity bookEntity = persistence.find(booksId);
         if (bookEntity == null) {
             LOGGER.log(Level.SEVERE, "El libro con el id = {0} no existe", booksId);
         }
-        LOGGER.log(Level.INFO, "Termina proceso de consultar el libro con id = {0}", booksId);
+        LOGGER.log(Level.INFO, "Termina proceso de consultar el libro with id = {0}", booksId);
         return bookEntity;
     }
 
@@ -101,10 +101,10 @@ public class EventLogic {
      * @throws BusinessLogicException Si el IBN de la actualización es inválido
      */
     public EventEntity updateBook(Long booksId, EventEntity bookEntity) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Inicia proceso de actualizar el libro con id = {0}", booksId);
+        LOGGER.log(Level.INFO, "Inicia proceso de actualizar el libro with id = {0}", booksId);
 
         EventEntity newEntity = persistence.update(bookEntity);
-        LOGGER.log(Level.INFO, "Termina proceso de actualizar el libro con id = {0}", bookEntity.getId());
+        LOGGER.log(Level.INFO, "Termina proceso de actualizar el libro with id = {0}", bookEntity.getId());
         return newEntity;
     }
 
@@ -115,10 +115,10 @@ public class EventLogic {
      * @throws BusinessLogicException si el libro tiene autores asociados
      */
     public void deleteBook(Long booksId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Inicia proceso de borrar el libro con id = {0}", booksId);
+        LOGGER.log(Level.INFO, "Inicia proceso de borrar el libro with id = {0}", booksId);
 
         persistence.delete(booksId);
-        LOGGER.log(Level.INFO, "Termina proceso de borrar el libro con id = {0}", booksId);
+        LOGGER.log(Level.INFO, "Termina proceso de borrar el libro with id = {0}", booksId);
     }
 
     /**

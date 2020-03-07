@@ -97,8 +97,9 @@ public class ResidentProfileNeighborhoodLogicTest {
 //===================================================
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
-     * descriptor and beans.xml file for dependencies injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
+     * contains classes, DB descriptor and beans.xml file for dependencies
+     * injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -190,7 +191,8 @@ public class ResidentProfileNeighborhoodLogicTest {
     }
 
     /**
-     * Tests the consultation of all resident entities associated with a neighborhood.
+     * Tests the consultation of all resident entities associated with a
+     * neighborhood.
      */
     @Test
     public void getResidentProfileesTest() {
@@ -204,7 +206,8 @@ public class ResidentProfileNeighborhoodLogicTest {
     }
 
     /**
-     * Tests the consultation of a resident entity associated with a neighborhood.
+     * Tests the consultation of a resident entity associated with a
+     * neighborhood.
      *
      * @throws BusinessLogicException if the resident is not found
      */
@@ -225,20 +228,20 @@ public class ResidentProfileNeighborhoodLogicTest {
     }
 
     /**
-     * Tests the removal of a resident from the neighborhood. 
+     * Tests the removal of a resident from the neighborhood.
      */
     @Test
     public void removeResidentProfileTest() {
         // gets the first neighborhood from the list. 
         // (Uses em.find because the persisted neighborhood contains the added residentes)
-        NeighborhoodEntity neighborhood = em.find(NeighborhoodEntity.class,testHoods.get(0).getId());
-        
+        NeighborhoodEntity neighborhood = em.find(NeighborhoodEntity.class, testHoods.get(0).getId());
+
         // get the first associated resident
         ResidentProfileEntity resident = testPeeps.get(0);
-        
+
         // gets the list of residentes in the neighborhood
         List<ResidentProfileEntity> list = neighborhood.getResidents();
-        
+
         residentNeighborhoodLogic.removeResidentProfile(neighborhood.getId(), resident.getId());
         Assert.assertEquals(1, list.size());
 

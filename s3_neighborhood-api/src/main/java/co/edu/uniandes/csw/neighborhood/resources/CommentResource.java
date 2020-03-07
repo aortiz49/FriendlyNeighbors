@@ -142,20 +142,7 @@ public class CommentResource {
         LOGGER.info("Resident deleted from resource: output: void");
     }
 
-    /**
 
-     * Connects /comments route with /events route which are dependent of comment resource, 
-     * by redirecting to the service managing the URL segment in charge of the events    
-     * @param commentId id from comment from which the resource is being accessed
-     * @return events resource from the specified comment 
-     */
-    @Path("{commentsId: \\d+}/events")
-    public Class<CommentResource> getResidentEventsResource(@PathParam("commentsId") Long commentId) {
-        if (commentLogic.getComment(commentId) == null) {
-            throw new WebApplicationException("Resource /comments/" + commentId + " does not exist.", 404);
-        }
-        return CommentResource.class;
-    }
 
     /**
      * Converts an entity list to a DTO list for comments.

@@ -176,4 +176,6 @@ public class ResidentProfileResource {
         }
         return MemberGroupResource.class;
     }
+    
+
 }

@@ -97,8 +97,9 @@ public class EventGroupLogicTest {
 //===================================================
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
-     * descriptor and beans.xml file for dependencies injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
+     * contains classes, DB descriptor and beans.xml file for dependencies
+     * injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {

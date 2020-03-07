@@ -88,7 +88,7 @@ public class MemberGroupLogic {
      * @return A new collection associated to member
      */
     public List<GroupEntity> replaceGroups(Long memberId, List<GroupEntity> groups) {
-        LOGGER.log(Level.INFO, "Trying to replace groups related to member con id = {0}", memberId);
+        LOGGER.log(Level.INFO, "Trying to replace groups related to member with id = {0}", memberId);
           ResidentProfileEntity memberEntity = memberPersistence.find(memberId);
         List<GroupEntity> groupList = groupPersistence.findAll();
         for (GroupEntity group : groupList) {
@@ -101,7 +101,7 @@ public class MemberGroupLogic {
             }
         }
         memberEntity.setGroups(groups);
-       LOGGER.log(Level.INFO, "Ended trying to replace groups related to member con id = {0}", memberId);
+       LOGGER.log(Level.INFO, "Ended trying to replace groups related to member with id = {0}", memberId);
            return memberEntity.getGroups();
     }
 
@@ -112,10 +112,10 @@ public class MemberGroupLogic {
      * @param groupId Id from group     
      */
     public void removeGroup(Long memberId, Long groupId) {
-         LOGGER.log(Level.INFO, "Trying to delete an group from member con id = {0}", memberId);
+         LOGGER.log(Level.INFO, "Trying to delete an group from member with id = {0}", memberId);
        ResidentProfileEntity memberEntity = memberPersistence.find(memberId);
         GroupEntity groupEntity = groupPersistence.find(groupId);
         groupEntity.getMembers().remove(memberEntity);
-       LOGGER.log(Level.INFO, "Finished removing an group from member con id = {0}", memberId);
+       LOGGER.log(Level.INFO, "Finished removing an group from member with id = {0}", memberId);
         }
 }

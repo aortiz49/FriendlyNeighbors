@@ -88,7 +88,7 @@ public class HelperFavorLogic {
      * @return A new collection associated to helper
      */
     public List<FavorEntity> replaceFavors(Long helperId, List<FavorEntity> favors) {
-        LOGGER.log(Level.INFO, "Trying to replace favors related to helper con id = {0}", helperId);
+        LOGGER.log(Level.INFO, "Trying to replace favors related to helper with id = {0}", helperId);
         ResidentProfileEntity helperEntity = helperPersistence.find(helperId);
         List<FavorEntity> favorList = favorPersistence.findAll();
         for (FavorEntity favor : favorList) {
@@ -101,7 +101,7 @@ public class HelperFavorLogic {
             }
         }
         helperEntity.setFavorsToHelp(favors);
-        LOGGER.log(Level.INFO, "Ended trying to replace favors related to helper con id = {0}", helperId);
+        LOGGER.log(Level.INFO, "Ended trying to replace favors related to helper with id = {0}", helperId);
         return helperEntity.getFavorsToHelp();
     }
 
@@ -112,10 +112,10 @@ public class HelperFavorLogic {
      * @param favorId Id from favor
      */
     public void removeFavor(Long helperId, Long favorId) {
-        LOGGER.log(Level.INFO, "Trying to delete an favor from helper con id = {0}", helperId);
+        LOGGER.log(Level.INFO, "Trying to delete an favor from helper with id = {0}", helperId);
         ResidentProfileEntity helperEntity = helperPersistence.find(helperId);
         FavorEntity favorEntity = favorPersistence.find(favorId);
         favorEntity.getCandidates().remove(helperEntity);
-        LOGGER.log(Level.INFO, "Finished removing an favor from helper con id = {0}", helperId);
+        LOGGER.log(Level.INFO, "Finished removing an favor from helper with id = {0}", helperId);
     }
 }

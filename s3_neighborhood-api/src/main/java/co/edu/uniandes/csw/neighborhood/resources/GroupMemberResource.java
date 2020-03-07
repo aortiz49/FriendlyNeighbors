@@ -79,7 +79,8 @@ public class GroupMemberResource {
         if (memberLogic.getResident(membersId) == null) {
             throw new WebApplicationException("Resource /members/" + membersId + " does not exist.", 404);
         }
-        ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO(groupMemberLogic.associateResidentProfileToResident(groupsId, membersId));
+//        ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO(groupMemberLogic.associateMemberToGroup(groupsId, membersId));
+        ResidentProfileDetailDTO detailDTO = null;
         LOGGER.log(Level.INFO, "Ended associating member to group from resource: output: {0}", detailDTO);
         return detailDTO;
     }
