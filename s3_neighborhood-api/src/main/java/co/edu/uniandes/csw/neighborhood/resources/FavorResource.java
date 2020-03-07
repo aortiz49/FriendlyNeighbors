@@ -43,12 +43,12 @@ public class FavorResource {
     @Inject
     private FavorLogic favorLogic;
     
-    @POST
-    public FavorDTO createFavor(FavorDTO favor) throws BusinessLogicException{
-        FavorEntity entity = favorLogic.createFavor(favor.toEntity());
-        FavorDTO favorDTO = new FavorDTO(entity);
-        return favor;
-    }
+//    @POST
+//    public FavorDTO createFavor(FavorDTO favor) throws BusinessLogicException{
+//        FavorEntity entity = favorLogic.createFavor(favor.toEntity());
+//        FavorDTO favorDTO = new FavorDTO(entity);
+//        return favor;
+//    }
     
     @GET
     @Path("{favorsId: \\d+}")
