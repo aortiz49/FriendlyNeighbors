@@ -104,7 +104,7 @@ public class EventResidentProfileLogic {
      * @return A new collection associated to resident
      */
     public List<EventEntity> replaceEvents(Long residentId, List<EventEntity> events) {
-       LOGGER.log(Level.INFO, "Trying to replace events related to resident con id = {0}", residentId);
+       LOGGER.log(Level.INFO, "Trying to replace events related to resident with id = {0}", residentId);
         ResidentProfileEntity resident = residentPersistence.find(residentId);
         List<EventEntity> eventList = eventPersistence.findAll();
         for (EventEntity event : eventList) {
@@ -114,20 +114,23 @@ public class EventResidentProfileLogic {
                 event.setHost(null);
             }
         }
-        LOGGER.log(Level.INFO, "Ended trying to replace events related to resident con id = {0}", residentId);
+        LOGGER.log(Level.INFO, "Ended trying to replace events related to resident with id = {0}", residentId);
         return events;
     }
     
-    /**
+   
+
+
+   /**
      * Removes a event from a resident. Event is no longer in DB
      *
-     * @param residentId Id from resident
+
      * @param eventId Id from event     
      */
-    public void removeEvent(Long residentId, Long eventId) {
-         LOGGER.log(Level.INFO, "Trying to delete a event from resident con id = {0}", residentId);
-      eventPersistence.delete(residentId);
+    public void removeEvent(Long residentID, Long eventId) throws BusinessLogicException {
+         LOGGER.log(Level.INFO, "Trying to delete a event from resident with id = {0}", eventId);
+      eventPersistence.delete(getEvent(residentID, eventId).getId());
 
-       LOGGER.log(Level.INFO, "Finished removing a event from resident con id = {0}", residentId);
+       LOGGER.log(Level.INFO, "Finished removing a event from resident with id = {0}", eventId);
         }
 }

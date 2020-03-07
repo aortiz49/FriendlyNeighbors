@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
@@ -66,12 +67,10 @@ public class EventEntity extends BaseEntity implements Serializable {
      * The availability of the event. How long the event will take place.
      */
     private String availability;
-    
-    
+
     //===================================================
     // Relations
     //===================================================
-
     /**
      * The host of the event.
      */
@@ -85,20 +84,24 @@ public class EventEntity extends BaseEntity implements Serializable {
     @PodamExclude
     @ManyToOne
     private LocationEntity location;
-   
 
     /**
      * The residents attending the event.
      */
     @PodamExclude
-    @ManyToMany          
+    @ManyToMany
     private List<ResidentProfileEntity> attendees = new ArrayList<ResidentProfileEntity>();
-  
-    
+
+    /**
+     * The groups attending the event.
+     */
+    @PodamExclude
+    @ManyToMany(mappedBy = "events", fetch = FetchType.EAGER)
+    private List<GroupEntity> groups = new ArrayList<>();
+
 //===================================================
 // Getters & Setters
 //===================================================
-
     public Date getDatePosted() {
         return datePosted;
     }
@@ -179,7 +182,13 @@ public class EventEntity extends BaseEntity implements Serializable {
         this.attendees = attendees;
     }
 
-  
-    
+    public List<GroupEntity> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<GroupEntity> groups) {
+        this.groups = groups;
+    }
+
     
 }

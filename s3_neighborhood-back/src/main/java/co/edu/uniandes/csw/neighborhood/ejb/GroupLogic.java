@@ -48,12 +48,6 @@ public class GroupLogic {
             throw new BusinessLogicException("A creation date has to be specified");
         }
         
-         //must have a creation date
-        if(groupEntity.getDateCreated()== null){
-            throw new BusinessLogicException("A creation date has to be specified");
-        }
-        
-        
                  //must have a description
         if(groupEntity.getDescription()== null){
             throw new BusinessLogicException("A name has to be specified");
@@ -108,12 +102,7 @@ public class GroupLogic {
         if(groupEntity.getDescription()== null){
             throw new BusinessLogicException("A description has to be specified");
         }
-       
-       //must have a creation date
-        if(groupEntity.getDateCreated()== null){
-            throw new BusinessLogicException("A creation date has to be specified");
-        }
-        
+
          //must have a creation date
         if(groupEntity.getDateCreated()== null){
             throw new BusinessLogicException("A creation date has to be specified");

@@ -98,7 +98,7 @@ public class EventLocationLogic {
             }    
         }
         locationEntity.setEvents(events);
-        LOGGER.log(Level.INFO, "Ended trying to replace events related to location con id = {0}", locationId);
+        LOGGER.log(Level.INFO, "Ended trying to replace events related to location with id = {0}", locationId);
         return locationEntity.getEvents();
     }
     

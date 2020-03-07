@@ -88,7 +88,7 @@ public class AttendeeEventLogic {
      * @return A new collection associated to attendee
      */
     public List<EventEntity> replaceEvents(Long attendeeId, List<EventEntity> events) {
-        LOGGER.log(Level.INFO, "Trying to replace events related to attendee con id = {0}", attendeeId);
+        LOGGER.log(Level.INFO, "Trying to replace events related to attendee with id = {0}", attendeeId);
           ResidentProfileEntity attendeeEntity = attendeePersistence.find(attendeeId);
         List<EventEntity> eventList = eventPersistence.findAll();
         for (EventEntity event : eventList) {
@@ -101,7 +101,7 @@ public class AttendeeEventLogic {
             }
         }
         attendeeEntity.setEventsToAttend(events);
-       LOGGER.log(Level.INFO, "Ended trying to replace events related to attendee con id = {0}", attendeeId);
+       LOGGER.log(Level.INFO, "Ended trying to replace events related to attendee with id = {0}", attendeeId);
            return attendeeEntity.getEventsToAttend();
     }
 
@@ -112,10 +112,10 @@ public class AttendeeEventLogic {
      * @param eventId Id from event     
      */
     public void removeEvent(Long attendeeId, Long eventId) {
-         LOGGER.log(Level.INFO, "Trying to delete an event from attendee con id = {0}", attendeeId);
+         LOGGER.log(Level.INFO, "Trying to delete an event from attendee with id = {0}", attendeeId);
        ResidentProfileEntity attendeeEntity = attendeePersistence.find(attendeeId);
         EventEntity eventEntity = eventPersistence.find(eventId);
         eventEntity.getAttendees().remove(attendeeEntity);
-       LOGGER.log(Level.INFO, "Finished removing an event from attendee con id = {0}", attendeeId);
+       LOGGER.log(Level.INFO, "Finished removing an event from attendee with id = {0}", attendeeId);
         }
 }

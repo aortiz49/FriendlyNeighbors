@@ -137,7 +137,7 @@ public class NeighborhoodPersistenceTest {
         NeighborhoodEntity newEntity = neighborhoodPersistence.find(entity.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getNumberOfResidents(), newEntity.getNumberOfResidents());
-        Assert.assertEquals(entity.getMunicipality(), newEntity.getMunicipality());
+        Assert.assertEquals(entity.getLocality(), newEntity.getLocality());
 
     }
 

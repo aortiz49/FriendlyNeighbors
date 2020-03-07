@@ -88,7 +88,7 @@ public class ViewerPostLogic {
      * @return A new collection associated to viewer
      */
     public List<PostEntity> replacePosts(Long viewerId, List<PostEntity> posts) {
-        LOGGER.log(Level.INFO, "Trying to replace posts related to viewer con id = {0}", viewerId);
+        LOGGER.log(Level.INFO, "Trying to replace posts related to viewer with id = {0}", viewerId);
           ResidentProfileEntity viewerEntity = viewerPersistence.find(viewerId);
         List<PostEntity> postList = postPersistence.findAll();
         for (PostEntity post : postList) {
@@ -101,7 +101,7 @@ public class ViewerPostLogic {
             }
         }
         viewerEntity.setPostsToView(posts);
-       LOGGER.log(Level.INFO, "Ended trying to replace posts related to viewer con id = {0}", viewerId);
+       LOGGER.log(Level.INFO, "Ended trying to replace posts related to viewer with id = {0}", viewerId);
            return viewerEntity.getPostsToView();
     }
 
@@ -112,10 +112,10 @@ public class ViewerPostLogic {
      * @param postId Id from post     
      */
     public void removePost(Long viewerId, Long postId) {
-         LOGGER.log(Level.INFO, "Trying to delete an post from viewer con id = {0}", viewerId);
+         LOGGER.log(Level.INFO, "Trying to delete an post from viewer with id = {0}", viewerId);
        ResidentProfileEntity viewerEntity = viewerPersistence.find(viewerId);
         PostEntity postEntity = postPersistence.find(postId);
         postEntity.getViewers().remove(viewerEntity);
-       LOGGER.log(Level.INFO, "Finished removing an post from viewer con id = {0}", viewerId);
+       LOGGER.log(Level.INFO, "Finished removing an post from viewer with id = {0}", viewerId);
         }
 }

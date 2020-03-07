@@ -36,8 +36,7 @@ public class EventAttendeeLogicTest {
 
     @Inject
     private ResidentProfileLogic residentLogic;
-    
-        
+
     @Inject
     private NeighborhoodPersistence neighPersistence;
 
@@ -67,7 +66,7 @@ public class EventAttendeeLogicTest {
     }
 
     /**
-     * Initial test configuration. 
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -86,7 +85,6 @@ public class EventAttendeeLogicTest {
         }
     }
 
-
     /**
      * Clears tables involved in tests
      */
@@ -95,8 +93,7 @@ public class EventAttendeeLogicTest {
         em.createQuery("delete from ResidentProfileEntity").executeUpdate();
     }
 
-
-        /**
+    /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
@@ -107,8 +104,7 @@ public class EventAttendeeLogicTest {
 
         for (int i = 0; i < 3; i++) {
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
-   
-            
+
             entity.setEventsToAttend(new ArrayList<>());
             entity.getEventsToAttend().add(event);
             em.persist(entity);
@@ -118,7 +114,7 @@ public class EventAttendeeLogicTest {
     }
 
     /**
-     * Test to associate a resident with an event 
+     * Test to associate a resident with an event
      *
      *
      * @throws BusinessLogicException
@@ -126,32 +122,29 @@ public class EventAttendeeLogicTest {
     @Test
     public void addResidentTest() throws BusinessLogicException {
         ResidentProfileEntity newResidentProfile = factory.manufacturePojo(ResidentProfileEntity.class);
-       
-            
-        NeighborhoodEntity neigh   = factory.manufacturePojo(NeighborhoodEntity.class);
+
+        NeighborhoodEntity neigh = factory.manufacturePojo(NeighborhoodEntity.class);
         neighPersistence.create(neigh);
-                   
+
         newResidentProfile.setNeighborhood(neigh);
-        
 
         residentLogic.createResident(newResidentProfile);
-              
-        ResidentProfileEntity residentEntity = eventResidentProfileLogic.associateResidentProfileToResident(event.getId(), newResidentProfile.getId());
+
+        ResidentProfileEntity residentEntity = eventResidentProfileLogic.associateResidentProfileToEvent(event.getId(), newResidentProfile.getId());
         Assert.assertNotNull(residentEntity);
 
         Assert.assertEquals(residentEntity.getId(), newResidentProfile.getId());
         Assert.assertEquals(residentEntity.getAddress(), newResidentProfile.getAddress());
 
-
         ResidentProfileEntity lastResident = eventResidentProfileLogic.getResidentProfile(event.getId(), newResidentProfile.getId());
 
         Assert.assertEquals(lastResident.getId(), newResidentProfile.getId());
 
-
     }
-    
+
     /**
-     * Test for getting a collection of resident entities associated with an event
+     * Test for getting a collection of resident entities associated with an
+     * event
      */
     @Test
     public void getResidentProfilesTest() {
@@ -186,15 +179,15 @@ public class EventAttendeeLogicTest {
      * @throws BusinessLogicException
      */
     @Test
-	
+
     public void replaceResidentProfilesTest() throws BusinessLogicException {
         List<ResidentProfileEntity> newCollection = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
             entity.setEventsToAttend(new ArrayList<>());
             entity.getEventsToAttend().add(event);
-            
-            NeighborhoodEntity neigh   = factory.manufacturePojo(NeighborhoodEntity.class);
+
+            NeighborhoodEntity neigh = factory.manufacturePojo(NeighborhoodEntity.class);
             neighPersistence.create(neigh);
 
             entity.setNeighborhood(neigh);
@@ -221,5 +214,4 @@ public class EventAttendeeLogicTest {
         Assert.assertTrue(eventResidentProfileLogic.getResidentProfiles(event.getId()).isEmpty());
     }
 
-   
 }

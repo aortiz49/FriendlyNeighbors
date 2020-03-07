@@ -87,9 +87,9 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
     private String name;
 
     /**
-     * The name of the municipality.
+     * The name of the locality.
      */
-    private String municipality;
+    private String locality;
 
     /**
      * The number of residents in the neighborhood.
@@ -173,21 +173,21 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
     }
 
     /**
-     * Returns the name of the municipality the neighborhood is in.
+     * Returns the name of the locality the neighborhood is in.
      *
-     * @return the municipality name
+     * @return the locality name
      */
-    public String getMunicipality() {
-        return municipality;
+    public String getLocality() {
+        return locality;
     }
 
     /**
-     * Sets the name of the municipality the neighborhood is in.
+     * Sets the name of the locality the neighborhood is in.
      *
-     * @param pMunicipality the new municipality
+     * @param pMunicipality the new locality
      */
-    public void setMunicipality(String pMunicipality) {
-        municipality = pMunicipality;
+    public void setLocality(String pMunicipality) {
+        locality = pMunicipality;
     }
 
     /**
@@ -215,5 +215,7 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
     public void setGroups(List<GroupEntity> groups) {
         this.groups = groups;
     }
+    
+    
 
 }

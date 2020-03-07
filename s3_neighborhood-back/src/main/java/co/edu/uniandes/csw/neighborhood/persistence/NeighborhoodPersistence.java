@@ -37,8 +37,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
- * Class that manages the persistence for the Neighborhood. It connects via the
- * Entity Manager in javax.persistance with a SQL database.
+ * Class that manages the persistence for the Neighborhood. It connects via the Entity Manager in
+ * javax.persistance with a SQL database.
  *
  * @author aortiz49
  */
@@ -62,12 +62,10 @@ public class NeighborhoodPersistence {
     //===================================================
     // CRUD Methods
     //===================================================
-
     /**
      * Persists a neighborhood in the database.
      *
-     * @param pNeighborhoodEntity neighborhood object to be created in the
-     *                            databse
+     * @param pNeighborhoodEntity neighborhood object to be created in the databse
      * @return the created neighborhood with an id given by the databse
      */
     public NeighborhoodEntity create(NeighborhoodEntity pNeighborhoodEntity) {
@@ -84,9 +82,8 @@ public class NeighborhoodPersistence {
     /**
      * Returns all neighborhoods in the database.
      *
-     * @return a list containing every neighborhood in the database. select u
-     * from NeighborhoodEntity u" is akin to a "SELECT * from
-     * NeighborhoodEntity" in SQL.
+     * @return a list containing every neighborhood in the database. select u from
+     * NeighborhoodEntity u" is akin to a "SELECT * from NeighborhoodEntity" in SQL.
      */
     public List<NeighborhoodEntity> findAll() {
         // log the consultation
@@ -94,8 +91,8 @@ public class NeighborhoodPersistence {
 
         // Create a typed neighborhood entity query to find all neighborhoods 
         // in the database. 
-        TypedQuery<NeighborhoodEntity> query =
-                em.createQuery("select u from NeighborhoodEntity u", NeighborhoodEntity.class);
+        TypedQuery<NeighborhoodEntity> query
+                = em.createQuery("select u from NeighborhoodEntity u", NeighborhoodEntity.class);
 
         return query.getResultList();
     }
@@ -113,47 +110,39 @@ public class NeighborhoodPersistence {
     }
 
     /**
-     * Looks for a neighborhood with the name given by the parameter. 
-     * 
-     * @param pNeighborhoodName the name corresponding to the neighborhood.
-     * @return  the found neighborhood
+     * Finds a neighborhood by name.
+     *
+     * @param pName the name of the neighborhood to search for
+     * @return null if the neighborhood doesn't exist. If the neighborhood exists, return the first
+     * one
      */
-    public NeighborhoodEntity findByName(String pNeighborhoodName) {
+    public NeighborhoodEntity findByName(String pName) {
+        LOGGER.log(Level.INFO, "Consulting neighborhood by name ", pName);
 
-        LOGGER.log(Level.INFO, "Consulting neighborhood with name ", pNeighborhoodName);
+        // creates a query to search for neighborhoods with the name given by the parameter. ":pName" is a placeholder that must be replaced
+        TypedQuery query = em.createQuery("Select e From NeighborhoodEntity e where e.name = :pName", NeighborhoodEntity.class);
 
-        TypedQuery query =
-                em.createQuery("Select x From ResidentProfileEntity x where x.name = :pNeighborhoodName",
-                               NeighborhoodEntity.class);
+        // the "pName" placeholder is replaced with the name of the parameter
+        query = query.setParameter("pName", pName);
 
-        // Sets the parameter where the name will be searched
-        query = query.setParameter("name", pNeighborhoodName);
-
-
-        List<NeighborhoodEntity> sameNameList = query.getResultList();
+        // invokes the query and returns a list of results
+        List<NeighborhoodEntity> sameName = query.getResultList();
         NeighborhoodEntity result;
-        
-        if (sameNameList == null) {
-            result = null;
-        }
-        
-        else if (sameNameList.isEmpty()) {
-            result = null;
-        }
-        else {
-            result = sameNameList.get(0);
-        }
 
+        if (sameName == null || sameName.isEmpty()) {
+            result = null;
+        } else {
+            result = sameName.get(0);
+        }
+        LOGGER.log(Level.INFO, "Exiting consultation of neighborhood by name ", pName);
         return result;
     }
 
     /**
      * Updates a neighborhood.
      *
-     * @param pNeighborhoodEntity the neighborhood with the modifications. For
-     *                            example, the name could have changed. In that case, we must use
-     *                            this
-     *                            update method.
+     * @param pNeighborhoodEntity the neighborhood with the modifications. For example, the name
+     * could have changed. In that case, we must use this update method.
      * @return the neighborhood with the updated changes
      */
     public NeighborhoodEntity update(NeighborhoodEntity pNeighborhoodEntity) {
@@ -174,7 +163,7 @@ public class NeighborhoodPersistence {
         NeighborhoodEntity reviewEntity = em.find(NeighborhoodEntity.class, pNeighborhoodId);
         em.remove(reviewEntity);
         LOGGER.log(Level.INFO, "Exiting the deletion of neighborhood with id = {0}",
-                   pNeighborhoodId);
+                pNeighborhoodId);
     }
 
 }

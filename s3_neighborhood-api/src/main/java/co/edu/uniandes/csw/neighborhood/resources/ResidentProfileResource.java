@@ -176,4 +176,23 @@ public class ResidentProfileResource {
         }
         return MemberGroupResource.class;
     }
+    
+            /**
+     *
+     * Connects /residents route with /favors route which are dependent of resident
+     * resource, by redirecting to the service managing the URL segment in
+     * charge of the members
+     *
+     * @param residentsId id from resident from which the resource is being accessed
+     * @return groups resource from the specified resident
+     */
+
+    @Path("{membersId: \\d+}/favors")
+    public Class<FavorResidentProfileResource> getFavorResidentProfileResource(@PathParam("membersId") Long residentsId) {
+        if (residentLogic.getResident(residentsId) == null) {
+            throw new WebApplicationException("Resource /residents/" + residentsId + " does not exist.", 404);
+        }
+        return FavorResidentProfileResource.class;
+    }
+
 }

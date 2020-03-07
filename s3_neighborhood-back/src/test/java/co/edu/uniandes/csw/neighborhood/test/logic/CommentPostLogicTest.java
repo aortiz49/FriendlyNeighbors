@@ -1,18 +1,14 @@
 /*
 MIT License
-
 Copyright (c) 2017 Universidad de los Andes - ISIS2603
-
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
-
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
-
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,11 +20,13 @@ SOFTWARE.
 package co.edu.uniandes.csw.neighborhood.test.logic;
 
 import co.edu.uniandes.csw.neighborhood.ejb.PostLogic;
-import co.edu.uniandes.csw.neighborhood.ejb.PostComment;
+import co.edu.uniandes.csw.neighborhood.ejb.CommentPostLogic;
 import co.edu.uniandes.csw.neighborhood.entities.CommentEntity;
 import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.PostPersistence;
+import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -55,9 +53,9 @@ public class CommentPostLogicTest {
     private PodamFactory factory = new PodamFactoryImpl();
 
     @Inject
-    private PostLogic residentLogic;
+    private ResidentProfilePersistence residentPersistence;
     @Inject
-    private PostComment residentCommentLogic;
+    private CommentPostLogic postCommentLogic;
 
     @PersistenceContext
     private EntityManager em;
@@ -121,8 +119,14 @@ public class CommentPostLogicTest {
             em.persist(comments);
             commentsData.add(comments);
         }
+        
+        ResidentProfileEntity resident = factory.manufacturePojo(ResidentProfileEntity.class);
+        residentPersistence.create(resident);
+        
+      
         for (int i = 0; i < 3; i++) {
             PostEntity entity = factory.manufacturePojo(PostEntity.class);
+            entity.setAuthor(resident);
             em.persist(entity);
             data.add(entity);
             if (i == 0) {
@@ -141,7 +145,9 @@ public class CommentPostLogicTest {
     public void addCommentsTest() {
         PostEntity entity = data.get(0);
         CommentEntity commentEntity = commentsData.get(1);
-        CommentEntity response = residentCommentLogic.associateCommentToResident(commentEntity.getId(), entity.getId());
+
+        
+        CommentEntity response = postCommentLogic.associateCommentToPost(commentEntity.getId(), entity.getId());
 
         Assert.assertNotNull(response);
         Assert.assertEquals(commentEntity.getId(), response.getId());
@@ -152,7 +158,7 @@ public class CommentPostLogicTest {
      */
     @Test
     public void getCommentsTest() {
-        List<CommentEntity> list = residentCommentLogic.getComments(data.get(0).getId());
+        List<CommentEntity> list = postCommentLogic.getComments(data.get(0).getId());
 
         Assert.assertEquals(1, list.size());
     }
@@ -166,7 +172,7 @@ public class CommentPostLogicTest {
     public void getCommentTest() throws BusinessLogicException {
         PostEntity entity = data.get(0);
         CommentEntity commentEntity = commentsData.get(0);
-        CommentEntity response = residentCommentLogic.getComment(entity.getId(), commentEntity.getId());
+        CommentEntity response = postCommentLogic.getComment(entity.getId(), commentEntity.getId());
 
         Assert.assertEquals(commentEntity.getId(), response.getId());
         Assert.assertEquals(commentEntity.getText(), response.getText());
@@ -182,7 +188,7 @@ public class CommentPostLogicTest {
     public void getNonRealatedCommentTest() throws BusinessLogicException {
         PostEntity entity = data.get(0);
         CommentEntity commentEntity = commentsData.get(1);
-        residentCommentLogic.getComment(entity.getId(), commentEntity.getId());
+        postCommentLogic.getComment(entity.getId(), commentEntity.getId());
     }
 
 }

@@ -57,7 +57,6 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     private ResidentProfileEntity owner;
 
 
- 
 //===================================================
 // Attributes
 //===================================================
@@ -275,5 +274,24 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     public void setPercentOfProductsSold(Double pPercentOfProductsSold) {
         percentOfProductsSold = pPercentOfProductsSold;
     }
+
+    
+    public NeighborhoodEntity getNeighborhood() {
+        return neighborhood;
+    }
+
+    public void setNeighborhood(NeighborhoodEntity neighborhood) {
+        this.neighborhood = neighborhood;
+    }
+
+    public ResidentProfileEntity getOwner() {
+        return owner;
+    }
+
+    public void setOwner(ResidentProfileEntity owner) {
+        this.owner = owner;
+    }
+    
+    
 
 }

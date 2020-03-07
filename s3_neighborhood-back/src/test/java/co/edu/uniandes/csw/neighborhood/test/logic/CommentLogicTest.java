@@ -127,6 +127,9 @@ public class CommentLogicTest {
         }
     }
 
+    /**
+     * Test for creating a comment
+     */
     @Test
     public void createCommentTest() {
         
@@ -163,7 +166,9 @@ public class CommentLogicTest {
 }
     
  
-
+/**
+ * Test for getting all comments
+ */
     @Test
     public void getCommentsTest() {
         List<CommentEntity> list = commentLogic.getComments();
@@ -180,6 +185,9 @@ public class CommentLogicTest {
     }
 
 
+    /**
+     * Test for getting a comment
+     */
     @Test
     public void getCommentTest() {
         CommentEntity entity = data.get(0);
@@ -190,6 +198,10 @@ public class CommentLogicTest {
     }
 
 
+    /**
+     * Test for updating a comment
+     * @throws BusinessLogicException 
+     */
     @Test
     public void updateCommentTest() throws BusinessLogicException {
   
@@ -204,6 +216,10 @@ public class CommentLogicTest {
     }
 
 
+    /**
+     * Test for deleting a comment
+     * @throws BusinessLogicException 
+     */
     @Test
     public void deleteCommentTest() throws BusinessLogicException {
         CommentEntity entity = data.get(1);

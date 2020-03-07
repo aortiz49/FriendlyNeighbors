@@ -63,7 +63,7 @@ public class ViewerPostLogicTest {
     }
 
     /**
-     * Initial test configuration. 
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -82,8 +82,7 @@ public class ViewerPostLogicTest {
         }
     }
 
-
-       /**
+    /**
      * Clears tables involved in tests
      */
     private void clearData() {
@@ -91,8 +90,7 @@ public class ViewerPostLogicTest {
         em.createQuery("delete from PostEntity").executeUpdate();
     }
 
-
-        /**
+    /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
@@ -112,7 +110,7 @@ public class ViewerPostLogicTest {
     }
 
     /**
-     * Test to associate an post with a viewer 
+     * Test to associate an post with a viewer
      *
      *
      * @throws BusinessLogicException
@@ -127,14 +125,12 @@ public class ViewerPostLogicTest {
         Assert.assertEquals(postEntity.getId(), newPost.getId());
         Assert.assertEquals(postEntity.getDescription(), newPost.getDescription());
 
-
         PostEntity lastPost = viewerPostLogic.getPost(viewer.getId(), newPost.getId());
 
         Assert.assertEquals(lastPost.getId(), newPost.getId());
 
-
     }
-    
+
     /**
      * Test for getting a collection of post entities associated with a viewer
      */
@@ -171,7 +167,7 @@ public class ViewerPostLogicTest {
      * @throws BusinessLogicException
      */
     @Test
-	
+
     public void replacePostsTest() throws BusinessLogicException {
         List<PostEntity> newCollection = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -200,5 +196,4 @@ public class ViewerPostLogicTest {
         Assert.assertTrue(viewerPostLogic.getPosts(viewer.getId()).isEmpty());
     }
 
-   
 }

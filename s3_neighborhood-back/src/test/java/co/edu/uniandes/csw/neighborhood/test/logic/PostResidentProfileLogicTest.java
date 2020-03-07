@@ -84,8 +84,8 @@ public class PostResidentProfileLogicTest {
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
 
-   /**
-     * Initial test configuration. 
+    /**
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -104,7 +104,7 @@ public class PostResidentProfileLogicTest {
         }
     }
 
-       /**
+    /**
      * Clears tables involved in tests
      */
     private void clearData() {
@@ -112,7 +112,7 @@ public class PostResidentProfileLogicTest {
         em.createQuery("delete from ResidentProfileEntity").executeUpdate();
     }
 
-        /**
+    /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
@@ -132,7 +132,7 @@ public class PostResidentProfileLogicTest {
     }
 
     /**
-     * Test to associate a post with a resident 
+     * Test to associate a post with a resident
      *
      *
      * @throws BusinessLogicException
@@ -174,7 +174,7 @@ public class PostResidentProfileLogicTest {
     }
 
     /**
-     * Test for getting a post from a non-author user 
+     * Test for getting a post from a non-author user
      *
      * @throws BusinessLogicException
      */

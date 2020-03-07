@@ -81,14 +81,14 @@ public class FavorResidentProfileLogic {
      * @param residentId Id from resident
      * @param favorId Id from associated entity
      * @return associated entity
-     * @throws BusinessLogicException If event is not associated 
+     * @throws BusinessLogicException If favor is not associated 
      */
     public FavorEntity getFavor(Long residentId, Long favorId) throws BusinessLogicException {
-              LOGGER.log(Level.INFO, "Finding event with id = {0} from resident with = " + residentId, favorId);
+              LOGGER.log(Level.INFO, "Finding favor with id = {0} from resident with = " + residentId, favorId);
         List<FavorEntity> favors = residentPersistence.find(residentId).getFavorsRequested();
         FavorEntity FavorEntity = favorPersistence.find(favorId);
         int index = favors.indexOf(FavorEntity);
-            LOGGER.log(Level.INFO, "Finish query about event with id = {0} from resident with = " + residentId, favorId);
+            LOGGER.log(Level.INFO, "Finish query about favor with id = {0} from resident with = " + residentId, favorId);
         if (index >= 0) {
             return favors.get(index);
         }
@@ -104,7 +104,7 @@ public class FavorResidentProfileLogic {
      * @return A new collection associated to resident
      */
     public List<FavorEntity> replaceFavors(Long residentId, List<FavorEntity> favors) {
-       LOGGER.log(Level.INFO, "Trying to replace favors related to resident con id = {0}", residentId);
+       LOGGER.log(Level.INFO, "Trying to replace favors related to resident with id = {0}", residentId);
         ResidentProfileEntity resident = residentPersistence.find(residentId);
         List<FavorEntity> favorList = favorPersistence.findAll();
         for (FavorEntity favor : favorList) {
@@ -114,20 +114,20 @@ public class FavorResidentProfileLogic {
                 favor.setAuthor(null);
             }
         }
-        LOGGER.log(Level.INFO, "Ended trying to replace favors related to resident con id = {0}", residentId);
+        LOGGER.log(Level.INFO, "Ended trying to replace favors related to resident with id = {0}", residentId);
         return favors;
     }
     
     /**
      * Removes a favor from a resident. Favor is no longer in DB
      *
-     * @param residentId Id from resident
-     * @param eventId Id from favor     
-     */
-    public void removeFavor(Long residentId, Long eventId) {
-         LOGGER.log(Level.INFO, "Trying to delete a favor from resident con id = {0}", residentId);
-      favorPersistence.delete(residentId);
 
-       LOGGER.log(Level.INFO, "Finished removing a favor from resident con id = {0}", residentId);
+     * @param favorId Id from favor     
+     */
+    public void removeFavor(Long residentID, Long favorId) throws BusinessLogicException {
+         LOGGER.log(Level.INFO, "Trying to delete a favor from resident with id = {0}", favorId);
+      favorPersistence.delete(getFavor(residentID, favorId).getId());
+
+       LOGGER.log(Level.INFO, "Finished removing a favor from resident with id = {0}", favorId);
         }
 }

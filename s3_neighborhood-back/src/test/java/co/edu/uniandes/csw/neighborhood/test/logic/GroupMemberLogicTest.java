@@ -36,8 +36,7 @@ public class GroupMemberLogicTest {
 
     @Inject
     private ResidentProfileLogic memberLogic;
-    
-        
+
     @Inject
     private NeighborhoodPersistence neighPersistence;
 
@@ -67,7 +66,7 @@ public class GroupMemberLogicTest {
     }
 
     /**
-     * Initial test configuration. 
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -86,7 +85,6 @@ public class GroupMemberLogicTest {
         }
     }
 
-
     /**
      * Clears tables involved in tests
      */
@@ -95,8 +93,7 @@ public class GroupMemberLogicTest {
         em.createQuery("delete from ResidentProfileEntity").executeUpdate();
     }
 
-
-        /**
+    /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
@@ -107,8 +104,7 @@ public class GroupMemberLogicTest {
 
         for (int i = 0; i < 3; i++) {
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
-   
-            
+
             entity.setGroups(new ArrayList<>());
             entity.getGroups().add(group);
             em.persist(entity);
@@ -118,7 +114,7 @@ public class GroupMemberLogicTest {
     }
 
     /**
-     * Test to associate a member with an group 
+     * Test to associate a member with an group
      *
      *
      * @throws BusinessLogicException
@@ -126,30 +122,26 @@ public class GroupMemberLogicTest {
     @Test
     public void addResidentTest() throws BusinessLogicException {
         ResidentProfileEntity newResidentProfile = factory.manufacturePojo(ResidentProfileEntity.class);
-       
-            
-        NeighborhoodEntity neigh   = factory.manufacturePojo(NeighborhoodEntity.class);
+
+        NeighborhoodEntity neigh = factory.manufacturePojo(NeighborhoodEntity.class);
         neighPersistence.create(neigh);
-                   
+
         newResidentProfile.setNeighborhood(neigh);
-        
 
         memberLogic.createResident(newResidentProfile);
-              
-        ResidentProfileEntity memberEntity = groupResidentProfileLogic.associateResidentProfileToResident(group.getId(), newResidentProfile.getId());
+
+        ResidentProfileEntity memberEntity = groupResidentProfileLogic.associateMemberToGroup(group.getId(), newResidentProfile.getId());
         Assert.assertNotNull(memberEntity);
 
         Assert.assertEquals(memberEntity.getId(), newResidentProfile.getId());
         Assert.assertEquals(memberEntity.getAddress(), newResidentProfile.getAddress());
 
-
         ResidentProfileEntity lastResident = groupResidentProfileLogic.getResidentProfile(group.getId(), newResidentProfile.getId());
 
         Assert.assertEquals(lastResident.getId(), newResidentProfile.getId());
 
-
     }
-    
+
     /**
      * Test for getting a collection of member entities associated with an group
      */
@@ -186,15 +178,15 @@ public class GroupMemberLogicTest {
      * @throws BusinessLogicException
      */
     @Test
-	
+
     public void replaceResidentProfilesTest() throws BusinessLogicException {
         List<ResidentProfileEntity> newCollection = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
             entity.setGroups(new ArrayList<>());
             entity.getGroups().add(group);
-            
-            NeighborhoodEntity neigh   = factory.manufacturePojo(NeighborhoodEntity.class);
+
+            NeighborhoodEntity neigh = factory.manufacturePojo(NeighborhoodEntity.class);
             neighPersistence.create(neigh);
 
             entity.setNeighborhood(neigh);
@@ -221,5 +213,4 @@ public class GroupMemberLogicTest {
         Assert.assertTrue(groupResidentProfileLogic.getResidentProfiles(group.getId()).isEmpty());
     }
 
-   
 }

@@ -5,7 +5,6 @@
  */
 package co.edu.uniandes.csw.neighborhood.ejb;
 
-
 import co.edu.uniandes.csw.neighborhood.entities.FavorEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
@@ -41,23 +40,24 @@ public class HelperFavorLogic {
      * @return associated favor entity
      */
     public FavorEntity associateFavorToAttenddee(Long helperId, Long favorId) {
-       LOGGER.log(Level.INFO, "Trying to associate favor with helper with id = {0}", helperId);
-         ResidentProfileEntity helperEntity = helperPersistence.find(helperId);
+        LOGGER.log(Level.INFO, "Trying to associate favor with helper with id = {0}", helperId);
+        ResidentProfileEntity helperEntity = helperPersistence.find(helperId);
         FavorEntity favorEntity = favorPersistence.find(favorId);
         favorEntity.getCandidates().add(helperEntity);
-        
+
         LOGGER.log(Level.INFO, "Favor is associated with helper with id = {0}", helperId);
-       return favorPersistence.find(favorId);
+        return favorPersistence.find(favorId);
     }
 
     /**
-     * Gets a collection of favor entities associated with a helper 
+     * Gets a collection of favor entities associated with a helper
+     *
      * @param helperId ID from helper entity
-     * @return collection of favor entities associated with a helper 
+     * @return collection of favor entities associated with a helper
      */
     public List<FavorEntity> getFavors(Long helperId) {
-       LOGGER.log(Level.INFO, "Gets all favors belonging to helper with id = {0}", helperId);
-            return helperPersistence.find(helperId).getFavorsToHelp();
+        LOGGER.log(Level.INFO, "Gets all favors belonging to helper with id = {0}", helperId);
+        return helperPersistence.find(helperId).getFavorsToHelp();
     }
 
     /**
@@ -66,18 +66,18 @@ public class HelperFavorLogic {
      * @param helperId Id from helper
      * @param favorId Id from associated entity
      * @return associated entity
-     * @throws BusinessLogicException If favor is not associated 
+     * @throws BusinessLogicException If favor is not associated
      */
     public FavorEntity getFavor(Long helperId, Long favorId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Finding favor with id = {0} from helper with = " + helperId, favorId);
-   List<FavorEntity> favors = helperPersistence.find(helperId).getFavorsToHelp();
+        List<FavorEntity> favors = helperPersistence.find(helperId).getFavorsToHelp();
         FavorEntity favorFavors = favorPersistence.find(favorId);
         int index = favors.indexOf(favorFavors);
-       LOGGER.log(Level.INFO, "Finish query about favor with id = {0} from helper with = " + helperId, favorId);
+        LOGGER.log(Level.INFO, "Finish query about favor with id = {0} from helper with = " + helperId, favorId);
         if (index >= 0) {
             return favors.get(index);
         }
-         throw new BusinessLogicException("There is no association between helper and favor");
+        throw new BusinessLogicException("There is no association between helper and favor");
     }
 
     /**
@@ -88,8 +88,8 @@ public class HelperFavorLogic {
      * @return A new collection associated to helper
      */
     public List<FavorEntity> replaceFavors(Long helperId, List<FavorEntity> favors) {
-        LOGGER.log(Level.INFO, "Trying to replace favors related to helper con id = {0}", helperId);
-          ResidentProfileEntity helperEntity = helperPersistence.find(helperId);
+        LOGGER.log(Level.INFO, "Trying to replace favors related to helper with id = {0}", helperId);
+        ResidentProfileEntity helperEntity = helperPersistence.find(helperId);
         List<FavorEntity> favorList = favorPersistence.findAll();
         for (FavorEntity favor : favorList) {
             if (favors.contains(favor)) {
@@ -101,21 +101,21 @@ public class HelperFavorLogic {
             }
         }
         helperEntity.setFavorsToHelp(favors);
-       LOGGER.log(Level.INFO, "Ended trying to replace favors related to helper con id = {0}", helperId);
-           return helperEntity.getFavorsToHelp();
+        LOGGER.log(Level.INFO, "Ended trying to replace favors related to helper with id = {0}", helperId);
+        return helperEntity.getFavorsToHelp();
     }
 
     /**
      * Unlinks an favor from a helper
      *
      * @param helperId Id from helper
-     * @param favorId Id from favor     
+     * @param favorId Id from favor
      */
     public void removeFavor(Long helperId, Long favorId) {
-         LOGGER.log(Level.INFO, "Trying to delete an favor from helper con id = {0}", helperId);
-       ResidentProfileEntity helperEntity = helperPersistence.find(helperId);
+        LOGGER.log(Level.INFO, "Trying to delete an favor from helper with id = {0}", helperId);
+        ResidentProfileEntity helperEntity = helperPersistence.find(helperId);
         FavorEntity favorEntity = favorPersistence.find(favorId);
         favorEntity.getCandidates().remove(helperEntity);
-       LOGGER.log(Level.INFO, "Finished removing an favor from helper con id = {0}", helperId);
-        }
+        LOGGER.log(Level.INFO, "Finished removing an favor from helper with id = {0}", helperId);
+    }
 }

@@ -41,7 +41,7 @@ public class EventAttendeeLogic {
      * @param attendeeId ID from attendee
      * @return associated attendee
      */
-    public ResidentProfileEntity associateResidentProfileToResident(Long eventId, Long attendeeId) {
+    public ResidentProfileEntity associateResidentProfileToEvent(Long eventId, Long attendeeId) {
        LOGGER.log(Level.INFO, "Trying to add attendee to event with id = {0}", eventId);
          EventEntity eventEntity = eventPersistence.find(eventId);
         ResidentProfileEntity attendeeEntity = attendeePersistence.find(attendeeId);
@@ -89,7 +89,7 @@ public class EventAttendeeLogic {
      * @return A new collection associated to event
      */
     public List<ResidentProfileEntity> replaceResidentProfiles(Long eventId, List<ResidentProfileEntity> attendees) {
-        LOGGER.log(Level.INFO, "Trying to replace attendees related to event con id = {0}", eventId);
+        LOGGER.log(Level.INFO, "Trying to replace attendees related to event with id = {0}", eventId);
           EventEntity eventEntity = eventPersistence.find(eventId);
         List<ResidentProfileEntity> attendeeList = attendeePersistence.findAll();
         for (ResidentProfileEntity attendee : attendeeList) {
@@ -102,7 +102,7 @@ public class EventAttendeeLogic {
             }
         }
         eventEntity.setAttendees(attendees);
-       LOGGER.log(Level.INFO, "Ended trying to replace attendees related to event con id = {0}", eventId);
+       LOGGER.log(Level.INFO, "Ended trying to replace attendees related to event with id = {0}", eventId);
            return eventEntity.getAttendees();
     }
 
@@ -113,11 +113,11 @@ public class EventAttendeeLogic {
      * @param attendeeId Id from attendee     
      */
     public void removeResidentProfile(Long eventId, Long attendeeId) {
-         LOGGER.log(Level.INFO, "Trying to delete an attendee from event con id = {0}", eventId);
+         LOGGER.log(Level.INFO, "Trying to delete an attendee from event with id = {0}", eventId);
        ResidentProfileEntity attendeeEntity = attendeePersistence.find(attendeeId);
         EventEntity eventEntity = eventPersistence.find(eventId);
         eventEntity.getAttendees().remove(attendeeEntity);
-       LOGGER.log(Level.INFO, "Finished removing an attendee from event con id = {0}", eventId);
+       LOGGER.log(Level.INFO, "Finished removing an attendee from event with id = {0}", eventId);
         }
     
 }

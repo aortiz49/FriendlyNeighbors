@@ -36,8 +36,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
- * Class that manages the persistence for the Business. It connects via the
- * Entity Manager in javax.persistance with a SQL database.
+ * Class that manages the persistence for the Business. It connects via the Entity Manager in
+ * javax.persistance with a SQL database.
  *
  * @author aortiz49
  */
@@ -82,8 +82,8 @@ public class BusinessPersistence {
     /**
      * Returns all businesses in the database.
      *
-     * @return a list containing every business in the database. "select u from
-     * BusinessUntity u" is akin to: "SELECT * from BusinessEntity" in SQL.
+     * @return a list containing every business in the database. "select u from BusinessUntity u" is
+     * akin to: "SELECT * from BusinessEntity" in SQL.
      */
     public List<BusinessEntity> findAll() {
         // log the consultation
@@ -111,11 +111,37 @@ public class BusinessPersistence {
     }
 
     /**
+     * Finds a business by name.
+     *
+     * @param pName the name of the business to
+     * @return null if the business doesn't exist. If the business exists, return the first one
+     */
+    public BusinessEntity findByName(String pName) {
+        LOGGER.log(Level.INFO, "Consulting business by name ", pName);
+
+        // creates a query to search for books with the name given by the parameter. ":pName" is a placeholder that must be replaced
+        TypedQuery query = em.createQuery("Select e From BusinessEntity e where e.name = :pName", BusinessEntity.class);
+
+        // the "pName" placeholder is replaced with the name of the parameter
+        query = query.setParameter("pName", pName);
+
+        // invokes the query and returns a list of results
+        List<BusinessEntity> sameName = query.getResultList();
+        BusinessEntity result;
+        if (sameName == null || sameName.isEmpty()) {
+            result = null;
+        } else {
+            result = sameName.get(0);
+        }
+        LOGGER.log(Level.INFO, "Exiting consultation of business by name ", pName);
+        return result;
+    }
+
+    /**
      * Updates a business.
      *
-     * @param pBusinessEntity the business with the modifications. For example,
-     * the name could have changed. In that case, we must use this update
-     * method.
+     * @param pBusinessEntity the business with the modifications. For example, the name could have
+     * changed. In that case, we must use this update method.
      * @return the business with the updated changes
      */
     public BusinessEntity update(BusinessEntity pBusinessEntity) {
@@ -133,14 +159,10 @@ public class BusinessPersistence {
      * @param pBusinessId the id of the business to be deleted
      */
     public void delete(Long pBusinessId) {
-        LOGGER.log(Level.INFO, "Deleting business with id = {0}",
-                pBusinessId);
-        BusinessEntity reviewEntity = em.find(BusinessEntity.class,
-                pBusinessId);
+        LOGGER.log(Level.INFO, "Deleting business with id = {0}", pBusinessId);
+        BusinessEntity reviewEntity = em.find(BusinessEntity.class, pBusinessId);
         em.remove(reviewEntity);
-        LOGGER.log(Level.INFO,
-                "Exiting the deletion of business with id = {0}",
-                pBusinessId);
+        LOGGER.log(Level.INFO,"Exiting the deletion of business with id = {0}",pBusinessId);
     }
 
 }

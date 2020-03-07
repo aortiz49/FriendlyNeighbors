@@ -84,8 +84,8 @@ public class EventResidentProfileLogicTest {
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
 
-   /**
-     * Initial test configuration. 
+    /**
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -104,7 +104,7 @@ public class EventResidentProfileLogicTest {
         }
     }
 
-       /**
+    /**
      * Clears tables involved in tests
      */
     private void clearData() {
@@ -112,7 +112,7 @@ public class EventResidentProfileLogicTest {
         em.createQuery("delete from ResidentProfileEntity").executeUpdate();
     }
 
-        /**
+    /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
@@ -132,7 +132,7 @@ public class EventResidentProfileLogicTest {
     }
 
     /**
-     * Test to associate a event with a resident 
+     * Test to associate a event with a resident
      *
      *
      * @throws BusinessLogicException
@@ -148,7 +148,8 @@ public class EventResidentProfileLogicTest {
     }
 
     /**
-     * Test for getting a collection of event entities associated with a resident
+     * Test for getting a collection of event entities associated with a
+     * resident
      */
     @Test
     public void getEventsTest() {
@@ -174,7 +175,7 @@ public class EventResidentProfileLogicTest {
     }
 
     /**
-     * Test for getting a event from a non-author user 
+     * Test for getting a event from a non-author user
      *
      * @throws BusinessLogicException
      */

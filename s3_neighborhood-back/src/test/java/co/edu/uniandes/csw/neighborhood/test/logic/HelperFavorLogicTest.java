@@ -63,7 +63,7 @@ public class HelperFavorLogicTest {
     }
 
     /**
-     * Initial test configuration. 
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -82,8 +82,7 @@ public class HelperFavorLogicTest {
         }
     }
 
-
-       /**
+    /**
      * Clears tables involved in tests
      */
     private void clearData() {
@@ -91,8 +90,7 @@ public class HelperFavorLogicTest {
         em.createQuery("delete from FavorEntity").executeUpdate();
     }
 
-
-        /**
+    /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
@@ -112,7 +110,7 @@ public class HelperFavorLogicTest {
     }
 
     /**
-     * Test to associate an favor with a helper 
+     * Test to associate an favor with a helper
      *
      *
      * @throws BusinessLogicException
@@ -127,14 +125,12 @@ public class HelperFavorLogicTest {
         Assert.assertEquals(favorEntity.getId(), newFavor.getId());
         Assert.assertEquals(favorEntity.getDescription(), newFavor.getDescription());
 
-
         FavorEntity lastFavor = helperFavorLogic.getFavor(helper.getId(), newFavor.getId());
 
         Assert.assertEquals(lastFavor.getId(), newFavor.getId());
 
-
     }
-    
+
     /**
      * Test for getting a collection of favor entities associated with a helper
      */
@@ -171,7 +167,7 @@ public class HelperFavorLogicTest {
      * @throws BusinessLogicException
      */
     @Test
-	
+
     public void replaceFavorsTest() throws BusinessLogicException {
         List<FavorEntity> newCollection = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -200,5 +196,4 @@ public class HelperFavorLogicTest {
         Assert.assertTrue(helperFavorLogic.getFavors(helper.getId()).isEmpty());
     }
 
-   
 }

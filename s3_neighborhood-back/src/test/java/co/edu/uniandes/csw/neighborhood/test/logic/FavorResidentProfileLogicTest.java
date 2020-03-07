@@ -84,8 +84,8 @@ public class FavorResidentProfileLogicTest {
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
 
-   /**
-     * Initial test configuration. 
+    /**
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -104,7 +104,7 @@ public class FavorResidentProfileLogicTest {
         }
     }
 
-       /**
+    /**
      * Clears tables involved in tests
      */
     private void clearData() {
@@ -112,7 +112,7 @@ public class FavorResidentProfileLogicTest {
         em.createQuery("delete from ResidentProfileEntity").executeUpdate();
     }
 
-        /**
+    /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
@@ -132,7 +132,7 @@ public class FavorResidentProfileLogicTest {
     }
 
     /**
-     * Test to associate a favor with a resident 
+     * Test to associate a favor with a resident
      *
      *
      * @throws BusinessLogicException
@@ -148,7 +148,8 @@ public class FavorResidentProfileLogicTest {
     }
 
     /**
-     * Test for getting a collection of favor entities associated with a resident
+     * Test for getting a collection of favor entities associated with a
+     * resident
      */
     @Test
     public void getFavorsTest() {
@@ -174,7 +175,7 @@ public class FavorResidentProfileLogicTest {
     }
 
     /**
-     * Test for getting a favor from a non-author user 
+     * Test for getting a favor from a non-author user
      *
      * @throws BusinessLogicException
      */

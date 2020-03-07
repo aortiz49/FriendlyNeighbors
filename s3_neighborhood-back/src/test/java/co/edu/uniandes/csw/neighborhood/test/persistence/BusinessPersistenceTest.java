@@ -149,7 +149,7 @@ public class BusinessPersistenceTest {
     }
 
     /**
-     * Test for retrieving all neighborhoods from DB.
+     * Test for retrieving all businesses from DB.
      */
     @Test
     public void findAllTest() {
@@ -171,6 +171,20 @@ public class BusinessPersistenceTest {
             }
             Assert.assertTrue(found);
         }
+    }
+
+    /**
+     * Test to consult a Business by name.
+     */
+    @Test
+    public void findBusinessByNameTest() {
+        BusinessEntity entity = data.get(0);
+        BusinessEntity newEntity = businessPersistence.findByName(entity.getName());
+        Assert.assertNotNull(newEntity);
+        Assert.assertEquals(entity.getName(), newEntity.getName());
+
+        newEntity = businessPersistence.findByName(null);
+        Assert.assertNull(newEntity);
     }
 
     /**
