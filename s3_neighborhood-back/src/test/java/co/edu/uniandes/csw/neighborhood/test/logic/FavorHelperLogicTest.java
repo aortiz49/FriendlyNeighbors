@@ -35,10 +35,12 @@ public class FavorHelperLogicTest {
     private FavorHelperLogic favorResidentProfileLogic;
 
     @Inject
-    private ResidentProfileLogic helperLogic;
+    private ResidentProfileLogic residentLogic;
 
     @Inject
     private NeighborhoodPersistence neighPersistence;
+
+    private NeighborhoodEntity neighborhood;
 
     @PersistenceContext
     private EntityManager em;
@@ -97,9 +99,21 @@ public class FavorHelperLogicTest {
      * Inserts initial data for correct test operation
      */
     private void insertData() {
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        neighPersistence.create(neighborhood);
+
         favor = factory.manufacturePojo(FavorEntity.class);
         favor.setId(1L);
         favor.setCandidates(new ArrayList<>());
+        
+        
+         ResidentProfileEntity author = factory.manufacturePojo(ResidentProfileEntity.class);
+         author.setNeighborhood(neighborhood);
+         em.persist(author);
+
+         
+        favor.setAuthor(author);
+
         em.persist(favor);
 
         for (int i = 0; i < 3; i++) {
@@ -107,6 +121,9 @@ public class FavorHelperLogicTest {
 
             entity.setFavorsToHelp(new ArrayList<>());
             entity.getFavorsToHelp().add(favor);
+            entity.setNeighborhood(neighborhood);
+            
+            
             em.persist(entity);
             data.add(entity);
             favor.getCandidates().add(entity);
@@ -114,7 +131,7 @@ public class FavorHelperLogicTest {
     }
 
     /**
-     * Test to associate a helper with an favor
+     * Test to associate a resident with an favor
      *
      *
      * @throws BusinessLogicException
@@ -123,18 +140,15 @@ public class FavorHelperLogicTest {
     public void addResidentTest() throws BusinessLogicException {
         ResidentProfileEntity newResidentProfile = factory.manufacturePojo(ResidentProfileEntity.class);
 
-        NeighborhoodEntity neigh = factory.manufacturePojo(NeighborhoodEntity.class);
-        neighPersistence.create(neigh);
+        newResidentProfile.setNeighborhood(neighborhood);
 
-        newResidentProfile.setNeighborhood(neigh);
+        residentLogic.createResident(newResidentProfile);
 
-        helperLogic.createResident(newResidentProfile);
+        ResidentProfileEntity residentEntity = favorResidentProfileLogic.associateResidentProfileToFavor(favor.getId(), newResidentProfile.getId());
+        Assert.assertNotNull(residentEntity);
 
-        ResidentProfileEntity helperEntity = favorResidentProfileLogic.associateResidentProfileToFavor(favor.getId(), newResidentProfile.getId());
-        Assert.assertNotNull(helperEntity);
-
-        Assert.assertEquals(helperEntity.getId(), newResidentProfile.getId());
-        Assert.assertEquals(helperEntity.getAddress(), newResidentProfile.getAddress());
+        Assert.assertEquals(residentEntity.getId(), newResidentProfile.getId());
+        Assert.assertEquals(residentEntity.getAddress(), newResidentProfile.getAddress());
 
         ResidentProfileEntity lastResident = favorResidentProfileLogic.getResidentProfile(favor.getId(), newResidentProfile.getId());
 
@@ -143,37 +157,38 @@ public class FavorHelperLogicTest {
     }
 
     /**
-     * Test for getting a collection of helper entities associated with an favor
+     * Test for getting a collection of resident entities associated with an
+     * favor
      */
     @Test
     public void getResidentProfilesTest() {
-        List<ResidentProfileEntity> helperEntities = favorResidentProfileLogic.getResidentProfiles(favor.getId());
+        List<ResidentProfileEntity> residentEntities = favorResidentProfileLogic.getResidentProfiles(favor.getId());
 
-        Assert.assertEquals(data.size(), helperEntities.size());
+        Assert.assertEquals(data.size(), residentEntities.size());
 
         for (int i = 0; i < data.size(); i++) {
-            Assert.assertTrue(helperEntities.contains(data.get(0)));
+            Assert.assertTrue(residentEntities.contains(data.get(0)));
         }
     }
 
     /**
-     * Test for getting a helper entity associated with an favor
+     * Test for getting a resident entity associated with an favor
      *
      * @throws BusinessLogicException
      */
     @Test
     public void getResidentTest() throws BusinessLogicException {
-        ResidentProfileEntity helperEntity = data.get(0);
-        ResidentProfileEntity helper = favorResidentProfileLogic.getResidentProfile(favor.getId(), helperEntity.getId());
-        Assert.assertNotNull(helper);
+        ResidentProfileEntity residentEntity = data.get(0);
+        ResidentProfileEntity resident = favorResidentProfileLogic.getResidentProfile(favor.getId(), residentEntity.getId());
+        Assert.assertNotNull(resident);
 
-        Assert.assertEquals(helperEntity.getId(), helper.getId());
-        Assert.assertEquals(helperEntity.getAddress(), helper.getAddress());
+        Assert.assertEquals(residentEntity.getId(), resident.getId());
+        Assert.assertEquals(residentEntity.getAddress(), resident.getAddress());
 
     }
 
     /**
-     * Test for replacing helpers associated with an favor
+     * Test for replacing residents associated with an favor
      *
      * @throws BusinessLogicException
      */
@@ -186,29 +201,26 @@ public class FavorHelperLogicTest {
             entity.setFavorsToHelp(new ArrayList<>());
             entity.getFavorsToHelp().add(favor);
 
-            NeighborhoodEntity neigh = factory.manufacturePojo(NeighborhoodEntity.class);
-            neighPersistence.create(neigh);
-
-            entity.setNeighborhood(neigh);
-            helperLogic.createResident(entity);
+            entity.setNeighborhood(neighborhood);
+            residentLogic.createResident(entity);
 
             newCollection.add(entity);
         }
         favorResidentProfileLogic.replaceResidentProfiles(favor.getId(), newCollection);
-        List<ResidentProfileEntity> helperEntities = favorResidentProfileLogic.getResidentProfiles(favor.getId());
+        List<ResidentProfileEntity> residentEntities = favorResidentProfileLogic.getResidentProfiles(favor.getId());
         for (ResidentProfileEntity aNuevaLista : newCollection) {
-            Assert.assertTrue(helperEntities.contains(aNuevaLista));
+            Assert.assertTrue(residentEntities.contains(aNuevaLista));
         }
     }
 
     /**
-     * Test for removing a helper from an favor
+     * Test for removing a resident from an favor
      *
      */
     @Test
     public void removeResidentTest() {
-        for (ResidentProfileEntity helper : data) {
-            favorResidentProfileLogic.removeResidentProfile(favor.getId(), helper.getId());
+        for (ResidentProfileEntity resident : data) {
+            favorResidentProfileLogic.removeResidentProfile(favor.getId(), resident.getId());
         }
         Assert.assertTrue(favorResidentProfileLogic.getResidentProfiles(favor.getId()).isEmpty());
     }

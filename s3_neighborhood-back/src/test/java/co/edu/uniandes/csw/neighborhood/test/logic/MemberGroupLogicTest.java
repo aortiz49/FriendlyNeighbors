@@ -131,6 +131,7 @@ public class MemberGroupLogicTest {
     @Test
     public void addGroupTest() throws BusinessLogicException {
         GroupEntity newGroup = factory.manufacturePojo(GroupEntity.class);
+        newGroup.setNeighborhood(neighborhood);
         groupLogic.createGroup(newGroup);
         GroupEntity groupEntity = memberGroupLogic.associateGroupToMember(member.getId(), newGroup.getId());
         Assert.assertNotNull(groupEntity);
@@ -187,6 +188,7 @@ public class MemberGroupLogicTest {
             GroupEntity entity = factory.manufacturePojo(GroupEntity.class);
             entity.setMembers(new ArrayList<>());
             entity.getMembers().add(member);
+            entity.setNeighborhood(neighborhood);
             groupLogic.createGroup(entity);
             newCollection.add(entity);
         }
