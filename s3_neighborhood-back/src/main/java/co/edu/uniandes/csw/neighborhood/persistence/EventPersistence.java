@@ -23,6 +23,7 @@ package co.edu.uniandes.csw.neighborhood.persistence;
 //===================================================
 
 import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,8 +33,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
- * Class that manages the persistence for the Event. It connects via the
- * Entity Manager in javax.persistance with a SQL database.
+ * Class that manages the persistence for the Event. It connects via the Entity Manager in
+ * javax.persistance with a SQL database.
  *
  * @author aortiz49
  */
@@ -61,8 +62,7 @@ public class EventPersistence {
     /**
      * Persists a event in the database.
      *
-     * @param pEventEntity event object to be created in the
-     * databse
+     * @param pEventEntity event object to be created in the databse
      * @return the created event with an id given by the databse
      */
     public EventEntity create(EventEntity pEventEntity) {
@@ -79,9 +79,8 @@ public class EventPersistence {
     /**
      * Returns all eventss in the database.
      *
-     * @return a list containing every event in the database. select u
-     * from EventEntity u" is akin to a "SELECT * from
-     * EventEntity" in SQL.
+     * @return a list containing every event in the database. select u from EventEntity u" is akin
+     * to a "SELECT * from EventEntity" in SQL.
      */
     public List<EventEntity> findAll() {
         // log the consultation
@@ -109,11 +108,39 @@ public class EventPersistence {
     }
 
     /**
+     * Finds am event by title.
+     *
+     * @param pName the title of the event to search for
+     * @return null if the event doesn't exist. If the event exists, return the first
+     * one
+     */
+    public EventEntity findByTitle(String pTitle) {
+        LOGGER.log(Level.INFO, "Consulting event by title ", pTitle);
+
+        // creates a query to search for events with the title given by the parameter. ":pTitle" is a placeholder that must be replaced
+        TypedQuery query = em.createQuery("Select e From EventEntity e where e.title = :pTitle", EventEntity.class);
+
+        // the "pTitle" placeholder is replaced with the name of the parameter
+        query = query.setParameter("pTitle", pTitle);
+
+        // invokes the query and returns a list of results
+        List<EventEntity> sameTitle = query.getResultList();
+        EventEntity result;
+
+        if (sameTitle == null || sameTitle.isEmpty()) {
+            result = null;
+        } else {
+            result = sameTitle.get(0);
+        }
+        LOGGER.log(Level.INFO, "Exiting consultation of event by title ", pTitle);
+        return result;
+    }
+
+    /**
      * Updates an event.
      *
-     * @param pEventEntity the event with the modifications. For
-     * example, the name could have changed. In that case, we must use this
-     * update method.
+     * @param pEventEntity the event with the modifications. For example, the name could have
+     * changed. In that case, we must use this update method.
      * @return the event with the updated changes
      */
     public EventEntity update(EventEntity pEventEntity) {

@@ -26,7 +26,7 @@ package co.edu.uniandes.csw.neighborhood.test.logic;
 import co.edu.uniandes.csw.neighborhood.ejb.EventLogic;
 import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
 import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
-import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+import co.edu.uniandes.csw.neighborhood.entities.LocationEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.EventPersistence;
@@ -145,13 +145,18 @@ public class EventLogicTest {
             em.persist(entity);
             events.add(entity);
         }
-           
-        // creates the host where the business is located
+
+        // creates the location where the event will be hosted
+        LocationEntity location = factory.manufacturePojo(LocationEntity.class);
+        location.setName("Parque de la 93");
+        em.persist(location);
+
+        // creates the host who will take care of the event
         ResidentProfileEntity host = factory.manufacturePojo(ResidentProfileEntity.class);
         host.setName("Paulina Acosta");
         em.persist(host);
 
-        // creates the resident where the business is located
+        // creates the resident where the event is located
         ResidentProfileEntity resident = factory.manufacturePojo(ResidentProfileEntity.class);
         host.setName("Andy Ortiz");
         em.persist(resident);
@@ -166,6 +171,9 @@ public class EventLogicTest {
         events.get(0).setHost(host);
         events.get(0).getAttendees().add(resident);
 
+        // add the location to the event
+        events.get(0).setLocation(location);
+
     }
 
     /**
@@ -176,7 +184,10 @@ public class EventLogicTest {
 
         // creates a random event
         EventEntity newEntity = factory.manufacturePojo(EventEntity.class);
-        
+
+        // sets the location
+        newEntity.setLocation(events.get(0).getLocation());
+
         // sets the attendee
         newEntity.getAttendees().add(events.get(0).getAttendees().get(0));
 
@@ -194,65 +205,49 @@ public class EventLogicTest {
     }
 
     /**
-     * Tests the creation of a Business with no neighborhood.
+     * Tests the creation of an Event with no location.
      */
     @Test(expected = BusinessLogicException.class)
-    public void createBusinessNoNeighborhoodTest() throws BusinessLogicException {
+    public void createEventNoLocationTest() throws BusinessLogicException {
 
-        // creates a random business
-        BusinessEntity newEntity = factory.manufacturePojo(BusinessEntity.class);
+        // creates a random entity
+        EventEntity newEntity = factory.manufacturePojo(EventEntity.class);
 
-        // persist the created business, should not be null
-        BusinessEntity result = businessLogic.createBusiness(newEntity);
+        // persist the created event, should not be null
+        EventEntity result = eventLogic.createEvent(newEntity);
     }
 
     /**
-     * Tests the creation of a Business with non-existent neighborhood.
+     * Tests the creation of an Event with non-existent location.
      */
     @Test(expected = BusinessLogicException.class)
-    public void createBusinessNonexistentNeighborhoodTest() throws BusinessLogicException {
+    public void createEventNonExistentLocationTest() throws BusinessLogicException {
 
-        // creates a random business
-        BusinessEntity newEntity = factory.manufacturePojo(BusinessEntity.class);
+        // creates a random entity
+        EventEntity newEntity = factory.manufacturePojo(EventEntity.class);
 
-        // change neighborhood id to one who doesn't exist in the system
-        NeighborhoodEntity neigh = data.get(0).getNeighborhood();
-        neigh.setId(11123L);
-        newEntity.setNeighborhood(neigh);
+        // change location id to one that doesn't exist in the system
+        LocationEntity loc = events.get(0).getLocation();
+        loc.setId(11123L);
+        newEntity.setLocation(loc);
 
         // persist the created business, should not finish
-        BusinessEntity result = businessLogic.createBusiness(newEntity);
+        EventEntity result = eventLogic.createEvent(newEntity);
     }
 
     /**
-     * Tests the creation of a Business with the same name.
-     */
-    @Test(expected = BusinessLogicException.class)
-    public void createBusinessSameNameLogicException() throws BusinessLogicException {
-
-        // creates a random business
-        BusinessEntity newEntity = factory.manufacturePojo(BusinessEntity.class);
-
-        // change business name to existingbusiness
-        newEntity.setName(data.get(0).getName());
-
-        // persist the created business, should not finish
-        BusinessEntity result = businessLogic.createBusiness(newEntity);
-    }
-
-    /**
-     * Returns all the businesses in the database.
+     * Returns all the events in the database.
      *
-     * @return list of businesses
+     * @return list of events
      */
     @Test
-    public void getBusinessesTest() {
-        List<BusinessEntity> list = businessLogic.getBusinesses();
-        Assert.assertEquals(data.size(), list.size());
+    public void getEventsTest() {
+        List<EventEntity> list = eventLogic.getAllEvents();
+        Assert.assertEquals(events.size(), list.size());
 
-        for (BusinessEntity entity : list) {
+        for (EventEntity entity : list) {
             boolean found = false;
-            for (BusinessEntity storedEntity : data) {
+            for (EventEntity storedEntity : events) {
                 if (entity.getId().equals(storedEntity.getId())) {
                     found = true;
                 }
@@ -262,68 +257,78 @@ public class EventLogicTest {
     }
 
     /**
-     * Finds a business by Id.
+     * Finds an event by Id.
      *
-     * @return the found business, null if not found
+     * @return the found event, null if not found
      */
     @Test
-    public void getBusinessTest() {
-        BusinessEntity entity = data.get(0);
-        BusinessEntity resultEntity = businessLogic.getBusiness(entity.getId());
+    public void getEventTest() {
+        EventEntity entity = events.get(0);
+        EventEntity resultEntity = eventLogic.getEvent(entity.getId());
         Assert.assertNotNull(resultEntity);
         Assert.assertEquals(entity.getId(), resultEntity.getId());
-        Assert.assertEquals(entity.getName(), resultEntity.getName());
+        Assert.assertEquals(entity.getDescription(), resultEntity.getDescription());
+        Assert.assertEquals(entity.getAvailability(), resultEntity.getAvailability());
+        Assert.assertEquals(entity.getStartTime(), resultEntity.getStartTime());
+        Assert.assertEquals(entity.getEndTime(), resultEntity.getEndTime());
     }
 
     /**
-     * Finds a business by name.
+     * Finds an event by title.
      *
-     * @return the found business, null if not found
+     * @return the found event, null if not found
      */
     @Test
-    public void getNeighborhoodByNameTest() {
-        BusinessEntity entity = data.get(0);
-        BusinessEntity resultEntity = businessLogic.getBusinessByName(entity.getName());
+    public void getEventByNameTest() {
+        EventEntity entity = events.get(0);
+        EventEntity resultEntity = eventLogic.getEventByTitle(entity.getTitle());
+
         Assert.assertNotNull(resultEntity);
         Assert.assertEquals(entity.getId(), resultEntity.getId());
-        Assert.assertEquals(entity.getName(), resultEntity.getName());
+        Assert.assertEquals(entity.getDescription(), resultEntity.getDescription());
+        Assert.assertEquals(entity.getAvailability(), resultEntity.getAvailability());
+        Assert.assertEquals(entity.getStartTime(), resultEntity.getStartTime());
+        Assert.assertEquals(entity.getEndTime(), resultEntity.getEndTime());
     }
 
     /**
-     * Tests to update a business.
+     * Tests to update an event.
      */
     @Test
-    public void updateBusinessTest() throws BusinessLogicException {
-        // get first business from generated data set
-        BusinessEntity entity = data.get(0);
+    public void updateEventTest() throws BusinessLogicException {
+        // get first event from generated data set
+        EventEntity entity = events.get(0);
 
-        // generate a random business
-        BusinessEntity newEntity = factory.manufacturePojo(BusinessEntity.class);
+        // generate a random event
+        EventEntity newEntity = factory.manufacturePojo(EventEntity.class);
 
-        // set the id of the random business to the id of the first one from the data set
+        // set the id of the random event to the id of the first one from the data set
         newEntity.setId(entity.getId());
 
-        // update the business with the new information
-        businessLogic.updateBusiness(entity.getId(), newEntity);
+        // update the event with the new information
+        eventLogic.updateEvent(entity.getId(), newEntity);
 
-        // find the business in the database
-        BusinessEntity resp = em.find(BusinessEntity.class, entity.getId());
+        // find the event in the database
+        EventEntity resp = em.find(EventEntity.class, entity.getId());
 
         // make sure they are equal
         Assert.assertEquals(newEntity.getId(), resp.getId());
-        Assert.assertEquals(newEntity.getName(), resp.getName());
+        Assert.assertEquals(newEntity.getDescription(), resp.getDescription());
+        Assert.assertEquals(newEntity.getAvailability(), resp.getAvailability());
+        Assert.assertEquals(newEntity.getStartTime(), resp.getStartTime());
+        Assert.assertEquals(newEntity.getEndTime(), resp.getEndTime());
     }
 
     /**
-     * Tests the deletion of a business.
+     * Tests the deletion of an event.
      *
      */
-    public void deleteBusinessTest() throws BusinessLogicException {
-        // get first business from generated data set
-        BusinessEntity entity = data.get(0);
+    public void deleteEventTest() throws BusinessLogicException {
+        // get first event from generated data set
+        EventEntity entity = events.get(0);
 
-        // delete the business
-        businessLogic.deleteBusiness(entity.getId());
+        // delete the event
+        eventLogic.deleteevent(entity.getId());
 
     }
 

@@ -285,6 +285,7 @@ public class BusinessLogicTest {
         Assert.assertEquals(entity.getName(), resultEntity.getName());
     }
 
+    
     /**
      * Tests to update a business.
      */

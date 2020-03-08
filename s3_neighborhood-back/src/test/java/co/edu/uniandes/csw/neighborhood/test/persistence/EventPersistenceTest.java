@@ -1,6 +1,6 @@
-
 package co.edu.uniandes.csw.neighborhood.test.persistence;
 
+import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
 import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
 import co.edu.uniandes.csw.neighborhood.persistence.EventPersistence;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 /**
  * Persistence test for Event
  *
- * @author kromero1
+ * @author aortiz49
  */
 @RunWith(Arquillian.class)
 public class EventPersistenceTest {
@@ -40,9 +40,8 @@ public class EventPersistenceTest {
     private List<EventEntity> data = new ArrayList<>();
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara.
-     * jar contains classes, DB descriptor and
-     * beans.xml file for dependencies injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
+     * descriptor and beans.xml file for dependencies injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -54,7 +53,7 @@ public class EventPersistenceTest {
     }
 
     /**
-     * Initial test configuration. 
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -75,7 +74,7 @@ public class EventPersistenceTest {
     }
 
     /**
-     * Clears tables involved in tests 
+     * Clears tables involved in tests
      */
     private void clearData() {
         em.createQuery("delete from EventEntity").executeUpdate();
@@ -109,11 +108,11 @@ public class EventPersistenceTest {
 
         Assert.assertEquals(newEntity.getId(), entity.getId());
     }
-    
-     /**
+
+    /**
      * Test for retrieving all events from DB.
      */
-        @Test
+    @Test
     public void findAllTest() {
         List<EventEntity> list = eventPersistence.findAll();
         Assert.assertEquals(data.size(), list.size());
@@ -127,7 +126,7 @@ public class EventPersistenceTest {
             Assert.assertTrue(found);
         }
     }
-    
+
     /**
      * Test for a query about a Event.
      */
@@ -139,7 +138,21 @@ public class EventPersistenceTest {
         Assert.assertEquals(entity.getId(), newEntity.getId());
     }
 
-     /**
+    /**
+     * Test to consult an Event by name.
+     */
+    @Test
+    public void findEventByTitleTest() {
+        EventEntity entity = data.get(0);
+        EventEntity newEntity = eventPersistence.findByTitle(entity.getTitle());
+        Assert.assertNotNull(newEntity);
+        Assert.assertEquals(entity.getTitle(), newEntity.getTitle());
+
+        newEntity = eventPersistence.findByTitle(null);
+        Assert.assertNull(newEntity);
+    }
+
+    /**
      * Test for updating a Event.
      */
     @Test
@@ -156,8 +169,8 @@ public class EventPersistenceTest {
 
         Assert.assertEquals(newEntity.getId(), resp.getId());
     }
-    
-     /**
+
+    /**
      * Test for deleting a Event.
      */
     @Test
@@ -167,7 +180,5 @@ public class EventPersistenceTest {
         EventEntity deleted = em.find(EventEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
-    
-    
-    
+
 }

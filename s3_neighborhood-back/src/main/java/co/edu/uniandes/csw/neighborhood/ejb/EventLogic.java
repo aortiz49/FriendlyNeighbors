@@ -23,11 +23,13 @@ SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.ejb;
 
+import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
 import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
 import co.edu.uniandes.csw.neighborhood.entities.LocationEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.EventPersistence;
 import co.edu.uniandes.csw.neighborhood.persistence.LocationPersistence;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
@@ -78,6 +80,77 @@ public class EventLogic {
         eventPersistence.create(pEventEntity);
         LOGGER.log(Level.INFO, "Termines the event creation process");
         return pEventEntity;
+    }
+
+    /**
+     * Returns all the events in the database.
+     *
+     * @return list of events
+     */
+    public List<EventEntity> getAllEvents() {
+        LOGGER.log(Level.INFO, "Begin consulting all events");
+        List<EventEntity> events = eventPersistence.findAll();
+        LOGGER.log(Level.INFO, "End consulting all events");
+        return events;
+    }
+
+    /**
+     * Finds an event by ID.
+     *
+     * @return the found event, null if not found
+     */
+    public EventEntity getEvent(Long pId) {
+        LOGGER.log(Level.INFO, "Begin search for event with Id = {0}", pId);
+        EventEntity entity = eventPersistence.find(pId);
+        if (entity == null) {
+            LOGGER.log(Level.SEVERE, "The event with Id = {0} doesn't exist", pId);
+        }
+        LOGGER.log(Level.INFO, "End search for event with Id = {0}", pId);
+        return entity;
+    }
+
+    /**
+     * Finds an event by title.
+     *
+     * @return the found event, null if not found
+     */
+    public EventEntity getEventByTitle(String pTitle) {
+        LOGGER.log(Level.INFO, "Begin search for event with title = {0}", pTitle);
+        EventEntity eventEntity = eventPersistence.findByTitle(pTitle);
+        if (eventEntity == null) {
+            LOGGER.log(Level.SEVERE, "The event with title = {0} doesn't exist", pTitle);
+        }
+        LOGGER.log(Level.INFO, "End search for event with title = {0}", pTitle);
+        return eventEntity;
+    }
+
+    /**
+     * Updates an event with a given Id.
+     *
+     * @param pEventId the Id of the event to update
+     * @param pEvent the new event
+     * @return the event entity after the update
+     * @throws BusinessLogicException if the new event violates the business rules
+     */
+    public EventEntity updateEvent(Long pEventId, EventEntity pEvent) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Begin the update process for event with id = {0}", pEventId);
+
+        // update event
+        EventEntity newEntity = eventPersistence.update(pEvent);
+        LOGGER.log(Level.INFO, "End the update process for event with id = {0}", pEvent.getId());
+        return newEntity;
+    }
+
+    /**
+     * Deletes an event by ID.
+     *
+     * @param eventId the ID of the event to be deleted
+     *
+     */
+    public void deleteevent(Long eventId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Begin the delettion process for event with id = {0}", eventId);
+        eventPersistence.delete(eventId);
+        LOGGER.log(Level.INFO, "End the delettion process for event with id = {0}", eventId);
     }
 
     /**
