@@ -9,6 +9,7 @@ package co.edu.uniandes.csw.neighborhood.test.logic;
 import co.edu.uniandes.csw.neighborhood.ejb.GroupLogic;
 import co.edu.uniandes.csw.neighborhood.entities.GroupEntity;
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
  * @author albayona
  */
 @RunWith(Arquillian.class)
-public class GroupTest {
+public class GroupLogicTest {
 
     private PodamFactory factory = new PodamFactoryImpl();
 
@@ -168,7 +169,6 @@ public class GroupTest {
         }
     }
 
-
     /**
      * Test for getting all groups
      */
@@ -213,7 +213,7 @@ public class GroupTest {
             Assert.assertEquals(pojoEntity.getId(), resp.getId());
             Assert.assertEquals(pojoEntity.getName(), resp.getName());
         } catch (BusinessLogicException ex) {
-            Logger.getLogger(GroupTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GroupLogicTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -228,4 +228,85 @@ public class GroupTest {
         Assert.assertNull(deleted);
     }
 
+    /**
+     * Test for creating a resident with no date
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createResidentsWithNoDate() throws BusinessLogicException {
+        GroupEntity newEntity = factory.manufacturePojo(GroupEntity.class);
+        newEntity.setDateCreated(null);
+        groupLogic.createGroup(newEntity);
+    }
+
+    /**
+     * Test for creating a resident with no name
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createResidentsWithNoName() throws BusinessLogicException {
+        GroupEntity newEntity = factory.manufacturePojo(GroupEntity.class);
+        newEntity.setName(null);
+        groupLogic.createGroup(newEntity);
+    }
+
+    /**
+     * Test for creating a resident with no description
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createResidentsWithNoDescription() throws BusinessLogicException {
+        GroupEntity newEntity = factory.manufacturePojo(GroupEntity.class);
+        newEntity.setDescription(null);
+        groupLogic.createGroup(newEntity);
+    }
+
+    /**
+     * Test for creating a resident with no neighborhood
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createResidentsWithNoNeighborhood() throws BusinessLogicException {
+        GroupEntity newEntity = factory.manufacturePojo(GroupEntity.class);
+        newEntity.setNeighborhood(null);
+        groupLogic.createGroup(newEntity);
+    }
+
+    
+    
+     /**
+     * Test for updating a resident with no date
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void updateResidentsWithNoDate() throws BusinessLogicException {
+           GroupEntity  newEntity = data.get(0);
+        newEntity.setDateCreated(null);
+        groupLogic.updateGroup(newEntity);
+    }
+
+    /**
+     * Test for updating a resident with no name
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void updateResidentsWithNoName() throws BusinessLogicException {
+           GroupEntity  newEntity = data.get(0);
+        newEntity.setName(null);
+        groupLogic.updateGroup(newEntity);
+    }
+
+    /**
+     * Test for updating a resident with no description
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void updateResidentsWithNoDescription() throws BusinessLogicException {
+           GroupEntity  newEntity = data.get(0);
+        newEntity.setDescription(null);
+        groupLogic.updateGroup(newEntity);
+    }
+
+    /**
+     * Test for updating a resident with no neighborhood
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void updateResidentsWithNoNeighborhood() throws BusinessLogicException {
+           GroupEntity  newEntity = data.get(0);
+        newEntity.setNeighborhood(null);
+        groupLogic.updateGroup(newEntity);
+    }
 }
