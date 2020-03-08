@@ -130,6 +130,15 @@ public class ResidentProfilePersistenceTest {
         ResidentProfileEntity entity = em.find(ResidentProfileEntity.class, result.getId());
 
         Assert.assertEquals(newEntity.getName(), entity.getName());
+        Assert.assertEquals(newEntity.getAddress(), entity.getAddress());
+        Assert.assertEquals(newEntity.getBusinesses(), entity.getBusinesses());
+        Assert.assertEquals(newEntity.getComments(), entity.getComments());
+        Assert.assertEquals(newEntity.getEmail(), entity.getEmail());
+        Assert.assertEquals(newEntity.getEvents(), entity.getEvents());
+        Assert.assertEquals(newEntity.getEventsToAttend(), entity.getEventsToAttend());
+        Assert.assertEquals(newEntity.getNickname(), entity.getNickname());
+        Assert.assertEquals(newEntity.getPhoneNumber(), entity.getPhoneNumber());
+
     }
 
     /**

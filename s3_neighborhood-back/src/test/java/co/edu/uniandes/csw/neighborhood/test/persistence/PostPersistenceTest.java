@@ -131,6 +131,14 @@ public class PostPersistenceTest {
         PostEntity entity = em.find(PostEntity.class, result.getId());
 
         Assert.assertEquals(newEntity.getTitle(), entity.getTitle());
+        Assert.assertEquals(newEntity.getAuthor(), entity.getAuthor());
+        Assert.assertEquals(newEntity.getBusiness(), entity.getBusiness());
+        Assert.assertEquals(newEntity.getComments(), entity.getComments());
+        Assert.assertEquals(newEntity.getDescription(), entity.getDescription());
+        Assert.assertEquals(newEntity.getGroup(), entity.getGroup());
+        Assert.assertEquals(newEntity.getId(), entity.getId());
+        Assert.assertEquals(newEntity.getViewers(), entity.getViewers());
+
     }
     
     /**

@@ -108,6 +108,10 @@ public class CommentPersistenceTest {
         CommentEntity entity = em.find(CommentEntity.class, result.getId());
 
         Assert.assertEquals(newEntity.getText(), entity.getText());
+        Assert.assertEquals(newEntity.getId(), entity.getId());
+        Assert.assertEquals(newEntity.getPost(), entity.getPost());
+        Assert.assertEquals(newEntity.getDate(), entity.getDate());
+
     }
     
      /**

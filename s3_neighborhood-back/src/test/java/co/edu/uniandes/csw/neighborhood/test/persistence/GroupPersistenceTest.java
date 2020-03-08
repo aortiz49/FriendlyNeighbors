@@ -109,6 +109,13 @@ public class GroupPersistenceTest {
         GroupEntity entity = em.find(GroupEntity.class, result.getId());
 
         Assert.assertEquals(newEntity.getName(), entity.getName());
+        Assert.assertEquals(newEntity.getId(), entity.getId());
+        Assert.assertEquals(newEntity.getDateCreated(), entity.getDateCreated());
+        Assert.assertEquals(newEntity.getDescription(), entity.getDescription());
+        Assert.assertEquals(newEntity.getEvents(), entity.getEvents());
+        Assert.assertEquals(newEntity.getMembers(), entity.getMembers());
+        Assert.assertEquals(newEntity.getPosts(), entity.getPosts());
+        Assert.assertEquals(newEntity.getNeighborhood(), entity.getNeighborhood());
     }
     
     /**
