@@ -268,14 +268,12 @@ public class GroupLogicTest {
         groupLogic.createGroup(newEntity);
     }
 
-    
-    
-     /**
+    /**
      * Test for updating a resident with no date
      */
     @Test(expected = BusinessLogicException.class)
     public void updateResidentsWithNoDate() throws BusinessLogicException {
-           GroupEntity  newEntity = data.get(0);
+        GroupEntity newEntity = data.get(0);
         newEntity.setDateCreated(null);
         groupLogic.updateGroup(newEntity);
     }
@@ -285,7 +283,7 @@ public class GroupLogicTest {
      */
     @Test(expected = BusinessLogicException.class)
     public void updateResidentsWithNoName() throws BusinessLogicException {
-           GroupEntity  newEntity = data.get(0);
+        GroupEntity newEntity = data.get(0);
         newEntity.setName(null);
         groupLogic.updateGroup(newEntity);
     }
@@ -295,7 +293,7 @@ public class GroupLogicTest {
      */
     @Test(expected = BusinessLogicException.class)
     public void updateResidentsWithNoDescription() throws BusinessLogicException {
-           GroupEntity  newEntity = data.get(0);
+        GroupEntity newEntity = data.get(0);
         newEntity.setDescription(null);
         groupLogic.updateGroup(newEntity);
     }
@@ -305,7 +303,7 @@ public class GroupLogicTest {
      */
     @Test(expected = BusinessLogicException.class)
     public void updateResidentsWithNoNeighborhood() throws BusinessLogicException {
-           GroupEntity  newEntity = data.get(0);
+        GroupEntity newEntity = data.get(0);
         newEntity.setNeighborhood(null);
         groupLogic.updateGroup(newEntity);
     }

@@ -47,7 +47,12 @@ public class PostLogic {
             throw new BusinessLogicException("A description has to be specified");
         }
 
-       PostEntity entity =  persistence.create(postEntity);
+        //must have a date
+        if (postEntity.getPublishDate() == null) {
+            throw new BusinessLogicException("A description has to be specified");
+        }
+
+        PostEntity entity = persistence.create(postEntity);
         LOGGER.log(Level.INFO, "Creation process for post eneded");
 
         return persistence.find(entity.getId());
@@ -107,6 +112,11 @@ public class PostLogic {
 
         //must have a description
         if (postEntity.getDescription() == null) {
+            throw new BusinessLogicException("A description has to be specified");
+        }
+
+        //must have a date
+        if (postEntity.getPublishDate() == null) {
             throw new BusinessLogicException("A description has to be specified");
         }
 

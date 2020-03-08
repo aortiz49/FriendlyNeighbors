@@ -231,6 +231,9 @@ public class CommentPostLogicTest {
 
         Assert.assertTrue(postCommentLogic.getComments(data.get(0).getId()).isEmpty());
     }
+    
+    
+
 
 
 }

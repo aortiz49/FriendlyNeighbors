@@ -239,4 +239,33 @@ public class PostLogicTest {
         Assert.assertNull(deleted);
     }
 
+    /**
+     * Test for creating a post with no title
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createPostWithNoTitle() throws BusinessLogicException {
+        PostEntity newEntity = factory.manufacturePojo(PostEntity.class);
+        newEntity.setTitle(null);
+        postLogic.createPost(newEntity);
+    }
+
+    /**
+     * Test for creating a post with no description
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createPostWithNoDescription() throws BusinessLogicException {
+        PostEntity newEntity = factory.manufacturePojo(PostEntity.class);
+        newEntity.setDescription(null);
+        postLogic.createPost(newEntity);
+    }
+
+    /**
+     * Test for creating a post with no date
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createPostWithNoDate() throws BusinessLogicException {
+        PostEntity newEntity = factory.manufacturePojo(PostEntity.class);
+        newEntity.setPublishDate(null);
+        postLogic.createPost(newEntity);
+    }
 }

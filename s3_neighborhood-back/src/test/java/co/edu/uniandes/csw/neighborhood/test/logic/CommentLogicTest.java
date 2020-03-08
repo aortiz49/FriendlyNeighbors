@@ -228,4 +228,24 @@ public class CommentLogicTest {
         Assert.assertNull(deleted);
     }
 
+    	 /**
+     * Test for creating a comment  with no text
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createCommentWithNoText() throws BusinessLogicException {
+        CommentEntity newEntity = factory.manufacturePojo(CommentEntity.class);
+        newEntity.setText(null);
+        commentLogic.createComment(newEntity);
+    }
+    
+            /**
+     * Test for creating a comment  with no date
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createCommentWithNoDate() throws BusinessLogicException {
+        CommentEntity newEntity = factory.manufacturePojo(CommentEntity.class);
+        newEntity.setDate(null);
+        commentLogic.createComment(newEntity);
+    }
+    
 }
