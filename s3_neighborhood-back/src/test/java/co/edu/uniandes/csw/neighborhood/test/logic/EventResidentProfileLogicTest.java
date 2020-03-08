@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.test.logic;
 
+import co.edu.uniandes.csw.neighborhood.ejb.EventLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.ResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.EventResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
@@ -55,12 +56,14 @@ public class EventResidentProfileLogicTest {
     private PodamFactory factory = new PodamFactoryImpl();
 
     @Inject
-    private ResidentProfileLogic residentLogic;
-    @Inject
     private EventResidentProfileLogic residentEventLogic;
+    
+    @Inject
+    private EventLogic eventLogic;
 
     @PersistenceContext
     private EntityManager em;
+    
 
     @Inject
     private UserTransaction utx;
@@ -184,6 +187,42 @@ public class EventResidentProfileLogicTest {
         ResidentProfileEntity entity = data.get(0);
         EventEntity eventEntity = eventsData.get(1);
         residentEventLogic.getEvent(entity.getId(), eventEntity.getId());
+    }
+    
+        /**
+     * Test for replacing events associated with a resident
+     *
+     * @throws BusinessLogicException
+     */
+    @Test
+
+    public void replaceEventsTest() throws BusinessLogicException {
+        List<EventEntity> newCollection = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            EventEntity entity = factory.manufacturePojo(EventEntity.class);
+            entity.setHost(data.get(0));
+
+            eventLogic.createEvent(entity);
+
+            newCollection.add(entity);
+        }
+        residentEventLogic.replaceEvents(data.get(0).getId(), newCollection);
+        List<EventEntity> events = residentEventLogic.getEvents(data.get(0).getId());
+        for (EventEntity newE : newCollection) {
+            Assert.assertTrue(events.contains(newE));
+        }
+    }
+
+    /**
+     * Test for removing an event from resident
+     *
+     */
+    @Test
+    public void removeEventTest() throws BusinessLogicException {
+   
+            residentEventLogic.removeEvent(data.get(0).getId(), eventsData.get(0).getId());
+
+        Assert.assertTrue(residentEventLogic.getEvents(data.get(0).getId()).isEmpty());
     }
 
 }

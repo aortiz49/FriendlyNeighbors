@@ -56,7 +56,7 @@ public class FavorResidentProfileLogic {
      * @return associated favor entity
      */
     public FavorEntity associateFavorToResident(Long favorId, Long residentId) {
-        LOGGER.log(Level.INFO, "Trying to add favor to resident with id = {0}", residentId);
+        LOGGER.log(Level.INFO, "Trying to associate favor to resident with id = {0}", residentId);
         ResidentProfileEntity ResidentProfileEntity = residentPersistence.find(residentId);
         
         FavorEntity FavorEntity = favorPersistence.find(favorId);

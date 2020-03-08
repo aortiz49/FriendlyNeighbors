@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.test.logic;
 
+import co.edu.uniandes.csw.neighborhood.ejb.FavorLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.ResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.FavorResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.entities.FavorEntity;
@@ -55,12 +56,14 @@ public class FavorResidentProfileLogicTest {
     private PodamFactory factory = new PodamFactoryImpl();
 
     @Inject
-    private ResidentProfileLogic residentLogic;
-    @Inject
     private FavorResidentProfileLogic residentFavorLogic;
+    
+    @Inject
+    private FavorLogic favorLogic;
 
     @PersistenceContext
     private EntityManager em;
+    
 
     @Inject
     private UserTransaction utx;
@@ -184,6 +187,42 @@ public class FavorResidentProfileLogicTest {
         ResidentProfileEntity entity = data.get(0);
         FavorEntity favorEntity = favorsData.get(1);
         residentFavorLogic.getFavor(entity.getId(), favorEntity.getId());
+    }
+    
+        /**
+     * Test for replacing favors associated with a resident
+     *
+     * @throws BusinessLogicException
+     */
+    @Test
+
+    public void replaceFavorsTest() throws BusinessLogicException {
+        List<FavorEntity> newCollection = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            FavorEntity entity = factory.manufacturePojo(FavorEntity.class);
+            entity.setAuthor(data.get(0));
+
+            favorLogic.createFavor(entity);
+
+            newCollection.add(entity);
+        }
+        residentFavorLogic.replaceFavors(data.get(0).getId(), newCollection);
+        List<FavorEntity> favors = residentFavorLogic.getFavors(data.get(0).getId());
+        for (FavorEntity newE : newCollection) {
+            Assert.assertTrue(favors.contains(newE));
+        }
+    }
+
+    /**
+     * Test for removing an favor from resident
+     *
+     */
+    @Test
+    public void removeFavorTest() throws BusinessLogicException {
+   
+            residentFavorLogic.removeFavor(data.get(0).getId(), favorsData.get(0).getId());
+
+        Assert.assertTrue(residentFavorLogic.getFavors(data.get(0).getId()).isEmpty());
     }
 
 }

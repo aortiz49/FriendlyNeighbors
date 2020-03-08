@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.test.logic;
 
+import co.edu.uniandes.csw.neighborhood.ejb.ServiceLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.ResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.ServiceResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.entities.ServiceEntity;
@@ -55,12 +56,14 @@ public class ServiceResidentProfileLogicTest {
     private PodamFactory factory = new PodamFactoryImpl();
 
     @Inject
-    private ResidentProfileLogic residentLogic;
-    @Inject
     private ServiceResidentProfileLogic residentServiceLogic;
+    
+    @Inject
+    private ServiceLogic serviceLogic;
 
     @PersistenceContext
     private EntityManager em;
+    
 
     @Inject
     private UserTransaction utx;
@@ -184,6 +187,42 @@ public class ServiceResidentProfileLogicTest {
         ResidentProfileEntity entity = data.get(0);
         ServiceEntity serviceEntity = servicesData.get(1);
         residentServiceLogic.getService(entity.getId(), serviceEntity.getId());
+    }
+    
+        /**
+     * Test for replacing services associated with a resident
+     *
+     * @throws BusinessLogicException
+     */
+    @Test
+
+    public void replaceServicesTest() throws BusinessLogicException {
+        List<ServiceEntity> newCollection = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            ServiceEntity entity = factory.manufacturePojo(ServiceEntity.class);
+            entity.setAuthor(data.get(0));
+
+            serviceLogic.createService(entity);
+
+            newCollection.add(entity);
+        }
+        residentServiceLogic.replaceServices(data.get(0).getId(), newCollection);
+        List<ServiceEntity> services = residentServiceLogic.getServices(data.get(0).getId());
+        for (ServiceEntity newE : newCollection) {
+            Assert.assertTrue(services.contains(newE));
+        }
+    }
+
+    /**
+     * Test for removing an service from resident
+     *
+     */
+    @Test
+    public void removeServiceTest() throws BusinessLogicException {
+   
+            residentServiceLogic.removeService(data.get(0).getId(), servicesData.get(0).getId());
+
+        Assert.assertTrue(residentServiceLogic.getServices(data.get(0).getId()).isEmpty());
     }
 
 }

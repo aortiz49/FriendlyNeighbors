@@ -54,7 +54,7 @@ public class FavorLogic {
        
         LOGGER.log(Level.INFO, "Creation process for favor eneded");
 
-        return persistence.find(entity.getId());
+        return favorEntity;
     }
 
     public void deleteFavor(Long id) {

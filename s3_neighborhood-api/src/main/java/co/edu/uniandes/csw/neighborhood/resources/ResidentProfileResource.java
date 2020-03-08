@@ -204,8 +204,8 @@ public class ResidentProfileResource {
      * accessed
      * @return groups resource from the specified resident
      */
-    @Path("{authorsId: \\d+}/favors")
-    public Class<FavorResidentProfileResource> getFavorResidentProfileResource(@PathParam("authorsId") Long residentsId) {
+    @Path("{residentsId: \\d+}/favors")
+    public Class<FavorResidentProfileResource> getFavorResidentProfileResource(@PathParam("residentsId") Long residentsId) {
         if (residentLogic.getResident(residentsId) == null) {
             throw new WebApplicationException("Resource /residents/" + residentsId + " does not exist.", 404);
         }

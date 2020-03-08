@@ -48,7 +48,7 @@ import java.util.logging.Logger;
 import javax.ws.rs.WebApplicationException;
 
 /**
- * Class implementing resource "resident/{id}/favors".
+ * Class implementing resource "resident/{favorId}/favors".
  *
  * @author albayona
  * @version 1.0
@@ -68,35 +68,38 @@ public class FavorResidentProfileResource {
     /**
      * Creates a favor with an existing resident
      *
-     * @param favorsId id from favor to be associated
-     * @param residentsId id from resident
+     * @param favorsId favorId from favor to be associated
+     * @param residentsId favorId from resident
      * @return JSON {@link FavorDetailDTO} -
      * @throws WebApplicationException {@link WebApplicationExceptionMapper} -
      * Logic error if not found
      */
     @POST
-    public FavorDetailDTO createFavorForResidentProfile(@PathParam("authorsId") Long residentsId, FavorDTO favor) throws BusinessLogicException {
+    public FavorDetailDTO createFavorForResidentProfile(@PathParam("residentsId") Long residentsId, FavorDTO favor) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creating favor for resident from resource: input: residentsId {0} , favorsId {1}", new Object[]{residentsId, favor.getId()});
 
-        FavorEntity entity = favorLogic.createFavor(favor.toEntity());
+        FavorEntity entity = null;
+
+        entity = favorLogic.createFavor(favor.toEntity());
         
-        residentFavorLogic.associateFavorToResident(entity.getId(), residentsId);
+        Long favorId = entity.getId();
+        
+        residentFavorLogic.associateFavorToResident(favorId, residentsId);
 
-
-       FavorDetailDTO dto = new  FavorDetailDTO(favorLogic.getFavor(entity.getId()));
+        FavorDetailDTO dto = new FavorDetailDTO(favorLogic.getFavor(favorId));
         LOGGER.log(Level.INFO, "Ended creating favor for resident from resource: output: {0}", dto.getId());
-        return dto ;
+        return dto;
     }
 
     /**
      * Looks for all the favors associated to a resident and returns it
      *
-     * @param residentsId id from resident whose favors are wanted
+     * @param residentsId favorId from resident whose favors are wanted
      * @return JSONArray {@link FavorDetailDTO} - favors found in resident. An
      * empty list if none is found
      */
     @GET
-    public List<FavorDetailDTO> getFavors(@PathParam("authorsId") Long residentsId) {
+    public List<FavorDetailDTO> getFavors(@PathParam("residentsId") Long residentsId) {
         LOGGER.log(Level.INFO, "Looking for favors from resources: input: {0}", residentsId);
         List<FavorDetailDTO> list = favorsListEntity2DTO(residentFavorLogic.getFavors(residentsId));
         LOGGER.log(Level.INFO, "Ended looking for favors from resources: output: {0}", list);
@@ -107,8 +110,8 @@ public class FavorResidentProfileResource {
      * Looks for a favor with specified ID by URL which is associated with a
      * resident and returns it
      *
-     * @param favorsId id from wanted favor
-     * @param residentsId id from resident whose favor is wanted
+     * @param favorsId favorId from wanted favor
+     * @param residentsId favorId from resident whose favor is wanted
      * @return {@link FavorDetailDTO} - favor found inside resident
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Logic error if favor not found
@@ -129,14 +132,14 @@ public class FavorResidentProfileResource {
      *
      * Updates a list from favors inside a resident which is received in body
      *
-     * @param residentsId id from resident whose list of favors is to be updated
+     * @param residentsId favorId from resident whose list of favors is to be updated
      * @param favors JSONArray {@link FavorDetailDTO} - modified favors list
      * @return JSONArray {@link FavorDetailDTO} - updated list
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Error if not found
      */
     @PUT
-    public List<FavorDetailDTO> replaceFavors(@PathParam("authorsId") Long residentsId, List<FavorDetailDTO> favors) {
+    public List<FavorDetailDTO> replaceFavors(@PathParam("residentsId") Long residentsId, List<FavorDetailDTO> favors) {
         LOGGER.log(Level.INFO, "Replacing resident favors from resource: input: residentsId {0} , favors {1}", new Object[]{residentsId, favors});
         for (FavorDetailDTO favor : favors) {
             if (favorLogic.getFavor(favor.getId()) == null) {
@@ -151,14 +154,14 @@ public class FavorResidentProfileResource {
     /**
      * Removes a favor from a resident
      *
-     * @param residentsId id from resident whose favor is to be removed
-     * @param favorsId id from favor to be removed
+     * @param residentsId favorId from resident whose favor is to be removed
+     * @param favorsId favorId from favor to be removed
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Error if not found
      */
     @DELETE
     @Path("{favorsId: \\d+}")
-    public void removeFavor(@PathParam("authorsId") Long residentsId, @PathParam("favorsId") Long favorsId) throws BusinessLogicException {
+    public void removeFavor(@PathParam("residentsId") Long residentsId, @PathParam("favorsId") Long favorsId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Removing favor from resident: input: residentsId {0} , favorsId {1}", new Object[]{residentsId, favorsId});
         if (favorLogic.getFavor(favorsId) == null) {
             throw new WebApplicationException("Resource /favors/" + favorsId + " does not exist.", 404);

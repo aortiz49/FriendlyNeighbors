@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.test.logic;
 
+import co.edu.uniandes.csw.neighborhood.ejb.PostLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.ResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.PostResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
@@ -55,12 +56,14 @@ public class PostResidentProfileLogicTest {
     private PodamFactory factory = new PodamFactoryImpl();
 
     @Inject
-    private ResidentProfileLogic residentLogic;
-    @Inject
     private PostResidentProfileLogic residentPostLogic;
+    
+    @Inject
+    private PostLogic postLogic;
 
     @PersistenceContext
     private EntityManager em;
+    
 
     @Inject
     private UserTransaction utx;
@@ -148,7 +151,8 @@ public class PostResidentProfileLogicTest {
     }
 
     /**
-     * Test for getting a collection of post entities associated with a resident
+     * Test for getting a collection of post entities associated with a
+     * resident
      */
     @Test
     public void getPostsTest() {
@@ -183,6 +187,42 @@ public class PostResidentProfileLogicTest {
         ResidentProfileEntity entity = data.get(0);
         PostEntity postEntity = postsData.get(1);
         residentPostLogic.getPost(entity.getId(), postEntity.getId());
+    }
+    
+        /**
+     * Test for replacing posts associated with a resident
+     *
+     * @throws BusinessLogicException
+     */
+    @Test
+
+    public void replacePostsTest() throws BusinessLogicException {
+        List<PostEntity> newCollection = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            PostEntity entity = factory.manufacturePojo(PostEntity.class);
+            entity.setAuthor(data.get(0));
+
+            postLogic.createPost(entity);
+
+            newCollection.add(entity);
+        }
+        residentPostLogic.replacePosts(data.get(0).getId(), newCollection);
+        List<PostEntity> posts = residentPostLogic.getPosts(data.get(0).getId());
+        for (PostEntity newE : newCollection) {
+            Assert.assertTrue(posts.contains(newE));
+        }
+    }
+
+    /**
+     * Test for removing an post from resident
+     *
+     */
+    @Test
+    public void removePostTest() throws BusinessLogicException {
+   
+            residentPostLogic.removePost(data.get(0).getId(), postsData.get(0).getId());
+
+        Assert.assertTrue(residentPostLogic.getPosts(data.get(0).getId()).isEmpty());
     }
 
 }
