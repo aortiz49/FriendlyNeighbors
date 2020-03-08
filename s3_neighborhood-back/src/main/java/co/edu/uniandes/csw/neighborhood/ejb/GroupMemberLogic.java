@@ -41,10 +41,15 @@ public class GroupMemberLogic {
      * @param memberId ID from member entity
      * @return associated member entity
      */
-    public ResidentProfileEntity associateMemberToGroup(Long groupsId, Long memberId) {
+    public ResidentProfileEntity associateMemberToGroup(Long groupsId, Long memberId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Trying to add member to groups with id = {0}", groupsId);
         GroupEntity groupsEntity = groupsPersistence.find(groupsId);
         ResidentProfileEntity memberEntity = memberPersistence.find(memberId);
+
+        if (memberEntity.getNeighborhood().getId() != groupsEntity.getNeighborhood().getId()) {
+            throw new BusinessLogicException("Group and member must belong to the same neighborhood");
+        }
+
         groupsEntity.getMembers().add(memberEntity);
 
         LOGGER.log(Level.INFO, "Resident is associated with groups with id = {0}", groupsId);

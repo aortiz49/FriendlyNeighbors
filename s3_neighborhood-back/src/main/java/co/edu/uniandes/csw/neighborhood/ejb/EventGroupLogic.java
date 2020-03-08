@@ -38,7 +38,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Class that implements the connection for the relations between group and event.
+ * Class that implements the connection for the relations between group and
+ * event.
  *
  * @author aortiz49
  */
@@ -176,10 +177,8 @@ public class EventGroupLogic {
             EventEntity current = currentEventsList.get(i);
             if (pNewEventsList.contains(current) && !current.getGroups().contains(group)) {
                 current.getGroups().add(group);
-                
-            } 
-            
-            // if the current event already has the group, remove it since it is not in the list
+
+            } // if the current event already has the group, remove it since it is not in the list
             // of events we want the group to have
             else if (current.getGroups().contains(group)) {
                 current.getGroups().remove(group);

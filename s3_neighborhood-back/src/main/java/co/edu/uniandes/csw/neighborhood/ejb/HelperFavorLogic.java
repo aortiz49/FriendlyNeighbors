@@ -39,10 +39,15 @@ public class HelperFavorLogic {
      * @param favorId ID from favor entity
      * @return associated favor entity
      */
-    public FavorEntity associateFavorToAttenddee(Long helperId, Long favorId) {
+    public FavorEntity associateFavorToAttenddee(Long helperId, Long favorId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Trying to associate favor with helper with id = {0}", helperId);
         ResidentProfileEntity helperEntity = helperPersistence.find(helperId);
         FavorEntity favorEntity = favorPersistence.find(favorId);
+
+        if (helperEntity.getNeighborhood().getId() != favorEntity.getAuthor().getNeighborhood().getId()) {
+            throw new BusinessLogicException("Favor and attendee must belong to the same neighborhood");
+        }
+
         favorEntity.getCandidates().add(helperEntity);
 
         LOGGER.log(Level.INFO, "Favor is associated with helper with id = {0}", helperId);

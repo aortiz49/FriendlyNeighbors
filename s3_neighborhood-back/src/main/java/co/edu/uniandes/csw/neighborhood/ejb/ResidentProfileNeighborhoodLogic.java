@@ -38,7 +38,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Class that implements the connection for the relations between neighborhood and resident.
+ * Class that implements the connection for the relations between neighborhood
+ * and resident.
  *
  * @author aortiz49
  */
@@ -74,7 +75,8 @@ public class ResidentProfileNeighborhoodLogic {
      * @param pResidentProfileId resident id
      * @param pNeighborhoodId neighborhood id
      * @return the resident instance that was associated to the neighborhood
-     * @throws BusinessLogicException when the neighborhood or resident don't exist
+     * @throws BusinessLogicException when the neighborhood or resident don't
+     * exist
      */
     public ResidentProfileEntity addResidentProfileToNeighborhood(Long pResidentProfileId, Long pNeighborhoodId) throws BusinessLogicException {
 
@@ -154,7 +156,8 @@ public class ResidentProfileNeighborhoodLogic {
      * Replaces residents associated with a neighborhood
      *
      * @param pNeighborhoodId the neighborhood id
-     * @param pNewResidentProfileesList Collection of service to associate with resident
+     * @param pNewResidentProfileesList Collection of service to associate with
+     * resident
      * @return A new collection associated to resident
      */
     public List<ResidentProfileEntity> replaceResidentProfilees(Long pNeighborhoodId, List<ResidentProfileEntity> pNewResidentProfilesList) {

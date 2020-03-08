@@ -41,7 +41,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 /**
- * Class the implements the connection with the businessPersistence for the Business entity.
+ * Class the implements the connection with the businessPersistence for the
+ * Business entity.
  *
  * @author aortiz49
  */
@@ -51,7 +52,6 @@ public class NeighborhoodLogic {
 //===================================================
 // Attributes
 //===================================================
-    
     /**
      * Enumeration for the valid locality names
      */
@@ -100,7 +100,8 @@ public class NeighborhoodLogic {
      *
      * @param pBusinessEntity the Neighborhood entity
      * @return the neighborhood entity after it is persisted
-     * @throws BusinessLogicException if the new neighborhood violates the business rules
+     * @throws BusinessLogicException if the new neighborhood violates the
+     * business rules
      */
     public NeighborhoodEntity createNeighborhood(NeighborhoodEntity pNeighborhoodEntity) throws BusinessLogicException {
 
@@ -166,7 +167,8 @@ public class NeighborhoodLogic {
      * @param pNeighborhoodId the Id of the neighborhood to update
      * @param pNeighborhood the new neighborhood
      * @return the neighborhood entity after the update
-     * @throws BusinessLogicException if the new neighborhood violates the business rules
+     * @throws BusinessLogicException if the new neighborhood violates the
+     * business rules
      */
     public NeighborhoodEntity updateNeighborhood(Long pNeighborhoodId, NeighborhoodEntity pNeighborhood) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Begin the update process for neighborhood with id = {0}", pNeighborhoodId);
@@ -181,8 +183,8 @@ public class NeighborhoodLogic {
      * Delete a neighborhood by ID.
      *
      * @param neighborhoodID the id of the neighborhood to delete.
-     * @throws BusinessLogicException if the neighborhood has businesses, groups, locations, or
-     * residents associated to it
+     * @throws BusinessLogicException if the neighborhood has businesses,
+     * groups, locations, or residents associated to it
      */
     public void deleteNeighborhood(Long neighborhoodID) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Begin the deletion process for neighborhood with id = {0}", neighborhoodID);
@@ -210,7 +212,8 @@ public class NeighborhoodLogic {
      *
      * @param pNeighborhoodEntity neighborhood to verify
      * @return true if the neighborhood is valid. False otherwise
-     * @throws BusinessLogicException if the neighborhood doesn't satisfy the business rules
+     * @throws BusinessLogicException if the neighborhood doesn't satisfy the
+     * business rules
      */
     private boolean verifyCreationBusinessRules(NeighborhoodEntity pNeighborhoodEntity)
             throws BusinessLogicException {

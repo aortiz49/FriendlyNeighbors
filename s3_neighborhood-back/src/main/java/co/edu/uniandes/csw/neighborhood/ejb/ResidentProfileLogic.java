@@ -38,7 +38,8 @@ import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 
 /**
- * Class the implements the connection with the businessPersistence for the Business entity.
+ * Class the implements the connection with the businessPersistence for the
+ * Business entity.
  *
  * @author albayona
  */
@@ -95,11 +96,15 @@ public class ResidentProfileLogic {
         }
 
         // the neighborhood the potential resident belongs to 
-        NeighborhoodEntity businessNeighborhood = residentEntity.getNeighborhood();
+        NeighborhoodEntity neighborhood = residentEntity.getNeighborhood();
 
         // 5. The business must have a neighborhood
-        if (businessNeighborhood == null) {
+        if (neighborhood == null) {
             throw new BusinessLogicException("The resident must have a neighborhood!");
+        }
+        // 6. The business must have an existing neighborhood
+        if (neighborhoodPersistence.find(neighborhood.getId()) == null) {
+            throw new BusinessLogicException("The resident must have an existing  neighborhood!");
         }
     }
 

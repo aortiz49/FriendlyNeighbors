@@ -55,11 +55,13 @@ public class ServiceResidentProfileLogic {
      * @param serviceId ID from service entity
      * @return associated service entity
      */
-    public ServiceEntity associateServiceToResident(Long serviceId, Long residentId) {
+    public ServiceEntity associateServiceToResident(Long serviceId, Long residentId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Trying to add service to resident with id = {0}", residentId);
         ResidentProfileEntity ResidentProfileEntity = residentPersistence.find(residentId);
         ServiceEntity ServiceEntity = servicePersistence.find(serviceId);
+
         ServiceEntity.setAuthor(ResidentProfileEntity);
+
         LOGGER.log(Level.INFO, "Service is associated with resident with id = {0}", residentId);
         return ServiceEntity;
     }
@@ -118,16 +120,16 @@ public class ServiceResidentProfileLogic {
         return services;
     }
 
-   /**
+    /**
      * Removes a service from a resident. Service is no longer in DB
      *
-
-     * @param serviceId Id from service     
+     *
+     * @param serviceId Id from service
      */
     public void removeService(Long residentID, Long serviceId) throws BusinessLogicException {
-         LOGGER.log(Level.INFO, "Trying to delete a service from resident with id = {0}", serviceId);
-      servicePersistence.delete(getService(residentID, serviceId).getId());
+        LOGGER.log(Level.INFO, "Trying to delete a service from resident with id = {0}", serviceId);
+        servicePersistence.delete(getService(residentID, serviceId).getId());
 
-       LOGGER.log(Level.INFO, "Finished removing a service from resident with id = {0}", serviceId);
-        }
+        LOGGER.log(Level.INFO, "Finished removing a service from resident with id = {0}", serviceId);
+    }
 }

@@ -46,7 +46,6 @@ public class EventLogic {
     @Inject
     private EventPersistence persistence;
 
-
     /**
      * Guardar un nuevo libro
      *
@@ -57,7 +56,6 @@ public class EventLogic {
      */
     public EventEntity createEvent(EventEntity bookEntity) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Inicia proceso de creación del libro");
-     
 
         persistence.create(bookEntity);
         LOGGER.log(Level.INFO, "Termina proceso de creación del libro");

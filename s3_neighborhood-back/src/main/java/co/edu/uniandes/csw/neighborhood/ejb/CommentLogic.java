@@ -11,64 +11,80 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import co.edu.uniandes.csw.neighborhood.persistence.CommentPersistence; 
-import co.edu.uniandes.csw.neighborhood.entities.CommentEntity; 
-import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException; 
-
+import co.edu.uniandes.csw.neighborhood.persistence.CommentPersistence;
+import co.edu.uniandes.csw.neighborhood.entities.CommentEntity;
+import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 
 /**
  *
  * @author albayona
-
+ *
  */
 @Stateless
 public class CommentLogic {
 
-   
     private static final Logger LOGGER = Logger.getLogger(CommentLogic.class.getName());
-    
+
     @Inject
     private CommentPersistence persistence;
 
-    
-      public CommentEntity createComment(CommentEntity commentEntity) throws BusinessLogicException {
+    /**
+     * Creates a comment
+     *
+     * @param commentEntity comment entity to be created
+     * @return crested entity
+     * @throws BusinessLogicException if business rules are not met
+     */
+    public CommentEntity createComment(CommentEntity commentEntity) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creation process for comment has started");
 
-         //must have a text
-        if(commentEntity.getText()== null){
+        //must have a text
+        if (commentEntity.getText() == null) {
             throw new BusinessLogicException("A text has to be specified");
         }
-        
+
         //must have a date
-        if(commentEntity.getDate()== null){
+        if (commentEntity.getDate() == null) {
             throw new BusinessLogicException("A date has to be specified");
         }
-        
-        
+
         persistence.create(commentEntity);
         LOGGER.log(Level.INFO, "Creation process for comment eneded");
-        
+
         return commentEntity;
     }
-    
-   
 
+    /**
+     * Deletes a comment by ID
+     *
+     * @param id of comment to be deleted
+     */
     public void deleteComment(Long id) {
-        
+
         LOGGER.log(Level.INFO, "Starting deleting process for comment with id = {0}", id);
         persistence.delete(id);
         LOGGER.log(Level.INFO, "Ended deleting process for comment with id = {0}", id);
     }
 
-
+    /**
+     * Get all comment entities
+     *
+     * @return all of comment entities
+     */
     public List<CommentEntity> getComments() {
-        
+
         LOGGER.log(Level.INFO, "Starting querying process for all comments");
         List<CommentEntity> residents = persistence.findAll();
         LOGGER.log(Level.INFO, "Ended querying process for all comments");
         return residents;
     }
 
+    /**
+     * Gets a comment by id
+     *
+     * @param id from entity comment
+     * @return entity comment found
+     */
     public CommentEntity getComment(Long id) {
         LOGGER.log(Level.INFO, "Starting querying process for comment with id ", id);
         CommentEntity resident = persistence.find(id);
@@ -76,25 +92,28 @@ public class CommentLogic {
         return resident;
     }
 
-      
-
+    /**
+     * Updates a comment
+     *
+     * @param commentEntity to be updated
+     * @return the entity with the updated comment
+     */
     public CommentEntity updateComment(CommentEntity commentEntity) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Starting update process for comment with id ", commentEntity.getId());
-        
-         //must have a text
-        if(commentEntity.getText()== null){
+
+        //must have a text
+        if (commentEntity.getText() == null) {
             throw new BusinessLogicException("A text has to be specified");
         }
-        
+
         //must have a date
-        if(commentEntity.getDate()== null){
+        if (commentEntity.getDate() == null) {
             throw new BusinessLogicException("A date has to be specified");
         }
-        
+
         CommentEntity modified = persistence.update(commentEntity);
         LOGGER.log(Level.INFO, "Ended update process for comment with id ", commentEntity.getId());
         return modified;
     }
 
-  
 }

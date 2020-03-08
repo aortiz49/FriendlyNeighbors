@@ -38,7 +38,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Class that implements the connection for the relations between neighborhood and group.
+ * Class that implements the connection for the relations between neighborhood
+ * and group.
  *
  * @author aortiz49
  */

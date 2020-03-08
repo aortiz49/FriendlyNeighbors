@@ -39,7 +39,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 /**
- * Class the implements the connection with the businessPersistence for the Business entity.
+ * Class the implements the connection with the businessPersistence for the
+ * Business entity.
  *
  * @author aortiz49
  */
@@ -72,9 +73,11 @@ public class BusinessLogic {
     /**
      * Creates and persists a new business
      *
-     * @param pBusinessEntity the entity of type Business of the new business to be persisted.
+     * @param pBusinessEntity the entity of type Business of the new business to
+     * be persisted.
      * @return the business entity after it is persisted
-     * @throws BusinessLogicException if the new business violates the business rules
+     * @throws BusinessLogicException if the new business violates the business
+     * rules
      */
     public BusinessEntity createBusiness(BusinessEntity pBusinessEntity) throws BusinessLogicException {
 
@@ -140,7 +143,8 @@ public class BusinessLogic {
      * @param pBusinessId the Id of the business to update
      * @param pBusiness the new business
      * @return the business entity after the update
-     * @throws BusinessLogicException if the new business violates the business rules
+     * @throws BusinessLogicException if the new business violates the business
+     * rules
      */
     public BusinessEntity updateBusiness(Long pId, BusinessEntity pBusiness) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Begin the update process for business with id = {0}", pId);
@@ -152,10 +156,10 @@ public class BusinessLogic {
     }
 
     /**
-     * Deletes a business by ID. 
+     * Deletes a business by ID.
      *
      * @param businessId the ID of the book to be deleted
-     * 
+     *
      */
     public void deleteBusiness(Long businessId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Begin the delete process for business with id = {0}", businessId);
@@ -168,7 +172,8 @@ public class BusinessLogic {
      *
      * @param pBusinessEntity business to verify
      * @return true if the business is valid. False otherwise
-     * @throws BusinessLogicException if the business doesn't satisfy the business rules
+     * @throws BusinessLogicException if the business doesn't satisfy the
+     * business rules
      */
     private boolean verifyBusinessCreationRules(BusinessEntity pBusinessEntity) throws BusinessLogicException {
         boolean valid = true;

@@ -86,12 +86,12 @@ public class ResidentProfileNeighborhoodLogicTest {
     /**
      * List of neighborhoods to be used in the tests.
      */
-    private List<NeighborhoodEntity> testHoods = new ArrayList<NeighborhoodEntity>();
+    private List<NeighborhoodEntity> neighborhoodData = new ArrayList<NeighborhoodEntity>();
 
     /**
      * List of residents to be used in the tests.
      */
-    private List<ResidentProfileEntity> testPeeps = new ArrayList<ResidentProfileEntity>();
+    private List<ResidentProfileEntity> residentData = new ArrayList<ResidentProfileEntity>();
 //===================================================
 // Test Setup
 //===================================================
@@ -149,19 +149,19 @@ public class ResidentProfileNeighborhoodLogicTest {
         for (int i = 0; i < 3; i++) {
             NeighborhoodEntity neigh = factory.manufacturePojo(NeighborhoodEntity.class);
             em.persist(neigh);
-            testHoods.add(neigh);
+            neighborhoodData.add(neigh);
         }
 
         // creates 3 random residentes
         for (int i = 0; i < 3; i++) {
             ResidentProfileEntity buss = factory.manufacturePojo(ResidentProfileEntity.class);
             em.persist(buss);
-            testPeeps.add(buss);
+            residentData.add(buss);
         }
 
         // associates residentes to a neighborhood
-        testPeeps.get(0).setNeighborhood(testHoods.get(0));
-        testPeeps.get(2).setNeighborhood(testHoods.get(0));
+        residentData.get(0).setNeighborhood(neighborhoodData.get(0));
+        residentData.get(2).setNeighborhood(neighborhoodData.get(0));
 
     }
 //===================================================
@@ -176,11 +176,11 @@ public class ResidentProfileNeighborhoodLogicTest {
     @Test
     public void addResidentProfileToNeighborhoodTest() throws BusinessLogicException {
         // gets the second random neighborhood from the list
-        NeighborhoodEntity neighborhood = testHoods.get(0);
+        NeighborhoodEntity neighborhood = neighborhoodData.get(0);
 
         // gets the second random resident from the list, since the first has an associated 
         // resident already
-        ResidentProfileEntity resident = testPeeps.get(1);
+        ResidentProfileEntity resident = residentData.get(1);
 
         // add the resident to the neighborhood
         ResidentProfileEntity response = residentNeighborhoodLogic.addResidentProfileToNeighborhood(
@@ -196,13 +196,13 @@ public class ResidentProfileNeighborhoodLogicTest {
      */
     @Test
     public void getResidentProfileesTest() {
-        List<ResidentProfileEntity> list = residentNeighborhoodLogic.getResidentProfilees(testHoods.get(0).getId());
+        List<ResidentProfileEntity> list = residentNeighborhoodLogic.getResidentProfilees(neighborhoodData.get(0).getId());
 
         // checks that there are two residentes associated to the neighborhood
         Assert.assertEquals(2, list.size());
 
         // checks that the name of the associated neighborhood matches
-        Assert.assertEquals(list.get(0).getNeighborhood().getName(), testHoods.get(0).getName());
+        Assert.assertEquals(list.get(0).getNeighborhood().getName(), neighborhoodData.get(0).getName());
     }
 
     /**
@@ -215,10 +215,10 @@ public class ResidentProfileNeighborhoodLogicTest {
     public void getResidentProfileTest() throws BusinessLogicException {
 
         // gets the first resident from the list
-        ResidentProfileEntity resident = testPeeps.get(0);
+        ResidentProfileEntity resident = residentData.get(0);
 
         // gets the first neighborhood from the list
-        NeighborhoodEntity neighborhood = testHoods.get(0);
+        NeighborhoodEntity neighborhood = neighborhoodData.get(0);
 
         // get the resident from the neighborhood
         ResidentProfileEntity response = residentNeighborhoodLogic.getResidentProfile(neighborhood.getId(), resident.getId());
@@ -234,10 +234,10 @@ public class ResidentProfileNeighborhoodLogicTest {
     public void removeResidentProfileTest() {
         // gets the first neighborhood from the list. 
         // (Uses em.find because the persisted neighborhood contains the added residentes)
-        NeighborhoodEntity neighborhood = em.find(NeighborhoodEntity.class, testHoods.get(0).getId());
+        NeighborhoodEntity neighborhood = em.find(NeighborhoodEntity.class, neighborhoodData.get(0).getId());
 
         // get the first associated resident
-        ResidentProfileEntity resident = testPeeps.get(0);
+        ResidentProfileEntity resident = residentData.get(0);
 
         // gets the list of residentes in the neighborhood
         List<ResidentProfileEntity> list = neighborhood.getResidents();
