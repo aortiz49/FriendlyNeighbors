@@ -147,10 +147,10 @@ public class EventLogic {
      * @param eventId the ID of the event to be deleted
      *
      */
-    public void deleteevent(Long eventId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Begin the delettion process for event with id = {0}", eventId);
+    public void deleteEvent(Long eventId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Begin the deletion process for event with id = {0}", eventId);
         eventPersistence.delete(eventId);
-        LOGGER.log(Level.INFO, "End the delettion process for event with id = {0}", eventId);
+        LOGGER.log(Level.INFO, "End the deletion process for event with id = {0}", eventId);
     }
 
     /**

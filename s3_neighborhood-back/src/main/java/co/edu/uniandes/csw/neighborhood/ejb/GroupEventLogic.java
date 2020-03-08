@@ -205,8 +205,11 @@ public class GroupEventLogic {
         // group to delete
         GroupEntity groupEntity = groupPersistence.find(pGroupId);
 
-        // event to remove from group   
+        // group to remove from event   
         eventEntity.getGroups().remove(groupEntity);
+
+        // event to remove from group
+        groupEntity.getEvents().remove(eventEntity);
 
         LOGGER.log(Level.INFO, "Finished removing a group from event con id = {0}", pGroupId);
     }

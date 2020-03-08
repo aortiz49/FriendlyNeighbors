@@ -62,8 +62,8 @@ public class EventPersistence {
     /**
      * Persists a event in the database.
      *
-     * @param pEventEntity event object to be created in the databse
-     * @return the created event with an id given by the databse
+     * @param pEventEntity event object to be created in the database
+     * @return the created event with an id given by the database
      */
     public EventEntity create(EventEntity pEventEntity) {
         // logs a message
@@ -77,7 +77,7 @@ public class EventPersistence {
     }
 
     /**
-     * Returns all eventss in the database.
+     * Returns all events in the database.
      *
      * @return a list containing every event in the database. select u from EventEntity u" is akin
      * to a "SELECT * from EventEntity" in SQL.
@@ -111,8 +111,7 @@ public class EventPersistence {
      * Finds am event by title.
      *
      * @param pName the title of the event to search for
-     * @return null if the event doesn't exist. If the event exists, return the first
-     * one
+     * @return null if the event doesn't exist. If the event exists, return the first one
      */
     public EventEntity findByTitle(String pTitle) {
         LOGGER.log(Level.INFO, "Consulting event by title ", pTitle);

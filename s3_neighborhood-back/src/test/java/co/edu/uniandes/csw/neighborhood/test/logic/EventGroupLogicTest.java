@@ -187,6 +187,9 @@ public class EventGroupLogicTest {
         EventEntity response = eventGroupLogic.addEventToGroup(event.getId(), group.getId());
 
         Assert.assertNotNull(response);
+
+        GroupEntity found = em.find(GroupEntity.class, group.getId());
+        Assert.assertEquals(3, found.getEvents().size());
         Assert.assertEquals(event.getId(), response.getId());
     }
 
@@ -240,10 +243,11 @@ public class EventGroupLogicTest {
         // get the first associated event
         EventEntity event = testEvents.get(0);
 
-        // gets the list of events in the group
-        List<EventEntity> list = group.getEvents();
-
         eventGroupLogic.removeEvent(group.getId(), event.getId());
+
+        // gets the list of events in the group
+        List<EventEntity> list = em.find(GroupEntity.class, group.getId()).getEvents();
+
         Assert.assertEquals(1, list.size());
 
     }

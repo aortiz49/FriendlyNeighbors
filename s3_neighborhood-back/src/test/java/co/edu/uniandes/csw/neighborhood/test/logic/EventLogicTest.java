@@ -328,7 +328,7 @@ public class EventLogicTest {
         EventEntity entity = events.get(0);
 
         // delete the event
-        eventLogic.deleteevent(entity.getId());
+        eventLogic.deleteEvent(entity.getId());
 
     }
 

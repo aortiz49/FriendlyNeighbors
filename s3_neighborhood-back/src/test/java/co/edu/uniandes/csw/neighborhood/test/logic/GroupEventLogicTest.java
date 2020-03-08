@@ -136,7 +136,6 @@ public class GroupEventLogicTest {
     private void clearData() {
         em.createQuery("delete from GroupEntity").executeUpdate();
         em.createQuery("delete from EventEntity").executeUpdate();
-
     }
 
     /**
@@ -187,6 +186,9 @@ public class GroupEventLogicTest {
         // add the group to the event
         GroupEntity response = groupEventLogic.addGroupToEvent(group.getId(), event.getId());
 
+        EventEntity found = em.find(EventEntity.class, event.getId());
+        Assert.assertEquals(3, found.getGroups().size());
+
         Assert.assertNotNull(response);
         Assert.assertEquals(group.getId(), response.getId());
     }
@@ -234,20 +236,20 @@ public class GroupEventLogicTest {
      */
     @Test
     public void removeGroupTest() {
-        // gets the first event from the list. 
-        // (Uses em.find because the persisted event contains the added groupes)
+
+        // gets the first group from the list. 
+        // (Uses em.find because the persisted event contains the added groups)
         EventEntity event = em.find(EventEntity.class, testEvents.get(0).getId());
 
         // get the first associated group
         GroupEntity group = testGroups.get(0);
 
-        // gets the list of groups in the event
-        List<GroupEntity> list = event.getGroups();
-
         groupEventLogic.removeGroup(event.getId(), group.getId());
-        
-        Assert.assertEquals(1, list.size());
 
+        // gets the list of events in the group
+        List<GroupEntity> list = em.find(EventEntity.class, event.getId()).getGroups();
+
+        Assert.assertEquals(1, list.size());
     }
 
 }
