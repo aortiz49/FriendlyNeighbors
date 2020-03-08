@@ -32,10 +32,18 @@ public class ViewerPostLogicTest {
     private PodamFactory factory = new PodamFactoryImpl();
 
     @Inject
-    private ViewerPostLogic viewerPostLogic;
+    private ViewerPostLogic residentPostLogic;
 
     @Inject
     private PostLogic postLogic;
+
+
+    @Inject
+    private NeighborhoodPersistence neighPersistence;
+
+    private NeighborhoodEntity neighborhood;
+    
+    private ResidentProfileEntity author;
 
     @PersistenceContext
     private EntityManager em;
@@ -43,7 +51,7 @@ public class ViewerPostLogicTest {
     @Inject
     private UserTransaction utx;
 
-    private ResidentProfileEntity viewer = new ResidentProfileEntity();
+    private ResidentProfileEntity resident = new ResidentProfileEntity();
     private List<PostEntity> data = new ArrayList<>();
 
     /**
@@ -86,31 +94,45 @@ public class ViewerPostLogicTest {
      * Clears tables involved in tests
      */
     private void clearData() {
-        em.createQuery("delete from ResidentProfileEntity").executeUpdate();
         em.createQuery("delete from PostEntity").executeUpdate();
+        em.createQuery("delete from ResidentProfileEntity").executeUpdate();
+
     }
 
     /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
-        viewer = factory.manufacturePojo(ResidentProfileEntity.class);
-        viewer.setId(1L);
-        viewer.setPostsToView(new ArrayList<>());
-        em.persist(viewer);
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        neighPersistence.create(neighborhood);
+
+        resident = factory.manufacturePojo(ResidentProfileEntity.class);
+        resident.setId(1L);
+        resident.setPostsToView(new ArrayList<>());
+        resident.setNeighborhood(neighborhood);
+
+        em.persist(resident);
+
+        author = factory.manufacturePojo(ResidentProfileEntity.class);
+        author.setNeighborhood(neighborhood);
+        em.persist(author);
 
         for (int i = 0; i < 3; i++) {
             PostEntity entity = factory.manufacturePojo(PostEntity.class);
+            entity.setAuthor(author);
+
             entity.setViewers(new ArrayList<>());
-            entity.getViewers().add(viewer);
+            entity.getViewers().add(resident);
+
             em.persist(entity);
             data.add(entity);
-            viewer.getPostsToView().add(entity);
+            resident.getPostsToView().add(entity);
         }
+
     }
 
     /**
-     * Test to associate an post with a viewer
+     * Test to associate an post with a resident
      *
      *
      * @throws BusinessLogicException
@@ -118,25 +140,29 @@ public class ViewerPostLogicTest {
     @Test
     public void addPostTest() throws BusinessLogicException {
         PostEntity newPost = factory.manufacturePojo(PostEntity.class);
+        newPost.setAuthor(author);
+        
         postLogic.createPost(newPost);
-        PostEntity postEntity = viewerPostLogic.associatePostToAttenddee(viewer.getId(), newPost.getId());
+
+        PostEntity postEntity = residentPostLogic.associatePostToViewer(resident.getId(), newPost.getId());
         Assert.assertNotNull(postEntity);
 
         Assert.assertEquals(postEntity.getId(), newPost.getId());
         Assert.assertEquals(postEntity.getDescription(), newPost.getDescription());
 
-        PostEntity lastPost = viewerPostLogic.getPost(viewer.getId(), newPost.getId());
+        PostEntity lastPost = residentPostLogic.getPost(resident.getId(), newPost.getId());
 
         Assert.assertEquals(lastPost.getId(), newPost.getId());
 
     }
 
     /**
-     * Test for getting a collection of post entities associated with a viewer
+     * Test for getting a collection of post entities associated with a
+     * resident
      */
     @Test
     public void getPostsTest() {
-        List<PostEntity> postEntities = viewerPostLogic.getPosts(viewer.getId());
+        List<PostEntity> postEntities = residentPostLogic.getPosts(resident.getId());
 
         Assert.assertEquals(data.size(), postEntities.size());
 
@@ -146,14 +172,14 @@ public class ViewerPostLogicTest {
     }
 
     /**
-     * Test for getting an post entity associated with a a viewer
+     * Test for getting an post entity associated with a a resident
      *
      * @throws BusinessLogicException
      */
     @Test
     public void getPostTest() throws BusinessLogicException {
         PostEntity postEntity = data.get(0);
-        PostEntity post = viewerPostLogic.getPost(viewer.getId(), postEntity.getId());
+        PostEntity post = residentPostLogic.getPost(resident.getId(), postEntity.getId());
         Assert.assertNotNull(post);
 
         Assert.assertEquals(postEntity.getId(), post.getId());
@@ -162,7 +188,7 @@ public class ViewerPostLogicTest {
     }
 
     /**
-     * Test for replacing posts associated with a viewer
+     * Test for replacing posts associated with a resident
      *
      * @throws BusinessLogicException
      */
@@ -173,27 +199,27 @@ public class ViewerPostLogicTest {
         for (int i = 0; i < 3; i++) {
             PostEntity entity = factory.manufacturePojo(PostEntity.class);
             entity.setViewers(new ArrayList<>());
-            entity.getViewers().add(viewer);
+            entity.getViewers().add(resident);
             postLogic.createPost(entity);
             newCollection.add(entity);
         }
-        viewerPostLogic.replacePosts(viewer.getId(), newCollection);
-        List<PostEntity> postEntities = viewerPostLogic.getPosts(viewer.getId());
+        residentPostLogic.replacePosts(resident.getId(), newCollection);
+        List<PostEntity> postEntities = residentPostLogic.getPosts(resident.getId());
         for (PostEntity aNuevaLista : newCollection) {
             Assert.assertTrue(postEntities.contains(aNuevaLista));
         }
     }
 
     /**
-     * Test for removing an post from viewer
+     * Test for removing an post from resident
      *
      */
     @Test
     public void removePostTest() {
         for (PostEntity post : data) {
-            viewerPostLogic.removePost(viewer.getId(), post.getId());
+            residentPostLogic.removePost(resident.getId(), post.getId());
         }
-        Assert.assertTrue(viewerPostLogic.getPosts(viewer.getId()).isEmpty());
+        Assert.assertTrue(residentPostLogic.getPosts(resident.getId()).isEmpty());
     }
 
 }

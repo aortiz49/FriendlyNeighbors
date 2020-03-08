@@ -39,7 +39,7 @@ public class ViewerPostLogic {
      * @param postId ID from post entity
      * @return associated post entity
      */
-    public PostEntity associatePostToAttenddee(Long viewerId, Long postId) throws BusinessLogicException {
+    public PostEntity associatePostToViewer(Long viewerId, Long postId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Trying to associate post with viewer with id = {0}", viewerId);
         ResidentProfileEntity viewerEntity = viewerPersistence.find(viewerId);
         PostEntity postEntity = postPersistence.find(postId);

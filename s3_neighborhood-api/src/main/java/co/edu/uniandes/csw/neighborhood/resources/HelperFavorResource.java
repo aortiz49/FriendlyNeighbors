@@ -24,13 +24,15 @@ SOFTWARE.
 package co.edu.uniandes.csw.neighborhood.resources;
 
 import co.edu.uniandes.csw.neighborhood.dtos.FavorDetailDTO;
-
-import co.edu.uniandes.csw.neighborhood.entities.FavorEntity;
 import co.edu.uniandes.csw.neighborhood.ejb.FavorLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.HelperFavorLogic;
+import co.edu.uniandes.csw.neighborhood.entities.FavorEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.mappers.WebApplicationExceptionMapper;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -40,11 +42,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+
 
 /**
  * Class implementing resource "resident/{id}/favorsToHelp".
@@ -58,11 +58,13 @@ public class HelperFavorResource {
 
     private static final Logger LOGGER = Logger.getLogger(HelperFavorResource.class.getName());
 
-    @Inject
-    private HelperFavorLogic helperFavorLogic;
+
 
     @Inject
     private FavorLogic favorLogic;
+    
+   @Inject
+    private HelperFavorLogic helperFavorLogic;
 
     /**
      * Associates a favor with an existing helper
@@ -75,15 +77,15 @@ public class HelperFavorResource {
      */
     @POST
     @Path("{favorsId: \\d+}")
-    public FavorDetailDTO associateFavorToResidentProfile(@PathParam("helpersId") Long helpersId, @PathParam("favorsId") Long favorsId) throws BusinessLogicException {
+    public FavorDetailDTO associateFavorToHelper(@PathParam("helpersId") Long helpersId, @PathParam("favorsId") Long favorsId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Associating favor to helper from resource: input: helpersId {0} , favorsId {1}", new Object[]{helpersId, favorsId});
         if (favorLogic.getFavor(favorsId) == null) {
             throw new WebApplicationException("Resource /favors/" + favorsId + " does not exist.", 404);
         }
         
-        FavorEntity e = helperFavorLogic.associateFavorToHelper(helpersId, favorsId);
+        FavorDetailDTO detailDTO = new FavorDetailDTO(helperFavorLogic.associateFavorToHelper(helpersId, favorsId));
+       
         
-        FavorDetailDTO detailDTO = new FavorDetailDTO(e);
         LOGGER.log(Level.INFO, "Ended associating favor to helper from resource: output: {0}", detailDTO);
         return detailDTO;
     }

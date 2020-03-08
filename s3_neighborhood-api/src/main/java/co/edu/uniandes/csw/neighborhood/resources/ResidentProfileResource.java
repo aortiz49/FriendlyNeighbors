@@ -55,10 +55,12 @@ public class ResidentProfileResource {
      * persisted
      */
     @POST
-    public ResidentProfileDTO createResident(ResidentProfileDTO resident) throws BusinessLogicException {
+    public ResidentProfileDetailDTO createResident(ResidentProfileDetailDTO resident) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creating resident from resource: input: {0}", resident);
 
-        ResidentProfileDTO residentDTO = new ResidentProfileDTO(residentLogic.createResident(resident.toEntity()));
+        ResidentProfileDetailDTO residentDTO = new ResidentProfileDetailDTO(residentLogic.createResident(resident.toEntity()));
+        
+        
 
         LOGGER.log(Level.INFO, "Created resident from resource: output: {0}", residentDTO);
         return residentDTO;

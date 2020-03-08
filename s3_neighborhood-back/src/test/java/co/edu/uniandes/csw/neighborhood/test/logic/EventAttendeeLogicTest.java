@@ -40,6 +40,8 @@ public class EventAttendeeLogicTest {
     @Inject
     private NeighborhoodPersistence neighPersistence;
 
+    private NeighborhoodEntity neighborhood;
+
     @PersistenceContext
     private EntityManager em;
 
@@ -97,9 +99,21 @@ public class EventAttendeeLogicTest {
      * Inserts initial data for correct test operation
      */
     private void insertData() {
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        neighPersistence.create(neighborhood);
+
         event = factory.manufacturePojo(EventEntity.class);
         event.setId(1L);
         event.setAttendees(new ArrayList<>());
+        
+        
+         ResidentProfileEntity author = factory.manufacturePojo(ResidentProfileEntity.class);
+         author.setNeighborhood(neighborhood);
+         em.persist(author);
+
+         
+        event.setHost(author);
+
         em.persist(event);
 
         for (int i = 0; i < 3; i++) {
@@ -107,6 +121,9 @@ public class EventAttendeeLogicTest {
 
             entity.setEventsToAttend(new ArrayList<>());
             entity.getEventsToAttend().add(event);
+            entity.setNeighborhood(neighborhood);
+            
+            
             em.persist(entity);
             data.add(entity);
             event.getAttendees().add(entity);
@@ -123,10 +140,7 @@ public class EventAttendeeLogicTest {
     public void addResidentTest() throws BusinessLogicException {
         ResidentProfileEntity newResidentProfile = factory.manufacturePojo(ResidentProfileEntity.class);
 
-        NeighborhoodEntity neigh = factory.manufacturePojo(NeighborhoodEntity.class);
-        neighPersistence.create(neigh);
-
-        newResidentProfile.setNeighborhood(neigh);
+        newResidentProfile.setNeighborhood(neighborhood);
 
         residentLogic.createResident(newResidentProfile);
 
@@ -187,10 +201,7 @@ public class EventAttendeeLogicTest {
             entity.setEventsToAttend(new ArrayList<>());
             entity.getEventsToAttend().add(event);
 
-            NeighborhoodEntity neigh = factory.manufacturePojo(NeighborhoodEntity.class);
-            neighPersistence.create(neigh);
-
-            entity.setNeighborhood(neigh);
+            entity.setNeighborhood(neighborhood);
             residentLogic.createResident(entity);
 
             newCollection.add(entity);

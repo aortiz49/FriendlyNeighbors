@@ -138,7 +138,7 @@ public class ServiceResidentProfileLogicTest {
      * @throws BusinessLogicException
      */
     @Test
-    public void addServicesTest() {
+    public void addServicesTest() throws BusinessLogicException {
         ResidentProfileEntity entity = data.get(0);
         ServiceEntity serviceEntity = servicesData.get(1);
         ServiceEntity response = residentServiceLogic.associateServiceToResident(serviceEntity.getId(), entity.getId());

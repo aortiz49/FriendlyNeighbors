@@ -55,7 +55,7 @@ public class GroupLogic {
 
         //must have a description
         if (groupEntity.getDescription() == null) {
-            throw new BusinessLogicException("A name has to be specified");
+            throw new BusinessLogicException("A description has to be specified");
         }
       
         NeighborhoodEntity neighborhood = groupEntity.getNeighborhood();
@@ -70,10 +70,10 @@ public class GroupLogic {
         }
 
 
-        GroupEntity entity =  persistence.create(groupEntity);
+         persistence.create(groupEntity);
         LOGGER.log(Level.INFO, "Creation process for group eneded");
 
-        return persistence.find(entity.getId());
+        return groupEntity;
     }
 
     

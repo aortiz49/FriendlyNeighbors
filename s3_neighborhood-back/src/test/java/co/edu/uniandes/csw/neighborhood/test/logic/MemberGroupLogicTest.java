@@ -36,6 +36,12 @@ public class MemberGroupLogicTest {
 
     @Inject
     private GroupLogic groupLogic;
+    
+    @Inject
+    private NeighborhoodPersistence neighPersistence;
+    
+    private NeighborhoodEntity neighborhood;
+
 
     @PersistenceContext
     private EntityManager em;
@@ -94,13 +100,20 @@ public class MemberGroupLogicTest {
      * Inserts initial data for correct test operation
      */
     private void insertData() {
+
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        neighPersistence.create(neighborhood);
+
         member = factory.manufacturePojo(ResidentProfileEntity.class);
         member.setId(1L);
         member.setGroups(new ArrayList<>());
+        member.setNeighborhood(neighborhood);
         em.persist(member);
 
         for (int i = 0; i < 3; i++) {
             GroupEntity entity = factory.manufacturePojo(GroupEntity.class);
+            entity.setNeighborhood(neighborhood);
+            
             entity.setMembers(new ArrayList<>());
             entity.getMembers().add(member);
             em.persist(entity);

@@ -37,6 +37,14 @@ public class AttendeeEventLogicTest {
     @Inject
     private EventLogic eventLogic;
 
+
+    @Inject
+    private NeighborhoodPersistence neighPersistence;
+
+    private NeighborhoodEntity neighborhood;
+    
+    private ResidentProfileEntity author;
+
     @PersistenceContext
     private EntityManager em;
 
@@ -63,7 +71,7 @@ public class AttendeeEventLogicTest {
     }
 
     /**
-     * Initial test configuration. 
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -82,37 +90,49 @@ public class AttendeeEventLogicTest {
         }
     }
 
-
-       /**
+    /**
      * Clears tables involved in tests
      */
     private void clearData() {
-        em.createQuery("delete from ResidentProfileEntity").executeUpdate();
         em.createQuery("delete from EventEntity").executeUpdate();
+        em.createQuery("delete from ResidentProfileEntity").executeUpdate();
+
     }
 
-
-        /**
+    /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        neighPersistence.create(neighborhood);
+
         resident = factory.manufacturePojo(ResidentProfileEntity.class);
         resident.setId(1L);
         resident.setEventsToAttend(new ArrayList<>());
+        resident.setNeighborhood(neighborhood);
+
         em.persist(resident);
+
+        author = factory.manufacturePojo(ResidentProfileEntity.class);
+        author.setNeighborhood(neighborhood);
+        em.persist(author);
 
         for (int i = 0; i < 3; i++) {
             EventEntity entity = factory.manufacturePojo(EventEntity.class);
+            entity.setHost(author);
+
             entity.setAttendees(new ArrayList<>());
             entity.getAttendees().add(resident);
+
             em.persist(entity);
             data.add(entity);
             resident.getEventsToAttend().add(entity);
         }
+
     }
 
     /**
-     * Test to associate an event with a resident 
+     * Test to associate an event with a resident
      *
      *
      * @throws BusinessLogicException
@@ -120,23 +140,25 @@ public class AttendeeEventLogicTest {
     @Test
     public void addEventTest() throws BusinessLogicException {
         EventEntity newEvent = factory.manufacturePojo(EventEntity.class);
+        newEvent.setHost(author);
+        
         eventLogic.createEvent(newEvent);
+
         EventEntity eventEntity = residentEventLogic.associateEventToAttenddee(resident.getId(), newEvent.getId());
         Assert.assertNotNull(eventEntity);
 
         Assert.assertEquals(eventEntity.getId(), newEvent.getId());
         Assert.assertEquals(eventEntity.getEndTime(), newEvent.getEndTime());
 
-
         EventEntity lastEvent = residentEventLogic.getEvent(resident.getId(), newEvent.getId());
 
         Assert.assertEquals(lastEvent.getId(), newEvent.getId());
 
-
     }
-    
+
     /**
-     * Test for getting a collection of event entities associated with a resident
+     * Test for getting a collection of event entities associated with a
+     * resident
      */
     @Test
     public void getEventsTest() {
@@ -171,7 +193,7 @@ public class AttendeeEventLogicTest {
      * @throws BusinessLogicException
      */
     @Test
-	
+
     public void replaceEventsTest() throws BusinessLogicException {
         List<EventEntity> newCollection = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -200,5 +222,4 @@ public class AttendeeEventLogicTest {
         Assert.assertTrue(residentEventLogic.getEvents(resident.getId()).isEmpty());
     }
 
-   
 }

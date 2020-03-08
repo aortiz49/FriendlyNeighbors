@@ -39,6 +39,8 @@ public class GroupMemberLogicTest {
 
     @Inject
     private NeighborhoodPersistence neighPersistence;
+    
+    private NeighborhoodEntity neighborhood;
 
     @PersistenceContext
     private EntityManager em;
@@ -97,13 +99,21 @@ public class GroupMemberLogicTest {
      * Inserts initial data for correct test operation
      */
     private void insertData() {
+        
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        neighPersistence.create(neighborhood);
+        
+        
         group = factory.manufacturePojo(GroupEntity.class);
         group.setId(1L);
         group.setMembers(new ArrayList<>());
+        group.setNeighborhood(neighborhood);
+        
         em.persist(group);
 
         for (int i = 0; i < 3; i++) {
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
+            entity.setNeighborhood(neighborhood);
 
             entity.setGroups(new ArrayList<>());
             entity.getGroups().add(group);
@@ -123,10 +133,9 @@ public class GroupMemberLogicTest {
     public void addResidentTest() throws BusinessLogicException {
         ResidentProfileEntity newResidentProfile = factory.manufacturePojo(ResidentProfileEntity.class);
 
-        NeighborhoodEntity neigh = factory.manufacturePojo(NeighborhoodEntity.class);
-        neighPersistence.create(neigh);
 
-        newResidentProfile.setNeighborhood(neigh);
+
+        newResidentProfile.setNeighborhood(neighborhood);
 
         memberLogic.createResident(newResidentProfile);
 
@@ -186,10 +195,8 @@ public class GroupMemberLogicTest {
             entity.setGroups(new ArrayList<>());
             entity.getGroups().add(group);
 
-            NeighborhoodEntity neigh = factory.manufacturePojo(NeighborhoodEntity.class);
-            neighPersistence.create(neigh);
 
-            entity.setNeighborhood(neigh);
+            entity.setNeighborhood(neighborhood);
             memberLogic.createResident(entity);
 
             newCollection.add(entity);
