@@ -118,15 +118,4 @@ public class CommentResidentProfileLogic {
         return comments;
     }
 
-    /**
-     * Removes a comment from a resident. Comment is no longer in DB
-     *
-     * @param commentId Id from comment
-     */
-    public void removeComment(Long commentId) {
-        LOGGER.log(Level.INFO, "Trying to delete a comment with id = {0}", commentId);
-        commentPersistence.delete(commentId);
-
-        LOGGER.log(Level.INFO, "Finished removing a comment with id = {0}", commentId);
-    }
 }

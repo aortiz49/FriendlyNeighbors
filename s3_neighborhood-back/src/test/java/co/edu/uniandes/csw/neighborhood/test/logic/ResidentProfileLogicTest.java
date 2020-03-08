@@ -237,4 +237,14 @@ public class ResidentProfileLogicTest {
         Assert.assertNull(deleted);
     }
 
+    
+        /**
+     * Test for creating a resident with existing email
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createResidentsWithSameEmail() throws BusinessLogicException {
+        ResidentProfileEntity newEntity = factory.manufacturePojo(ResidentProfileEntity.class);
+        newEntity.setEmail(data.get(0).getEmail());
+        residentLogic.createResident(newEntity);
+    }
 }

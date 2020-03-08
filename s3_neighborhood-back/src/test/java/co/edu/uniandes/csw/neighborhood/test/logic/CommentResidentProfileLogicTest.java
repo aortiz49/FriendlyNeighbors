@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.test.logic;
 
+import co.edu.uniandes.csw.neighborhood.ejb.CommentLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.ResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.CommentResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.entities.CommentEntity;
@@ -55,12 +56,14 @@ public class CommentResidentProfileLogicTest {
     private PodamFactory factory = new PodamFactoryImpl();
 
     @Inject
-    private ResidentProfileLogic residentLogic;
-    @Inject
     private CommentResidentProfileLogic residentCommentLogic;
+    
+    @Inject
+    private CommentLogic commentLogic;
 
     @PersistenceContext
     private EntityManager em;
+    
 
     @Inject
     private UserTransaction utx;
@@ -131,9 +134,25 @@ public class CommentResidentProfileLogicTest {
         }
     }
 
+    /**
+     * Test to associate a comment with a resident
+     *
+     *
+     * @throws BusinessLogicException
+     */
+    @Test
+    public void addCommentsTest() {
+        ResidentProfileEntity entity = data.get(0);
+        CommentEntity commentEntity = commentsData.get(1);
+        CommentEntity response = residentCommentLogic.associateCommentToResident(commentEntity.getId(), entity.getId());
+
+        Assert.assertNotNull(response);
+        Assert.assertEquals(commentEntity.getId(), response.getId());
+    }
 
     /**
-     * Test for getting a collection of comment entities associated with a resident
+     * Test for getting a collection of comment entities associated with a
+     * resident
      */
     @Test
     public void getCommentsTest() {
@@ -169,5 +188,31 @@ public class CommentResidentProfileLogicTest {
         CommentEntity commentEntity = commentsData.get(1);
         residentCommentLogic.getComment(entity.getId(), commentEntity.getId());
     }
+    
+        /**
+     * Test for replacing comments associated with a resident
+     *
+     * @throws BusinessLogicException
+     */
+    @Test
+
+    public void replaceCommentsTest() throws BusinessLogicException {
+        List<CommentEntity> newCollection = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            CommentEntity entity = factory.manufacturePojo(CommentEntity.class);
+            entity.setAuthor(data.get(0));
+
+            commentLogic.createComment(entity);
+
+            newCollection.add(entity);
+        }
+        residentCommentLogic.replaceComments(data.get(0).getId(), newCollection);
+        List<CommentEntity> comments = residentCommentLogic.getComments(data.get(0).getId());
+        for (CommentEntity newE : newCollection) {
+            Assert.assertTrue(comments.contains(newE));
+        }
+    }
+
+
 
 }
