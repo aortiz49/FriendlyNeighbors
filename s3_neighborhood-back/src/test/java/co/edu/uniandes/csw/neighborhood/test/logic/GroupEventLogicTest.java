@@ -26,12 +26,12 @@ package co.edu.uniandes.csw.neighborhood.test.logic;
 // Imports
 //===================================================
 
-import co.edu.uniandes.csw.neighborhood.ejb.EventGroupLogic;
-import co.edu.uniandes.csw.neighborhood.ejb.GroupLogic;
-import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
+import co.edu.uniandes.csw.neighborhood.ejb.GroupEventLogic;
+import co.edu.uniandes.csw.neighborhood.ejb.EventLogic;
 import co.edu.uniandes.csw.neighborhood.entities.GroupEntity;
+import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
-import co.edu.uniandes.csw.neighborhood.persistence.GroupPersistence;
+import co.edu.uniandes.csw.neighborhood.persistence.EventPersistence;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -50,12 +50,12 @@ import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
- * Tests the EventGroupLogic.
+ * Tests the GroupEventLogic.
  *
  * @author aortiz49
  */
 @RunWith(Arquillian.class)
-public class EventGroupLogicTest {
+public class GroupEventLogicTest {
 //===================================================
 // Attributes
 //===================================================
@@ -66,10 +66,10 @@ public class EventGroupLogicTest {
     private PodamFactory factory = new PodamFactoryImpl();
 
     /**
-     * Dependency injection for event/group logic.
+     * Dependency injection for group/event logic.
      */
     @Inject
-    private EventGroupLogic eventGroupLogic;
+    private GroupEventLogic groupEventLogic;
 
     /**
      * Entity manager to communicate with the database.
@@ -84,14 +84,14 @@ public class EventGroupLogicTest {
     private UserTransaction utx;
 
     /**
-     * List of groups to be used in the tests.
-     */
-    private List<GroupEntity> testGroups = new ArrayList<GroupEntity>();
-
-    /**
      * List of events to be used in the tests.
      */
     private List<EventEntity> testEvents = new ArrayList<EventEntity>();
+
+    /**
+     * List of groups to be used in the tests.
+     */
+    private List<GroupEntity> testGroups = new ArrayList<GroupEntity>();
 //===================================================
 // Test Setup
 //===================================================
@@ -103,9 +103,9 @@ public class EventGroupLogicTest {
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addPackage(GroupEntity.class.getPackage())
-                .addPackage(GroupLogic.class.getPackage())
-                .addPackage(GroupPersistence.class.getPackage())
+                .addPackage(EventEntity.class.getPackage())
+                .addPackage(EventLogic.class.getPackage())
+                .addPackage(EventPersistence.class.getPackage())
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
@@ -134,8 +134,9 @@ public class EventGroupLogicTest {
      * Clears tables involved in tests
      */
     private void clearData() {
-        em.createQuery("delete from EventEntity").executeUpdate();
         em.createQuery("delete from GroupEntity").executeUpdate();
+        em.createQuery("delete from EventEntity").executeUpdate();
+
     }
 
     /**
@@ -143,26 +144,26 @@ public class EventGroupLogicTest {
      */
     private void insertData() {
 
-        // creates 3 random groups
+        // creates 3 random events
         for (int i = 0; i < 3; i++) {
-            GroupEntity neigh = factory.manufacturePojo(GroupEntity.class);
+            EventEntity neigh = factory.manufacturePojo(EventEntity.class);
             em.persist(neigh);
-            testGroups.add(neigh);
+            testEvents.add(neigh);
         }
 
-        // creates 3 random eventes
+        // creates 3 random groupes
         for (int i = 0; i < 3; i++) {
-            EventEntity buss = factory.manufacturePojo(EventEntity.class);
+            GroupEntity buss = factory.manufacturePojo(GroupEntity.class);
             em.persist(buss);
-            testEvents.add(buss);
+            testGroups.add(buss);
         }
 
-        // associates events to a group
-        testEvents.get(0).getGroups().add(testGroups.get(0));
-        testEvents.get(2).getGroups().add(testGroups.get(0));
-
+        // associates groups to an event
         testGroups.get(0).getEvents().add(testEvents.get(0));
-        testGroups.get(0).getEvents().add(testEvents.get(2));
+        testGroups.get(2).getEvents().add(testEvents.get(0));
+
+        testEvents.get(0).getGroups().add(testGroups.get(0));
+        testEvents.get(0).getGroups().add(testGroups.get(2));
 
     }
 //===================================================
@@ -170,80 +171,81 @@ public class EventGroupLogicTest {
 //===================================================
 
     /**
-     * Tests the association of a event with a group.
+     * Tests the association of a group with a event.
      *
      * @throws BusinessLogicException if the association fails
      */
     @Test
-    public void addEventToGroupTest() throws BusinessLogicException {
-        // gets the second random group from the list
-        GroupEntity group = testGroups.get(0);
+    public void addGroupToEventTest() throws BusinessLogicException {
+        // gets the second random event from the list
+        EventEntity event = testEvents.get(0);
 
-        // gets the second random event from the list, since the first has an associated 
-        // event already
-        EventEntity event = testEvents.get(1);
+        // gets the second random group from the list, since the first has an associated 
+        // group already
+        GroupEntity group = testGroups.get(1);
 
-        // add the event to the group
-        EventEntity response = eventGroupLogic.addEventToGroup(event.getId(), group.getId());
+        // add the group to the event
+        GroupEntity response = groupEventLogic.addGroupToEvent(group.getId(), event.getId());
 
         Assert.assertNotNull(response);
-        Assert.assertEquals(event.getId(), response.getId());
+        Assert.assertEquals(group.getId(), response.getId());
     }
 
     /**
-     * Tests the consultation of all event entities associated with a group.
+     * Tests the consultation of all group entities associated with a event.
      */
     @Test
-    public void getEventsTest() {
-        List<EventEntity> list = eventGroupLogic.getEvents(testGroups.get(0).getId());
+    public void getGroupesTest() {
+        List<GroupEntity> list = groupEventLogic.getGroups(testEvents.get(0).getId());
 
-        // checks that there are two events associated to the group
+        // checks that there are two groupes associated to the event
         Assert.assertEquals(2, list.size());
 
-        // checks that the name of the associated group matches
-        Assert.assertEquals(list.get(0).getGroups().get(0).getName(), testGroups.get(0).getName());
+        // checks that the name of the associated event matches
+        Assert.assertEquals(list.get(0).getEvents().get(0).getTitle(), testEvents.get(0).getTitle());
 
-        Assert.assertEquals(list.get(1).getGroups().get(0).getName(), testGroups.get(0).getName());
+        Assert.assertEquals(list.get(1).getEvents().get(0).getTitle(), testEvents.get(0).getTitle());
 
     }
 
     /**
-     * Tests the consultation of a event entity associated with a group.
+     * Tests the consultation of a group entity associated with a event.
      *
-     * @throws BusinessLogicException if the event is not found
+     * @throws BusinessLogicException if the group is not found
      */
     @Test
-    public void getEventTest() throws BusinessLogicException {
-
-        // gets the first event from the list
-        EventEntity event = testEvents.get(0);
+    public void getGroupTest() throws BusinessLogicException {
 
         // gets the first group from the list
         GroupEntity group = testGroups.get(0);
 
-        // get the event from the group
-        EventEntity response = eventGroupLogic.getEvent(group.getId(), event.getId());
+        // gets the first event from the list
+        EventEntity event = testEvents.get(0);
 
-        Assert.assertEquals(event.getId(), response.getId());
+        // get the group from the event
+        GroupEntity response = groupEventLogic.getGroup(event.getId(), group.getId());
+
+        Assert.assertEquals(group.getId(), response.getId());
 
     }
 
     /**
-     * Tests the removal of a event from the group.
+     * Tests the removal of a group from the event.
      */
     @Test
-    public void removeEventTest() {
-        // gets the first group from the list. 
-        // (Uses em.find because the persisted group contains the added eventes)
-        GroupEntity group = em.find(GroupEntity.class, testGroups.get(0).getId());
+    public void removeGroupTest() {
+        // gets the first event from the list. 
+        // (Uses em.find because the persisted event contains the added groupes)
+        EventEntity event = em.find(EventEntity.class, testEvents.get(0).getId());
 
-        // get the first associated event
-        EventEntity event = testEvents.get(0);
+        // get the first associated group
+        GroupEntity group = testGroups.get(0);
 
-        // gets the list of events in the group
-        List<EventEntity> list = group.getEvents();
+        // gets the list of groups in the event
+        List<GroupEntity> list = event.getGroups();
 
-        eventGroupLogic.removeEvent(group.getId(), event.getId());
+        groupEventLogic.removeGroup(event.getId(), group.getId());
+        
         Assert.assertEquals(1, list.size());
 
     }

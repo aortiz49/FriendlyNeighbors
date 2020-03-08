@@ -24,110 +24,86 @@ SOFTWARE.
 package co.edu.uniandes.csw.neighborhood.ejb;
 
 import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
-import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
+import co.edu.uniandes.csw.neighborhood.entities.LocationEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.EventPersistence;
-import java.util.List;
+import co.edu.uniandes.csw.neighborhood.persistence.LocationPersistence;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 /**
- * Clase que implementa la conexion con la persistencia para la entidad de Book.
+ * Class that implements the connection to persistence class of Event.
  *
- * @author kromero1
+ * @author aortiz49
  */
 @Stateless
 public class EventLogic {
+//===================================================
+// Imports
+//===================================================
 
+    /**
+     * Creates a logger for console output.
+     */
     private static final Logger LOGGER = Logger.getLogger(EventLogic.class.getName());
 
+    /**
+     * Injects dependencies for event persistence.
+     */
     @Inject
-    private EventPersistence persistence;
-
+    private EventPersistence eventPersistence;
 
     /**
-     * Guardar un nuevo libro
-     *
-     * @param bookEntity La entidad de tipo libro del nuevo libro a persistir.
-     * @return La entidad luego de persistirla
-     * @throws BusinessLogicException Si el ISBN es inválido o ya existe en la
-     * persistencia.
+     * Injects dependencies for location persistence.
      */
-    public EventEntity createEvent(EventEntity bookEntity) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Inicia proceso de creación del libro");
-     
+    @Inject
+    private LocationPersistence locationPersistence;
 
-        persistence.create(bookEntity);
-        LOGGER.log(Level.INFO, "Termina proceso de creación del libro");
-        return bookEntity;
+    /**
+     * Creates a new event.
+     *
+     * @param pEventEntity the event entity to be persisted.
+     * @return the persisted event entity
+     * @throws BusinessLogicException if the event creation violates the business rules
+     */
+    public EventEntity createEvent(EventEntity pEventEntity) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Start the event creation process");
+
+        // verify business rules
+        verifyBusinessCreationRules(pEventEntity);
+
+        // create the event
+        eventPersistence.create(pEventEntity);
+        LOGGER.log(Level.INFO, "Termines the event creation process");
+        return pEventEntity;
     }
 
     /**
-     * Devuelve todos los libros que hay en la base de datos.
+     * Verifies that the the event is valid.
      *
-     * @return Lista de entidades de tipo libro.
+     * @param pEventEntity event to verify
+     * @return true if the business is valid. False otherwise
+     * @throws BusinessLogicException if the event doesn't satisfy the business rules
      */
-    public List<EventEntity> getEvents() {
-        LOGGER.log(Level.INFO, "Inicia proceso de consultar todos los libros");
-        List<EventEntity> books = persistence.findAll();
-        LOGGER.log(Level.INFO, "Termina proceso de consultar todos los libros");
-        return books;
-    }
+    private boolean verifyBusinessCreationRules(EventEntity pEventEntity) throws BusinessLogicException {
+        boolean valid = true;
 
-    /**
-     * Busca un libro por ID
-     *
-     * @param booksId El id del libro a buscar
-     * @return El libro encontrado, null si no lo encuentra.
-     */
-    public EventEntity getBook(Long booksId) {
-        LOGGER.log(Level.INFO, "Inicia proceso de consultar el libro con id = {0}", booksId);
-        EventEntity bookEntity = persistence.find(booksId);
-        if (bookEntity == null) {
-            LOGGER.log(Level.SEVERE, "El libro con el id = {0} no existe", booksId);
+        // the neighborhood the potential business belongs to 
+        LocationEntity eventLocation = pEventEntity.getLocation();
+
+        // 1. The event must have a location
+        if (eventLocation == null) {
+            throw new BusinessLogicException("The event must have a location.");
+        } // 2. The location to which the event will be added to must already exist
+        else if (eventPersistence.find(eventLocation.getId()) == null) {
+            throw new BusinessLogicException("The event's location doesn't exist.");
+        } // 3. The title of the event cannot be null
+        else if (pEventEntity.getTitle() == null) {
+            throw new BusinessLogicException("The event title cannot be null.");
         }
-        LOGGER.log(Level.INFO, "Termina proceso de consultar el libro con id = {0}", booksId);
-        return bookEntity;
-    }
 
-    /**
-     * Actualizar un libro por ID
-     *
-     * @param booksId El ID del libro a actualizar
-     * @param bookEntity La entidad del libro con los cambios deseados
-     * @return La entidad del libro luego de actualizarla
-     * @throws BusinessLogicException Si el IBN de la actualización es inválido
-     */
-    public EventEntity updateBook(Long booksId, EventEntity bookEntity) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Inicia proceso de actualizar el libro con id = {0}", booksId);
-
-        EventEntity newEntity = persistence.update(bookEntity);
-        LOGGER.log(Level.INFO, "Termina proceso de actualizar el libro con id = {0}", bookEntity.getId());
-        return newEntity;
-    }
-
-    /**
-     * Eliminar un libro por ID
-     *
-     * @param booksId El ID del libro a eliminar
-     * @throws BusinessLogicException si el libro tiene autores asociados
-     */
-    public void deleteBook(Long booksId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Inicia proceso de borrar el libro con id = {0}", booksId);
-
-        persistence.delete(booksId);
-        LOGGER.log(Level.INFO, "Termina proceso de borrar el libro con id = {0}", booksId);
-    }
-
-    /**
-     * Verifica que el ISBN no sea invalido.
-     *
-     * @param isbn a verificar
-     * @return true si el ISBN es valido.
-     */
-    private boolean validateISBN(String isbn) {
-        return !(isbn == null || isbn.isEmpty());
+        return valid;
     }
 }

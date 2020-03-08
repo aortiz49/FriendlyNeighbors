@@ -1,10 +1,6 @@
-package co.edu.uniandes.csw.neighborhood.test.logic;
-
-
 /*
 MIT License
-
-Copyright (c) 2017 Universidad de los Andes - ISIS2603
+Copyright (c) 2020 Universidad de los Andes - ISIS2603
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,24 +20,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
+package co.edu.uniandes.csw.neighborhood.test.logic;
+
 //===================================================
-// Imports
-//===================================================
-import co.edu.uniandes.csw.neighborhood.ejb.BusinessLogic;
+import co.edu.uniandes.csw.neighborhood.ejb.EventLogic;
 import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
+import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
-import co.edu.uniandes.csw.neighborhood.persistence.BusinessPersistence;
+import co.edu.uniandes.csw.neighborhood.persistence.EventPersistence;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -50,10 +43,12 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.junit.runner.RunWith;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
+//===================================================
+// Imports
+//===================================================
 
 /**
  * Runs tests for NeighborhoodLogic.
@@ -61,13 +56,13 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
  * @author aortiz49
  */
 @RunWith(Arquillian.class)
-public class BusinessLogicTest {
+public class EventLogicTest {
 //===================================================
 // Attributes
 //===================================================
 
     /**
-     * Creates BusinessEntity POJOs.
+     * Creates entity POJOs.
      */
     private PodamFactory factory = new PodamFactoryImpl();
 
@@ -75,7 +70,7 @@ public class BusinessLogicTest {
      * Injects BusinessLogic objects.
      */
     @Inject
-    private BusinessLogic businessLogic;
+    private EventLogic eventLogic;
 
     /**
      * Entity manager to communicate with the database.
@@ -92,7 +87,7 @@ public class BusinessLogicTest {
     /**
      * An array containing the set of data used for the tests.
      */
-    private List<BusinessEntity> data = new ArrayList<>();
+    private List<EventEntity> events = new ArrayList<>();
 
     /**
      *
@@ -104,9 +99,9 @@ public class BusinessLogicTest {
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addPackage(BusinessEntity.class.getPackage())
-                .addPackage(BusinessLogic.class.getPackage())
-                .addPackage(BusinessPersistence.class.getPackage())
+                .addPackage(EventEntity.class.getPackage())
+                .addPackage(EventLogic.class.getPackage())
+                .addPackage(EventPersistence.class.getPackage())
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
@@ -121,12 +116,12 @@ public class BusinessLogicTest {
             clearData();
             insertData();
             utx.commit();
-        } catch (IllegalStateException | SecurityException | HeuristicMixedException
-                | HeuristicRollbackException | NotSupportedException | RollbackException
-                | SystemException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             try {
                 utx.rollback();
-            } catch (IllegalStateException | SecurityException | SystemException e1) {
+            } catch (Exception e1) {
+                e1.printStackTrace();
             }
         }
     }
@@ -135,8 +130,8 @@ public class BusinessLogicTest {
      * Clears tables involved in tests
      */
     private void clearData() {
-        em.createQuery("delete from BusinessEntity").executeUpdate();
-        em.createQuery("delete from NeighborhoodEntity").executeUpdate();
+        em.createQuery("delete from EventEntity").executeUpdate();
+        em.createQuery("delete from ResidentProfileEntity").executeUpdate();
     }
 
     /**
@@ -144,49 +139,58 @@ public class BusinessLogicTest {
      */
     private void insertData() {
 
-        // creates 3 businesses 
+        // creates 3 events 
         for (int i = 0; i < 3; i++) {
-            BusinessEntity entity = factory.manufacturePojo(BusinessEntity.class);
+            EventEntity entity = factory.manufacturePojo(EventEntity.class);
             em.persist(entity);
-            data.add(entity);
+            events.add(entity);
         }
+           
+        // creates the host where the business is located
+        ResidentProfileEntity host = factory.manufacturePojo(ResidentProfileEntity.class);
+        host.setName("Paulina Acosta");
+        em.persist(host);
 
-        // creates the neighborhood where the business is located
-        NeighborhoodEntity neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
-        neighborhood.setName("Salitre");
-        em.persist(neighborhood);
+        // creates the resident where the business is located
+        ResidentProfileEntity resident = factory.manufacturePojo(ResidentProfileEntity.class);
+        host.setName("Andy Ortiz");
+        em.persist(resident);
 
-        // add the business to the neighborhood
-        neighborhood.getBusinesses().add(data.get(0));
+        // add the event to the host
+        host.getEvents().add(events.get(0));
 
-        // add the neighborhood to the business
-        data.get(0).setNeighborhood(neighborhood);
+        // add the event to the resident
+        resident.getEvents().add(events.get(0));
+
+        // add the host and resident to the event
+        events.get(0).setHost(host);
+        events.get(0).getAttendees().add(resident);
 
     }
 
     /**
-     * Tests the creation of a Business.
+     * Tests the creation of an Event.
      */
     @Test
-    public void createBusinessTest() throws BusinessLogicException {
+    public void createEventTest() throws BusinessLogicException {
 
-        // creates a random business
-        BusinessEntity newEntity = factory.manufacturePojo(BusinessEntity.class);
+        // creates a random event
+        EventEntity newEntity = factory.manufacturePojo(EventEntity.class);
+        
+        // sets the attendee
+        newEntity.getAttendees().add(events.get(0).getAttendees().get(0));
 
-        // sets the neighborhood
-        newEntity.setNeighborhood(data.get(0).getNeighborhood());
+        // sets the host
+        newEntity.setHost(events.get(0).getHost());
 
-        // sets the owner
-        newEntity.setOwner(data.get(0).getOwner());
-
-        // persist the created business, should not be null
-        BusinessEntity result = businessLogic.createBusiness(newEntity);
+        // persist the created event, should not be null
+        EventEntity result = eventLogic.createEvent(newEntity);
         Assert.assertNotNull(result);
 
         // locate the persisted business
-        BusinessEntity entity = em.find(BusinessEntity.class, result.getId());
+        EventEntity entity = em.find(EventEntity.class, result.getId());
         Assert.assertEquals(newEntity.getId(), entity.getId());
-        Assert.assertEquals(newEntity.getName(), entity.getName());
+        Assert.assertEquals(newEntity.getTitle(), entity.getTitle());
     }
 
     /**

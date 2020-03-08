@@ -176,10 +176,8 @@ public class EventGroupLogic {
             EventEntity current = currentEventsList.get(i);
             if (pNewEventsList.contains(current) && !current.getGroups().contains(group)) {
                 current.getGroups().add(group);
-                
-            } 
-            
-            // if the current event already has the group, remove it since it is not in the list
+
+            } // if the current event already has the group, remove it since it is not in the list
             // of events we want the group to have
             else if (current.getGroups().contains(group)) {
                 current.getGroups().remove(group);
@@ -201,8 +199,14 @@ public class EventGroupLogic {
     public void removeEvent(Long pGroupId, Long pEventId) {
         LOGGER.log(Level.INFO, "Start removing a event from group with id = {0}", pEventId);
 
-        // removes the event from the database
-        eventPersistence.delete(pEventId);
+        // desired group
+        GroupEntity groupEntity = groupPersistence.find(pGroupId);
+
+        // event to delete
+        EventEntity eventEntity = eventPersistence.find(pEventId);
+
+        // event to remove from group   
+        groupEntity.getEvents().remove(eventEntity);
 
         LOGGER.log(Level.INFO, "Finished removing a event from group con id = {0}", pEventId);
     }
