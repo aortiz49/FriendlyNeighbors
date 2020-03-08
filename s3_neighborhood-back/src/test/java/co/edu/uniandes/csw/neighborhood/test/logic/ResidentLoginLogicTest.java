@@ -155,11 +155,8 @@ public class ResidentLoginLogicTest {
         // the name of the object in the database
         Assert.assertEquals(newResidentLogin.getUserName(), entity.getUserName());
         
-       
 }
-    
- 
-
+   
     @Test
     public void getResidentLoginsTest() {
         List<ResidentLoginEntity> list = residentLoginLogic.getResidentLogins();

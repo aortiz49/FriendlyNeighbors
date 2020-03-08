@@ -132,8 +132,7 @@ public class CommentLogicTest {
         
          // uses the factory to create a ranbdom NeighborhoodEntity object
         CommentEntity newComment = factory.manufacturePojo(CommentEntity.class);
-                
-              
+                        
         // invokes the method to be tested (create): it creates a table in the 
         // database. The parameter of this method is the newly created object from 
         // the podam factory which has an id associated to it. 
@@ -162,8 +161,6 @@ public class CommentLogicTest {
        
 }
     
- 
-
     @Test
     public void getCommentsTest() {
         List<CommentEntity> list = commentLogic.getComments();
@@ -175,7 +172,7 @@ public class CommentLogicTest {
                     found = true;
                 }
             }
-            Assert.assertTrue(found);
+            Assert.assertTrue(found); 
         }
     }
 
