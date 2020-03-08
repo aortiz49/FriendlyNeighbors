@@ -55,15 +55,16 @@ public class ServiceResidentProfileLogic {
      * @param serviceId ID from service entity
      * @return associated service entity
      */
-    public ServiceEntity associateServiceToResident(Long serviceId, Long residentId) throws BusinessLogicException {
+    public ServiceEntity associateServiceToResident(Long serviceId, Long residentId) {
         LOGGER.log(Level.INFO, "Trying to add service to resident with id = {0}", residentId);
         ResidentProfileEntity ResidentProfileEntity = residentPersistence.find(residentId);
+        
         ServiceEntity ServiceEntity = servicePersistence.find(serviceId);
-
+        
         ServiceEntity.setAuthor(ResidentProfileEntity);
-
+        
         LOGGER.log(Level.INFO, "Service is associated with resident with id = {0}", residentId);
-        return servicePersistence.find(residentId);
+        return servicePersistence.find(serviceId);
     }
 
     /**
@@ -95,7 +96,7 @@ public class ServiceResidentProfileLogic {
         if (index >= 0) {
             return services.get(index);
         }
-        throw new BusinessLogicException("Service is no associated with resident");
+        throw new BusinessLogicException("Service is not associated with resident");
     }
 
     /**

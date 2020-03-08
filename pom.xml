@@ -11,8 +11,8 @@
     <name>s3_neighborhood</name>
  
     <modules>
-        <module>s3_neighborhood-back </module>
-        <module>s3_neighborhood-api </module>
+        <module>s3_neighborhood-back</module>
+        <module>s3_neighborhood-api</module>
         
     </modules>
     

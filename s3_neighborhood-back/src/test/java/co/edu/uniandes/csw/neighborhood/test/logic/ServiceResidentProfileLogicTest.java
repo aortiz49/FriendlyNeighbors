@@ -67,7 +67,7 @@ public class ServiceResidentProfileLogicTest {
 
     private List<ResidentProfileEntity> data = new ArrayList<ResidentProfileEntity>();
 
-    private List<ServiceEntity> servicesData = new ArrayList<ServiceEntity>();
+    private List<ServiceEntity> servicesData = new ArrayList();
 
     /**
      * @return Returns jar which Arquillian will deploy embedded in Payara. jar
@@ -138,7 +138,7 @@ public class ServiceResidentProfileLogicTest {
      * @throws BusinessLogicException
      */
     @Test
-    public void addServicesTest() throws BusinessLogicException {
+    public void addServicesTest() {
         ResidentProfileEntity entity = data.get(0);
         ServiceEntity serviceEntity = servicesData.get(1);
         ServiceEntity response = residentServiceLogic.associateServiceToResident(serviceEntity.getId(), entity.getId());
