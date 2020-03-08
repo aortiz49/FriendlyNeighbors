@@ -237,6 +237,81 @@ public class ResidentProfileLogicTest {
         Assert.assertNull(deleted);
     }
 
-    
+    /**
+     * Test for creating a resident with no Phone
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createResidentsWithNoPhone() throws BusinessLogicException {
+        ResidentProfileEntity newEntity = factory.manufacturePojo(ResidentProfileEntity.class);
+        newEntity.setPhoneNumber(null);
+        residentLogic.createResident(newEntity);
+    }
 
+    /**
+     * Test for creating a resident with no name
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createResidentsWithNoName() throws BusinessLogicException {
+        ResidentProfileEntity newEntity = factory.manufacturePojo(ResidentProfileEntity.class);
+        newEntity.setName(null);
+        residentLogic.createResident(newEntity);
+    }
+
+    /**
+     * Test for creating a resident with no proof
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createResidentsWithNoProof() throws BusinessLogicException {
+        ResidentProfileEntity newEntity = factory.manufacturePojo(ResidentProfileEntity.class);
+        newEntity.setProofOfResidence(null);
+        residentLogic.createResident(newEntity);
+    }
+
+    /**
+     * Test for creating a resident with no neighborhood
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createResidentsWithNoNeighborhood() throws BusinessLogicException {
+        ResidentProfileEntity newEntity = factory.manufacturePojo(ResidentProfileEntity.class);
+        residentLogic.createResident(newEntity);
+    }
+
+    /**
+     * Test for updating a resident with no Phone
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void updateResidentsWithNoPhone() throws BusinessLogicException {
+        ResidentProfileEntity newEntity = data.get(0);
+        newEntity.setPhoneNumber(null);
+        residentLogic.updateResident(newEntity);
+    }
+
+    /**
+     * Test for updating a resident with no name
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void updateResidentsWithNoName() throws BusinessLogicException {
+        ResidentProfileEntity newEntity = data.get(0);
+        newEntity.setName(null);
+        residentLogic.updateResident(newEntity);
+    }
+
+    /**
+     * Test for updating a resident with no proof
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void updateResidentsWithNoProof() throws BusinessLogicException {
+        ResidentProfileEntity newEntity = data.get(0);
+        newEntity.setProofOfResidence(null);
+        residentLogic.updateResident(newEntity);
+    }
+
+    /**
+     * Test for updating a resident with no neighborhood
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void updateResidentsWithNoNeighborhood() throws BusinessLogicException {
+        ResidentProfileEntity newEntity = data.get(0);
+        residentLogic.updateResident(newEntity);
+    }
 }
