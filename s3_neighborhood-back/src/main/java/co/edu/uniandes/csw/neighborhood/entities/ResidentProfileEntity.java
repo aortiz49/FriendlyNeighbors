@@ -77,14 +77,14 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
      * Favors a resident is signed up to complete.
      */
     @PodamExclude
-    @ManyToMany(mappedBy = "candidates", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "candidates", fetch = FetchType.LAZY)
     private List<FavorEntity> favorsToHelp = new ArrayList();
 
     /**
      * Posts shared with this resident.
      */
     @PodamExclude
-    @ManyToMany(mappedBy = "viewers", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "viewers", fetch = FetchType.LAZY)
     private List<PostEntity> postsToView = new ArrayList();
 
     /**
@@ -144,21 +144,21 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
      * Represents events posted by this resident
      */
     @PodamExclude
-    @OneToOne(mappedBy = "resident", fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "resident", fetch = FetchType.LAZY)
     private ResidentLoginEntity login;
 
     /**
      * Represents groups this resident is part of
      */
     @PodamExclude
-    @ManyToMany(mappedBy = "members", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "members", fetch = FetchType.LAZY)
     private List<GroupEntity> groups = new ArrayList<>();
 
     /**
      * Represents comments posted by this resident
      */
     @PodamExclude
-    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private List<CommentEntity> comments = new ArrayList<>();
     
     /**

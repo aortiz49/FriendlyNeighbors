@@ -45,7 +45,10 @@ public class HelperFavorLogic {
         FavorEntity favorEntity = favorPersistence.find(favorId);
 
         if (helperEntity.getNeighborhood().getId() != favorEntity.getAuthor().getNeighborhood().getId()) {
-            throw new BusinessLogicException("Favor and attendee must belong to the same neighborhood");
+            throw new BusinessLogicException("Favor and helper must belong to the same neighborhood");
+        }
+        if (helperEntity.getId() == favorEntity.getAuthor().getId()) {
+            throw new BusinessLogicException("Author cannot be a helper");
         }
 
         favorEntity.getCandidates().add(helperEntity);

@@ -43,13 +43,17 @@ public class FavorHelperLogic {
      */
     public ResidentProfileEntity associateResidentProfileToFavor(Long favorId, Long helperId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Trying to add helper to favor with id = {0}", favorId);
-        
+
         FavorEntity favorEntity = favorPersistence.find(favorId);
-        
+
         ResidentProfileEntity helperEntity = helperPersistence.find(helperId);
 
         if (helperEntity.getNeighborhood().getId() != favorEntity.getAuthor().getNeighborhood().getId()) {
-            throw new BusinessLogicException("Favor and heper must belong to the same neighborhood");
+            throw new BusinessLogicException("Favor and helper must belong to the same neighborhood");
+        }
+
+        if (helperEntity.getId() == favorEntity.getAuthor().getId()) {
+            throw new BusinessLogicException("Author cannot be a helper");
         }
 
         favorEntity.getCandidates().add(helperEntity);
