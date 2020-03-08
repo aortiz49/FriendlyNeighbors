@@ -1,0 +1,62 @@
+{
+	"info": {
+		"_postman_id": "81e4d6d2-73bd-4b5b-a76b-8387e8382531",
+		"name": "ResidentsResourceTest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3b3b64d-c1a7-49dd-8e3e-72e6e52e44f4",
+						"exec": [
+							"tests[\"Free of errors on Get\"] = responseCode.code == 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"residents"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

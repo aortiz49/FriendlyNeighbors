@@ -238,7 +238,29 @@ public class ResidentProfileLogicTest {
     }
 
     /**
-     * Test for creating a resident with no Phone
+     * Test for creating a resident with no email
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createResidentsWithNoEmail() throws BusinessLogicException {
+        ResidentProfileEntity newEntity = factory.manufacturePojo(ResidentProfileEntity.class);
+        newEntity.setEmail(null);
+        residentLogic.createResident(newEntity);
+    }
+    
+        /**
+     * Test for creating a resident with duplicated email
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createResidentsWithDuplicatedEmail() throws BusinessLogicException {
+        ResidentProfileEntity newEntity = factory.manufacturePojo(ResidentProfileEntity.class);
+        ResidentProfileEntity newEntity2 = factory.manufacturePojo(ResidentProfileEntity.class);
+        newEntity.setEmail(newEntity.getEmail());
+        residentLogic.createResident(newEntity);
+        residentLogic.createResident(newEntity2);
+    }
+
+    /**
+     * Test for creating a resident with no phone
      */
     @Test(expected = BusinessLogicException.class)
     public void createResidentsWithNoPhone() throws BusinessLogicException {
