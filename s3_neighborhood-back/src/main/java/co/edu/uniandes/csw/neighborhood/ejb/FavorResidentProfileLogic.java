@@ -58,10 +58,13 @@ public class FavorResidentProfileLogic {
     public FavorEntity associateFavorToResident(Long favorId, Long residentId) {
         LOGGER.log(Level.INFO, "Trying to add favor to resident with id = {0}", residentId);
         ResidentProfileEntity ResidentProfileEntity = residentPersistence.find(residentId);
+        
         FavorEntity FavorEntity = favorPersistence.find(favorId);
+        
         FavorEntity.setAuthor(ResidentProfileEntity);
+        
         LOGGER.log(Level.INFO, "Favor is associated with resident with id = {0}", residentId);
-        return FavorEntity;
+        return favorPersistence.find(favorId);
     }
 
     /**

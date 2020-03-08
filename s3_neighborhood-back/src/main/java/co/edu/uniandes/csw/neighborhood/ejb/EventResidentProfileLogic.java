@@ -61,7 +61,7 @@ public class EventResidentProfileLogic {
         EventEntity EventEntity = eventPersistence.find(eventId);
         EventEntity.setHost(ResidentProfileEntity);
         LOGGER.log(Level.INFO, "Event is associated with resident with id = {0}", residentId);
-        return EventEntity;
+        return eventPersistence.find(eventId);
     }
 
     /**

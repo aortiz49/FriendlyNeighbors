@@ -61,7 +61,7 @@ public class CommentResidentProfileLogic {
         CommentEntity CommentEntity = commentPersistence.find(commentId);
         CommentEntity.setAuthor(ResidentProfileEntity);
         LOGGER.log(Level.INFO, "Comment is associated with resident with id = {0}", residentId);
-        return CommentEntity;
+        return commentPersistence.find(commentId);
     }
 
     /**

@@ -61,7 +61,7 @@ public class PostResidentProfileLogic {
         PostEntity PostEntity = postPersistence.find(postId);
         PostEntity.setAuthor(ResidentProfileEntity);
         LOGGER.log(Level.INFO, "Post is associated with resident with id = {0}", residentId);
-        return PostEntity;
+        return postPersistence.find(postId);
     }
 
     /**

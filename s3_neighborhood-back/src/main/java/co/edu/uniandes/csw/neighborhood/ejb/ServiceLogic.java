@@ -30,10 +30,10 @@ public class ServiceLogic {
     public ServiceEntity createService(ServiceEntity serviceEntity) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creation process for service has started");
 
-        persistence.create(serviceEntity);
+        ServiceEntity entity = persistence.create(serviceEntity);
         LOGGER.log(Level.INFO, "Creation process for service eneded");
 
-        return serviceEntity;
+        return persistence.find(entity.getId());
     }
 
     public void deleteService(Long id) {

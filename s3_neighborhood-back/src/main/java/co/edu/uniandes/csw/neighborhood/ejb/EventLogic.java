@@ -57,9 +57,12 @@ public class EventLogic {
     public EventEntity createEvent(EventEntity bookEntity) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Inicia proceso de creación del libro");
 
-        persistence.create(bookEntity);
+        EventEntity entity = persistence.create(bookEntity);
+       
         LOGGER.log(Level.INFO, "Termina proceso de creación del libro");
-        return bookEntity;
+        
+        
+        return persistence.find(entity.getId());
     }
 
     /**

@@ -5,23 +5,20 @@
  */
 package co.edu.uniandes.csw.neighborhood.resources;
 
-import co.edu.uniandes.csw.neighborhood.dtos.FavorDTO;
+import co.edu.uniandes.csw.neighborhood.dtos.FavorDetailDTO;
 import co.edu.uniandes.csw.neighborhood.ejb.FavorLogic;
 import co.edu.uniandes.csw.neighborhood.entities.FavorEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import java.util.logging.Level;
@@ -47,21 +44,21 @@ public class FavorResource {
     
     @GET
     @Path("{favorsId: \\d+}")
-    public FavorDTO getFavor(@PathParam("favorsId") Long favorsId) {
+    public FavorDetailDTO getFavor(@PathParam("favorsId") Long favorsId) {
         LOGGER.log(Level.INFO, "Looking for  favor from resource: input: {0}", favorsId);
         FavorEntity entity = favorLogic.getFavor(favorsId);
         if (entity == null) {
             throw new WebApplicationException("Resource /favors/" + favorsId + " does not exist.", 404);
         }
-        FavorDTO favorDTO = new FavorDTO(entity);
+        FavorDetailDTO favorDTO = new FavorDetailDTO(entity);
         LOGGER.log(Level.INFO, "Ended looking for favor from resource: output: {0}", favorDTO);
         return favorDTO;
     }
     
     @GET
-    public List<FavorDTO> getFavors() {
+    public List<FavorDetailDTO> getFavors() {
         LOGGER.info("Looking for all favors from resources: input: void");
-        List<FavorDTO> favors = listEntity2DTO(favorLogic.getFavors());
+        List<FavorDetailDTO> favors = listEntity2DTO(favorLogic.getFavors());
         LOGGER.log(Level.INFO, "Ended looking for all favors from resources: output: {0}", favors);
         return favors;
     }
@@ -79,24 +76,33 @@ public class FavorResource {
     
     @PUT
     @Path("{favorsId: \\d+}")
-    public FavorDTO updateFavor(@PathParam("favorsId") Long favorsId, FavorDTO favor) throws BusinessLogicException {
+    public FavorDetailDTO updateFavor(@PathParam("favorsId") Long favorsId, FavorDetailDTO favor) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Updating favor from resource: input: favorsId: {0} , favors: {1}", new Object[]{favorsId, favor});
         favor.setId(favorsId);
         if (favorLogic.getFavor(favorsId) == null) {
             throw new WebApplicationException("El recurso /favors/" + favorsId + " no existe.", 404);
         }
-        FavorDTO favorDTO = new FavorDTO(favorLogic.updateFavor(favor.toEntity()));
+        FavorDetailDTO favorDTO = new FavorDetailDTO(favorLogic.updateFavor(favor.toEntity()));
         LOGGER.log(Level.INFO, "Ended updating favor from resource: output: {0}", favorDTO);
 
         return favorDTO;
     }
 
-    private List<FavorDTO> listEntity2DTO(List<FavorEntity> entityList) {
-        List<FavorDTO> list = new ArrayList<>();
+    private List<FavorDetailDTO> listEntity2DTO(List<FavorEntity> entityList) {
+        List<FavorDetailDTO> list = new ArrayList<>();
         for (FavorEntity entity : entityList) {
-            list.add(new FavorDTO(entity));
+            list.add(new FavorDetailDTO(entity));
         }
         return list;    
+    }
+    
+
+    @Path("{favorsId: \\d+}/helpers")
+    public Class<FavorHelperResource> getFavorHelperResource(@PathParam("favorsId") Long groupsId) {
+        if (favorLogic.getFavor(groupsId) == null) {
+            throw new WebApplicationException("Resource /groups/" + groupsId + " does not exist.", 404);
+        }
+        return FavorHelperResource.class;
     }
     
 }

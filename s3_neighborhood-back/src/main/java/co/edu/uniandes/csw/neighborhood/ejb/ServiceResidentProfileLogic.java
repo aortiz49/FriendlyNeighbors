@@ -63,7 +63,7 @@ public class ServiceResidentProfileLogic {
         ServiceEntity.setAuthor(ResidentProfileEntity);
 
         LOGGER.log(Level.INFO, "Service is associated with resident with id = {0}", residentId);
-        return ServiceEntity;
+        return servicePersistence.find(residentId);
     }
 
     /**

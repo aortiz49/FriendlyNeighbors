@@ -48,10 +48,10 @@ public class CommentLogic {
             throw new BusinessLogicException("A date has to be specified");
         }
 
-        persistence.create(commentEntity);
+        CommentEntity entity = persistence.create(commentEntity);
         LOGGER.log(Level.INFO, "Creation process for comment eneded");
 
-        return commentEntity;
+        return persistence.find(entity.getId());
     }
 
     /**

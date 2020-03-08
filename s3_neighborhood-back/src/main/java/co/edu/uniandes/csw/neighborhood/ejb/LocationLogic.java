@@ -54,10 +54,10 @@ public class LocationLogic {
             throw new BusinessLogicException("An open time has to be specified");
         }
 
-        persistence.create(locationEntity);
+        LocationEntity entity = persistence.create(locationEntity);
         LOGGER.log(Level.INFO, "Creation process for location eneded");
 
-        return locationEntity;
+        return persistence.find(entity.getId());
     }
 
     public void deleteLocation(Long id) {

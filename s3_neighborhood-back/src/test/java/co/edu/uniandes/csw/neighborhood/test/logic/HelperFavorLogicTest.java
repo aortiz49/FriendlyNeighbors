@@ -119,7 +119,7 @@ public class HelperFavorLogicTest {
     public void addFavorTest() throws BusinessLogicException {
         FavorEntity newFavor = factory.manufacturePojo(FavorEntity.class);
         favorLogic.createFavor(newFavor);
-        FavorEntity favorEntity = helperFavorLogic.associateFavorToAttenddee(helper.getId(), newFavor.getId());
+        FavorEntity favorEntity = helperFavorLogic.associateFavorToHelper(helper.getId(), newFavor.getId());
         Assert.assertNotNull(favorEntity);
 
         Assert.assertEquals(favorEntity.getId(), newFavor.getId());

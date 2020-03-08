@@ -73,10 +73,10 @@ public class ResidentProfileLogic {
         }
         verifyBusinessRules(residentEntity);
 
-        persistence.create(residentEntity);
+        ResidentProfileEntity entity = persistence.create(residentEntity);
         LOGGER.log(Level.INFO, "Creation process for resident eneded");
 
-        return residentEntity;
+        return persistence.find(entity.getId());
     }
 
     private void verifyBusinessRules(ResidentProfileEntity residentEntity) throws BusinessLogicException {

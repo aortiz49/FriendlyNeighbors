@@ -74,6 +74,7 @@ public class BusinessPersistence {
 
         // makes the entity instance managed and persistent
         em.persist(pBusinessEntity);
+        
         LOGGER.log(Level.INFO, "Business created");
 
         return pBusinessEntity;

@@ -60,7 +60,7 @@ public class CommentResource {
 
        
         LOGGER.log(Level.INFO, "Created comment from resource: output: {0}", commentDTO);
-        return comment;
+        return commentDTO;
     }
 
     /**

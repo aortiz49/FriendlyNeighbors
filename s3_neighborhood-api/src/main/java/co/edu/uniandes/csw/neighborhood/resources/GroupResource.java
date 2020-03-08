@@ -60,7 +60,7 @@ public class GroupResource {
         GroupDTO groupDTO = new GroupDTO(groupLogic.createGroup(group.toEntity()));
 
         LOGGER.log(Level.INFO, "Created group from resource: output: {0}", groupDTO);
-        return group;
+        return groupDTO;
     }
 
     /**

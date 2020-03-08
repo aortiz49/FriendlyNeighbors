@@ -39,7 +39,7 @@ public class HelperFavorLogic {
      * @param favorId ID from favor entity
      * @return associated favor entity
      */
-    public FavorEntity associateFavorToAttenddee(Long helperId, Long favorId) throws BusinessLogicException {
+    public FavorEntity associateFavorToHelper(Long helperId, Long favorId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Trying to associate favor with helper with id = {0}", helperId);
         ResidentProfileEntity helperEntity = helperPersistence.find(helperId);
         FavorEntity favorEntity = favorPersistence.find(favorId);

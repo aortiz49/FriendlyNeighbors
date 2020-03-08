@@ -50,10 +50,11 @@ public class FavorLogic {
             throw new BusinessLogicException("A date has to be specified");
         }
 
-        persistence.create(favorEntity);
+       FavorEntity entity =  persistence.create(favorEntity);
+       
         LOGGER.log(Level.INFO, "Creation process for favor eneded");
 
-        return favorEntity;
+        return persistence.find(entity.getId());
     }
 
     public void deleteFavor(Long id) {

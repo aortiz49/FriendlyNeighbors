@@ -74,13 +74,15 @@ public class GroupMemberResource {
      */
     @POST
     @Path("{membersId: \\d+}")
-    public ResidentProfileDetailDTO associateMemberToGroup(@PathParam("groupsId") Long groupsId, @PathParam("membersId") Long membersId) {
+    public ResidentProfileDetailDTO associateMemberToGroup(@PathParam("groupsId") Long groupsId, @PathParam("membersId") Long membersId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Associating member to group from resource: input: groupsId {0} , membersId {1}", new Object[]{groupsId, membersId});
         if (memberLogic.getResident(membersId) == null) {
             throw new WebApplicationException("Resource /members/" + membersId + " does not exist.", 404);
         }
-//        ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO(groupMemberLogic.associateMemberToGroup(groupsId, membersId));
-        ResidentProfileDetailDTO detailDTO = null;
+        ResidentProfileEntity e = groupMemberLogic.associateMemberToGroup(groupsId, membersId);
+        
+        ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO(e);
+
         LOGGER.log(Level.INFO, "Ended associating member to group from resource: output: {0}", detailDTO);
         return detailDTO;
     }

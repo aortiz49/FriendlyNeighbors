@@ -47,10 +47,10 @@ public class PostLogic {
             throw new BusinessLogicException("A description has to be specified");
         }
 
-        persistence.create(postEntity);
+       PostEntity entity =  persistence.create(postEntity);
         LOGGER.log(Level.INFO, "Creation process for post eneded");
 
-        return postEntity;
+        return persistence.find(entity.getId());
     }
 
     /**

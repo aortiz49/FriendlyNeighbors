@@ -75,7 +75,7 @@ public class MemberGroupResource {
      */
     @POST
     @Path("{groupsId: \\d+}")
-    public GroupDetailDTO associateGroupToResidentProfile(@PathParam("membersId") Long membersId, @PathParam("groupsId") Long groupsId) {
+    public GroupDetailDTO associateGroupToResidentProfile(@PathParam("membersId") Long membersId, @PathParam("groupsId") Long groupsId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Associating group to member from resource: input: membersId {0} , groupsId {1}", new Object[]{membersId, groupsId});
         if (groupLogic.getGroup(groupsId) == null) {
             throw new WebApplicationException("Resource /groups/" + groupsId + " does not exist.", 404);

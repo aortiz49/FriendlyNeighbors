@@ -5,6 +5,7 @@
  */
 package co.edu.uniandes.csw.neighborhood.ejb;
 
+import co.edu.uniandes.csw.neighborhood.entities.FavorEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -69,12 +70,13 @@ public class GroupLogic {
         }
 
 
-        persistence.create(groupEntity);
+        GroupEntity entity =  persistence.create(groupEntity);
         LOGGER.log(Level.INFO, "Creation process for group eneded");
 
-        return groupEntity;
+        return persistence.find(entity.getId());
     }
 
+    
     /**
      * Deletes a group by ID
      *
