@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -64,6 +65,33 @@ public class ServicePersistence {
                 serviceId);
         return em.find(ServiceEntity.class, serviceId);
 
+    }
+    
+    /**
+     * Finds a service by name.
+     *
+     * @param pTitle the name of the service to
+     * @return null if the service doesn't exist. If the service exists, return the first one
+     */
+    public ServiceEntity findByTitle(String pTitle) {
+        LOGGER.log(Level.INFO, "Consulting business by title ", pTitle);
+
+        // creates a query to search for services with the title given by the parameter. ":pTitle" is a placeholder that must be replaced
+        TypedQuery query = em.createQuery("Select e From ServiceEntity e where e.title = :pTitle", ServiceEntity.class);
+
+        // the "pName" placeholder is replaced with the name of the parameter
+        query = query.setParameter("pTitle", pTitle);
+
+        // invokes the query and returns a list of results
+        List<ServiceEntity> sameTitle = query.getResultList();
+        ServiceEntity result;
+        if (sameTitle == null || sameTitle.isEmpty()) {
+            result = null;
+        } else {
+            result = sameTitle.get(0);
+        }
+        LOGGER.log(Level.INFO, "Exiting consultation of service by title ", pTitle);
+        return result;
     }
 
     /**

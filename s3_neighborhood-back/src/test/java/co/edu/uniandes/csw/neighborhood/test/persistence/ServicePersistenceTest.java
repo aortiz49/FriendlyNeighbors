@@ -1,4 +1,3 @@
-
 package co.edu.uniandes.csw.neighborhood.test.persistence;
 
 import co.edu.uniandes.csw.neighborhood.entities.ServiceEntity;
@@ -40,9 +39,8 @@ public class ServicePersistenceTest {
     private List<ServiceEntity> data = new ArrayList<>();
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara.
-     * jar contains classes, DB descriptor and
-     * beans.xml file for dependencies injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
+     * descriptor and beans.xml file for dependencies injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -54,7 +52,7 @@ public class ServicePersistenceTest {
     }
 
     /**
-     * Initial test configuration. 
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -75,7 +73,7 @@ public class ServicePersistenceTest {
     }
 
     /**
-     * Clears tables involved in tests 
+     * Clears tables involved in tests
      */
     private void clearData() {
         em.createQuery("delete from ServiceEntity").executeUpdate();
@@ -109,11 +107,11 @@ public class ServicePersistenceTest {
 
         Assert.assertEquals(newEntity.getAuthor(), entity.getAuthor());
     }
-    
-     /**
+
+    /**
      * Test for retrieving all neighborhoods from DB.
      */
-        @Test
+    @Test
     public void findAllTest() {
         List<ServiceEntity> list = servicePersistence.findAll();
         Assert.assertEquals(data.size(), list.size());
@@ -127,19 +125,40 @@ public class ServicePersistenceTest {
             Assert.assertTrue(found);
         }
     }
-    
+
+    /**
+     * Test to consult a Service by Title.
+     */
+    @Test
+    public void findServiceByTitleTest() {
+        ServiceEntity entity = data.get(0);
+        ServiceEntity newEntity = servicePersistence.findByTitle(entity.getTitle());
+        Assert.assertNotNull(newEntity);
+        Assert.assertEquals(entity.getTitle(), newEntity.getTitle());
+
+        newEntity = servicePersistence.findByTitle(null);
+        Assert.assertNull(newEntity);
+    }
+
     /**
      * Test for a query about a Service.
      */
     @Test
     public void getServiceTest() {
+        // get the first bsuiness entity from the table 
         ServiceEntity entity = data.get(0);
+
+        // using the find method from the Service persistence, returns the 
+        // Service entity matching the id
         ServiceEntity newEntity = servicePersistence.find(entity.getId());
         Assert.assertNotNull(newEntity);
-        Assert.assertEquals(entity.getAuthor(), newEntity.getAuthor());
+        Assert.assertEquals(entity.getAvailability(), newEntity.getAvailability());
+        Assert.assertEquals(entity.getDescription(), newEntity.getDescription());
+        Assert.assertEquals(entity.getTitle(), newEntity.getTitle());
+
     }
 
-     /**
+    /**
      * Test for updating a Service.
      */
     @Test
@@ -157,8 +176,8 @@ public class ServicePersistenceTest {
         Assert.assertEquals(newEntity.getAuthor(), resp.getAuthor());
 
     }
-    
-     /**
+
+    /**
      * Test for deleting a Service.
      */
     @Test
@@ -167,5 +186,5 @@ public class ServicePersistenceTest {
         servicePersistence.delete(entity.getId());
         ServiceEntity deleted = em.find(ServiceEntity.class, entity.getId());
         Assert.assertNull(deleted);
-    }   
+    }
 }
