@@ -19,6 +19,7 @@ SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.test.logic;
 
+import co.edu.uniandes.csw.neighborhood.ejb.CommentLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.PostLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.CommentPostLogic;
 import co.edu.uniandes.csw.neighborhood.entities.CommentEntity;
@@ -56,6 +57,9 @@ public class CommentPostLogicTest {
     private ResidentProfilePersistence residentPersistence;
     @Inject
     private CommentPostLogic postCommentLogic;
+    
+    @Inject
+    private CommentLogic commentLogic;
 
     @PersistenceContext
     private EntityManager em;
@@ -190,5 +194,43 @@ public class CommentPostLogicTest {
         CommentEntity commentEntity = commentsData.get(1);
         postCommentLogic.getComment(entity.getId(), commentEntity.getId());
     }
+    
+    
+        /**
+     * Test for replacing comments associated with a post
+     *
+     * @throws BusinessLogicException
+     */
+    @Test
+
+    public void replaceCommentsTest() throws BusinessLogicException {
+        List<CommentEntity> newCollection = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            CommentEntity entity = factory.manufacturePojo(CommentEntity.class);
+            entity.setPost(data.get(0));
+
+            commentLogic.createComment(entity);
+
+            newCollection.add(entity);
+        }
+        postCommentLogic.replaceComments(data.get(0).getId(), newCollection);
+        List<CommentEntity> comments = postCommentLogic.getComments(data.get(0).getId());
+        for (CommentEntity newE : newCollection) {
+            Assert.assertTrue(comments.contains(newE));
+        }
+    }
+
+    /**
+     * Test for removing an comment from post
+     *
+     */
+    @Test
+    public void removeCommentTest() throws BusinessLogicException {
+   
+            postCommentLogic.removeComment(data.get(0).getId(), commentsData.get(0).getId());
+
+        Assert.assertTrue(postCommentLogic.getComments(data.get(0).getId()).isEmpty());
+    }
+
 
 }
