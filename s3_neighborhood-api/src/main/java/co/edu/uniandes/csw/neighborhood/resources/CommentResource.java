@@ -114,7 +114,7 @@ public class CommentResource {
         LOGGER.log(Level.INFO, "Updating comment from resource: input: authorsId: {0} , author: {1}", new Object[]{commentsId, comment});
         comment.setId(commentsId);
         if (commentLogic.getComment(commentsId) == null) {
-            throw new WebApplicationException("El recurso /authors/" + commentsId + " no existe.", 404);
+           throw new WebApplicationException("Resource /comments/" + commentsId + " does not exist.", 404);
         }
         CommentDTO detailDTO = new CommentDTO(commentLogic.updateComment(comment.toEntity()));
         LOGGER.log(Level.INFO, "Ended updating comment from resource: output: {0}", detailDTO);

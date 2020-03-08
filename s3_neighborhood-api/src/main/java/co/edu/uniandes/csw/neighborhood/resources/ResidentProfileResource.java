@@ -118,7 +118,7 @@ public class ResidentProfileResource {
         LOGGER.log(Level.INFO, "Updating resident from resource: input: authorsId: {0} , author: {1}", new Object[]{residentsId, resident});
         resident.setId(residentsId);
         if (residentLogic.getResident(residentsId) == null) {
-            throw new WebApplicationException("El recurso /authors/" + residentsId + " no existe.", 404);
+                        throw new WebApplicationException("Resource /residents/" + residentsId + " does not exist.", 404);
         }
         ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO(residentLogic.updateResident(resident.toEntity()));
         LOGGER.log(Level.INFO, "Ended updating resident from resource: output: {0}", detailDTO);

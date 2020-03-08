@@ -114,7 +114,7 @@ public class GroupResource {
         LOGGER.log(Level.INFO, "Updating group from resource: input: authorsId: {0} , author: {1}", new Object[]{groupsId, group});
         group.setId(groupsId);
         if (groupLogic.getGroup(groupsId) == null) {
-            throw new WebApplicationException("El recurso /authors/" + groupsId + " no existe.", 404);
+             throw new WebApplicationException("Resource /groups/" + groupsId + " does not exist.", 404);
         }
         GroupDetailDTO detailDTO = new GroupDetailDTO(groupLogic.updateGroup(group.toEntity()));
         LOGGER.log(Level.INFO, "Ended updating group from resource: output: {0}", detailDTO);

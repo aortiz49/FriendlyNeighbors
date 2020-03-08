@@ -156,9 +156,9 @@ public class ResidentProfileLogic {
     }
 
     /**
-     * Retornas a resident
+     * Returns a resident by email
      *
-     * @param email : email from wanted resident consultar
+     * @param email : email from wanted resident 
      * @return the entity of the wanted resident
      */
     public ResidentProfileEntity getResidentByEmail(String email) {
