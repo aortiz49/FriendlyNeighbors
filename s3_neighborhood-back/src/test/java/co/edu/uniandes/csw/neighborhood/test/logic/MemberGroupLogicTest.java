@@ -36,6 +36,12 @@ public class MemberGroupLogicTest {
 
     @Inject
     private GroupLogic groupLogic;
+    
+    @Inject
+    private NeighborhoodPersistence neighPersistence;
+    
+    private NeighborhoodEntity neighborhood;
+
 
     @PersistenceContext
     private EntityManager em;
@@ -47,8 +53,9 @@ public class MemberGroupLogicTest {
     private List<GroupEntity> data = new ArrayList<>();
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
-     * descriptor and beans.xml file for dependencies injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
+     * contains classes, DB descriptor and beans.xml file for dependencies
+     * injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -93,23 +100,26 @@ public class MemberGroupLogicTest {
      * Inserts initial data for correct test operation
      */
     private void insertData() {
+
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        neighPersistence.create(neighborhood);
+
         member = factory.manufacturePojo(ResidentProfileEntity.class);
         member.setId(1L);
         member.setGroups(new ArrayList<>());
+        member.setNeighborhood(neighborhood);
         em.persist(member);
 
         for (int i = 0; i < 3; i++) {
             GroupEntity entity = factory.manufacturePojo(GroupEntity.class);
+            entity.setNeighborhood(neighborhood);
+            
             entity.setMembers(new ArrayList<>());
             entity.getMembers().add(member);
             em.persist(entity);
             data.add(entity);
             member.getGroups().add(entity);
         }
-        GroupEntity entity = factory.manufacturePojo(GroupEntity.class);
-        em.persist(entity);
-        data.add(entity);
-
     }
 
     /**
@@ -120,20 +130,18 @@ public class MemberGroupLogicTest {
      */
     @Test
     public void addGroupTest() throws BusinessLogicException {
+        GroupEntity newGroup = factory.manufacturePojo(GroupEntity.class);
+        newGroup.setNeighborhood(neighborhood);
+        groupLogic.createGroup(newGroup);
+        GroupEntity groupEntity = memberGroupLogic.associateGroupToMember(member.getId(), newGroup.getId());
+        Assert.assertNotNull(groupEntity);
 
-        // gets the random group from the list
-        ResidentProfileEntity resident = member;
+        Assert.assertEquals(groupEntity.getId(), newGroup.getId());
+        Assert.assertEquals(groupEntity.getDescription(), newGroup.getDescription());
 
-        // gets the group
-        GroupEntity group = data.get(3);
-        
-        // add the event to the resident
-        GroupEntity response = memberGroupLogic.associateGroupToMember(resident.getId(), group.getId());
+        GroupEntity lastGroup = memberGroupLogic.getGroup(member.getId(), newGroup.getId());
 
-        Assert.assertNotNull(response);
-
-        ResidentProfileEntity found = em.find(ResidentProfileEntity.class, resident.getId());
-        Assert.assertEquals(4, found.getGroups().size());
+        Assert.assertEquals(lastGroup.getId(), newGroup.getId());
 
     }
 
@@ -144,9 +152,9 @@ public class MemberGroupLogicTest {
     public void getGroupsTest() {
         List<GroupEntity> groupEntities = memberGroupLogic.getGroups(member.getId());
 
-        Assert.assertEquals(data.size()-1, groupEntities.size());
+        Assert.assertEquals(data.size(), groupEntities.size());
 
-        for (int i = 0; i < data.size()-1; i++) {
+        for (int i = 0; i < data.size(); i++) {
             Assert.assertTrue(groupEntities.contains(data.get(0)));
         }
     }
@@ -177,8 +185,11 @@ public class MemberGroupLogicTest {
     public void replaceGroupsTest() throws BusinessLogicException {
         List<GroupEntity> newCollection = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            GroupEntity entity = data.get(i);
-            entity.setName("a"+i);
+            GroupEntity entity = factory.manufacturePojo(GroupEntity.class);
+            entity.setMembers(new ArrayList<>());
+            entity.getMembers().add(member);
+            entity.setNeighborhood(neighborhood);
+            groupLogic.createGroup(entity);
             newCollection.add(entity);
         }
         memberGroupLogic.replaceGroups(member.getId(), newCollection);

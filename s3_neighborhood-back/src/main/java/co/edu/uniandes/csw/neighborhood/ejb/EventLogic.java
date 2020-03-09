@@ -170,7 +170,7 @@ public class EventLogic {
         if (eventLocation == null) {
             throw new BusinessLogicException("The event must have a location.");
         } // 2. The location to which the event will be added to must already exist
-        else if (eventPersistence.find(eventLocation.getId()) == null) {
+        else if (locationPersistence.find(eventLocation.getId()) == null) {
             throw new BusinessLogicException("The event's location doesn't exist.");
         } // 3. The title of the event cannot be null
         else if (pEventEntity.getTitle() == null) {

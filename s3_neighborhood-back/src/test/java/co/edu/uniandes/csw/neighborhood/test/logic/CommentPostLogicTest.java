@@ -146,7 +146,7 @@ public class CommentPostLogicTest {
      * @throws BusinessLogicException
      */
     @Test
-    public void addCommentsTest() throws BusinessLogicException {
+    public void addCommentsTest() {
         PostEntity entity = data.get(0);
         CommentEntity commentEntity = commentsData.get(1);
 

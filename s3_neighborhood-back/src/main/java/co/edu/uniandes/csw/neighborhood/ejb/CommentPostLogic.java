@@ -59,13 +59,13 @@ public class CommentPostLogic {
      * @param commentId ID from comment entity
      * @return associated comment entity
      */
-    public CommentEntity associateCommentToPost(Long commentId, Long postId) throws BusinessLogicException {
+    public CommentEntity associateCommentToPost(Long commentId, Long postId) {
         LOGGER.log(Level.INFO, "Trying to add comment to post with id = {0}", postId);
         PostEntity PostEntity = postPersistence.find(postId);
         CommentEntity CommentEntity = commentPersistence.find(commentId);
         CommentEntity.setPost(PostEntity);
 
-        commentResidentLogic.addCommentToResidentProfile(commentId, PostEntity.getAuthor().getId());
+        commentResidentLogic.associateCommentToResident(commentId, PostEntity.getAuthor().getId());
 
         LOGGER.log(Level.INFO, "Comment is associated with post with id = {0}", postId);
         return CommentEntity;
