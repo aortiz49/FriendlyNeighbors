@@ -59,8 +59,6 @@ public class ResidentProfileResource {
         LOGGER.log(Level.INFO, "Creating resident from resource: input: {0}", resident);
 
         ResidentProfileDetailDTO residentDTO = new ResidentProfileDetailDTO(residentLogic.createResident(resident.toEntity()));
-        
-        
 
         LOGGER.log(Level.INFO, "Created resident from resource: output: {0}", residentDTO);
         return residentDTO;
@@ -118,7 +116,7 @@ public class ResidentProfileResource {
         LOGGER.log(Level.INFO, "Updating resident from resource: input: authorsId: {0} , author: {1}", new Object[]{residentsId, resident});
         resident.setId(residentsId);
         if (residentLogic.getResident(residentsId) == null) {
-                        throw new WebApplicationException("Resource /residents/" + residentsId + " does not exist.", 404);
+            throw new WebApplicationException("Resource /residents/" + residentsId + " does not exist.", 404);
         }
         ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO(residentLogic.updateResident(resident.toEntity()));
         LOGGER.log(Level.INFO, "Ended updating resident from resource: output: {0}", detailDTO);
@@ -175,12 +173,12 @@ public class ResidentProfileResource {
         }
         return MemberGroupResource.class;
     }
-    
-        /**
+
+    /**
      *
-     * Connects /residents route with /favorsToHelp route which are
-     * dependent of resident resource, by redirecting to the service managing
-     * the URL segment in charge of the members
+     * Connects /residents route with /favorsToHelp route which are dependent of
+     * resident resource, by redirecting to the service managing the URL segment
+     * in charge of the members
      *
      * @param residentsId id from resident from which the resource is being
      * accessed
