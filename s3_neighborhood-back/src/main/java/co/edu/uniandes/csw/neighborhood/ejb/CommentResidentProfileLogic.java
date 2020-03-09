@@ -40,8 +40,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Class that implements the connection for the relations between resident and
- * comment.
+ * Class that implements the connection for the relations between resident and comment.
  *
  * @author aortiz49
  */
@@ -77,8 +76,7 @@ public class CommentResidentProfileLogic {
      * @param pCommentId the comment id
      * @param pResidentProfileId the resident id
      * @return the comment instance that was associated to the resident
-     * @throws BusinessLogicException when the neighborhood or resident don't
-     * exist
+     * @throws BusinessLogicException when the neighborhood or resident don't exist
      */
     public CommentEntity addCommentToResidentProfile(Long pCommentId, Long pResidentProfileId) throws BusinessLogicException {
 
@@ -112,99 +110,71 @@ public class CommentResidentProfileLogic {
     }
 
     /**
-     * Gets a collection of resident entities associated with a neighborhood
+     * Gets a collection of comment entities associated with a resident
      *
-     * @param pNeighborhoodId the neighborhood id
-     * @return collection of resident entities associated with a neighborhood
+     * @param pResidentProfileId the neighborhood id
+     * @return collection of comment entities associated with a resident
      */
-    public List<ResidentProfileEntity> getResidentProfilees(Long pNeighborhoodId) {
-        LOGGER.log(Level.INFO, "Gets all residentes belonging to neighborhood with id = {0}", pNeighborhoodId);
+    public List<CommentEntity> getComments(Long pResidentProfileId) {
+        LOGGER.log(Level.INFO, "Gets all comments belonging to resident with id = {0}", pResidentProfileId);
 
-        // returns the list of all residentes
-        return neighborhoodPersistence.find(pNeighborhoodId).getResidents();
+        // returns the list of all comment
+        return residentPersistence.find(pResidentProfileId).getComments();
     }
 
     /**
-     * Gets a service entity associated with a resident
+     * Gets a comment entity associated with a resident
      *
-     * @param pNeighborhoodId the neighborhood id
-     * @param pResidentProfileId Id from associated entity
+     * @param pCommentId the comment id
+     * @param pResidentProfileId the resident id
      * @return associated entity
      * @throws BusinessLogicException If event is not associated
      */
-    public ResidentProfileEntity getResidentProfile(Long pNeighborhoodId, Long pResidentProfileId) throws BusinessLogicException {
+    public CommentEntity getComment(Long pCommentId, Long pResidentProfileId) throws BusinessLogicException {
 
         // logs start
-        LOGGER.log(Level.INFO, "Finding resident with id = {0} from neighborhood with = " + pResidentProfileId, pNeighborhoodId);
+        LOGGER.log(Level.INFO, "Finding comment with id = {0} from resident with = " + pCommentId, pResidentProfileId);
 
-        // gets all the residentes in a neighborhood
-        List<ResidentProfileEntity> residentes = neighborhoodPersistence.find(pNeighborhoodId).getResidents();
+        // gets all the comments in a neighborhood
+        List<CommentEntity> comments = residentPersistence.find(pResidentProfileId).getComments();
 
-        // the busines that was found
-        int index = residentes.indexOf(residentPersistence.find(pResidentProfileId));
+        // the comment that was found
+        int index = comments.indexOf(commentPersistence.find(pCommentId));
 
         // logs end
-        LOGGER.log(Level.INFO, "Finish resident query with id = {0} from neighborhood with = " + pResidentProfileId, pNeighborhoodId);
+        LOGGER.log(Level.INFO, "Finish finding comment with id = {0} from resident with = " + pCommentId, pResidentProfileId);
 
         // if the index doesn't exist
         if (index == -1) {
             throw new BusinessLogicException("ResidentProfile is not associated with the neighborhood");
         }
 
-        return residentes.get(index);
+        return comments.get(index);
     }
 
     /**
-     * Replaces residents associated with a neighborhood
+     * Removes a comment from a resident.
      *
-     * @param pNeighborhoodId the neighborhood id
-     * @param pNewResidentProfileesList Collection of service to associate with
-     * resident
-     * @return A new collection associated to resident
+     * @param pCommentId the comment id
+     * @param pResidentProfileId the resident id
      */
-    public List<ResidentProfileEntity> replaceResidentProfilees(Long pNeighborhoodId, List<ResidentProfileEntity> pNewResidentProfilesList) {
+    public void removeComment(Long pCommentId, Long pResidentProfileId) {
+        // gets the first resident from the list. 
+         LOGGER.log(Level.INFO, "Start removing comment from resident with id = {0}", pCommentId);
 
-        //logs start 
-        LOGGER.log(Level.INFO, "Start replacing residents associated to neighborhood with id = {0}", pNeighborhoodId);
+        // desired resident
+        ResidentProfileEntity resident = residentPersistence.find(pResidentProfileId);
 
-        // finds the neighborhood
-        NeighborhoodEntity neighborhood = neighborhoodPersistence.find(pNeighborhoodId);
+        // comment to delete
+        CommentEntity comment = commentPersistence.find(pCommentId);
 
-        // finds all the residentes
-        List<ResidentProfileEntity> currentResidentProfileesList = residentPersistence.findAll();
+        // remove comment from resident
+        resident.getComments().remove(comment);
+        
+        // set comment's resident author to null 
+        comment.setAuthor(null);
 
-        // for all residentes in the database, check if a resident in the new list already exists. 
-        // if this resident exists, change the neighborhood it is associated with
-        for (int i = 0; i < currentResidentProfileesList.size(); i++) {
-            ResidentProfileEntity current = currentResidentProfileesList.get(i);
-            if (pNewResidentProfilesList.contains(current)) {
-                current.setNeighborhood(neighborhood);
-            } // if the current resident in the list has the desired neighborhood as its neighborhood,
-            // set this neighborhood to null since it is not in the list of residentes we want the 
-            // neighborhood to have
-            else if (current.getNeighborhood().equals(neighborhood)) {
-                current.setNeighborhood(null);
-            }
-        }
+        LOGGER.log(Level.INFO, "Finished removing an event from group con id = {0}", pCommentId);
 
-        // logs end
-        LOGGER.log(Level.INFO, "End replacing residentes related to neighborhood with id = {0}", pNeighborhoodId);
-
-        return pNewResidentProfilesList;
-    }
-
-    /**
-     * Removes a resident from a neighborhood.
-     *
-     * @param pNeighborhoodId Id from resident
-     * @param pResidentProfileId Id from service
-     */
-    public void removeResidentProfile(Long pNeighborhoodId, Long pResidentProfileId) {
-        LOGGER.log(Level.INFO, "Start removing a resident from neighborhood with id = {0}", pResidentProfileId);
-
-        // removes the resident from the database
-        residentPersistence.delete(pResidentProfileId);
-
-        LOGGER.log(Level.INFO, "Finished removing a resident from neighborhood con id = {0}", pResidentProfileId);
     }
 }

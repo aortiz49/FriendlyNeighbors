@@ -203,44 +203,44 @@ public class CommentResidentProfileLogicTest {
 
         ResidentProfileEntity updatedRes = em.find(ResidentProfileEntity.class, resident.getId());
         Assert.assertEquals(3, updatedRes.getComments().size());
-        
+
         // TODO: ask why insertion isnt appended
-        Assert.assertNotNull(updatedRes.getComments().contains(comment.getId()));
+        Assert.assertNotNull(updatedRes.getComments().contains(comment));
 
     }
 
     /**
-     * Tests the consultation of all resident entities associated with a neighborhood.
+     * Tests the consultation of all comment entities associated with a resident.
      */
     @Test
-    public void getResidentProfileesTest() {
-        List<ResidentProfileEntity> list = residentNeighborhoodLogic.getResidentProfilees(testHoods.get(0).getId());
+    public void getCommentsTest() {
+        List<CommentEntity> list = commentResidentProfileLogic.getComments(testPeeps.get(0).getId());
 
-        // checks that there are two residentes associated to the neighborhood
+        // checks that there are two comment associated to the resident
         Assert.assertEquals(2, list.size());
 
-        // checks that the name of the associated neighborhood matches
-        Assert.assertEquals(list.get(0).getNeighborhood().getName(), testHoods.get(0).getName());
+        // checks that the name of the associated resident matches
+        Assert.assertEquals(list.get(0).getAuthor().getName(), testPeeps.get(0).getName());
     }
 
     /**
-     * Tests the consultation of a resident entity associated with a neighborhood.
+     * Tests the consultation of a comment entity associated with a resident.
      *
-     * @throws BusinessLogicException if the resident is not found
+     * @throws BusinessLogicException if the comment is not found
      */
     @Test
-    public void getResidentProfileTest() throws BusinessLogicException {
+    public void getCommentTest() throws BusinessLogicException {
+
+        // gets the first comment from the list
+        CommentEntity comment = testComments.get(0);
 
         // gets the first resident from the list
         ResidentProfileEntity resident = testPeeps.get(0);
 
-        // gets the first neighborhood from the list
-        NeighborhoodEntity neighborhood = testHoods.get(0);
+        // get the comment from the resident
+        CommentEntity response = commentResidentProfileLogic.getComment(comment.getId(), resident.getId());
 
-        // get the resident from the neighborhood
-        ResidentProfileEntity response = residentNeighborhoodLogic.getResidentProfile(neighborhood.getId(), resident.getId());
-
-        Assert.assertEquals(resident.getId(), response.getId());
+        Assert.assertEquals(comment.getId(), response.getId());
 
     }
 
@@ -248,18 +248,19 @@ public class CommentResidentProfileLogicTest {
      * Tests the removal of a resident from the neighborhood.
      */
     @Test
-    public void removeResidentProfileTest() {
-        // gets the first neighborhood from the list. 
-        // (Uses em.find because the persisted neighborhood contains the added residentes)
-        NeighborhoodEntity neighborhood = em.find(NeighborhoodEntity.class, testHoods.get(0).getId());
+    public void removeTest() {
+        // gets the first resident from the list. 
+        // (Uses em.find because the persisted resident contains the added events)
+        ResidentProfileEntity resident = em.find(ResidentProfileEntity.class, testPeeps.get(0).getId());
 
-        // get the first associated resident
-        ResidentProfileEntity resident = testPeeps.get(0);
+        // get the first associated comment
+        CommentEntity comment = testComments.get(0);
 
-        // gets the list of residentes in the neighborhood
-        List<ResidentProfileEntity> list = neighborhood.getResidents();
+        commentResidentProfileLogic.removeComment(comment.getId(), resident.getId());
 
-        residentNeighborhoodLogic.removeResidentProfile(neighborhood.getId(), resident.getId());
+        // gets the list of comments posted by the resident
+        List<CommentEntity> list = em.find(ResidentProfileEntity.class, resident.getId()).getComments();
+
         Assert.assertEquals(1, list.size());
 
     }

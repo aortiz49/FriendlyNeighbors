@@ -239,7 +239,7 @@ public class BusinessNeighborhoodLogicTest {
         BusinessEntity business = testJoints.get(0);
         
         // gets the list of businesses in the neighborhood
-        List<BusinessEntity> list = neighborhood.getBusinesses();
+        List<BusinessEntity> list = em.find(NeighborhoodEntity.class, neighborhood.getId()).getBusinesses();
         
         businessNeighborhoodLogic.removeBusiness(neighborhood.getId(), business.getId());
         Assert.assertEquals(1, list.size());

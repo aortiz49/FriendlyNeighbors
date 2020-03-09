@@ -47,9 +47,8 @@ public class AttendeeEventLogicTest {
     private List<EventEntity> data = new ArrayList<>();
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
-     * contains classes, DB descriptor and beans.xml file for dependencies
-     * injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
+     * descriptor and beans.xml file for dependencies injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -63,7 +62,7 @@ public class AttendeeEventLogicTest {
     }
 
     /**
-     * Initial test configuration. 
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -82,8 +81,7 @@ public class AttendeeEventLogicTest {
         }
     }
 
-
-       /**
+    /**
      * Clears tables involved in tests
      */
     private void clearData() {
@@ -91,8 +89,7 @@ public class AttendeeEventLogicTest {
         em.createQuery("delete from EventEntity").executeUpdate();
     }
 
-
-        /**
+    /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
@@ -109,32 +106,37 @@ public class AttendeeEventLogicTest {
             data.add(entity);
             resident.getEventsToAttend().add(entity);
         }
+
+        EventEntity entity = factory.manufacturePojo(EventEntity.class);
+        entity.setAttendees(new ArrayList<>());
+        entity.getAttendees().add(resident);
+        em.persist(entity);
+        data.add(entity);
     }
 
     /**
-     * Test to associate an event with a resident 
+     * Test to associate an event with a resident
      *
      *
      * @throws BusinessLogicException
      */
     @Test
     public void addEventTest() throws BusinessLogicException {
-        EventEntity newEvent = factory.manufacturePojo(EventEntity.class);
-        eventLogic.createEvent(newEvent);
-        EventEntity eventEntity = residentEventLogic.associateEventToAttenddee(resident.getId(), newEvent.getId());
-        Assert.assertNotNull(eventEntity);
+        // gets the resident
+        ResidentProfileEntity residentEntity = resident;
 
-        Assert.assertEquals(eventEntity.getId(), newEvent.getId());
-        Assert.assertEquals(eventEntity.getEndTime(), newEvent.getEndTime());
+        // gets the third random event from the list
+        EventEntity event = data.get(3);
 
+        // add the event to the resident
+        residentEventLogic.associateEventToAttenddee(residentEntity.getId(), event.getId());
 
-        EventEntity lastEvent = residentEventLogic.getEvent(resident.getId(), newEvent.getId());
-
-        Assert.assertEquals(lastEvent.getId(), newEvent.getId());
-
+        ResidentProfileEntity found = em.find(ResidentProfileEntity.class, residentEntity.getId());
+        Assert.assertEquals(4, found.getEvents().size());
+        Assert.assertEquals(event.getId(), response.getId());
 
     }
-    
+
     /**
      * Test for getting a collection of event entities associated with a resident
      */
@@ -171,7 +173,7 @@ public class AttendeeEventLogicTest {
      * @throws BusinessLogicException
      */
     @Test
-	
+
     public void replaceEventsTest() throws BusinessLogicException {
         List<EventEntity> newCollection = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -200,5 +202,4 @@ public class AttendeeEventLogicTest {
         Assert.assertTrue(residentEventLogic.getEvents(resident.getId()).isEmpty());
     }
 
-   
 }

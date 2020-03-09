@@ -195,11 +195,20 @@ public class BusinessNeighborhoodLogic {
      * @param pBusinessId Id from service
      */
     public void removeBusiness(Long pNeighborhoodId, Long pBusinessId) {
-        LOGGER.log(Level.INFO, "Start removing a business from neighborhood with id = {0}", pBusinessId);
+       LOGGER.log(Level.INFO, "Start removing business from neighborhood with id = {0}", pBusinessId);
 
-        // removes the business from the database
-        businessPersistence.delete(pBusinessId);
+        // desired neighborhood
+        NeighborhoodEntity neighborhood = neighborhoodPersistence.find(pNeighborhoodId);
 
-        LOGGER.log(Level.INFO, "Finished removing a business from neighborhood con id = {0}", pBusinessId);
+        // business to delete
+        BusinessEntity business = businessPersistence.find(pBusinessId);
+
+        // business to remove from neighborhood   
+        neighborhood.getBusinesses().remove(business);
+        
+        // group to remove from event
+        business.setNeighborhood(null);
+
+        LOGGER.log(Level.INFO, "Finished removing an event from group con id = {0}", pBusinessId);
     }
 }
