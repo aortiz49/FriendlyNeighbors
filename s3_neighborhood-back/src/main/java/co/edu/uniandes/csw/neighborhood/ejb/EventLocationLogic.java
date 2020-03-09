@@ -1,118 +1,198 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+MIT License
+
+Copyright (c) 2020 Universidad de los Andes - ISIS2603
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.ejb;
+//===================================================
+// Imports
+//===================================================
 
 import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
 import co.edu.uniandes.csw.neighborhood.entities.LocationEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.EventPersistence;
 import co.edu.uniandes.csw.neighborhood.persistence.LocationPersistence;
-import java.util.List;
-import java.util.logging.Logger;
 import javax.ejb.Stateless;
-import java.util.logging.Level;
 import javax.inject.Inject;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
+ * Class that implements the connection for the relations between location and event.
  *
- * @author v.cardonac1
+ * @author aortiz49
  */
 @Stateless
 public class EventLocationLogic {
-    
+//==================================================
+// Attributes
+//===================================================
+
+    /**
+     * Logger that outputs to the console.
+     */
     private static final Logger LOGGER = Logger.getLogger(EventLocationLogic.class.getName());
-    
-    @Inject
-    private EventPersistence eventPersistence;
-    
+
+    /**
+     * Dependency injection for location persistence.
+     */
     @Inject
     private LocationPersistence locationPersistence;
-    
+
     /**
-     * Associates an event with a location
-     * 
-     * @param eventId ID from the event entity
-     * @param locationId ID prom location
-     * @return associated event
+     * Dependency injection for event persistence.
      */
-    public EventEntity associateEventToLocation(Long eventId, Long locationId){
-        LOGGER.log(Level.INFO, "Trying to add event with id - {0}", eventId);
-        LocationEntity locationEntity = locationPersistence.find(locationId);
-        EventEntity eventEntity = eventPersistence.find(eventId);
+    @Inject
+    private EventPersistence eventPersistence;
+
+//===================================================
+// Methods
+//===================================================
+    /**
+     * Associates a Event to a Location.
+     *
+     * @param pEventId event id
+     * @param pLocationId location id
+     * @return the event instance that was associated to the location
+     * @throws BusinessLogicException when the location or event don't exist
+     */
+    public EventEntity addEventToLocation(Long pEventId, Long pLocationId) throws BusinessLogicException {
+
+        // creates the logger
+        LOGGER.log(Level.INFO, "Start association between event and location with id = {0}", pEventId);
+
+        // finds existing location
+        LocationEntity locationEntity = locationPersistence.find(pLocationId);
+
+        // location must exist
+        if (locationEntity == null) {
+            throw new BusinessLogicException("The location must exist.");
+        }
+
+        // finds existing event
+        EventEntity eventEntity = eventPersistence.find(pEventId);
+
+        // event must exist
+        if (eventEntity == null) {
+            throw new BusinessLogicException("The event must exist.");
+        }
+
+        // add the event to the location
+        locationEntity.getEvents().add(eventEntity);
+
+        // add the location to the event
         eventEntity.setLocation(locationEntity);
-        LOGGER.log(Level.INFO, "Event is associatedd with location with id = {0}", locationId);
-        return eventPersistence.find(eventId);
+
+        LOGGER.log(Level.INFO, "End association between event and location with id = {0}", pEventId);
+        return eventEntity;
     }
-    
+
     /**
-     * Gets a collection of events entities associated with a location
-     * @param locationId ID from the location entity
-     * @return collection of events associated with a location
+     * Gets a collection of event entities associated with a location
+     *
+     * @param pLocationId the location id
+     * @return collection of event entities associated with a location
      */
-    public List<EventEntity> getEvents(Long locationId){
-        LOGGER.log(Level.INFO, "Gets all events belonging to location with id = {0}", locationId);
-        return locationPersistence.find(locationId).getEvents();
+    public List<EventEntity> getEvents(Long pLocationId) {
+        LOGGER.log(Level.INFO, "Gets all events belonging to location with id = {0}", pLocationId);
+
+        // returns the list of all events
+        return locationPersistence.find(pLocationId).getEvents();
     }
-    
+
     /**
-     * Gets an event associated with a location
-     * 
-     * @param locationId ID from location
-     * @param eventId ID from associated
-     * @return associated event
+     * Gets a service entity associated with a resident
+     *
+     * @param pLocationId the location id
+     * @param pEventId Id from associated entity
+     * @return associated entity
      * @throws BusinessLogicException If event is not associated
      */
-    public EventEntity getEvent(Long locationId, Long eventId) throws BusinessLogicException{
-        LOGGER.log(Level.INFO, "Finding event with id = {0} from location with id = " + locationId, eventId);
-        List<EventEntity> events = locationPersistence.find(locationId).getEvents();
-        EventEntity event = eventPersistence.find(eventId);
-        int index = events.indexOf(event);
-        LOGGER.log(Level.INFO, "Finish query about event id = {0} from location with id = "+ locationId, eventId);
-        if(index >= 0){
-            return events.get(index);
+    public EventEntity getEvent(Long pLocationId, Long pEventId) throws BusinessLogicException {
+
+        // logs start
+        LOGGER.log(Level.INFO, "Finding event with id = {0} from location with = " + pEventId, pLocationId);
+
+        // gets all the events in a location
+        List<EventEntity> events = locationPersistence.find(pLocationId).getEvents();
+
+        // the busines that was found
+        int index = events.indexOf(eventPersistence.find(pEventId));
+
+        // logs end
+        LOGGER.log(Level.INFO, "Finish event query with id = {0} from location with = " + pEventId, pLocationId);
+
+        // if the index doesn't exist
+        if (index == -1) {
+            throw new BusinessLogicException("Event is not associated with the location");
         }
-        throw new BusinessLogicException("There is no association between event and location");
+
+        return events.get(index);
     }
-    
-    /**
-     * Replaces events associated with a location
-     * 
-     * @param locationId ID from location
-     * @param events Collections of events to asociate with location
-     * @return A new collection associated to location
+
+  /**
+     * Replaces events associated with a resident
+     *
+     * @param pLocationId Id from resident
+     * @param pEventsList Collection of event to associate with resident
+     * @return A new collection associated to resident
      */
-    public List<EventEntity> replaceEvents(Long locationId, List<EventEntity> events){
-        LOGGER.log(Level.INFO, "Trying to replace events related to location with id = {0}", locationId);
-        LocationEntity locationEntity = locationPersistence.find(locationId);
-        List<EventEntity> eventsList = eventPersistence.findAll();
-        for(EventEntity event: eventsList){
-            if(events.contains(event)){
-                if(event.getLocation() != locationEntity){
-                    event.setLocation(locationEntity);
-                }
-            } else{
+    public List<EventEntity> replaceEvents(Long pLocationId, List<EventEntity> pEventsList) {
+       LOGGER.log(Level.INFO, "Trying to replace events related to location con id = {0}", pLocationId);
+        LocationEntity location = locationPersistence.find(pLocationId);
+        List<EventEntity> eventList = eventPersistence.findAll();
+        for (EventEntity event : eventList) {
+            if (pEventsList.contains(event)) {
+                event.setLocation(location);
+            } else if (event.getLocation()!= null && event.getLocation().equals(location)) {
                 event.setLocation(null);
-            }    
+            }
         }
-        locationEntity.setEvents(events);
-        LOGGER.log(Level.INFO, "Ended trying to replace events related to location con id = {0}", locationId);
-        return locationEntity.getEvents();
+        LOGGER.log(Level.INFO, "Ended trying to replace events related to location con id = {0}", pLocationId);
+        return pEventsList;
     }
-    
+
     /**
-     * Unlinks an event from a location
-     * 
-     * @param locationId Id from location
-     * @param eventId  Id from event
+     * Removes a event from a location.
+     *
+     * @param pLocationId Id from resident
+     * @param pEventId Id from service
      */
-    public void removeEvent(Long locationId, Long eventId){
-        LOGGER.log(Level.INFO, "Trying to delete an event from location with id = {0}", locationId);
-        EventEntity eventEntity = eventPersistence.find(eventId);
-        LocationEntity locationEntity = locationPersistence.find(locationId);
+    public void removeEvent(Long pLocationId, Long pEventId) {
+        LOGGER.log(Level.INFO, "Start removing an event from location with id = {0}", pEventId);
+
+        // desired location
+        LocationEntity locationEntity = locationPersistence.find(pLocationId);
+
+        // event to delete
+        EventEntity eventEntity = eventPersistence.find(pEventId);
+
+        // event to remove from location   
         locationEntity.getEvents().remove(eventEntity);
-        LOGGER.log(Level.INFO, "Finished removing an event from location with id = {0}", locationId);
+        
+        // location to remove from event
+        eventEntity.setLocation(null);
+
+        LOGGER.log(Level.INFO, "Finished removing an event from location con id = {0}", pEventId);
     }
 }

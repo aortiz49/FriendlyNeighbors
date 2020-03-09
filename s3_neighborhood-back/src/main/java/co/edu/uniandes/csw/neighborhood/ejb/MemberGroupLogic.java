@@ -40,14 +40,34 @@ public class MemberGroupLogic {
      * @param groupId ID from group entity
      * @return associated group entity
      */
-    public GroupEntity associateGroupToMember(Long memberId, Long groupId) {
-       LOGGER.log(Level.INFO, "Trying to associate group with member with id = {0}", memberId);
-         ResidentProfileEntity memberEntity = memberPersistence.find(memberId);
+    public GroupEntity associateGroupToMember(Long memberId, Long groupId) throws BusinessLogicException {
+        // creates the logger
+        LOGGER.log(Level.INFO, "Start association between group and resident with id = {0}", memberId);
+
+        // finds existing location
+        ResidentProfileEntity resident = memberPersistence.find(memberId);
+
+        // resident must exist
+        if (resident == null) {
+            throw new BusinessLogicException("The resident must exist.");
+        }
+
+        // finds existing group
         GroupEntity groupEntity = groupPersistence.find(groupId);
-        groupEntity.getMembers().add(memberEntity);
-        
-        LOGGER.log(Level.INFO, "Group is associated with member with id = {0}", memberId);
-       return groupPersistence.find(groupId);
+
+        // event must exist
+        if (groupEntity == null) {
+            throw new BusinessLogicException("The group must exist.");
+        }
+
+        // add the group to the resident
+        resident.getGroups().add(groupEntity);
+
+        // add the resident to the group
+        groupEntity.getMembers().add(resident);
+
+        LOGGER.log(Level.INFO, "End association between group and resident with id = {0}", memberId);
+        return groupEntity;
     }
 
     /**

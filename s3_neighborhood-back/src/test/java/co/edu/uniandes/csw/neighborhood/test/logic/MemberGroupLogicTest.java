@@ -47,9 +47,8 @@ public class MemberGroupLogicTest {
     private List<GroupEntity> data = new ArrayList<>();
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
-     * contains classes, DB descriptor and beans.xml file for dependencies
-     * injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
+     * descriptor and beans.xml file for dependencies injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -63,7 +62,7 @@ public class MemberGroupLogicTest {
     }
 
     /**
-     * Initial test configuration. 
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -82,8 +81,7 @@ public class MemberGroupLogicTest {
         }
     }
 
-
-       /**
+    /**
      * Clears tables involved in tests
      */
     private void clearData() {
@@ -91,8 +89,7 @@ public class MemberGroupLogicTest {
         em.createQuery("delete from GroupEntity").executeUpdate();
     }
 
-
-        /**
+    /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
@@ -109,33 +106,37 @@ public class MemberGroupLogicTest {
             data.add(entity);
             member.getGroups().add(entity);
         }
-        
+        GroupEntity entity = factory.manufacturePojo(GroupEntity.class);
+        em.persist(entity);
+        data.add(entity);
+
     }
 
     /**
-     * Test to associate an group with a member 
+     * Test to associate an group with a member
      *
      *
      * @throws BusinessLogicException
      */
     @Test
     public void addGroupTest() throws BusinessLogicException {
-        GroupEntity newGroup = factory.manufacturePojo(GroupEntity.class);
-        groupLogic.createGroup(newGroup);
-        GroupEntity groupEntity = memberGroupLogic.associateGroupToMember(member.getId(), newGroup.getId());
-        Assert.assertNotNull(groupEntity);
 
-        Assert.assertEquals(groupEntity.getId(), newGroup.getId());
-        Assert.assertEquals(groupEntity.getDescription(), newGroup.getDescription());
+        // gets the random group from the list
+        ResidentProfileEntity resident = member;
 
+        // gets the group
+        GroupEntity group = data.get(3);
+        
+        // add the event to the resident
+        GroupEntity response = memberGroupLogic.associateGroupToMember(resident.getId(), group.getId());
 
-        GroupEntity lastGroup = memberGroupLogic.getGroup(member.getId(), newGroup.getId());
+        Assert.assertNotNull(response);
 
-        Assert.assertEquals(lastGroup.getId(), newGroup.getId());
-
+        ResidentProfileEntity found = em.find(ResidentProfileEntity.class, resident.getId());
+        Assert.assertEquals(4, found.getGroups().size());
 
     }
-    
+
     /**
      * Test for getting a collection of group entities associated with a member
      */
@@ -143,9 +144,9 @@ public class MemberGroupLogicTest {
     public void getGroupsTest() {
         List<GroupEntity> groupEntities = memberGroupLogic.getGroups(member.getId());
 
-        Assert.assertEquals(data.size(), groupEntities.size());
+        Assert.assertEquals(data.size()-1, groupEntities.size());
 
-        for (int i = 0; i < data.size(); i++) {
+        for (int i = 0; i < data.size()-1; i++) {
             Assert.assertTrue(groupEntities.contains(data.get(0)));
         }
     }
@@ -172,14 +173,12 @@ public class MemberGroupLogicTest {
      * @throws BusinessLogicException
      */
     @Test
-	
+
     public void replaceGroupsTest() throws BusinessLogicException {
         List<GroupEntity> newCollection = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            GroupEntity entity = factory.manufacturePojo(GroupEntity.class);
-            entity.setMembers(new ArrayList<>());
-            entity.getMembers().add(member);
-            groupLogic.createGroup(entity);
+            GroupEntity entity = data.get(i);
+            entity.setName("a"+i);
             newCollection.add(entity);
         }
         memberGroupLogic.replaceGroups(member.getId(), newCollection);
@@ -201,5 +200,4 @@ public class MemberGroupLogicTest {
         Assert.assertTrue(memberGroupLogic.getGroups(member.getId()).isEmpty());
     }
 
-   
 }
