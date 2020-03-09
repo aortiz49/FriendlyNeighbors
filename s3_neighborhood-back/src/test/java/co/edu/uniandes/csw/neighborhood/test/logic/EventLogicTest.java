@@ -202,6 +202,13 @@ public class EventLogicTest {
         EventEntity entity = em.find(EventEntity.class, result.getId());
         Assert.assertEquals(newEntity.getId(), entity.getId());
         Assert.assertEquals(newEntity.getTitle(), entity.getTitle());
+        Assert.assertEquals(newEntity.getAvailability(), entity.getAvailability());
+        Assert.assertEquals(newEntity.getDateOfEvent(), entity.getDateOfEvent());
+        Assert.assertEquals(newEntity.getDatePosted(), entity.getDatePosted());
+        Assert.assertEquals(newEntity.getDescription(), entity.getDescription());
+        Assert.assertEquals(newEntity.getEndTime(), entity.getEndTime());
+        Assert.assertEquals(newEntity.getStartTime(), entity.getStartTime());
+
     }
 
     /**

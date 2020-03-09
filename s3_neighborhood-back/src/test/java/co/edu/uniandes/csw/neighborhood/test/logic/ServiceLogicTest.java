@@ -101,9 +101,8 @@ public class ServiceLogicTest {
      *
      * Configures the test.
      *
-     * @return the jar that Arquillian will deploy on the embedded Payara
-     * server. It contains the classes, the database descriptor, and the
-     * beans.xml to resolve injection dependencies.
+     * @return the jar that Arquillian will deploy on the embedded Payara server. It contains the
+     * classes, the database descriptor, and the beans.xml to resolve injection dependencies.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -188,6 +187,9 @@ public class ServiceLogicTest {
         ServiceEntity entity = em.find(ServiceEntity.class, result.getId());
         Assert.assertEquals(newEntity.getId(), entity.getId());
         Assert.assertEquals(newEntity.getTitle(), entity.getTitle());
+        Assert.assertEquals(newEntity.getAvailability(), entity.getAvailability());
+        Assert.assertEquals(newEntity.getDescription(), entity.getDescription());
+
     }
 
     /**

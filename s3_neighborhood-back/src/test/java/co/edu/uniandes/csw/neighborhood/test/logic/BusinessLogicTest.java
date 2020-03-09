@@ -187,6 +187,11 @@ public class BusinessLogicTest {
         BusinessEntity entity = em.find(BusinessEntity.class, result.getId());
         Assert.assertEquals(newEntity.getId(), entity.getId());
         Assert.assertEquals(newEntity.getName(), entity.getName());
+        Assert.assertEquals(newEntity.getAddress(), entity.getAddress());
+        Assert.assertEquals(newEntity.getLatitude(), entity.getLatitude(), 0.0001);
+        Assert.assertEquals(newEntity.getLongitude(), entity.getLongitude(), 0.0001);
+        Assert.assertEquals(newEntity.getRating(), entity.getRating(),.0001);
+
     }
 
     /**
@@ -285,7 +290,6 @@ public class BusinessLogicTest {
         Assert.assertEquals(entity.getName(), resultEntity.getName());
     }
 
-    
     /**
      * Tests to update a business.
      */
