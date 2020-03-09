@@ -26,11 +26,11 @@ import org.junit.Test;
  */
 public class NewClass {
     
-    private static final String COLLECTION = "Author-Tests-Paso5.postman_collection";
+    private static final String COLLECTION = "ResidentsResourceTest.postman_collection";
 
     @Deployment(testable = true)
     public static WebArchive createDeployment() {
-        return ShrinkWrap.create(WebArchive.class, "frontstepbystep-api.war")//War del modulo api
+        return ShrinkWrap.create(WebArchive.class, "s3_neighborhood-api.war")//War del modulo api
                 // Se agrega las dependencias
                 .addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
                         .importRuntimeDependencies().resolve()
