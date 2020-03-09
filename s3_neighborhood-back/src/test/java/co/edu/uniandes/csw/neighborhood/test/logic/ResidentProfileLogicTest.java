@@ -336,4 +336,22 @@ public class ResidentProfileLogicTest {
         ResidentProfileEntity newEntity = data.get(0);
         residentLogic.updateResident(newEntity);
     }
+    
+     /**
+     * Test for finding a resident by email
+     */
+        @Test
+    public void getResidentByEmailTest() {
+        
+        ResidentProfileEntity entity = data.get(0);
+        ResidentProfileEntity newEntity = residentLogic.getResidentByEmail(entity.getEmail());
+        Assert.assertNotNull(newEntity);
+        Assert.assertEquals(entity.getName(), newEntity.getName());
+        Assert.assertEquals(entity.getNickname(), newEntity.getNickname());
+        Assert.assertEquals(entity.getEmail(), newEntity.getEmail());
+        Assert.assertEquals(entity.getPhoneNumber(), newEntity.getPhoneNumber());
+        Assert.assertEquals(entity.getPreferences(), newEntity.getPreferences());
+        Assert.assertEquals(entity.getProofOfResidence(), newEntity.getProofOfResidence());
+
+    }
 }
