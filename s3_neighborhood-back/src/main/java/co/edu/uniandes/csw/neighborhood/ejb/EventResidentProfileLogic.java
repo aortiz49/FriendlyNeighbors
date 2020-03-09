@@ -34,7 +34,7 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-/**
+/** 
  * @author albayona
  */
 @Stateless
@@ -56,47 +56,47 @@ public class EventResidentProfileLogic {
      * @return associated event entity
      */
     public EventEntity associateEventToResident(Long eventId, Long residentId) {
-        LOGGER.log(Level.INFO, "Trying to add event to resident with id = {0}", residentId);
+       LOGGER.log(Level.INFO, "Trying to add event to resident with id = {0}", residentId);
         ResidentProfileEntity ResidentProfileEntity = residentPersistence.find(residentId);
         EventEntity EventEntity = eventPersistence.find(eventId);
         EventEntity.setHost(ResidentProfileEntity);
-        LOGGER.log(Level.INFO, "Event is associated with resident with id = {0}", residentId);
-        return eventPersistence.find(eventId);
+      LOGGER.log(Level.INFO, "Event is associated with resident with id = {0}", residentId);
+        return EventEntity;
     }
 
     /**
-     * /**
-     * Gets a collection of events entities associated with a resident
-     *
+    /**
+     * Gets a collection of events entities associated with a resident 
      * @param residentId ID from resident entity
-     * @return collection of event entities associated with a resident
+     * @return collection of event entities associated with a resident 
      */
     public List<EventEntity> getEvents(Long residentId) {
-        LOGGER.log(Level.INFO, "Gets all events belonging to resident with id = {0}", residentId);
+          LOGGER.log(Level.INFO, "Gets all events belonging to resident with id = {0}", residentId);
         return residentPersistence.find(residentId).getEvents();
     }
 
-    /**
-     * Gets a event entity associated with a resident
+ /**
+     * Gets a event entity associated with  a resident
      *
      * @param residentId Id from resident
      * @param eventId Id from associated entity
      * @return associated entity
-     * @throws BusinessLogicException If event is not associated
+     * @throws BusinessLogicException If event is not associated 
      */
     public EventEntity getEvent(Long residentId, Long eventId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Finding event with id = {0} from resident with = " + residentId, eventId);
+              LOGGER.log(Level.INFO, "Finding event with id = {0} from resident with = " + residentId, eventId);
         List<EventEntity> events = residentPersistence.find(residentId).getEvents();
         EventEntity EventEntity = eventPersistence.find(eventId);
         int index = events.indexOf(EventEntity);
-        LOGGER.log(Level.INFO, "Finish query about event with id = {0} from resident with = " + residentId, eventId);
+            LOGGER.log(Level.INFO, "Finish query about event with id = {0} from resident with = " + residentId, eventId);
         if (index >= 0) {
             return events.get(index);
         }
         throw new BusinessLogicException("Event is not associated with resident");
     }
 
-    /**
+
+  /**
      * Replaces events associated with a resident
      *
      * @param residentId Id from resident
@@ -104,30 +104,30 @@ public class EventResidentProfileLogic {
      * @return A new collection associated to resident
      */
     public List<EventEntity> replaceEvents(Long residentId, List<EventEntity> events) {
-        LOGGER.log(Level.INFO, "Trying to replace events related to resident with id = {0}", residentId);
+       LOGGER.log(Level.INFO, "Trying to replace events related to resident con id = {0}", residentId);
         ResidentProfileEntity resident = residentPersistence.find(residentId);
         List<EventEntity> eventList = eventPersistence.findAll();
         for (EventEntity event : eventList) {
             if (events.contains(event)) {
                 event.setHost(resident);
-            } else if (event.getHost() != null && event.getHost().equals(resident)) {
+            } else if (event.getHost()!= null && event.getHost().equals(resident)) {
                 event.setHost(null);
             }
         }
-        LOGGER.log(Level.INFO, "Ended trying to replace events related to resident with id = {0}", residentId);
+        LOGGER.log(Level.INFO, "Ended trying to replace events related to resident con id = {0}", residentId);
         return events;
     }
-
+    
     /**
      * Removes a event from a resident. Event is no longer in DB
      *
-     *
-     * @param eventId Id from event
+     * @param residentId Id from resident
+     * @param eventId Id from event     
      */
-    public void removeEvent(Long residentID, Long eventId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Trying to delete a event from resident with id = {0}", eventId);
-        eventPersistence.delete(getEvent(residentID, eventId).getId());
+    public void removeEvent(Long residentId, Long eventId) {
+         LOGGER.log(Level.INFO, "Trying to delete a event from resident con id = {0}", residentId);
+      eventPersistence.delete(residentId);
 
-        LOGGER.log(Level.INFO, "Finished removing a event from resident with id = {0}", eventId);
-    }
+       LOGGER.log(Level.INFO, "Finished removing a event from resident con id = {0}", residentId);
+        }
 }
