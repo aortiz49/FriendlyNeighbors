@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.test.logic;
 
-import co.edu.uniandes.csw.neighborhood.ejb.EventLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.ResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.EventResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
@@ -56,14 +55,12 @@ public class EventResidentProfileLogicTest {
     private PodamFactory factory = new PodamFactoryImpl();
 
     @Inject
-    private EventResidentProfileLogic residentEventLogic;
-    
+    private ResidentProfileLogic residentLogic;
     @Inject
-    private EventLogic eventLogic;
+    private EventResidentProfileLogic residentEventLogic;
 
     @PersistenceContext
     private EntityManager em;
-    
 
     @Inject
     private UserTransaction utx;
@@ -87,8 +84,8 @@ public class EventResidentProfileLogicTest {
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
 
-    /**
-     * Initial test configuration.
+   /**
+     * Initial test configuration. 
      */
     @Before
     public void configTest() {
@@ -107,7 +104,7 @@ public class EventResidentProfileLogicTest {
         }
     }
 
-    /**
+       /**
      * Clears tables involved in tests
      */
     private void clearData() {
@@ -115,7 +112,7 @@ public class EventResidentProfileLogicTest {
         em.createQuery("delete from ResidentProfileEntity").executeUpdate();
     }
 
-    /**
+        /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
@@ -135,7 +132,7 @@ public class EventResidentProfileLogicTest {
     }
 
     /**
-     * Test to associate a event with a resident
+     * Test to associate a event with a resident 
      *
      *
      * @throws BusinessLogicException
@@ -151,8 +148,7 @@ public class EventResidentProfileLogicTest {
     }
 
     /**
-     * Test for getting a collection of event entities associated with a
-     * resident
+     * Test for getting a collection of event entities associated with a resident
      */
     @Test
     public void getEventsTest() {
@@ -178,7 +174,7 @@ public class EventResidentProfileLogicTest {
     }
 
     /**
-     * Test for getting a event from a non-author user
+     * Test for getting a event from a non-author user 
      *
      * @throws BusinessLogicException
      */
@@ -187,42 +183,6 @@ public class EventResidentProfileLogicTest {
         ResidentProfileEntity entity = data.get(0);
         EventEntity eventEntity = eventsData.get(1);
         residentEventLogic.getEvent(entity.getId(), eventEntity.getId());
-    }
-    
-        /**
-     * Test for replacing events associated with a resident
-     *
-     * @throws BusinessLogicException
-     */
-    @Test
-
-    public void replaceEventsTest() throws BusinessLogicException {
-        List<EventEntity> newCollection = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            EventEntity entity = factory.manufacturePojo(EventEntity.class);
-            entity.setHost(data.get(0));
-
-            eventLogic.createEvent(entity);
-
-            newCollection.add(entity);
-        }
-        residentEventLogic.replaceEvents(data.get(0).getId(), newCollection);
-        List<EventEntity> events = residentEventLogic.getEvents(data.get(0).getId());
-        for (EventEntity newE : newCollection) {
-            Assert.assertTrue(events.contains(newE));
-        }
-    }
-
-    /**
-     * Test for removing an event from resident
-     *
-     */
-    @Test
-    public void removeEventTest() throws BusinessLogicException {
-   
-            residentEventLogic.removeEvent(data.get(0).getId(), eventsData.get(0).getId());
-
-        Assert.assertTrue(residentEventLogic.getEvents(data.get(0).getId()).isEmpty());
     }
 
 }
