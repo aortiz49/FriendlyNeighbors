@@ -21,7 +21,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-
 package co.edu.uniandes.csw.neighborhood.test.logic;
 
 //===================================================
@@ -102,8 +101,9 @@ public class ServiceLogicTest {
      *
      * Configures the test.
      *
-     * @return the jar that Arquillian will deploy on the embedded Payara server. It contains the
-     * classes, the database descriptor, and the beans.xml to resolve injection dependencies.
+     * @return the jar that Arquillian will deploy on the embedded Payara
+     * server. It contains the classes, the database descriptor, and the
+     * beans.xml to resolve injection dependencies.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -190,6 +190,130 @@ public class ServiceLogicTest {
         Assert.assertEquals(newEntity.getTitle(), entity.getTitle());
     }
 
+    /**
+     * Tests the creation of a Service with no resident.
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createServiceNoResidentTest() throws BusinessLogicException {
 
+        // creates a random service
+        ServiceEntity newEntity = factory.manufacturePojo(ServiceEntity.class);
 
+        // persist the created service, should not work
+        serviceLogic.createService(newEntity);
+    }
+
+    /**
+     * Tests the creation of a Service with a long description.
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createServiceLongDescriptionTest() throws BusinessLogicException {
+
+        // creates a random service
+        ServiceEntity newEntity = factory.manufacturePojo(ServiceEntity.class);
+        newEntity.setDescription("0XzLvMu90HC5w5gtFYN3qnwyez8yN1NVCSYU4fdD00Abl"
+                + "PZrkreAumJrnkVQtXHhGSWnk9BGv1nItmaRhTtRbTHBOKOQf4NvaQT8u5i6L"
+                + "aax6lK94kEwEdiFoiVbV4MVoFrL0asdasdafafURiGjNZ97gOOlgIaaYZZC7"
+                + "L4jVLOdakl"
+                + "Agb2K3RRY0LQCG8DYmE1qyvBirDRcfnJePVHB7qWERBWJNbcGBdMdWyYlj2"
+                + "Lq1cIrfuVGRYnlM8R4j0RuIA1KAwUfEcTx");
+
+        // persist the created service, should not work
+        serviceLogic.createService(newEntity);
+    }
+
+    /**
+     * Tests the creation of a Service without a description.
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createServiceNoDescriptionTest() throws BusinessLogicException {
+
+        // creates a random service
+        ServiceEntity newEntity = factory.manufacturePojo(ServiceEntity.class);
+        newEntity.setDescription(null);
+
+        // persist the created service, should not work
+        serviceLogic.createService(newEntity);
+    }
+
+    /**
+     * Returns all the services in the database.
+     *
+     */
+    @Test
+    public void getServicesTest() {
+        List<ServiceEntity> list = serviceLogic.getServices();
+        Assert.assertEquals(services.size(), list.size());
+
+        for (ServiceEntity entity : list) {
+            boolean found = false;
+            for (ServiceEntity storedEntity : services) {
+                if (entity.getId().equals(storedEntity.getId())) {
+                    found = true;
+                }
+            }
+            Assert.assertTrue(found);
+        }
+    }
+
+    /**
+     * Finds a service by Id.
+     *
+     */
+    @Test
+    public void getServiceTest() {
+        ServiceEntity entity = services.get(0);
+        ServiceEntity resultEntity = serviceLogic.getService(entity.getId());
+        Assert.assertNotNull(resultEntity);
+        Assert.assertEquals(entity.getId(), resultEntity.getId());
+    }
+
+    /**
+     * Finds a service by title.
+     *
+     */
+    @Test
+    public void getServiceByTitle() {
+        ServiceEntity entity = services.get(0);
+        ServiceEntity resultEntity = serviceLogic.getServiceByName(entity.getTitle());
+        Assert.assertNotNull(resultEntity);
+        Assert.assertEquals(entity.getId(), resultEntity.getId());
+    }
+
+    /**
+     * Tests to update a service.
+     */
+    @Test
+    public void updateServiceTest() throws BusinessLogicException {
+        // get first service from generated data set
+        ServiceEntity entity = services.get(0);
+
+        // generate a random business
+        ServiceEntity newEntity = factory.manufacturePojo(ServiceEntity.class);
+
+        // set the id of the random service to the id of the first one from the data set
+        newEntity.setId(entity.getId());
+
+        // update the service with the new information
+        serviceLogic.updateService(entity.getId(), newEntity);
+
+        // find the business in the database
+        ServiceEntity resp = em.find(ServiceEntity.class, entity.getId());
+
+        // make sure they are equal
+        Assert.assertEquals(newEntity.getId(), resp.getId());
+    }
+
+    /**
+     * Tests the deletion of a service.
+     *
+     */
+    public void deleteServiceTest() throws BusinessLogicException {
+        // get first service from generated data set
+        ServiceEntity entity = services.get(0);
+
+        // delete the service
+        serviceLogic.deleteService(entity.getId());
+
+    }
 }

@@ -166,9 +166,9 @@ public class ServiceLogic {
         LOGGER.log(Level.INFO, "Begin the delete process for Service with id = {0}", pServiceId);
 
         if (ServicePersistence.find(pServiceId) == null) {
-            throw new BusinessLogicException("Service doesn't exist.");                   
+            throw new BusinessLogicException("Service doesn't exist.");
         }
-            
+
         ServicePersistence.delete(pServiceId);
         LOGGER.log(Level.INFO, "End the delete process for Service with id = {0}", pServiceId);
     }
@@ -196,6 +196,9 @@ public class ServiceLogic {
         }// 3. The description of the service cannot be null
         else if (pServiceEntity.getDescription() == null) {
             throw new BusinessLogicException("The Service address cannot be null!");
+        } else if (pServiceEntity.getDescription().length() > 250) {
+            throw new BusinessLogicException("The service cannot have more than 250 characters");
+
         }
 
         return valid;
