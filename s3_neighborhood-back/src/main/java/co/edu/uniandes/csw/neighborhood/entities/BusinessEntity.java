@@ -95,15 +95,6 @@ public class BusinessEntity extends BaseEntity implements Serializable {
      */
     private Double longitude;
 
-    /**
-     * The business's total revenue.
-     */
-    private Double totalRevenue;
-
-    /**
-     * The amount of products sold vs the amount of products in inventory.
-     */
-    private Double percentOfProductsSold;
 
 //===================================================
 // Getters & Setters
@@ -238,44 +229,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     public void setLongitude(Double pLongitude) {
         longitude = pLongitude;
     }
-
-    /**
-     * Returns the total revenue of the business.
-     *
-     * @return the total revenue
-     */
-    public Double getTotalRevenue() {
-        return totalRevenue;
-    }
-
-    /**
-     * Sets the total revenue of the business.
-     *
-     * @param pTotalRevenue the new total revenue.
-     */
-    public void setTotalRevenue(Double pTotalRevenue) {
-        totalRevenue = pTotalRevenue;
-    }
-
-    /**
-     * Returns the percent of products sold at the business.
-     *
-     * @return the percent of products sold
-     */
-    public Double getPercentOfProductsSold() {
-        return percentOfProductsSold;
-    }
-
-    /**
-     * Sets the percent of products sold at the business.
-     *
-     * @param pPercentOfProductsSold the new percent of products sold
-     */
-    public void setPercentOfProductsSold(Double pPercentOfProductsSold) {
-        percentOfProductsSold = pPercentOfProductsSold;
-    }
-
-    
+  
     public NeighborhoodEntity getNeighborhood() {
         return neighborhood;
     }
