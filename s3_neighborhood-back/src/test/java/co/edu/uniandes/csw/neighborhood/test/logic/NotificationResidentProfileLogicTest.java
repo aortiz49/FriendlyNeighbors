@@ -26,12 +26,12 @@ package co.edu.uniandes.csw.neighborhood.test.logic;
 // Imports
 //===================================================
 
-import co.edu.uniandes.csw.neighborhood.ejb.AttendeeEventLogic;
-import co.edu.uniandes.csw.neighborhood.ejb.EventLogic;
+import co.edu.uniandes.csw.neighborhood.ejb.NotificationResidentProfileLogic;
+import co.edu.uniandes.csw.neighborhood.ejb.ResidentProfileLogic;
+import co.edu.uniandes.csw.neighborhood.entities.NotificationEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
-import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
-import co.edu.uniandes.csw.neighborhood.persistence.EventPersistence;
+import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -50,12 +50,12 @@ import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
- * Tests the ResidentProfileEventLogic.
+ * Tests the NotificationResidentProfileLogic.
  *
  * @author aortiz49
  */
 @RunWith(Arquillian.class)
-public class AttendeeEventLogicTest {
+public class NotificationResidentProfileLogicTest {
 //===================================================
 // Attributes
 //===================================================
@@ -66,10 +66,10 @@ public class AttendeeEventLogicTest {
     private PodamFactory factory = new PodamFactoryImpl();
 
     /**
-     * Dependency injection for group/event logic.
+     * Dependency injection for notification/residentProfile logic.
      */
     @Inject
-    private AttendeeEventLogic attendeeEventLogic;
+    private NotificationResidentProfileLogic notificationResidentProfileLogic;
 
     /**
      * Entity manager to communicate with the database.
@@ -84,14 +84,14 @@ public class AttendeeEventLogicTest {
     private UserTransaction utx;
 
     /**
-     * List of events to be used in the tests.
+     * List of residentProfiles to be used in the tests.
      */
-    private List<EventEntity> testEvents = new ArrayList<>();
+    private List<ResidentProfileEntity> testPeeps = new ArrayList<>();
 
     /**
-     * List of groups to be used in the tests.
+     * List of notifications to be used in the tests.
      */
-    private List<ResidentProfileEntity> testResidentProfiles = new ArrayList<>();
+    private List<NotificationEntity> testJoints = new ArrayList<>();
 //===================================================
 // Test Setup
 //===================================================
@@ -103,9 +103,9 @@ public class AttendeeEventLogicTest {
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addPackage(EventEntity.class.getPackage())
-                .addPackage(EventLogic.class.getPackage())
-                .addPackage(EventPersistence.class.getPackage())
+                .addPackage(ResidentProfileEntity.class.getPackage())
+                .addPackage(ResidentProfileLogic.class.getPackage())
+                .addPackage(ResidentProfilePersistence.class.getPackage())
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
@@ -134,7 +134,7 @@ public class AttendeeEventLogicTest {
      * Clears tables involved in tests
      */
     private void clearData() {
-        em.createQuery("delete from EventEntity").executeUpdate();
+        em.createQuery("delete from NotificationEntity").executeUpdate();
         em.createQuery("delete from ResidentProfileEntity").executeUpdate();
 
     }
@@ -144,26 +144,23 @@ public class AttendeeEventLogicTest {
      */
     private void insertData() {
 
-        // creates 3 random events
+        // creates 3 random residentProfiles
         for (int i = 0; i < 3; i++) {
-            EventEntity neigh = factory.manufacturePojo(EventEntity.class);
+            ResidentProfileEntity neigh = factory.manufacturePojo(ResidentProfileEntity.class);
             em.persist(neigh);
-            testEvents.add(neigh);
+            testPeeps.add(neigh);
         }
 
-        // creates 3 random groupes
+        // creates 3 random notifications
         for (int i = 0; i < 3; i++) {
-            ResidentProfileEntity buss = factory.manufacturePojo(ResidentProfileEntity.class);
+            NotificationEntity buss = factory.manufacturePojo(NotificationEntity.class);
             em.persist(buss);
-            testResidentProfiles.add(buss);
+            testJoints.add(buss);
         }
 
-        // associates groups to an event
-        testResidentProfiles.get(0).getEvents().add(testEvents.get(0));
-        testResidentProfiles.get(2).getEvents().add(testEvents.get(0));
-
-        testEvents.get(0).getAttendees().add(testResidentProfiles.get(0));
-        testEvents.get(0).getAttendees().add(testResidentProfiles.get(2));
+        // associates notifications to a residentProfile
+        testJoints.get(0).setAuthor(testPeeps.get(0));
+        testJoints.get(2).setAuthor(testPeeps.get(0));
 
     }
 //===================================================
@@ -171,85 +168,80 @@ public class AttendeeEventLogicTest {
 //===================================================
 
     /**
-     * Tests the association of a group with a event.
+     * Tests the association of a notification with a residentProfile.
      *
      * @throws BusinessLogicException if the association fails
      */
     @Test
-    public void addResidentProfileToEventTest() throws BusinessLogicException {
-        // gets the second random event from the list
-        EventEntity event = testEvents.get(0);
+    public void addNotificationToResidentProfileTest() throws BusinessLogicException {
+        // gets the second random residentProfile from the list
+        ResidentProfileEntity residentProfile = testPeeps.get(0);
 
-        // gets the second random group from the list, since the first has an associated 
-        // group already
-        ResidentProfileEntity group = testResidentProfiles.get(1);
+        // gets the second random notification from the list, since the first has an associated 
+        // notification already
+        NotificationEntity notification = testJoints.get(1);
 
-        // add the group to the event
-        ResidentProfileEntity response = attendeeEventLogic.addResidentProfileToEvent(group.getId(), event.getId());
-
-        EventEntity found = em.find(EventEntity.class, event.getId());
-        Assert.assertEquals(3, found.getAttendees().size());
+        // add the notification to the residentProfile
+        NotificationEntity response = notificationResidentProfileLogic.addNotificationToResidentProfile(
+                notification.getId(), residentProfile.getId());
 
         Assert.assertNotNull(response);
-        Assert.assertEquals(group.getId(), response.getId());
+        Assert.assertEquals(notification.getId(), response.getId());
     }
 
     /**
-     * Tests the consultation of all group entities associated with a event.
+     * Tests the consultation of all notification entities associated with a residentProfile.
      */
     @Test
-    public void getResidentProfilesTest() {
-        List<ResidentProfileEntity> list = attendeeEventLogic.getResidentProfiles(testEvents.get(0).getId());
+    public void getNotificationsTest() {
+        List<NotificationEntity> list = notificationResidentProfileLogic.getNotifications(testPeeps.get(0).getId());
 
-        // checks that there are two groupes associated to the event
+        // checks that there are two notifications associated to the residentProfile
         Assert.assertEquals(2, list.size());
 
-        // checks that the name of the associated event matches
-        Assert.assertEquals(list.get(0).getEventsToAttend().get(0).getTitle(), testEvents.get(0).getTitle());
-        Assert.assertEquals(list.get(1).getEventsToAttend().get(0).getTitle(), testEvents.get(0).getTitle());
-
+        // checks that the name of the associated residentProfile matches
+        Assert.assertEquals(list.get(0).getAuthor().getName(), testPeeps.get(0).getName());
     }
 
     /**
-     * Tests the consultation of a group entity associated with a event.
+     * Tests the consultation of a notification entity associated with a residentProfile.
      *
-     * @throws BusinessLogicException if the group is not found
+     * @throws BusinessLogicException if the notification is not found
      */
     @Test
-    public void getResidentProfileTest() throws BusinessLogicException {
+    public void getNotificationTest() throws BusinessLogicException {
 
-        // gets the first group from the list
-        ResidentProfileEntity group = testResidentProfiles.get(0);
+        // gets the first notification from the list
+        NotificationEntity notification = testJoints.get(0);
 
-        // gets the first event from the list
-        EventEntity event = testEvents.get(0);
+        // gets the first residentProfile from the list
+        ResidentProfileEntity residentProfile = testPeeps.get(0);
 
-        // get the group from the event
-        ResidentProfileEntity response = attendeeEventLogic.getResidentProfile(event.getId(), group.getId());
+        // get the notification from the residentProfile
+        NotificationEntity response = notificationResidentProfileLogic.getNotification(residentProfile.getId(), notification.getId());
 
-        Assert.assertEquals(group.getId(), response.getId());
+        Assert.assertEquals(notification.getId(), response.getId());
 
     }
 
     /**
-     * Tests the removal of a group from the event.
+     * Tests the removal of a notification from the residentProfile. 
      */
     @Test
-    public void removeResidentProfileTest() {
-
-        // gets the first group from the list. 
-        // (Uses em.find because the persisted event contains the added groups)
-        EventEntity event = em.find(EventEntity.class, testEvents.get(0).getId());
-
-        // get the first associated group
-        ResidentProfileEntity group = testResidentProfiles.get(0);
-
-        attendeeEventLogic.removeResidentProfile(event.getId(), group.getId());
-
-        // gets the list of events in the group
-        List<ResidentProfileEntity> list = em.find(EventEntity.class, event.getId()).getAttendees();
-
+    public void removeNotificationTest() {
+        // gets the first residentProfile from the list. 
+        // (Uses em.find because the persisted residentProfile contains the added notifications)
+        ResidentProfileEntity residentProfile = em.find(ResidentProfileEntity.class,testPeeps.get(0).getId());
+        
+        // get the first associated notification
+        NotificationEntity notification = testJoints.get(0);
+        
+        // gets the list of notifications in the residentProfile
+        List<NotificationEntity> list = em.find(ResidentProfileEntity.class, residentProfile.getId()).getNotifications();
+        
+        notificationResidentProfileLogic.removeNotification(residentProfile.getId(), notification.getId());
         Assert.assertEquals(1, list.size());
+
     }
 
 }

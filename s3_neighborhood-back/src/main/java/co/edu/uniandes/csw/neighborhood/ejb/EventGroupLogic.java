@@ -38,8 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Class that implements the connection for the relations between group and
- * event.
+ * Class that implements the connection for the relations between group and event.
  *
  * @author aortiz49
  */
@@ -198,11 +197,20 @@ public class EventGroupLogic {
      * @param pEventId Id from service
      */
     public void removeEvent(Long pGroupId, Long pEventId) {
-        LOGGER.log(Level.INFO, "Start removing a event from group with id = {0}", pEventId);
+        LOGGER.log(Level.INFO, "Start removing an event from group with id = {0}", pEventId);
 
-        // removes the event from the database
-        eventPersistence.delete(pEventId);
+        // desired group
+        GroupEntity groupEntity = groupPersistence.find(pGroupId);
 
-        LOGGER.log(Level.INFO, "Finished removing a event from group with id = {0}", pEventId);
+        // event to delete
+        EventEntity eventEntity = eventPersistence.find(pEventId);
+
+        // event to remove from group   
+        groupEntity.getEvents().remove(eventEntity);
+        
+        // group to remove from event
+        eventEntity.getGroups().remove(groupEntity);
+
+        LOGGER.log(Level.INFO, "Finished removing an event from group con id = {0}", pEventId);
     }
 }

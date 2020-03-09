@@ -26,10 +26,10 @@ package co.edu.uniandes.csw.neighborhood.ejb;
 // Imports
 //===================================================
 
-import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
+import co.edu.uniandes.csw.neighborhood.entities.GroupEntity;
 import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
-import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
+import co.edu.uniandes.csw.neighborhood.persistence.GroupPersistence;
 import co.edu.uniandes.csw.neighborhood.persistence.EventPersistence;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -43,7 +43,7 @@ import java.util.logging.Logger;
  * @author aortiz49
  */
 @Stateless
-public class AttendeeEventLogic {
+public class GroupEventLogic {
 //==================================================
 // Attributes
 //===================================================
@@ -51,7 +51,7 @@ public class AttendeeEventLogic {
     /**
      * Logger that outputs to the console.
      */
-    private static final Logger LOGGER = Logger.getLogger(AttendeeEventLogic.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(GroupEventLogic.class.getName());
 
     /**
      * Dependency injection for event persistence.
@@ -63,23 +63,23 @@ public class AttendeeEventLogic {
      * Dependency injection for group persistence.
      */
     @Inject
-    private ResidentProfilePersistence groupPersistence;
+    private GroupPersistence groupPersistence;
 
 //===================================================
 // Methods
 //===================================================
     /**
-     * Associates a ResidentProfile to a Event.
+     * Associates a Group to a Event.
      *
-     * @param pResidentProfileId group id
+     * @param pGroupId group id
      * @param pEventId event id
      * @return the group instance that was associated to the event
      * @throws BusinessLogicException when the event or group don't exist
      */
-    public ResidentProfileEntity addResidentProfileToEvent(Long pResidentProfileId, Long pEventId) throws BusinessLogicException {
+    public GroupEntity addGroupToEvent(Long pGroupId, Long pEventId) throws BusinessLogicException {
 
         // creates the logger
-        LOGGER.log(Level.INFO, "Start association between group and event with id = {0}", pResidentProfileId);
+        LOGGER.log(Level.INFO, "Start association between group and event with id = {0}", pGroupId);
 
         // finds existing event
         EventEntity eventEntity = eventPersistence.find(pEventId);
@@ -90,7 +90,7 @@ public class AttendeeEventLogic {
         }
 
         // finds existing group
-        ResidentProfileEntity groupEntity = groupPersistence.find(pResidentProfileId);
+        GroupEntity groupEntity = groupPersistence.find(pGroupId);
 
         // group must exist
         if (groupEntity == null) {
@@ -98,12 +98,12 @@ public class AttendeeEventLogic {
         }
 
         // add the group to the event
-        eventEntity.getAttendees().add(groupEntity);
+        eventEntity.getGroups().add(groupEntity);
 
         // add the event to the group
         groupEntity.getEvents().add(eventEntity);
 
-        LOGGER.log(Level.INFO, "End association between group and event with id = {0}", pResidentProfileId);
+        LOGGER.log(Level.INFO, "End association between group and event with id = {0}", pGroupId);
         return groupEntity;
     }
 
@@ -113,38 +113,38 @@ public class AttendeeEventLogic {
      * @param pEventId the event id
      * @return collection of group entities associated with a event
      */
-    public List<ResidentProfileEntity> getResidentProfiles(Long pEventId) {
+    public List<GroupEntity> getGroups(Long pEventId) {
         LOGGER.log(Level.INFO, "Gets all groups belonging to event with id = {0}", pEventId);
 
         // returns the list of all groups
-        return eventPersistence.find(pEventId).getAttendees();
+        return eventPersistence.find(pEventId).getGroups();
     }
 
     /**
      * Gets a service entity associated with a resident
      *
      * @param pEventId the event id
-     * @param pResidentProfileId Id from associated entity
+     * @param pGroupId Id from associated entity
      * @return associated entity
      * @throws BusinessLogicException If group is not associated
      */
-    public ResidentProfileEntity getResidentProfile(Long pEventId, Long pResidentProfileId) throws BusinessLogicException {
+    public GroupEntity getGroup(Long pEventId, Long pGroupId) throws BusinessLogicException {
 
         // logs start
-        LOGGER.log(Level.INFO, "Finding group with id = {0} from event with = " + pResidentProfileId, pEventId);
+        LOGGER.log(Level.INFO, "Finding group with id = {0} from event with = " + pGroupId, pEventId);
 
         // gets all the groups in a event
-        List<ResidentProfileEntity> groups = eventPersistence.find(pEventId).getAttendees();
+        List<GroupEntity> groups = eventPersistence.find(pEventId).getGroups();
 
         // the busines that was found
-        int index = groups.indexOf(groupPersistence.find(pResidentProfileId));
+        int index = groups.indexOf(groupPersistence.find(pGroupId));
 
         // logs end
-        LOGGER.log(Level.INFO, "Finish group query with id = {0} from event with = " + pResidentProfileId, pEventId);
+        LOGGER.log(Level.INFO, "Finish group query with id = {0} from event with = " + pGroupId, pEventId);
 
         // if the index doesn't exist
         if (index == -1) {
-            throw new BusinessLogicException("ResidentProfile is not associated with the event");
+            throw new BusinessLogicException("Group is not associated with the event");
         }
 
         return groups.get(index);
@@ -154,10 +154,10 @@ public class AttendeeEventLogic {
      * Replaces groups associated with a event
      *
      * @param pEventId the event id
-     * @param pNewResidentProfilesList Collection of service to associate with resident
+     * @param pNewGroupsList Collection of service to associate with resident
      * @return A new collection associated to resident
      */
-    public List<ResidentProfileEntity> replaceResidentProfiles(Long pEventId, List<ResidentProfileEntity> pNewResidentProfilesList) {
+    public List<GroupEntity> replaceGroups(Long pEventId, List<GroupEntity> pNewGroupsList) {
 
         //logs start 
         LOGGER.log(Level.INFO, "Start replacing groups related to event with id = {0}", pEventId);
@@ -166,15 +166,15 @@ public class AttendeeEventLogic {
         EventEntity event = eventPersistence.find(pEventId);
 
         // finds all the groups
-        List<ResidentProfileEntity> currentResidentProfilesList = groupPersistence.findAll();
+        List<GroupEntity> currentGroupsList = groupPersistence.findAll();
 
         // replaces groups attended by a event.
         // for all groups in the database, check if an group in the new list already exists. 
         // if the current group exists in the new list but doesn't already contain the event, add 
         // the event to the current group.
-        for (int i = 0; i < currentResidentProfilesList.size(); i++) {
-            ResidentProfileEntity current = currentResidentProfilesList.get(i);
-            if (pNewResidentProfilesList.contains(current) && !current.getEvents().contains(event)) {
+        for (int i = 0; i < currentGroupsList.size(); i++) {
+            GroupEntity current = currentGroupsList.get(i);
+            if (pNewGroupsList.contains(current) && !current.getEvents().contains(event)) {
                 current.getEvents().add(event);
 
             } // if the current group already has the event, remove it since it is not in the list
@@ -187,30 +187,30 @@ public class AttendeeEventLogic {
         // logs end
         LOGGER.log(Level.INFO, "End replacing groups related to event with id = {0}", pEventId);
 
-        return pNewResidentProfilesList;
+        return pNewGroupsList;
     }
 
     /**
      * Removes a group from a event.
      *
      * @param pEventId Id from resident
-     * @param pResidentProfileId Id from service
+     * @param pGroupId Id from service
      */
-    public void removeResidentProfile(Long pEventId, Long pResidentProfileId) {
-        LOGGER.log(Level.INFO, "Start removing a group from event with id = {0}", pResidentProfileId);
+    public void removeGroup(Long pEventId, Long pGroupId) {
+        LOGGER.log(Level.INFO, "Start removing a group from event with id = {0}", pGroupId);
 
         // desired event
         EventEntity eventEntity = eventPersistence.find(pEventId);
 
         // group to delete
-        ResidentProfileEntity groupEntity = groupPersistence.find(pResidentProfileId);
+        GroupEntity groupEntity = groupPersistence.find(pGroupId);
 
         // group to remove from event   
-        eventEntity.getAttendees().remove(groupEntity);
+        eventEntity.getGroups().remove(groupEntity);
 
         // event to remove from group
         groupEntity.getEvents().remove(eventEntity);
 
-        LOGGER.log(Level.INFO, "Finished removing a group from event con id = {0}", pResidentProfileId);
+        LOGGER.log(Level.INFO, "Finished removing a group from event con id = {0}", pGroupId);
     }
 }

@@ -1,6 +1,3 @@
-package co.edu.uniandes.csw.neighborhood.test.logic;
-
-
 /*
 MIT License
 
@@ -24,14 +21,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
+package co.edu.uniandes.csw.neighborhood.test.logic;
+
 //===================================================
 // Imports
 //===================================================
 import co.edu.uniandes.csw.neighborhood.ejb.BusinessLogic;
+import co.edu.uniandes.csw.neighborhood.ejb.ServiceLogic;
 import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ServiceEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.BusinessPersistence;
+import co.edu.uniandes.csw.neighborhood.persistence.ServicePersistence;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -61,7 +64,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
  * @author aortiz49
  */
 @RunWith(Arquillian.class)
-public class BusinessLogicTest {
+public class ServiceLogicTest {
 //===================================================
 // Attributes
 //===================================================
@@ -72,10 +75,10 @@ public class BusinessLogicTest {
     private PodamFactory factory = new PodamFactoryImpl();
 
     /**
-     * Injects BusinessLogic objects.
+     * Injects SServiceLogic objects.
      */
     @Inject
-    private BusinessLogic businessLogic;
+    private ServiceLogic serviceLogic;
 
     /**
      * Entity manager to communicate with the database.
@@ -92,7 +95,7 @@ public class BusinessLogicTest {
     /**
      * An array containing the set of data used for the tests.
      */
-    private List<BusinessEntity> data = new ArrayList<>();
+    private List<ServiceEntity> services = new ArrayList<>();
 
     /**
      *
@@ -104,9 +107,9 @@ public class BusinessLogicTest {
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addPackage(BusinessEntity.class.getPackage())
-                .addPackage(BusinessLogic.class.getPackage())
-                .addPackage(BusinessPersistence.class.getPackage())
+                .addPackage(ServiceEntity.class.getPackage())
+                .addPackage(ServiceLogic.class.getPackage())
+                .addPackage(ServicePersistence.class.getPackage())
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
@@ -135,8 +138,8 @@ public class BusinessLogicTest {
      * Clears tables involved in tests
      */
     private void clearData() {
-        em.createQuery("delete from BusinessEntity").executeUpdate();
-        em.createQuery("delete from NeighborhoodEntity").executeUpdate();
+        em.createQuery("delete from ServiceEntity").executeUpdate();
+        em.createQuery("delete from ResidentProfileEntity").executeUpdate();
     }
 
     /**
@@ -144,116 +147,109 @@ public class BusinessLogicTest {
      */
     private void insertData() {
 
-        // creates 3 businesses 
+        // creates 3 services 
         for (int i = 0; i < 3; i++) {
-            BusinessEntity entity = factory.manufacturePojo(BusinessEntity.class);
+            ServiceEntity entity = factory.manufacturePojo(ServiceEntity.class);
             em.persist(entity);
-            data.add(entity);
+            services.add(entity);
         }
 
-        // creates the neighborhood where the business is located
-        NeighborhoodEntity neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
-        neighborhood.setName("Salitre");
-        em.persist(neighborhood);
+        // creates the resident where the business is located
+        ResidentProfileEntity resident = factory.manufacturePojo(ResidentProfileEntity.class);
+        resident.setName("Josh Trager");
+        em.persist(resident);
 
-        // add the business to the neighborhood
-        neighborhood.getBusinesses().add(data.get(0));
+        // add the service to the resident
+        resident.getServices().add(services.get(0));
 
-        // add the neighborhood to the business
-        data.get(0).setNeighborhood(neighborhood);
+        // add the author to the service
+        services.get(0).setAuthor(resident);
 
     }
 
     /**
-     * Tests the creation of a Business.
+     * Tests the creation of a Service.
      */
     @Test
-    public void createBusinessTest() throws BusinessLogicException {
+    public void createServiceTest() throws BusinessLogicException {
 
         // creates a random business
-        BusinessEntity newEntity = factory.manufacturePojo(BusinessEntity.class);
+        ServiceEntity newEntity = factory.manufacturePojo(ServiceEntity.class);
 
-        // sets the neighborhood
-        newEntity.setNeighborhood(data.get(0).getNeighborhood());
-
-        // sets the owner
-        newEntity.setOwner(data.get(0).getOwner());
+        // sets the author of the service
+        newEntity.setAuthor(services.get(0).getAuthor());
 
         // persist the created business, should not be null
-        BusinessEntity result = businessLogic.createBusiness(newEntity);
+        ServiceEntity result = serviceLogic.createService(newEntity);
         Assert.assertNotNull(result);
 
         // locate the persisted business
-        BusinessEntity entity = em.find(BusinessEntity.class, result.getId());
+        ServiceEntity entity = em.find(ServiceEntity.class, result.getId());
         Assert.assertEquals(newEntity.getId(), entity.getId());
-        Assert.assertEquals(newEntity.getName(), entity.getName());
-        Assert.assertEquals(newEntity.getAddress(), entity.getAddress());
-        Assert.assertEquals(newEntity.getLatitude(), entity.getLatitude(), 0.0001);
-        Assert.assertEquals(newEntity.getLongitude(), entity.getLongitude(), 0.0001);
-        Assert.assertEquals(newEntity.getRating(), entity.getRating(),.0001);
+        Assert.assertEquals(newEntity.getTitle(), entity.getTitle());
+        Assert.assertEquals(newEntity.getAvailability(), entity.getAvailability());
+        Assert.assertEquals(newEntity.getDescription(), entity.getDescription());
 
     }
 
     /**
-     * Tests the creation of a Business with no neighborhood.
+     * Tests the creation of a Service with no resident.
      */
     @Test(expected = BusinessLogicException.class)
-    public void createBusinessNoNeighborhoodTest() throws BusinessLogicException {
+    public void createServiceNoResidentTest() throws BusinessLogicException {
 
-        // creates a random business
-        BusinessEntity newEntity = factory.manufacturePojo(BusinessEntity.class);
+        // creates a random service
+        ServiceEntity newEntity = factory.manufacturePojo(ServiceEntity.class);
 
-        // persist the created business, should not be null
-        BusinessEntity result = businessLogic.createBusiness(newEntity);
+        // persist the created service, should not work
+        serviceLogic.createService(newEntity);
     }
 
     /**
-     * Tests the creation of a Business with non-existent neighborhood.
+     * Tests the creation of a Service with a long description.
      */
     @Test(expected = BusinessLogicException.class)
-    public void createBusinessNonexistentNeighborhoodTest() throws BusinessLogicException {
+    public void createServiceLongDescriptionTest() throws BusinessLogicException {
 
-        // creates a random business
-        BusinessEntity newEntity = factory.manufacturePojo(BusinessEntity.class);
+        // creates a random service
+        ServiceEntity newEntity = factory.manufacturePojo(ServiceEntity.class);
+        newEntity.setDescription("0XzLvMu90HC5w5gtFYN3qnwyez8yN1NVCSYU4fdD00Abl"
+                + "PZrkreAumJrnkVQtXHhGSWnk9BGv1nItmaRhTtRbTHBOKOQf4NvaQT8u5i6L"
+                + "aax6lK94kEwEdiFoiVbV4MVoFrL0asdasdafafURiGjNZ97gOOlgIaaYZZC7"
+                + "L4jVLOdakl"
+                + "Agb2K3RRY0LQCG8DYmE1qyvBirDRcfnJePVHB7qWERBWJNbcGBdMdWyYlj2"
+                + "Lq1cIrfuVGRYnlM8R4j0RuIA1KAwUfEcTx");
 
-        // change neighborhood id to one who doesn't exist in the system
-        NeighborhoodEntity neigh = data.get(0).getNeighborhood();
-        neigh.setId(11123L);
-        newEntity.setNeighborhood(neigh);
-
-        // persist the created business, should not finish
-        BusinessEntity result = businessLogic.createBusiness(newEntity);
+        // persist the created service, should not work
+        serviceLogic.createService(newEntity);
     }
 
     /**
-     * Tests the creation of a Business with the same name.
+     * Tests the creation of a Service without a description.
      */
     @Test(expected = BusinessLogicException.class)
-    public void createBusinessSameNameLogicException() throws BusinessLogicException {
+    public void createServiceNoDescriptionTest() throws BusinessLogicException {
 
-        // creates a random business
-        BusinessEntity newEntity = factory.manufacturePojo(BusinessEntity.class);
+        // creates a random service
+        ServiceEntity newEntity = factory.manufacturePojo(ServiceEntity.class);
+        newEntity.setDescription(null);
 
-        // change business name to existingbusiness
-        newEntity.setName(data.get(0).getName());
-
-        // persist the created business, should not finish
-        BusinessEntity result = businessLogic.createBusiness(newEntity);
+        // persist the created service, should not work
+        serviceLogic.createService(newEntity);
     }
 
     /**
-     * Returns all the businesses in the database.
+     * Returns all the services in the database.
      *
-     * @return list of businesses
      */
     @Test
-    public void getBusinessesTest() {
-        List<BusinessEntity> list = businessLogic.getBusinesses();
-        Assert.assertEquals(data.size(), list.size());
+    public void getServicesTest() {
+        List<ServiceEntity> list = serviceLogic.getServices();
+        Assert.assertEquals(services.size(), list.size());
 
-        for (BusinessEntity entity : list) {
+        for (ServiceEntity entity : list) {
             boolean found = false;
-            for (BusinessEntity storedEntity : data) {
+            for (ServiceEntity storedEntity : services) {
                 if (entity.getId().equals(storedEntity.getId())) {
                     found = true;
                 }
@@ -263,69 +259,63 @@ public class BusinessLogicTest {
     }
 
     /**
-     * Finds a business by Id.
+     * Finds a service by Id.
      *
-     * @return the found business, null if not found
      */
     @Test
-    public void getBusinessTest() {
-        BusinessEntity entity = data.get(0);
-        BusinessEntity resultEntity = businessLogic.getBusiness(entity.getId());
+    public void getServiceTest() {
+        ServiceEntity entity = services.get(0);
+        ServiceEntity resultEntity = serviceLogic.getService(entity.getId());
         Assert.assertNotNull(resultEntity);
         Assert.assertEquals(entity.getId(), resultEntity.getId());
-        Assert.assertEquals(entity.getName(), resultEntity.getName());
     }
 
     /**
-     * Finds a business by name.
+     * Finds a service by title.
      *
-     * @return the found business, null if not found
      */
     @Test
-    public void getNeighborhoodByNameTest() {
-        BusinessEntity entity = data.get(0);
-        BusinessEntity resultEntity = businessLogic.getBusinessByName(entity.getName());
+    public void getServiceByTitle() {
+        ServiceEntity entity = services.get(0);
+        ServiceEntity resultEntity = serviceLogic.getServiceByName(entity.getTitle());
         Assert.assertNotNull(resultEntity);
         Assert.assertEquals(entity.getId(), resultEntity.getId());
-        Assert.assertEquals(entity.getName(), resultEntity.getName());
     }
 
     /**
-     * Tests to update a business.
+     * Tests to update a service.
      */
     @Test
-    public void updateBusinessTest() throws BusinessLogicException {
-        // get first business from generated data set
-        BusinessEntity entity = data.get(0);
+    public void updateServiceTest() throws BusinessLogicException {
+        // get first service from generated data set
+        ServiceEntity entity = services.get(0);
 
         // generate a random business
-        BusinessEntity newEntity = factory.manufacturePojo(BusinessEntity.class);
+        ServiceEntity newEntity = factory.manufacturePojo(ServiceEntity.class);
 
-        // set the id of the random business to the id of the first one from the data set
+        // set the id of the random service to the id of the first one from the data set
         newEntity.setId(entity.getId());
 
-        // update the business with the new information
-        businessLogic.updateBusiness(entity.getId(), newEntity);
+        // update the service with the new information
+        serviceLogic.updateService(entity.getId(), newEntity);
 
         // find the business in the database
-        BusinessEntity resp = em.find(BusinessEntity.class, entity.getId());
+        ServiceEntity resp = em.find(ServiceEntity.class, entity.getId());
 
         // make sure they are equal
         Assert.assertEquals(newEntity.getId(), resp.getId());
-        Assert.assertEquals(newEntity.getName(), resp.getName());
     }
 
     /**
-     * Tests the deletion of a business.
+     * Tests the deletion of a service.
      *
      */
-    public void deleteBusinessTest() throws BusinessLogicException {
-        // get first business from generated data set
-        BusinessEntity entity = data.get(0);
+    public void deleteServiceTest() throws BusinessLogicException {
+        // get first service from generated data set
+        ServiceEntity entity = services.get(0);
 
-        // delete the business
-        businessLogic.deleteBusiness(entity.getId());
+        // delete the service
+        serviceLogic.deleteService(entity.getId());
 
     }
-
 }

@@ -38,8 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Class that implements the connection for the relations between neighborhood
- * and business.
+ * Class that implements the connection for the relations between neighborhood and business.
  *
  * @author aortiz49
  */
@@ -75,8 +74,7 @@ public class BusinessNeighborhoodLogic {
      * @param pBusinessId business id
      * @param pNeighborhoodId neighborhood id
      * @return the business instance that was associated to the neighborhood
-     * @throws BusinessLogicException when the neighborhood or business don't
-     * exist
+     * @throws BusinessLogicException when the neighborhood or business don't exist
      */
     public BusinessEntity addBusinessToNeighborhood(Long pBusinessId, Long pNeighborhoodId) throws BusinessLogicException {
 
@@ -156,8 +154,7 @@ public class BusinessNeighborhoodLogic {
      * Replaces businesses associated with a neighborhood
      *
      * @param pNeighborhoodId the neighborhood id
-     * @param pNewBusinessesList Collection of service to associate with
-     * resident
+     * @param pNewBusinessesList Collection of service to associate with resident
      * @return A new collection associated to resident
      */
     public List<BusinessEntity> replaceBusinesses(Long pNeighborhoodId, List<BusinessEntity> pNewBusinessesList) {
@@ -198,11 +195,20 @@ public class BusinessNeighborhoodLogic {
      * @param pBusinessId Id from service
      */
     public void removeBusiness(Long pNeighborhoodId, Long pBusinessId) {
-        LOGGER.log(Level.INFO, "Start removing a business from neighborhood with id = {0}", pBusinessId);
+       LOGGER.log(Level.INFO, "Start removing business from neighborhood with id = {0}", pBusinessId);
 
-        // removes the business from the database
-        businessPersistence.delete(pBusinessId);
+        // desired neighborhood
+        NeighborhoodEntity neighborhood = neighborhoodPersistence.find(pNeighborhoodId);
 
-        LOGGER.log(Level.INFO, "Finished removing a business from neighborhood with id = {0}", pBusinessId);
+        // business to delete
+        BusinessEntity business = businessPersistence.find(pBusinessId);
+
+        // business to remove from neighborhood   
+        neighborhood.getBusinesses().remove(business);
+        
+        // group to remove from event
+        business.setNeighborhood(null);
+
+        LOGGER.log(Level.INFO, "Finished removing an event from group con id = {0}", pBusinessId);
     }
 }

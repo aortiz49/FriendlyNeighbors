@@ -26,9 +26,9 @@ package co.edu.uniandes.csw.neighborhood.test.logic;
 // Imports
 //===================================================
 
-import co.edu.uniandes.csw.neighborhood.ejb.AttendeeEventLogic;
+import co.edu.uniandes.csw.neighborhood.ejb.GroupEventLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.EventLogic;
-import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
+import co.edu.uniandes.csw.neighborhood.entities.GroupEntity;
 import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.EventPersistence;
@@ -50,12 +50,12 @@ import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
- * Tests the ResidentProfileEventLogic.
+ * Tests the GroupEventLogic.
  *
  * @author aortiz49
  */
 @RunWith(Arquillian.class)
-public class AttendeeEventLogicTest {
+public class GroupEventLogicTest {
 //===================================================
 // Attributes
 //===================================================
@@ -69,7 +69,7 @@ public class AttendeeEventLogicTest {
      * Dependency injection for group/event logic.
      */
     @Inject
-    private AttendeeEventLogic attendeeEventLogic;
+    private GroupEventLogic groupEventLogic;
 
     /**
      * Entity manager to communicate with the database.
@@ -86,12 +86,12 @@ public class AttendeeEventLogicTest {
     /**
      * List of events to be used in the tests.
      */
-    private List<EventEntity> testEvents = new ArrayList<>();
+    private List<EventEntity> testEvents = new ArrayList<EventEntity>();
 
     /**
      * List of groups to be used in the tests.
      */
-    private List<ResidentProfileEntity> testResidentProfiles = new ArrayList<>();
+    private List<GroupEntity> testGroups = new ArrayList<GroupEntity>();
 //===================================================
 // Test Setup
 //===================================================
@@ -134,9 +134,8 @@ public class AttendeeEventLogicTest {
      * Clears tables involved in tests
      */
     private void clearData() {
+        em.createQuery("delete from GroupEntity").executeUpdate();
         em.createQuery("delete from EventEntity").executeUpdate();
-        em.createQuery("delete from ResidentProfileEntity").executeUpdate();
-
     }
 
     /**
@@ -153,17 +152,17 @@ public class AttendeeEventLogicTest {
 
         // creates 3 random groupes
         for (int i = 0; i < 3; i++) {
-            ResidentProfileEntity buss = factory.manufacturePojo(ResidentProfileEntity.class);
+            GroupEntity buss = factory.manufacturePojo(GroupEntity.class);
             em.persist(buss);
-            testResidentProfiles.add(buss);
+            testGroups.add(buss);
         }
 
         // associates groups to an event
-        testResidentProfiles.get(0).getEvents().add(testEvents.get(0));
-        testResidentProfiles.get(2).getEvents().add(testEvents.get(0));
+        testGroups.get(0).getEvents().add(testEvents.get(0));
+        testGroups.get(2).getEvents().add(testEvents.get(0));
 
-        testEvents.get(0).getAttendees().add(testResidentProfiles.get(0));
-        testEvents.get(0).getAttendees().add(testResidentProfiles.get(2));
+        testEvents.get(0).getGroups().add(testGroups.get(0));
+        testEvents.get(0).getGroups().add(testGroups.get(2));
 
     }
 //===================================================
@@ -176,19 +175,19 @@ public class AttendeeEventLogicTest {
      * @throws BusinessLogicException if the association fails
      */
     @Test
-    public void addResidentProfileToEventTest() throws BusinessLogicException {
+    public void addGroupToEventTest() throws BusinessLogicException {
         // gets the second random event from the list
         EventEntity event = testEvents.get(0);
 
         // gets the second random group from the list, since the first has an associated 
         // group already
-        ResidentProfileEntity group = testResidentProfiles.get(1);
+        GroupEntity group = testGroups.get(1);
 
         // add the group to the event
-        ResidentProfileEntity response = attendeeEventLogic.addResidentProfileToEvent(group.getId(), event.getId());
+        GroupEntity response = groupEventLogic.addGroupToEvent(group.getId(), event.getId());
 
         EventEntity found = em.find(EventEntity.class, event.getId());
-        Assert.assertEquals(3, found.getAttendees().size());
+        Assert.assertEquals(3, found.getGroups().size());
 
         Assert.assertNotNull(response);
         Assert.assertEquals(group.getId(), response.getId());
@@ -198,15 +197,16 @@ public class AttendeeEventLogicTest {
      * Tests the consultation of all group entities associated with a event.
      */
     @Test
-    public void getResidentProfilesTest() {
-        List<ResidentProfileEntity> list = attendeeEventLogic.getResidentProfiles(testEvents.get(0).getId());
+    public void getGroupesTest() {
+        List<GroupEntity> list = groupEventLogic.getGroups(testEvents.get(0).getId());
 
         // checks that there are two groupes associated to the event
         Assert.assertEquals(2, list.size());
 
         // checks that the name of the associated event matches
-        Assert.assertEquals(list.get(0).getEventsToAttend().get(0).getTitle(), testEvents.get(0).getTitle());
-        Assert.assertEquals(list.get(1).getEventsToAttend().get(0).getTitle(), testEvents.get(0).getTitle());
+        Assert.assertEquals(list.get(0).getEvents().get(0).getTitle(), testEvents.get(0).getTitle());
+
+        Assert.assertEquals(list.get(1).getEvents().get(0).getTitle(), testEvents.get(0).getTitle());
 
     }
 
@@ -216,16 +216,16 @@ public class AttendeeEventLogicTest {
      * @throws BusinessLogicException if the group is not found
      */
     @Test
-    public void getResidentProfileTest() throws BusinessLogicException {
+    public void getGroupTest() throws BusinessLogicException {
 
         // gets the first group from the list
-        ResidentProfileEntity group = testResidentProfiles.get(0);
+        GroupEntity group = testGroups.get(0);
 
         // gets the first event from the list
         EventEntity event = testEvents.get(0);
 
         // get the group from the event
-        ResidentProfileEntity response = attendeeEventLogic.getResidentProfile(event.getId(), group.getId());
+        GroupEntity response = groupEventLogic.getGroup(event.getId(), group.getId());
 
         Assert.assertEquals(group.getId(), response.getId());
 
@@ -235,19 +235,19 @@ public class AttendeeEventLogicTest {
      * Tests the removal of a group from the event.
      */
     @Test
-    public void removeResidentProfileTest() {
+    public void removeGroupTest() {
 
         // gets the first group from the list. 
         // (Uses em.find because the persisted event contains the added groups)
         EventEntity event = em.find(EventEntity.class, testEvents.get(0).getId());
 
         // get the first associated group
-        ResidentProfileEntity group = testResidentProfiles.get(0);
+        GroupEntity group = testGroups.get(0);
 
-        attendeeEventLogic.removeResidentProfile(event.getId(), group.getId());
+        groupEventLogic.removeGroup(event.getId(), group.getId());
 
         // gets the list of events in the group
-        List<ResidentProfileEntity> list = em.find(EventEntity.class, event.getId()).getAttendees();
+        List<GroupEntity> list = em.find(EventEntity.class, event.getId()).getGroups();
 
         Assert.assertEquals(1, list.size());
     }
