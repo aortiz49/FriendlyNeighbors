@@ -42,6 +42,12 @@ public class NeighborhoodDTO implements Serializable {
 // Attributes
 //===================================================
 
+        /**
+     * The id of the neighborhood.
+     */
+    private Long id;
+    
+    
     /**
      * The name of the neighborhood.
      */
@@ -77,6 +83,8 @@ public class NeighborhoodDTO implements Serializable {
             this.name = pNeighborhood.getName();
             this.locality = pNeighborhood.getLocality();
             this.numberOfResidents = pNeighborhood.getNumberOfResidents();
+            this.id = pNeighborhood.getId();
+            
         }
     }
 //===================================================
@@ -94,6 +102,7 @@ public class NeighborhoodDTO implements Serializable {
         neighborhood.setName(this.getName());
         neighborhood.setLocality(this.getLocality());
         neighborhood.setNumberOfResidents(this.getNumberOfResidents());
+        neighborhood.setId(this.getId());
 
         return neighborhood;
     }
@@ -163,5 +172,19 @@ public class NeighborhoodDTO implements Serializable {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+    }
+
+    /**
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(Long id) {
+        this.id = id;
     }
 }
