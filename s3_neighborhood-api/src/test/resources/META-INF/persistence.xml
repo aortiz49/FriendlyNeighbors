@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="neighborhoodPU" transaction-type="JTA">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>co.edu.uniandes.csw.neighborhood.entities.BusinessEntity</class>
+    <class>co.edu.uniandes.csw.neighborhood.entities.CommentEntity</class>
+    <class>co.edu.uniandes.csw.neighborhood.entities.EventEntity</class>
+    <class>co.edu.uniandes.csw.neighborhood.entities.FavorEntity</class>
+    <class>co.edu.uniandes.csw.neighborhood.entities.GroupEntity</class>
+    <class>co.edu.uniandes.csw.neighborhood.entities.LocationEntity</class>
+    <class>co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity</class>
+    <class>co.edu.uniandes.csw.neighborhood.entities.NotificationEntity</class>
+    <class>co.edu.uniandes.csw.neighborhood.entities.PostEntity</class>
+    <class>co.edu.uniandes.csw.neighborhood.entities.ResidentLoginEntity</class>
+    <class>co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity</class>
+    <class>co.edu.uniandes.csw.neighborhood.entities.ServiceEntity</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
+    <properties>
+      <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
+      <property name="eclipselink.target-database" value="Derby"/>
+      <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:derby://localhost:1527/neighborhood"/>
+      <property name="javax.persistence.jdbc.user" value=""/>
+      <property name="javax.persistence.jdbc.password" value=""/>
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
+    </properties>
+  </persistence-unit>
+</persistence>
