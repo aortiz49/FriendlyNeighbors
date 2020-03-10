@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2017 Universidad de los Andes - ISIS2603
+Copyright (c) 2020 Universidad de los Andes - ISIS2603
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,49 +28,28 @@ package co.edu.uniandes.csw.neighborhood.dtos;
 
 import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
 import java.io.Serializable;
-import java.util.Date;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * Data transfer object for Businesses. This DTO contains the json representation of a Business that
+ * Data transfer object for Businesses. This DTO contains the JSON representation of a Business that
  * gets transferred between the client and server.
- *
- * Upon JSON serialization, this class uses the following model:  <br>
- * <pre>
- *   {
- *      "name": string,
- *      "address": string,
- *      "openingTime": string,
- *      "closingTime": string,
- *      "rating": number,
- *      "latitude": number,
- *      "longitude": number,
- *
- *   }
- * </pre> For example, a business can represented as follows:<br>
- *
- * <pre>
- *
- *   {
- *      "name": Andy Ortiz,
- *      "address": Calle 24b Bis #69a-50,
- *      "openingTime": 08:45AM,
- *      "closingTime": 09:45APM,
- *      "rating": 1.44,
- *      "latitude": -4.717152,
- *      "longitude": 11.877332
- *   }
- *
- * </pre>
  *
  * @author aortiz49
  */
 public class BusinessDTO implements Serializable {
 //===================================================
-// Attributes
+// Dependencies
 //===================================================
 
+    /**
+     * The business's neighborhood.
+     */
+    private NeighborhoodDTO neighborhood;
+
+//===================================================
+// Attributes
+//===================================================
     /**
      * The name of the business
      */
@@ -102,12 +81,12 @@ public class BusinessDTO implements Serializable {
     private Double latitude;
 
     /**
-     * The business's longitude.s
+     * The business's longitude.
      */
     private Double longitude;
 
 //===================================================
-// Constructor
+// Constructors
 //===================================================
     /**
      * Empty Business constructor.
@@ -118,47 +97,74 @@ public class BusinessDTO implements Serializable {
     /**
      * Creates a BusinessDTO object from a BusinessEntity object.
      *
-     * @param pBusinessEntity business entity from which to create the new BusinessDTO
+     * @param pBusiness business entity from which to create the new BusinessDTO
      *
      */
-    public BusinessDTO(BusinessEntity pBusinessEntity) {
-        if (pBusinessEntity != null) {
-            this.name = pBusinessEntity.getName();
-            this.address = pBusinessEntity.getAddress();
-            this.openingTime = pBusinessEntity.getOpeningTime();
-            this.closingTime = pBusinessEntity.getClosingTime();
-            this.rating = pBusinessEntity.getRating();
-            this.latitude = pBusinessEntity.getLatitude();
-            this.longitude = pBusinessEntity.getLongitude();
+    public BusinessDTO(BusinessEntity pBusiness) {
+        if (pBusiness != null) {
+            this.name = pBusiness.getName();
+            this.address = pBusiness.getAddress();
+            this.openingTime = pBusiness.getOpeningTime();
+            this.closingTime = pBusiness.getClosingTime();
+            this.rating = pBusiness.getRating();
+            this.latitude = pBusiness.getLatitude();
+            this.longitude = pBusiness.getLongitude();
+            this.neighborhood = new NeighborhoodDTO(pBusiness.getNeighborhood());
 
         }
     }
+//===================================================
+// Conversion
+//===================================================
 
     /**
-     * Converts a BusinessDTO object into an AuthorEntity.
+     * Converts a BusinessDTO object into an BusinessEntity.
      *
      * @return the new BusinessEntity object
      *
      */
     public BusinessEntity toEntity() {
-        BusinessEntity businessEntity = new BusinessEntity();
-        businessEntity.setName(this.getName());
-        businessEntity.setAddress(this.getAddress());
-        businessEntity.setOpeningTime(this.getOpeningTime());
-        businessEntity.setClosingTime(this.getClosingTime());
-        businessEntity.setRating(this.getRating());
-        businessEntity.setLatitude(this.getLatitude());
-        businessEntity.setLongitude(this.getLongitude());
+        BusinessEntity business = new BusinessEntity();
+        business.setName(this.getName());
+        business.setAddress(this.getAddress());
+        business.setOpeningTime(this.getOpeningTime());
+        business.setClosingTime(this.getClosingTime());
+        business.setRating(this.getRating());
+        business.setLatitude(this.getLatitude());
+        business.setLongitude(this.getLongitude());
 
-        return businessEntity;
+        if (neighborhood != null) {
+            business.setNeighborhood(getNeighborhood().toEntity());
+        }
+
+        return business;
     }
 //===================================================
 // Getters & Setters
 //===================================================
+
+    /**
+     * Returns the business's neighborhood.
+     *
+     * @return the neighborhood
+     */
+    public NeighborhoodDTO getNeighborhood() {
+        return neighborhood;
+    }
+
+    /**
+     * Sets the business's neighborhood.
+     *
+     * @param pNeighborhood the new neighborhood
+     */
+    public void setNeighborhood(NeighborhoodDTO pNeighborhood) {
+        neighborhood = pNeighborhood;
+    }
+
     /**
      * Returns the name of the business.
      *
-     * @return business's name
+     * @return the business's name
      */
     public String getName() {
         return name;
@@ -284,6 +290,11 @@ public class BusinessDTO implements Serializable {
         longitude = pLongitude;
     }
 
+    /**
+     * Returns the string representation of the Business object.
+     *
+     * @return the object string
+     */
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);

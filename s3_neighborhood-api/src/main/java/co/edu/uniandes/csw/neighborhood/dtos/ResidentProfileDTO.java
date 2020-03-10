@@ -64,13 +64,12 @@ public class ResidentProfileDTO implements Serializable {
      * Represents the neighborhood of this resident
      */
     private NeighborhoodDTO neighborhood;
-    
-        /**
+
+    /**
      * Represents the proof of residence for this resident
      */
     private String proofOfResidence;
 
-    
     public ResidentProfileDTO() {
     }
 
@@ -261,8 +260,5 @@ public class ResidentProfileDTO implements Serializable {
     public void setProofOfResidence(String proofOfResidence) {
         this.proofOfResidence = proofOfResidence;
     }
-
-
-    
 
 }
