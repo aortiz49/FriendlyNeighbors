@@ -9,5 +9,4 @@
         <property name="createDatabase" value="drop and create"/>
     </jdbc-connection-pool>
     <jdbc-resource enabled="true" jndi-name="java:app/jdbc/neighborhood" object-type="user" pool-name="neighborhood_pool"/>
-    <jdbc-resource enabled="true" jndi-name="java:app/neighborhood" object-type="user" pool-name="neighborhood_pool"/>
 </resources>

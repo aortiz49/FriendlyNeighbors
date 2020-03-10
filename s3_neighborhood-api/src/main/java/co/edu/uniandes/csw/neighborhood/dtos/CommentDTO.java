@@ -79,7 +79,10 @@ public class CommentDTO implements Serializable {
         this.id = entityComment.getId();
         this.date = entityComment.getDate();
         this.text = entityComment.getText();
+        
+        
         this.post = new PostDTO(entityComment.getPost());
+        
         this.author = new ResidentProfileDTO(entityComment.getAuthor());
     }
 

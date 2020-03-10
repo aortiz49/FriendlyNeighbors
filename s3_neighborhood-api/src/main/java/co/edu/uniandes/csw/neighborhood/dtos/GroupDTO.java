@@ -24,7 +24,7 @@ public class GroupDTO {
     /**
      * Represents the date group was created
      */
-     @XmlJavaTypeAdapter(DateAdapter.class)
+    @XmlJavaTypeAdapter(DateAdapter.class)
     private Date dateCreated;
 
     /**
@@ -57,7 +57,10 @@ public class GroupDTO {
         this.dateCreated = entityGroup.getDateCreated();
         this.name = entityGroup.getName();
         this.description = entityGroup.getDescription();
-        this.neighborhood = new NeighborhoodDTO(entityGroup.getNeighborhood());
+
+        if (entityGroup.getNeighborhood() != null) {
+            this.neighborhood = new NeighborhoodDTO(entityGroup.getNeighborhood());
+        }
     }
 
     /**
@@ -73,9 +76,11 @@ public class GroupDTO {
         groupEntity.setDateCreated(getDateCreated());
         groupEntity.setName(getName());
         groupEntity.setDescription(getDescription());
-        
-        if(neighborhood != null) groupEntity.setNeighborhood(getNeighborhood().toEntity());
-      
+
+        if (neighborhood != null) {
+            groupEntity.setNeighborhood(getNeighborhood().toEntity());
+        }
+
         return groupEntity;
     }
 
@@ -148,8 +153,5 @@ public class GroupDTO {
     public void setId(long Id) {
         this.id = Id;
     }
-
-
-    
 
 }

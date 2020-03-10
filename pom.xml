@@ -12,8 +12,6 @@
  
     <modules>
         <module>s3_neighborhood-back</module>
-        <module>s3_neighborhood-api</module>
-        
     </modules>
     
     <repositories>
