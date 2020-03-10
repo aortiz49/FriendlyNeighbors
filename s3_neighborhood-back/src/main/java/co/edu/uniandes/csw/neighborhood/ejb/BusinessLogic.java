@@ -39,8 +39,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 /**
- * Class the implements the connection with the businessPersistence for the
- * Business entity.
+ * Class the implements the connection with the businessPersistence for the Business entity.
  *
  * @author aortiz49
  */
@@ -73,11 +72,9 @@ public class BusinessLogic {
     /**
      * Creates and persists a new business
      *
-     * @param pBusinessEntity the entity of type Business of the new business to
-     * be persisted.
+     * @param pBusinessEntity the entity of type Business of the new business to be persisted.
      * @return the business entity after it is persisted
-     * @throws BusinessLogicException if the new business violates the business
-     * rules
+     * @throws BusinessLogicException if the new business violates the business rules
      */
     public BusinessEntity createBusiness(BusinessEntity pBusinessEntity) throws BusinessLogicException {
 
@@ -143,8 +140,7 @@ public class BusinessLogic {
      * @param pBusinessId the Id of the business to update
      * @param pBusiness the new business
      * @return the business entity after the update
-     * @throws BusinessLogicException if the new business violates the business
-     * rules
+     * @throws BusinessLogicException if the new business violates the business rules
      */
     public BusinessEntity updateBusiness(Long pId, BusinessEntity pBusiness) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Begin the update process for business with id = {0}", pId);
@@ -172,8 +168,7 @@ public class BusinessLogic {
      *
      * @param pBusinessEntity business to verify
      * @return true if the business is valid. False otherwise
-     * @throws BusinessLogicException if the business doesn't satisfy the
-     * business rules
+     * @throws BusinessLogicException if the business doesn't satisfy the business rules
      */
     private boolean verifyBusinessCreationRules(BusinessEntity pBusinessEntity) throws BusinessLogicException {
         boolean valid = true;
@@ -186,7 +181,7 @@ public class BusinessLogic {
             throw new BusinessLogicException("The business must have a neighborhood!");
         } // 2. The neighborhood to which the business will be added to must already exist
         else if (neighborhoodPersistence.find(businessNeighborhood.getId()) == null) {
-            throw new BusinessLogicException("The business's neighborhood doesn't exist!");
+            throw new BusinessLogicException("The neighborhood " + businessNeighborhood + " doesn't exist!");
         } // 3. No two businesses can have the same name
         else if (businessPersistence.findByName(pBusinessEntity.getName()) != null) {
             throw new BusinessLogicException("The neighborhood already has a business with that name!");
