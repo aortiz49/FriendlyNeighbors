@@ -64,13 +64,12 @@ public class ResidentProfileDTO implements Serializable {
      * Represents the neighborhood of this resident
      */
     private NeighborhoodDTO neighborhood;
-    
-        /**
+
+    /**
      * Represents the proof of residence for this resident
      */
     private String proofOfResidence;
 
-    
     public ResidentProfileDTO() {
     }
 
@@ -90,7 +89,7 @@ public class ResidentProfileDTO implements Serializable {
             this.address = residentEntity.getAddress();
             this.proofOfResidence = residentEntity.getProofOfResidence();
             this.preferences = residentEntity.getPreferences();
-            this.login = new LoginDTO(residentEntity.getLogin());
+            this.login = new ResidentLoginDTO(residentEntity.getLogin());
             this.neighborhood = new NeighborhoodDTO(residentEntity.getNeighborhood());
         }
     }
@@ -262,7 +261,14 @@ public class ResidentProfileDTO implements Serializable {
         this.proofOfResidence = proofOfResidence;
     }
 
-
-    
+    /**
+     * Returns the string representation of the Business object.
+     *
+     * @return the object string
+     */
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+    }
 
 }

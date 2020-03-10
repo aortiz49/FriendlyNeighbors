@@ -52,8 +52,8 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
     @PodamExclude
     @OneToMany(mappedBy = "neighborhood", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BusinessEntity> businesses = new ArrayList<>(); 
-    
+    private List<BusinessEntity> businesses = new ArrayList<>();
+
     /**
      * The residents in the neighborhood.
      */
@@ -61,7 +61,7 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "neighborhood", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ResidentProfileEntity> residents = new ArrayList<>();
-     
+
     /**
      * The places in the neighborhood.
      */
@@ -69,15 +69,15 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "neighborhood", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LocationEntity> places = new ArrayList<>();
-    
-     /**
+
+    /**
      * The groups in the neighborhood.
      */
     @PodamExclude
     @OneToMany(mappedBy = "neighborhood", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GroupEntity> groups = new ArrayList<>();
-    
+
 //===================================================
 // Attributes
 //===================================================  
@@ -92,18 +92,17 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
     private String locality;
 
     /**
-     * The number of residents in the neighborhood.
+     * The max number of residents in the neighborhood.
      */
     private int numberOfResidents;
 
 //===================================================
 // Getters & Setters
 //===================================================      
-
     /**
      * Returns the list of businesses in the neighborhood.
-     * 
-     * @return the list of businesses in the neighborhood 
+     *
+     * @return the list of businesses in the neighborhood
      */
     public List<BusinessEntity> getBusinesses() {
         return businesses;
@@ -111,7 +110,7 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
 
     /**
      * Sets the list of businesses in the neighborhood.
-     * 
+     *
      * @param pBusinesses the new list of businesses
      */
     public void setBusinesses(List<BusinessEntity> pBusinesses) {
@@ -120,7 +119,7 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
 
     /**
      * Returns a list of residents in the neighborhood.
-     * 
+     *
      * @return the list of residents in the neighborhood
      */
     public List<ResidentProfileEntity> getResidents() {
@@ -129,7 +128,7 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
 
     /**
      * Sets the list of residents in the neighborhood.
-     * 
+     *
      * @param pResidents the new list of residents
      */
     public void setResidents(List<ResidentProfileEntity> pResidents) {
@@ -138,7 +137,7 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
 
     /**
      * Returns the list of places of interest in the neighborhood.
-     * 
+     *
      * @return the list of places of interest
      */
     public List<LocationEntity> getPlaces() {
@@ -147,13 +146,31 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
 
     /**
      * Sets the list of places of interest in the neighborhood
-     * 
-     * @param pPlaces the new list of places of interest 
+     *
+     * @param pPlaces the new list of places of interest
      */
     public void setPlaces(List<LocationEntity> pPlaces) {
         places = pPlaces;
     }
-       
+
+    /**
+     * Returns the list of groups in the neighborhood.
+     *
+     * @return the list of groups
+     */
+    public List<GroupEntity> getGroups() {
+        return groups;
+    }
+
+    /**
+     * Sets the list of groups in the neighborhood.
+     *
+     * @param pGroups the new list of groups
+     */
+    public void setGroups(List<GroupEntity> pGroups) {
+        groups = pGroups;
+    }
+
     /**
      * Returns the name of the neighborhood.
      *
@@ -207,15 +224,5 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
     public void setNumberOfResidents(int pNumberOfResidents) {
         numberOfResidents = pNumberOfResidents;
     }
-
-    public List<GroupEntity> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(List<GroupEntity> groups) {
-        this.groups = groups;
-    }
-    
-    
 
 }

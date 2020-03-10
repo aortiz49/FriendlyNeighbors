@@ -109,7 +109,7 @@ public class ResidentLoginEntity extends BaseEntity implements Serializable {
         return governmentId;
     }
 
-    public boolean isIsActive() {
+    public boolean isActive() {
         return isActive;
     }
     

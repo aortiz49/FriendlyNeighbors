@@ -5,7 +5,6 @@
  */
 package co.edu.uniandes.csw.neighborhood.resources;
 
-import co.edu.uniandes.csw.neighborhood.dtos.ResidentLoginDetailDTO;
 import co.edu.uniandes.csw.neighborhood.dtos.ResidentProfileDTO;
 import co.edu.uniandes.csw.neighborhood.dtos.ResidentProfileDetailDTO;
 import co.edu.uniandes.csw.neighborhood.ejb.ResidentProfileLogic;
