@@ -24,29 +24,29 @@ import org.junit.runner.RunWith;
 
 /**
  *
- * @author andre
+ * @author albayona
  */
 @RunWith(Arquillian.class)
-public class NewClass {
+public class ResidentProfileIT {
     
-    private static final String COLLECTION = "Cascara-Tests.postman_collection";
+    private static final String COLLECTION = "ResidentProfile-Tests.postman_collection";
 
     @Deployment(testable = true)
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class, "s3_neighborhood-api.war")//War del modulo api
-                // Se agrega las dependencias
+                // Dependencies are added
                 .addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
                         .importRuntimeDependencies().resolve()
                         .withTransitivity().asFile())
-                // Se agregan los compilados de los paquetes de servicios
-                .addPackage(ResidentProfileResource.class.getPackage()) //No importa cual recurso usar, lo importante es agregar el paquet
-                .addPackage(ResidentProfileDTO.class.getPackage()) //No importa cual dto usar, lo importante es agregar el paquete.
+                //Compiled packages from service added
+                .addPackage(ResidentProfileResource.class.getPackage()) //Only looks at the packages
+                .addPackage(ResidentProfileDTO.class.getPackage()) //Only looks at the packages
                 .addPackage(BusinessLogicExceptionMapper.class.getPackage())
-                // El archivo que contiene la configuracion a la base de datos.
+                // Data base configuration added
                 .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
-                // El archivo beans.xml es necesario para injeccion de dependencias.
+                // Beans configuraration for dependencies injection 
                 .addAsWebInfResource(new File("src/main/webapp/WEB-INF/beans.xml"))
-                // El archivo web.xml es necesario para el despliegue de los servlets
+                // web.xml for servlets deployment
                 .setWebXML(new File("src/main/webapp/WEB-INF/web.xml"))
                 .addAsWebInfResource(new File("src/main/webapp/WEB-INF/glassfish-resources.xml"));
     }
@@ -57,8 +57,8 @@ public class NewClass {
         PostmanTestBuilder tp = new PostmanTestBuilder();
         tp.setTestWithoutLogin(COLLECTION, "Entorno-IT.postman_environment");
         String desiredResult = "0";
-        Assert.assertEquals("Error en Requests de: " + COLLECTION, desiredResult, tp.getRequests_failed());
-        Assert.assertEquals("Error en Assertions de: " + COLLECTION, desiredResult, tp.getAssertions_failed());
+        Assert.assertEquals("Requests error from: " + COLLECTION, desiredResult, tp.getRequests_failed());
+        Assert.assertEquals("Assertions error from: " + COLLECTION, desiredResult, tp.getAssertions_failed());
     }
     
 }
