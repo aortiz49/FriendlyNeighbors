@@ -94,7 +94,7 @@ public class ServiceDTO implements Serializable {
             this.datePosted = pService.getDatePosted();
             this.title = pService.getTitle();
             this.description = pService.getDescription();
-            this.isAvailable = pService.getIsAvailable();
+            this.isAvailable = pService.isAvailable();
 
             this.author = new ResidentProfileDTO(pService.getAuthor());
 
