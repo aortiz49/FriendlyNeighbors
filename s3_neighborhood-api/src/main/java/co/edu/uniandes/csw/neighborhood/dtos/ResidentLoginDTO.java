@@ -90,7 +90,7 @@ public class ResidentLoginDTO implements Serializable {
             this.userName = pResidentLogin.getPassword();
             this.password = pResidentLogin.getPassword();
             this.governmentId = pResidentLogin.getGovernmentId();
-            this.isActive = pResidentLogin.isActive();
+            this.isActive = pResidentLogin.isIsActive();
 
             this.resident = new ResidentProfileDTO(pResidentLogin.getResident());
 

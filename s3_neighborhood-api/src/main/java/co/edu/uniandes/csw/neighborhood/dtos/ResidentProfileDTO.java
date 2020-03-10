@@ -91,7 +91,7 @@ public class ResidentProfileDTO implements Serializable {
             this.preferences = residentEntity.getPreferences();
             
             if(residentEntity.getLogin() != null)       
-                 this.login = new LoginDTO(residentEntity.getLogin());
+                 this.login = new ResidentLoginDTO(residentEntity.getLogin());
             
             if(residentEntity.getNeighborhood()!= null)  
                 this.neighborhood = new NeighborhoodDTO(residentEntity.getNeighborhood());
