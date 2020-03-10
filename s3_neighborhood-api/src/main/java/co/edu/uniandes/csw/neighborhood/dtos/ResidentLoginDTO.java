@@ -43,7 +43,7 @@ public class ResidentLoginDTO implements Serializable {
 //===================================================
 
     /**
-     * The resident who owns the login
+     * The resident who owns the login.
      */
     private ResidentProfileDTO resident;
 
@@ -125,7 +125,7 @@ public class ResidentLoginDTO implements Serializable {
 
     /**
      * Returns the resident associated to the login.
-     * 
+     *
      * @return the resident
      */
     public ResidentProfileDTO getResident() {
@@ -134,8 +134,8 @@ public class ResidentLoginDTO implements Serializable {
 
     /**
      * Sets the resident associated to the login.
-     * 
-     * @param pResident the new resident 
+     *
+     * @param pResident the new resident
      */
     public void setResident(ResidentProfileDTO pResident) {
         resident = pResident;
@@ -143,7 +143,7 @@ public class ResidentLoginDTO implements Serializable {
 
     /**
      * Returns the resident's user name.
-     * 
+     *
      * @return the user name
      */
     public String getUserName() {
@@ -152,7 +152,7 @@ public class ResidentLoginDTO implements Serializable {
 
     /**
      * Sets the resident's user name.
-     * 
+     *
      * @param pUserName the new user name
      */
     public void setUserName(String pUserName) {
@@ -161,7 +161,7 @@ public class ResidentLoginDTO implements Serializable {
 
     /**
      * Returns the resident's password.
-     * 
+     *
      * @return the password
      */
     public String getPassword() {
@@ -170,7 +170,7 @@ public class ResidentLoginDTO implements Serializable {
 
     /**
      * Sets the resident's password.
-     * 
+     *
      * @param pPassword the new password
      */
     public void setPassword(String pPassword) {
@@ -179,7 +179,7 @@ public class ResidentLoginDTO implements Serializable {
 
     /**
      * Returns the resident's government Id.
-     * 
+     *
      * @return the government Id
      */
     public String getGovernmentId() {
@@ -188,8 +188,8 @@ public class ResidentLoginDTO implements Serializable {
 
     /**
      * Sets the resident's government Id.
-     * 
-     * @param pGovernmentId the new government Id 
+     *
+     * @param pGovernmentId the new government Id
      */
     public void setGovernmentId(String pGovernmentId) {
         governmentId = pGovernmentId;
@@ -197,7 +197,7 @@ public class ResidentLoginDTO implements Serializable {
 
     /**
      * Checks if the resident has an active account or not.
-     * 
+     *
      * @return true if active, false otherwise
      */
     public boolean isActive() {
@@ -206,7 +206,7 @@ public class ResidentLoginDTO implements Serializable {
 
     /**
      * Sets the active status of the resident.
-     * 
+     *
      * @param pIsActive the new status
      */
     public void setIsActive(boolean pIsActive) {

@@ -261,4 +261,14 @@ public class ResidentProfileDTO implements Serializable {
         this.proofOfResidence = proofOfResidence;
     }
 
+    /**
+     * Returns the string representation of the Business object.
+     *
+     * @return the object string
+     */
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+    }
+
 }
