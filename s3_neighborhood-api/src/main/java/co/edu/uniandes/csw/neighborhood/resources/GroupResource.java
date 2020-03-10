@@ -5,7 +5,6 @@
  */
 package co.edu.uniandes.csw.neighborhood.resources;
 
-import co.edu.uniandes.csw.neighborhood.dtos.ResidentLoginDetailDTO;
 import co.edu.uniandes.csw.neighborhood.dtos.GroupDTO;
 import co.edu.uniandes.csw.neighborhood.dtos.GroupDetailDTO;
 import co.edu.uniandes.csw.neighborhood.ejb.GroupLogic;
@@ -20,7 +19,6 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import static javax.ws.rs.HttpMethod.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;

@@ -89,7 +89,7 @@ public class ResidentProfileDTO implements Serializable {
             this.address = residentEntity.getAddress();
             this.proofOfResidence = residentEntity.getProofOfResidence();
             this.preferences = residentEntity.getPreferences();
-            this.login = new LoginDTO(residentEntity.getLogin());
+            this.login = new ResidentLoginDTO(residentEntity.getLogin());
             this.neighborhood = new NeighborhoodDTO(residentEntity.getNeighborhood());
         }
     }
