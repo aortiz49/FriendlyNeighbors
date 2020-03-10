@@ -6,6 +6,8 @@
 package co.edu.uniandes.csw.neighborhood.resources;
 
 import co.edu.uniandes.csw.neighborhood.dtos.NeighborhoodDTO;
+import co.edu.uniandes.csw.neighborhood.ejb.NeighborhoodLogic;
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
 import java.util.logging.Level;
@@ -27,20 +29,23 @@ public class NeighborhoodResource {
     private static final Logger LOGGER = Logger.getLogger(NeighborhoodResource.class.getName());
 
     @Inject
-    private NeighborhoodPersistence logic;
+    private NeighborhoodLogic logic;
 
     @POST
-    public NeighborhoodDTO createNeighborhood(NeighborhoodDTO n) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Creating neighborhood from resource: input: {0}", n);
+    public NeighborhoodDTO createNeighborhood(NeighborhoodDTO pNeighborhood) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Creating neighborhood from resource: input: {0}", pNeighborhood);
+  // Converts the BusinessDTO (JSON) to a Business Entuty object to be managed by the logic.
+        NeighborhoodEntity neighborhoodEntity = pNeighborhood.toEntity();
 
-        NeighborhoodDTO nd = new NeighborhoodDTO(logic.create(n.toEntity()));
-        
-        
+        // Invokes the logic to create a new business. 
+        NeighborhoodEntity newBusinessEntity = logic.createNeighborhood(neighborhoodEntity);
 
-        LOGGER.log(Level.INFO, "Created neighborhood from resource: output: {0}", nd);
-        return nd;
+        // Invokes the BusinessDTO constructor to create a new BusinessDTO object. 
+        NeighborhoodDTO newNeighborhoodDTO = new NeighborhoodDTO(newBusinessEntity);
+
+        LOGGER.log(Level.INFO, "Created neighborhood from resource: output: {0}", pNeighborhood);
+        return newNeighborhoodDTO;
     }
 
-   
 
 }

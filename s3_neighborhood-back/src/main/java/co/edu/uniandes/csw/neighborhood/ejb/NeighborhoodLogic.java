@@ -49,34 +49,6 @@ import javax.inject.Inject;
 @Stateless
 public class NeighborhoodLogic {
 
-//===================================================
-// Attributes
-//===================================================
-    /**
-     * Enumeration for the valid locality names
-     */
-    private enum LocalityNames {
-        USAQUÉN,
-        CHAPINERO,
-        SANTA_FE,
-        SAN_CRISTÓBAL,
-        USME,
-        TUNJUELITO,
-        BOSA,
-        KENNEDY,
-        FONTIBÓN,
-        ENGATIVÁ,
-        SUBA,
-        BARRIOS_UNIDOS,
-        TEUSAQUILLO,
-        LOS_MÁRTIRES,
-        ANTONIO_NARIÑO,
-        PUENTE_ARANDA,
-        LA_CANDELARIA,
-        RAFAEL_URIBE_URIBE,
-        CIUDAD_BOLÍVAR,
-        SUMAPAZ
-    }
 
 //===================================================
 // Attributes
@@ -234,9 +206,8 @@ public class NeighborhoodLogic {
         if (neighborhoodPersistence.find(pNeighborhoodEntity.getId()) != null) {
             throw new BusinessLogicException("The neighborhood already exists!");
         }
-
-        return valid;
-
+      
+    return valid;
     }
 
 }
