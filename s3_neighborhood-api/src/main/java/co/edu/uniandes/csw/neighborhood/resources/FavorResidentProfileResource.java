@@ -118,7 +118,7 @@ public class FavorResidentProfileResource {
      */
     @GET
     @Path("{favorsId: \\d+}")
-    public FavorDetailDTO getFavor(@PathParam("authorsId") Long residentsId, @PathParam("favorsId") Long favorsId) throws BusinessLogicException {
+    public FavorDetailDTO getFavor(@PathParam("residentsId") Long residentsId, @PathParam("favorsId") Long favorsId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Looking for favor: input: residentsId {0} , favorsId {1}", new Object[]{residentsId, favorsId});
         if (favorLogic.getFavor(favorsId) == null) {
             throw new WebApplicationException("Resource /favors/" + favorsId + " does not exist.", 404);
