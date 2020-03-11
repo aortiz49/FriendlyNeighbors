@@ -95,6 +95,7 @@ public class CommentDTO implements Serializable {
     public CommentEntity toEntity() {
         CommentEntity commentEntity = new CommentEntity();
 
+        commentEntity.setId(getId());
         commentEntity.setDate(getDate());
         commentEntity.setText(getText());
         if (author != null) {
