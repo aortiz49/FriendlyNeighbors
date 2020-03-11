@@ -8,6 +8,7 @@ package co.edu.uniandes.csw.neighborhood.dtos;
 import co.edu.uniandes.csw.neighborhood.adapters.DateAdapter;
 import co.edu.uniandes.csw.neighborhood.entities.NotificationEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -17,13 +18,9 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *
  * @author v.cardonac1
  */
-public class NotificationDTO {
+public class NotificationDTO implements Serializable{
     
-    enum Priority {
-        LOW,
-        MEDIUM,
-        HIGH
-    }
+    
     private long id;
 
     /**
@@ -51,7 +48,7 @@ public class NotificationDTO {
      * Indicates the  priority of this  notification
      */
     @Enumerated(EnumType.STRING)
-    private Priority priority;
+    private NotificationEntity.Priority priority;
     
     private ResidentProfileDTO author;
     private BusinessDTO business;
@@ -66,7 +63,7 @@ public class NotificationDTO {
         this.description = entityNotification.getDescription();
         this.header = entityNotification.getHeader();
         this.id = entityNotification.getId();
-        //this.priority = entityNotification.getPriority();
+        this.priority = entityNotification.getPriority();
         this.publishDate = entityNotification.getPublishDate();
         this.seen = entityNotification.isSeen();
     }
@@ -81,7 +78,7 @@ public class NotificationDTO {
         notificationEntity.setId(getId());
         notificationEntity.setPublishDate(getPublishDate());
         notificationEntity.setSeen(isSeen());
-        //notificationEntity.setPriority(getPriority());
+        notificationEntity.setPriority(getPriority());
         return notificationEntity;
     }
     /**
@@ -157,14 +154,14 @@ public class NotificationDTO {
     /**
      * @return the priority
      */
-    public Priority getPriority() {
+    public NotificationEntity.Priority getPriority() {
         return priority;
     }
 
     /**
      * @param priority the priority to set
      */
-    public void setPriority(Priority priority) {
+    public void setPriority(NotificationEntity.Priority priority) {
         this.priority = priority;
     }
 

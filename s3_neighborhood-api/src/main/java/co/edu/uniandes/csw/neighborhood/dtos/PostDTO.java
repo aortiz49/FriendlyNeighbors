@@ -20,7 +20,8 @@ import uk.co.jemos.podam.common.PodamStrategyValue;
 /**
 * @k.romero
 */
-public class PostDTO implements Serializable{
+public class PostDTO {
+
     /**
      * Represents the date post was made
      */
@@ -40,7 +41,8 @@ public class PostDTO implements Serializable{
      * Represents the number of numberOfLikes of the post
      */
     private Integer numberOfLikes;
-
+    
+    private long id;
     
     /**
      * The neighborhood to which the group belongs to.
@@ -78,7 +80,21 @@ public class PostDTO implements Serializable{
     public void setGroup(GroupDTO group) {
         this.group = group;
     }
+    
+        /**
+     * @return the id
+     */
+    public long getId() {
+        return id;
+    }
 
+    /**
+     * @param id the id to set
+     */
+    public void setId(long id) {
+        this.id = id;
+    }
+    
     public ResidentProfileDTO getAuthor() {
         return author;
     }
@@ -123,7 +139,7 @@ public class PostDTO implements Serializable{
     public PostDTO(PostEntity entityPost) {
         
         this.description = entityPost.getDescription();
-        
+        this.id = entityPost.getId();
         this.numberOfLikes = entityPost.getNumberOfLikes();
         this.title =  entityPost.getTitle();
         if (entityPost.getAuthor()!= null) {
@@ -148,7 +164,7 @@ public class PostDTO implements Serializable{
 
         
         postEntity.setDescription(getDescription());
-       
+        postEntity.setId(getId());
         postEntity.setNumberOfLikes(getNumberOfLikes());
         postEntity.setTitle(getTitle());  
         if (author != null) {
