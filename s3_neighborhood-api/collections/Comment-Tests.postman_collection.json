@@ -1,70 +1,10 @@
 {
 	"info": {
-		"_postman_id": "3021502b-102d-4979-9129-9b47b6d3dc58",
+		"_postman_id": "585460f1-fde1-4959-8c55-6ac822ba77e4",
 		"name": "Comment-Tests.postman_collection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
-		{
-			"name": "Create comment with nonexisting neighborhood",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "2c9e845f-40eb-4e50-8a3b-2b4c2f298330",
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "aaf6ceef-c993-4bed-b150-d635432d9806",
-						"exec": [
-							"tests[\"The comment must have an existing  neighborhood\"] = responseCode.code === 412;",
-							"tests[\"Expected error message\"] = responseBody.has(\"must have a neighborhood\")"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"dateCreated\": \"2000-08-20T00:00:00-05:00\",\r\n    \"name\": \"name\",\r\n     \"description\": \"desc\"\r\n\r\n\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/comments",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"comments"
-					]
-				}
-			},
-			"response": []
-		},
 		{
 			"name": "Create neighborhood for tests",
 			"event": [
@@ -191,7 +131,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"dateCreated\": \"2000-08-20T00:00:00-05:00\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"name\": \"name1\",\r\n     \"description\": \"desc1\"\r\n\r\n\r\n}",
+					"raw": "{\r\n    \r\n    \r\n    \"date\": \"2000-08-20T00:00:00-05:00\",\r\n     \"text\": \"desc\",\r\n     \"id\": 2\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -199,7 +139,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/comments/",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/comments",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -208,8 +148,7 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
-						"comments",
-						""
+						"comments"
 					]
 				}
 			},
@@ -254,7 +193,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"dateCreated\": \"2000-08-20T00:00:00-05:00\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"name\": \"name2\",\r\n     \"description\": \"desc2\"\r\n\r\n\r\n}",
+					"raw": "{\r\n    \r\n    \r\n    \"date\": \"2000-08-20T00:00:00-05:00\",\r\n     \"text\": \"desc2\",\r\n     \"id\": 2\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -278,14 +217,14 @@
 			"response": []
 		},
 		{
-			"name": "Create comment with no name",
+			"name": "Create comment with no text",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"id": "22c22c13-4fd9-4544-b1a0-0664707ae6a7",
 						"exec": [
-							"tests[\"A name has to be specified\"] = responseCode.code === 412;",
+							"tests[\"A text has to be specified\"] = responseCode.code === 412;",
 							""
 						],
 						"type": "text/javascript"
@@ -304,57 +243,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blc@hotmail.com\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/comments",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"comments"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create comment with no name description",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "22c22c13-4fd9-4544-b1a0-0664707ae6a7",
-						"exec": [
-							"tests[\"A name has to be specified\"] = responseCode.code === 412;",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blc@hotmail.com\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"raw": "{\r\n    \r\n    \r\n    \"date\": \"2000-08-20T00:00:00-05:00\",\r\n     \"id\": 2\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -543,7 +432,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"dateCreated\": \"2000-08-20T00:00:00-05:00\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"name\": \"nameEdited\",\r\n     \"description\": \"descEdited\"\r\n\r\n\r\n}",
+					"raw": "{\r\n    \r\n    \r\n    \"date\": \"2000-08-20T00:00:00-05:00\",\r\n     \"text\": \"descEdited\",\r\n     \"id\": 2\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
