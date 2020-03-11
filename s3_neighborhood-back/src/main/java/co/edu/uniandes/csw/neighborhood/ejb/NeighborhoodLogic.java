@@ -144,7 +144,7 @@ public class NeighborhoodLogic {
      */
     public NeighborhoodEntity updateNeighborhood(Long pNeighborhoodId, NeighborhoodEntity pNeighborhood) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Begin the update process for neighborhood with id = {0}", pNeighborhoodId);
-
+        
         // update neighborhood
         NeighborhoodEntity newEntity = neighborhoodPersistence.update(pNeighborhood);
         LOGGER.log(Level.INFO, "End the update process for neighborhood with id = {0}", pNeighborhood.getName());
