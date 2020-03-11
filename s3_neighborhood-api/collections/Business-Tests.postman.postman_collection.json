@@ -1,0 +1,613 @@
+{
+	"info": {
+		"_postman_id": "85f528d2-78b4-4af8-abb2-68c4a45d587b",
+		"name": "Business-Tests.postman",
+		"description": "REST API for businesses.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create neighborhood_1 Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "57114b87-c2b7-47ac-81ae-e73786236e88",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"new_id_nc1\",data.id);",
+							"tests[\"Successful neighborhood creation.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": 1,\n\t\"name\": \"Neighborhood1\",\n\t\"locality\" :\"Engativa\",\n\t\"numberOfResidents\":45\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods"
+					]
+				},
+				"description": "Creates a neighborhood."
+			},
+			"response": []
+		},
+		{
+			"name": "Creates business_1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5738407f-6145-48d7-97c6-0fd27820a24b",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"new_id_b1\",data.id);",
+							"tests[\"Successful business creation.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t\"neighborhood\": {\n    \t\"id\": {{new_id_nc1}}\n    \t},\n   \t\"id\":1,\n\t\"name\": \"Business1\",\n\t\"address\": \"809 W. South St\",\n\t\"openingTime\": \"08:00AM\",\n\t\"closingTime\": \"09:00PM\",\n\t\"rating\": 5.433,\n\t\"latitude\": -4.8754356543,\n\t\"longitude\": 54.23244\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/s3_neighborhood-api/api/businesses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"businesses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Creates business_2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5738407f-6145-48d7-97c6-0fd27820a24b",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"new_id_b2\",data.id);",
+							"tests[\"Successful business creation.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t\"neighborhood\": {\n    \t\"id\": {{new_id_nc1}}\n    \t},\n    \"id\":1,\n\t\"name\": \"Business2\",\n\t\"address\": \"999 W. North St\",\n\t\"openingTime\": \"58:00AM\",\n\t\"closingTime\": \"04:00PM\",\n\t\"rating\": 4.332,\n\t\"latitude\": -4.1754356543,\n\t\"longitude\": 54.113244\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/s3_neighborhood-api/api/businesses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"businesses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Creates a business with no neighborhood",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5738407f-6145-48d7-97c6-0fd27820a24b",
+						"exec": [
+							"tests[\"Business without neighborhood not created.\"] = responseCode.code === 412;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"TestBusiness\",\n\t\"address\": \"809 W. South St\",\n\t\"openingTime\": \"08:00AM\",\n\t\"closingTime\": \"09:00PM\",\n\t\"rating\": 5.433,\n\t\"latitude\": -4.8754356543,\n\t\"longitude\": 54.23244\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/s3_neighborhood-api/api/businesses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"businesses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Creates a business with repeated name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5738407f-6145-48d7-97c6-0fd27820a24b",
+						"exec": [
+							"tests[\"Business with duplicate name not created.\"] = responseCode.code === 412;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t\"neighborhood\": {\n    \t\"id\": {{new_id_nc1}}\n    \t},\n\t\"name\": \"Business1\",\n\t\"address\": \"809 W. South St\",\n\t\"openingTime\": \"08:00AM\",\n\t\"closingTime\": \"09:00PM\",\n\t\"rating\": 5.433,\n\t\"latitude\": -4.8754356543,\n\t\"longitude\": 54.23244\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/s3_neighborhood-api/api/businesses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"businesses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Creates a business with a null name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5738407f-6145-48d7-97c6-0fd27820a24b",
+						"exec": [
+							"tests[\"Business with null name not created.\"] = responseCode.code === 412;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t\"neighborhood\": {\n    \t\"id\": {{new_id_nc1}}\n    \t},\n\t\"address\": \"809 W. South St\",\n\t\"openingTime\": \"08:00AM\",\n\t\"closingTime\": \"09:00PM\",\n\t\"rating\": 5.433,\n\t\"latitude\": -4.8754356543,\n\t\"longitude\": 54.23244\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/s3_neighborhood-api/api/businesses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"businesses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Creates a business with repeated name Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5738407f-6145-48d7-97c6-0fd27820a24b",
+						"exec": [
+							"tests[\"Business with null address not created.\"] = responseCode.code === 412;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t\"neighborhood\": {\n    \t\"id\": {{new_id_nc1}}\n    \t},\n\t\"name\": \"Business2\",\n\t\"openingTime\": \"08:00AM\",\n\t\"closingTime\": \"09:00PM\",\n\t\"rating\": 5.433,\n\t\"latitude\": -4.8754356543,\n\t\"longitude\": 54.23244\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/s3_neighborhood-api/api/businesses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"businesses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all businesses",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "86955d06-1c2e-44fb-b154-d4ce52c89560",
+						"exec": [
+							"tests[\"All businesses obtained.\"] = responseCode.code == 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/businesses",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"businesses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get business_1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a25b6da5-9ee1-4065-a011-77a2d71a5c27",
+						"exec": [
+							"tests[\"Business_1 was successfully obtained.\"] = responseCode.code == 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/businesses/{{new_id_b1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"businesses",
+						"{{new_id_b1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get non-existent business",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6f487f9c-621e-405b-aa9d-fd26720ea5fd",
+						"exec": [
+							"tests[\"Non-existent business was not obtained.\"] = responseCode.code == 404;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/businesses/1000",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"businesses",
+						"1000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Updates business_2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0eca1491-29fe-4e30-9699-49fc0911466f",
+						"exec": [
+							"tests[\"Business_2 was successfully updated.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t\"neighborhood\": {\n    \t\"id\": {{new_id_nc1}}\n    \t},\n    \"id\":1,\n\t\"name\": \"New Business\",\n\t\"address\": \"New address\",\n\t\"openingTime\": \"00:00AM\",\n\t\"closingTime\": \"23:49PM\",\n\t\"rating\":5.00,\n\t\"latitude\": -1.00000,\n\t\"longitude\": 99.99999\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/businesses/{{new_id_b2}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"businesses",
+						"{{new_id_b2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get business_2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a25b6da5-9ee1-4065-a011-77a2d71a5c27",
+						"exec": [
+							"tests[\"Business_2 was successfully obtained.\"] = responseCode.code == 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/businesses/{{new_id_b2}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"businesses",
+						"{{new_id_b2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete business_1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fbe6427c-ff03-42df-aead-2c0937c6104d",
+						"exec": [
+							"tests[\"Successfully deleted business_2\"] = responseCode.code == 204;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/businesses/{{new_id_b2}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"businesses",
+						"{{new_id_b2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete non-existent business",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fbe6427c-ff03-42df-aead-2c0937c6104d",
+						"exec": [
+							"tests[\"Non-existent business not deleted.\"] = responseCode.code == 404;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/businesses/1000",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"businesses",
+						"1000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get remaining businesses",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "86955d06-1c2e-44fb-b154-d4ce52c89560",
+						"exec": [
+							"tests[\"All businesses obtained.\"] = responseCode.code == 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/businesses",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"businesses"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

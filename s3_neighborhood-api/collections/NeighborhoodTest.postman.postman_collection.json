@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "eded8b8c-533d-4573-9e80-6f3f8dd6ae7d",
 		"name": "NeighborhoodTest.postman",
+		"description": "# Introduction\nThis API provides REST services for the Neighborhood.\n\n# Overview\nThe supported features are:\n1. Create a new neighborhood\n2. Retreive a newighborhood\n2. Update a neighborhood\n3. Delete a neighborhood\n\n\n# Authentication\nNo authentication is needed.\n\n# Error Codes\n412 - Business logic error\n404 - NOt found\n\n# Rate limit\nNo rate limit.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -317,7 +318,7 @@
 			"response": []
 		},
 		{
-			"name": "Get the neighborhood posted in this collection",
+			"name": "Get neighborhood_1",
 			"event": [
 				{
 					"listen": "test",

@@ -51,6 +51,11 @@ public class BusinessDTO implements Serializable {
 // Attributes
 //===================================================
     /**
+     * The business's id.
+     */
+    private Long id;
+    
+    /**
      * The name of the business
      */
     private String name;
@@ -102,6 +107,7 @@ public class BusinessDTO implements Serializable {
      */
     public BusinessDTO(BusinessEntity pBusiness) {
         if (pBusiness != null) {
+            this.id = pBusiness.getId();
             this.name = pBusiness.getName();
             this.address = pBusiness.getAddress();
             this.openingTime = pBusiness.getOpeningTime();
@@ -125,6 +131,7 @@ public class BusinessDTO implements Serializable {
      */
     public BusinessEntity toEntity() {
         BusinessEntity business = new BusinessEntity();
+        business.setId(this.getId());
         business.setName(this.getName());
         business.setAddress(this.getAddress());
         business.setOpeningTime(this.getOpeningTime());
@@ -142,6 +149,14 @@ public class BusinessDTO implements Serializable {
 //===================================================
 // Getters & Setters
 //===================================================
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     /**
      * Returns the business's neighborhood.
