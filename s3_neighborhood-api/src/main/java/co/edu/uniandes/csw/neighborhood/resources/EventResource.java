@@ -30,8 +30,8 @@ import javax.ws.rs.WebApplicationException;
 /**
  * Class implementing resource "events".
  *
- * @author albayona
- * @version 1.0
+ * @author K.romero
+ 
  */
 @Path("events")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -70,7 +70,7 @@ public class EventResource {
     @GET
     public List<EventDetailDTO> getResidents() {
         LOGGER.info("Looking for all events from resources: input: void");
-        List<EventDetailDTO> events = listEntity2DTO(eventLogic.getEvents());
+        List<EventDetailDTO> events = listEntity2DTO(eventLogic.getAllEvents());
         LOGGER.log(Level.INFO, "Ended looking for all events from resources: output: {0}", events);
         return events;
     }
@@ -110,11 +110,11 @@ public class EventResource {
     @Path("{eventsId: \\d+}")
     public EventDetailDTO updateAuthor(@PathParam("eventsId") Long eventsId, EventDetailDTO event) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Updating event from resource: input: authorsId: {0} , author: {1}", new Object[]{eventsId, event});
-        event.setId(eventsId);
+        event.setTitle(eventsId+"");
         if (eventLogic.getEvent(eventsId) == null) {
              throw new WebApplicationException("Resource /events/" + eventsId + " does not exist.", 404);
         }
-        EventDetailDTO detailDTO = new EventDetailDTO(eventLogic.updateEvent(event.toEntity()));
+        EventDetailDTO detailDTO = new EventDetailDTO(eventLogic.updateEvent(eventsId,event.toEntity()));
         LOGGER.log(Level.INFO, "Ended updating event from resource: output: {0}", detailDTO);
 
         return detailDTO;
@@ -129,7 +129,7 @@ public class EventResource {
      */
     @DELETE
     @Path("{eventsId: \\d+}")
-    public void deleteResident(@PathParam("eventsId") Long eventsId) {
+    public void deleteResident(@PathParam("eventsId") Long eventsId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Deleting event from resource: input: {0}", eventsId);
         if (eventLogic.getEvent(eventsId) == null) {
             throw new WebApplicationException("Resource /events/" + eventsId + " does not exist.", 404);
@@ -149,11 +149,11 @@ public class EventResource {
      */
 
     @Path("{eventsId: \\d+}/members")
-    public Class<EventMemberResource> getEventMemberResource(@PathParam("eventsId") Long eventsId) {
+    public Class<EventResource> getEventMemberResource(@PathParam("eventsId") Long eventsId) {
         if (eventLogic.getEvent(eventsId) == null) {
             throw new WebApplicationException("Resource /events/" + eventsId + " does not exist.", 404);
         }
-        return EventMemberResource.class;
+        return EventResource.class;
     }
 
     /**

@@ -30,8 +30,8 @@ import javax.ws.rs.WebApplicationException;
 /**
  * Class implementing resource "services".
  *
- * @author albayona
- * @version 1.0
+ * @author k.romero
+ 
  */
 @Path("services")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -68,9 +68,9 @@ public class ServiceResource {
      * if found. Otherwise, an empty list.
      */
     @GET
-    public List<ServiceDetailDTO> getResidents() {
+    public List<ServiceDTO> getResidents() {
         LOGGER.info("Looking for all services from resources: input: void");
-        List<ServiceDetailDTO> services = listEntity2DTO(serviceLogic.getServices());
+        List<ServiceDTO> services = listEntity2DTO(serviceLogic.getServices());
         LOGGER.log(Level.INFO, "Ended looking for all services from resources: output: {0}", services);
         return services;
     }
@@ -85,13 +85,13 @@ public class ServiceResource {
      */
     @GET
     @Path("{servicesId: \\d+}")
-    public ServiceDetailDTO getResident(@PathParam("servicesId") Long servicesId) {
+    public ServiceDTO getResident(@PathParam("servicesId") Long servicesId) {
         LOGGER.log(Level.INFO, "Looking for  service from resource: input: {0}", servicesId);
         ServiceEntity serviceEntity = serviceLogic.getService(servicesId);
         if (serviceEntity == null) {
             throw new WebApplicationException("Resource /services/" + servicesId + " does not exist.", 404);
         }
-        ServiceDetailDTO detailDTO = new ServiceDetailDTO(serviceEntity);
+        ServiceDTO detailDTO = new ServiceDTO(serviceEntity);
         LOGGER.log(Level.INFO, "Ended looking for service from resource: output: {0}", detailDTO);
         return detailDTO;
     }
@@ -108,13 +108,13 @@ public class ServiceResource {
      */
     @PUT
     @Path("{servicesId: \\d+}")
-    public ServiceDetailDTO updateAuthor(@PathParam("servicesId") Long servicesId, ServiceDetailDTO service) throws BusinessLogicException {
+    public ServiceDTO updateAuthor(@PathParam("servicesId") Long servicesId, ServiceDTO service) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Updating service from resource: input: authorsId: {0} , author: {1}", new Object[]{servicesId, service});
-        service.setId(servicesId);
+        service.setTitle(servicesId+"");
         if (serviceLogic.getService(servicesId) == null) {
              throw new WebApplicationException("Resource /services/" + servicesId + " does not exist.", 404);
         }
-        ServiceDetailDTO detailDTO = new ServiceDetailDTO(serviceLogic.updateService(service.toEntity()));
+        ServiceDTO detailDTO = new ServiceDTO(serviceLogic.updateService(servicesId,service.toEntity()));
         LOGGER.log(Level.INFO, "Ended updating service from resource: output: {0}", detailDTO);
 
         return detailDTO;
@@ -129,7 +129,7 @@ public class ServiceResource {
      */
     @DELETE
     @Path("{servicesId: \\d+}")
-    public void deleteResident(@PathParam("servicesId") Long servicesId) {
+    public void deleteResident(@PathParam("servicesId") Long servicesId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Deleting service from resource: input: {0}", servicesId);
         if (serviceLogic.getService(servicesId) == null) {
             throw new WebApplicationException("Resource /services/" + servicesId + " does not exist.", 404);
@@ -149,11 +149,11 @@ public class ServiceResource {
      */
 
     @Path("{servicesId: \\d+}/members")
-    public Class<ServiceMemberResource> getServiceMemberResource(@PathParam("servicesId") Long servicesId) {
+    public Class<ServiceResource> getServiceMemberResource(@PathParam("servicesId") Long servicesId) {
         if (serviceLogic.getService(servicesId) == null) {
             throw new WebApplicationException("Resource /services/" + servicesId + " does not exist.", 404);
         }
-        return ServiceMemberResource.class;
+        return ServiceResource.class;
     }
 
     /**
@@ -162,10 +162,10 @@ public class ServiceResource {
      * @param entityList Resident entity list to be converted.
      * @return Resident DTO list
      */
-    private List<ServiceDetailDTO> listEntity2DTO(List<ServiceEntity> entityList) {
-        List<ServiceDetailDTO> list = new ArrayList<>();
+    private List<ServiceDTO> listEntity2DTO(List<ServiceEntity> entityList) {
+        List<ServiceDTO> list = new ArrayList<>();
         for (ServiceEntity entity : entityList) {
-            list.add(new ServiceDetailDTO(entity));
+            list.add(new ServiceDTO(entity));
         }
         return list;
     }
