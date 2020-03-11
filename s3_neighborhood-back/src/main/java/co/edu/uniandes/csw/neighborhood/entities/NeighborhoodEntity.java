@@ -48,32 +48,7 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
     //===================================================
     // Attributes
     //===================================================
-    
-    /**
-     * Enumeration for the valid locality names
-     */
-    private enum LocalityNames {
-        USAQUÉN,
-        CHAPINERO,
-        SANTA_FE,
-        SAN_CRISTÓBAL,
-        USME,
-        TUNJUELITO,
-        BOSA,
-        KENNEDY,
-        FONTIBÓN,
-        ENGATIVÁ,
-        SUBA,
-        BARRIOS_UNIDOS,
-        TEUSAQUILLO,
-        LOS_MÁRTIRES,
-        ANTONIO_NARIÑO,
-        PUENTE_ARANDA,
-        LA_CANDELARIA,
-        RAFAEL_URIBE_URIBE,
-        CIUDAD_BOLÍVAR,
-        SUMAPAZ
-    }
+
 
 //===================================================
 // Relations
@@ -122,7 +97,6 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
     /**
      * The name of the locality.
      */
-    @Enumerated(EnumType.STRING)
     private String locality;
 
     /**
