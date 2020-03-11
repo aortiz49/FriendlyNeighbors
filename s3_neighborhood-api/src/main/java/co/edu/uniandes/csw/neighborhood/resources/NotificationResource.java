@@ -45,7 +45,7 @@ public class NotificationResource {
     public NotificationDTO createNotification(NotificationDTO notification) throws BusinessLogicException{
         NotificationEntity entity = notificationLogic.createNotification(notification.toEntity());
         NotificationDTO notificationDTO = new NotificationDTO(entity);
-        return notification;
+        return notificationDTO;
     }
     
     @GET

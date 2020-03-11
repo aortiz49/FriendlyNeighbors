@@ -28,7 +28,7 @@ public class NotificationEntity extends BaseEntity implements Serializable {
 //===================================================
 // Enumerations
 //===================================================
-    enum Priority {
+    public enum Priority {
         LOW,
         MEDIUM,
         HIGH

@@ -71,7 +71,7 @@ public class FavorResource {
             throw new WebApplicationException("Resource /favors/" + favorsId + " does not exist.", 404);
         }
         favorLogic.deleteFavor(favorsId);
-        LOGGER.info("Resident deleted from resource: output: void");
+        LOGGER.info("Favor deleted from resource: output: void");
     }
     
     @PUT
@@ -80,7 +80,7 @@ public class FavorResource {
         LOGGER.log(Level.INFO, "Updating favor from resource: input: favorsId: {0} , favors: {1}", new Object[]{favorsId, favor});
         favor.setId(favorsId);
         if (favorLogic.getFavor(favorsId) == null) {
-            throw new WebApplicationException("El recurso /favors/" + favorsId + " no existe.", 404);
+            throw new WebApplicationException("Resource /favors/" + favorsId + " does not exist.", 404);
         }
         FavorDetailDTO favorDTO = new FavorDetailDTO(favorLogic.updateFavor(favor.toEntity()));
         LOGGER.log(Level.INFO, "Ended updating favor from resource: output: {0}", favorDTO);
@@ -97,10 +97,18 @@ public class FavorResource {
     }
     
 
+    @Path("{favorsId: \\d+}/author")
+    public Class<FavorResidentProfileResource> getFavorResidentProfileResource(@PathParam("favorsId") Long favorsId) {
+        if (favorLogic.getFavor(favorsId) == null) {
+            throw new WebApplicationException("Resource /favors/" + favorsId + " does not exist.", 404);
+        }
+        return FavorResidentProfileResource.class;
+    }
+
     @Path("{favorsId: \\d+}/helpers")
-    public Class<FavorHelperResource> getFavorHelperResource(@PathParam("favorsId") Long groupsId) {
-        if (favorLogic.getFavor(groupsId) == null) {
-            throw new WebApplicationException("Resource /groups/" + groupsId + " does not exist.", 404);
+    public Class<FavorHelperResource> getFavorHelperResource(@PathParam("favorsId") Long favorsId) {
+        if (favorLogic.getFavor(favorsId) == null) {
+            throw new WebApplicationException("Resource /favors/" + favorsId + " does not exist.", 404);
         }
         return FavorHelperResource.class;
     }
