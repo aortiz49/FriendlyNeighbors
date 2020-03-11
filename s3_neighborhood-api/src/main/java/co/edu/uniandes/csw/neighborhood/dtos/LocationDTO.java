@@ -63,7 +63,6 @@ public class LocationDTO {
     
     
     public LocationDTO(){
-        super();
     }
     
     public LocationDTO(LocationEntity entityLocation){

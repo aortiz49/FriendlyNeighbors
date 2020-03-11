@@ -7,12 +7,9 @@ package co.edu.uniandes.csw.neighborhood.resources;
 
 import co.edu.uniandes.csw.neighborhood.dtos.NeighborhoodDTO;
 import co.edu.uniandes.csw.neighborhood.dtos.NeighborhoodDetailDTO;
-import co.edu.uniandes.csw.neighborhood.dtos.ResidentProfileDetailDTO;
 import co.edu.uniandes.csw.neighborhood.ejb.NeighborhoodLogic;
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
-import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
-import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -110,6 +107,38 @@ public class NeighborhoodResource {
         }
         logic.deleteNeighborhood(neighborhoodsId);
         LOGGER.info("neighborhoodResource deleteNeighborhood: output: void");
+    }
+
+    @Path("{neighborhoodsId: \\d+}/residents")
+    public Class<ResidentProfileResource> getResidentProfileResource(@PathParam("residentsId") Long neighborhoodsId) {
+        if (logic.getNeighborhood(neighborhoodsId) == null) {
+            throw new WebApplicationException("The resource recurso /neighborhoods/" + neighborhoodsId + " no existe.", 404);
+        }
+        return ResidentProfileResource.class;
+    }
+
+    @Path("{neighborhoodsId: \\d+}/businesses")
+    public Class<BusinessResource> getBusinessResource(@PathParam("businessesId") Long neighborhoodsId) {
+        if (logic.getNeighborhood(neighborhoodsId) == null) {
+            throw new WebApplicationException("The resource recurso /neighborhoods/" + neighborhoodsId + " no existe.", 404);
+        }
+        return BusinessResource.class;
+    }
+
+    @Path("{neighborhoodsId: \\d+}/locations")
+    public Class<LocationResource> getLocationResource(@PathParam("locationsId") Long neighborhoodsId) {
+        if (logic.getNeighborhood(neighborhoodsId) == null) {
+            throw new WebApplicationException("The resource recurso /neighborhoods/" + neighborhoodsId + " no existe.", 404);
+        }
+        return LocationResource.class;
+    }
+
+    @Path("{neighborhoodsId: \\d+}/groups")
+    public Class<GroupResource> getGroupsResource(@PathParam("groupsId") Long neighborhoodsId) {
+        if (logic.getNeighborhood(neighborhoodsId) == null) {
+            throw new WebApplicationException("The resource recurso /neighborhoods/" + neighborhoodsId + " no existe.", 404);
+        }
+        return GroupResource.class;
     }
 
     /**
