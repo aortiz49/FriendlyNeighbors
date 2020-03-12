@@ -73,6 +73,8 @@ public class ServiceDTO implements Serializable {
      * Indicates if a service is available or not.
      */
     private boolean isAvailable;
+    
+    private long id;
 
 //===================================================
 // Constructors
@@ -95,7 +97,7 @@ public class ServiceDTO implements Serializable {
             this.title = pService.getTitle();
             this.description = pService.getDescription();
             this.isAvailable = pService.isAvailable();
-
+            this.id = pService.getId();
             this.author = new ResidentProfileDTO(pService.getAuthor());
 
         }
@@ -116,7 +118,7 @@ public class ServiceDTO implements Serializable {
         service.setTitle(this.getTitle());
         service.setDescription(this.getDescription());
         service.setAvailability(this.isAvailable());
-
+        service.setId(this.getId());
         if (author != null) {
             service.setAuthor(getAuthor().toEntity());
         }
@@ -126,7 +128,20 @@ public class ServiceDTO implements Serializable {
 //===================================================
 // Getters & Setters
 //===================================================
+    
+    /**
+     * @return the id
+     */
+    public long getId() {
+        return id;
+    }
 
+    /**
+     * @param id the id to set
+     */
+    public void setId(long id) {
+        this.id = id;
+    }
     /**
      * Returns the author of the service.
      * 
