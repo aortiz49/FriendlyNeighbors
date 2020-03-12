@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "370dee63-8264-4c36-bf44-56e900dec174",
+		"_postman_id": "5af2c86d-fed5-44f1-a7c1-da94b267ced9",
 		"name": "ResidentProfile-Tests.postman_collection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -304,7 +304,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blc@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blcd@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -676,7 +676,7 @@
 						"id": "bad7ce88-801b-42bb-b50a-da3eb62d7308",
 						"exec": [
 							"tests[\"A nonexisting resident should not be edited\"] = responseCode.code === 404;",
-							"tests[\"Expected error message \"] = responseBody.has(\"Resource /residents/22 does not exist.\");"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -702,7 +702,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents/22",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents/2222",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -712,7 +712,7 @@
 						"s3_neighborhood-api",
 						"api",
 						"residents",
-						"22"
+						"2222"
 					]
 				}
 			},
