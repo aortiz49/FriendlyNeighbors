@@ -149,11 +149,11 @@ public class PostResource {
      */
 
     @Path("{postsId: \\d+}/author")
-    public Class<PostResidenProfileResource> getPostResidentProfileResource(@PathParam("postsId") Long postsId) {
+    public Class<PostResidentProfileResource> getPostResidentProfileResource(@PathParam("postsId") Long postsId) {
         if (postLogic.getPost(postsId) == null) {
             throw new WebApplicationException("Resource /posts/" + postsId + " does not exist.", 404);
         }
-        return PostResidenProfileResource.class;
+        return PostResidentProfileResource.class;
     }
 
     /**
