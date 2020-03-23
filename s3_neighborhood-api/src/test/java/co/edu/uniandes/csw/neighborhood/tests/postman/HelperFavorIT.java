@@ -27,9 +27,9 @@ import org.junit.runner.RunWith;
  * @author albayona
  */
 @RunWith(Arquillian.class)
-public class CommentIT {
+public class HelperFavorIT {
     
-    private static final String COLLECTION = "Comment-Tests.postman_collection";
+    private static final String COLLECTION = "HelperFavor-Tests.postman_collection";
 
     @Deployment(testable = true)
     public static WebArchive createDeployment() {
