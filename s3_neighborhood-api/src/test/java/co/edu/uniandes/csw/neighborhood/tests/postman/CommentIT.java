@@ -27,7 +27,7 @@ import org.junit.runner.RunWith;
  * @author albayona
  */
 @RunWith(Arquillian.class)
-public class ResidentProfileIT {
+public class CommentIT {
     
     private static final String COLLECTION = "ResidentProfile-Tests.postman_collection";
 
