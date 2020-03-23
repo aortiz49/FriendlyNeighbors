@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f5304556-d0b0-4020-89b8-97a4579da35a",
+		"_postman_id": "0b31ab37-d723-4010-b8cc-769b2df20549",
 		"name": "HelperFavor-Tests.postman_collection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -108,6 +108,60 @@
 			"response": []
 		},
 		{
+			"name": "Create resident for tests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f4515fb8-152f-4e8a-8cdb-0196a0643f3b",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"new_id_R\",data.id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blcd@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"residents",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Create favor",
 			"event": [
 				{
@@ -145,7 +199,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"dateCreated\": \"2000-08-20T00:00:00-05:00\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"name\": \"name1\",\r\n     \"description\": \"desc1\"\r\n\r\n\r\n}",
+					"raw": "{\r\n\t\r\n\t\"title\": \"Hola\",\r\n\t\"description\": \"NN\",\r\n\t\"type\": \"NN\",\r\n\t\"datePosted\": \"2000-08-20T00:00:00-05:00\"\r\n\t\r\n\t\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -153,7 +207,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_R}}/favors/",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -164,6 +218,8 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
+						"residents",
+						"{{new_id_R}}",
 						"favors",
 						""
 					]
@@ -209,7 +265,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"dateCreated\": \"2000-08-20T00:00:00-05:00\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"name\": \"name1\",\r\n     \"description\": \"desc1\"\r\n\r\n\r\n}",
+					"raw": "{\r\n\t\r\n\t\"title\": \"Hola\",\r\n\t\"description\": \"NN\",\r\n\t\"type\": \"NN\",\r\n\t\"datePosted\": \"2000-08-20T00:00:00-05:00\"\r\n\t\r\n\t\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -217,7 +273,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_R}}/favors/",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -228,6 +284,8 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
+						"residents",
+						"{{new_id_R}}",
 						"favors",
 						""
 					]
@@ -980,6 +1038,58 @@
 						"{{new_id_N}}",
 						"favors",
 						"{{new_id_g2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete resident",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bad7ce88-801b-42bb-b50a-da3eb62d7308",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_R}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"residents",
+						"{{new_id_R}}"
 					]
 				}
 			},
