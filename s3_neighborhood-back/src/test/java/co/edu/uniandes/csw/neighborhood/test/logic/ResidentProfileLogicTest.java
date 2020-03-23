@@ -333,16 +333,6 @@ public class ResidentProfileLogicTest {
     }
 
     /**
-     * Test for updating a resident with no neighborhood
-     */
-    @Test(expected = BusinessLogicException.class)
-    public void updateResidentsWithNoNeighborhood() throws BusinessLogicException {
-        ResidentProfileEntity newEntity = data.get(0);
-        newEntity.setNeighborhood(null);
-        residentLogic.updateResident(newEntity, neighborhood.getId());
-    }
-
-    /**
      * Test for finding a resident by email
      */
     @Test

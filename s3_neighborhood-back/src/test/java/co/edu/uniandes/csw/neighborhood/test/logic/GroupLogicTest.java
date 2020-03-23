@@ -293,13 +293,4 @@ public class GroupLogicTest {
         groupLogic.updateGroup(newEntity, neighborhood.getId());
     }
 
-    /**
-     * Test for updating a resident with no neighborhood
-     */
-    @Test(expected = BusinessLogicException.class)
-    public void updateResidentsWithNoNeighborhood() throws BusinessLogicException {
-        GroupEntity newEntity = data.get(0);
-        newEntity.setNeighborhood(null);
-        groupLogic.updateGroup(newEntity, new Long(-100));
-    }
 }
