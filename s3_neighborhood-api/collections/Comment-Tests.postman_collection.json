@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "ad5527fb-0baa-4138-9168-26d6b9b37366",
+		"_postman_id": "f26a0cbb-c962-4c69-85c8-bf63111b9b71",
 		"name": "Comment-Tests.postman_collection",
 		"description": "# Introduction\nWhat does your API do?\n\n# Overview\nThings that the developers should know about\n\n# Authentication\nWhat is the preferred way of using the API?\n\n# Error Codes\nWhat errors and status codes can a user expect?\n\n# Rate limit\nIs there a limit to the number of requests an user can send?",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -268,7 +268,7 @@
 						"{{new_id_R}}"
 					]
 				},
-				"description": "Create a new comment with the neighborhood specified as a path paramter. The Id is initialized by the BD and must be seen in the response.\r\nFor the test, the id is stored in a variable that will be used in other requests in the collection.\r\n** Expected http code: 200 **\r\n"
+				"description": "Creates a new comment with neighborhood, post and author specified as path parameter. The Id is initialized by the BD and must be seen in the response.\r\nFor the test, the id is stored in a variable that will be used in other requests in the collection.\r\n** Expected http code: 200 **\r\n"
 			},
 			"response": []
 		},
@@ -336,7 +336,7 @@
 						"{{new_id_R}}"
 					]
 				},
-				"description": "Create a new comment with the neighborhood specified as a path paramter. The Id is initialized by the BD and must be seen in the response.\r\nFor the test, the id is stored in a variable that will be used in other requests in the collection.\r\n** Expected http code: 200 **\r\n"
+				"description": "Creates a new comment with neighborhood, post and author specified as path parameter. The Id is initialized by the BD and must be seen in the response.\r\nFor the test, the id is stored in a variable that will be used in other requests in the collection.\r\n** Expected http code: 200 **\r\n"
 			},
 			"response": []
 		},
