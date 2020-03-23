@@ -62,7 +62,7 @@ public class ServicePersistence {
      * @return a service.
      */
     public ServiceEntity find(Long serviceId, Long neighborhood_id) {
-        LOGGER.log(Level.INFO, "Querying for service with id " + serviceId + " belonging to " + neighborhood_id);
+        LOGGER.log(Level.INFO, "Querying for service with id {0}" + serviceId + " belonging to " + neighborhood_id);
 
         ServiceEntity e = em.find(ServiceEntity.class, serviceId);
 

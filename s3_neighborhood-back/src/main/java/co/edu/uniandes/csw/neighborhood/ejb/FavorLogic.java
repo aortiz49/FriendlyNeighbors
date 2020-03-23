@@ -83,14 +83,14 @@ public class FavorLogic {
     }
 
     public FavorEntity getFavor(Long id, Long neighID) {
-        LOGGER.log(Level.INFO, "Starting querying process for favor with id ", id);
+        LOGGER.log(Level.INFO, "Starting querying process for favor with id {0}", id);
         FavorEntity resident = persistence.find(id, neighID);
-        LOGGER.log(Level.INFO, "Ended querying process for  favor with id", id);
+        LOGGER.log(Level.INFO, "Ended querying process for  favor with id {0}", id);
         return resident;
     }
 
     public FavorEntity updateFavor(FavorEntity favorEntity, Long neighID) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Starting update process for favor with id ", favorEntity.getId());
+        LOGGER.log(Level.INFO, "Starting update process for favor with id {0}", favorEntity.getId());
 
         //must have a title
         if (favorEntity.getTitle() == null) {
@@ -116,7 +116,7 @@ public class FavorLogic {
         favorEntity.setAuthor(original.getAuthor());
 
         FavorEntity modified = persistence.update(favorEntity, neighID);
-        LOGGER.log(Level.INFO, "Ended update process for favor with id ", favorEntity.getId());
+        LOGGER.log(Level.INFO, "Ended update process for favor with id {0}", favorEntity.getId());
         return modified;
     }
 

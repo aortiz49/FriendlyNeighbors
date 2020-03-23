@@ -76,14 +76,14 @@ public class LocationLogic {
     }
 
     public LocationEntity getLocation(Long id) {
-        LOGGER.log(Level.INFO, "Starting querying process for location with id ", id);
+        LOGGER.log(Level.INFO, "Starting querying process for location with id {0}", id);
         LocationEntity location = persistence.find(id);
-        LOGGER.log(Level.INFO, "Ended querying process for  location with id", id);
+        LOGGER.log(Level.INFO, "Ended querying process for  location with id {0}", id);
         return location;
     }
 
     public LocationEntity updateLocation(LocationEntity locationEntity) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Starting update process for location with id ", locationEntity.getId());
+        LOGGER.log(Level.INFO, "Starting update process for location with id {0}", locationEntity.getId());
 
         // OpenTime can not be null
         if (locationEntity.getOpenTime() == null) {
@@ -107,7 +107,7 @@ public class LocationLogic {
         }
 
         LocationEntity modified = persistence.update(locationEntity);
-        LOGGER.log(Level.INFO, "Ended update process for location with id ", locationEntity.getId());
+        LOGGER.log(Level.INFO, "Ended update process for location with id {0}", locationEntity.getId());
         return modified;
     }
 }

@@ -110,9 +110,9 @@ public class GroupLogic {
      * @return entity group found
      */
     public GroupEntity getGroup(Long id, Long neighId) {
-        LOGGER.log(Level.INFO, "Starting querying process for group with id ", id);
+        LOGGER.log(Level.INFO, "Starting querying process for group with id {0}", id);
         GroupEntity resident = persistence.find(id, neighId);
-        LOGGER.log(Level.INFO, "Ended querying process for  group with id", id);
+        LOGGER.log(Level.INFO, "Ended querying process for  group with id {0}", id);
         return resident;
     }
 
@@ -124,7 +124,7 @@ public class GroupLogic {
      * @return the entity with the updated group
      */
     public GroupEntity updateGroup(GroupEntity groupEntity,  Long neighId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Starting update process for group with id ", groupEntity.getId());
+        LOGGER.log(Level.INFO, "Starting update process for group with id {0}", groupEntity.getId());
 
         //must have a name
         if (groupEntity.getName() == null) {
@@ -146,7 +146,7 @@ public class GroupLogic {
         groupEntity.setNeighborhood(neighborhood);
 
         GroupEntity modified = persistence.update(groupEntity, neighId);
-        LOGGER.log(Level.INFO, "Ended update process for group with id ", groupEntity.getId());
+        LOGGER.log(Level.INFO, "Ended update process for group with id {0}", groupEntity.getId());
         return modified;
     }
 

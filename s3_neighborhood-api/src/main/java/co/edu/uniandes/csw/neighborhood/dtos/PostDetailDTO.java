@@ -27,11 +27,6 @@ public class PostDetailDTO extends PostDTO implements Serializable {
 // Attributes
 //===================================================
 
-    /**
-     * Represents the posts who are members of this post
-     * 
-     */
-    
 
     private List<CommentDTO> comments;
     
@@ -67,12 +62,6 @@ public class PostDetailDTO extends PostDTO implements Serializable {
                         comments.add(new CommentDTO(entityComment));
                     }
        
-
-          
-            
-
-           
-
         }
     }
 

@@ -40,8 +40,8 @@ public class PostPersistence {
     /**
      * Returns all posts from DB belonging to a neighborhood.
      *
-     * @param neighborhood_id: id from parent neighborhood.
-     * @return a list with ll posts found in DB belonging to a neighborhood.
+     * @param neighID: id from parent neighborhood.
+     * @return a list with posts found in DB belonging to a neighborhood.
      */
     public List<PostEntity> findAll(Long neighID) {
 

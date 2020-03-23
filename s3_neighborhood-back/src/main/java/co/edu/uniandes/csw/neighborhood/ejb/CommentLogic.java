@@ -108,9 +108,9 @@ public class CommentLogic {
      * @return entity comment found
      */
     public CommentEntity getComment(Long id, Long neighId) {
-        LOGGER.log(Level.INFO, "Starting querying process for comment with id ", id);
+        LOGGER.log(Level.INFO, "Starting querying process for comment with id {0}", id);
         CommentEntity resident = persistence.find(id, neighId);
-        LOGGER.log(Level.INFO, "Ended querying process for  comment with id", id);
+        LOGGER.log(Level.INFO, "Ended querying process for  comment with id {0}", id);
         return resident;
     }
 
@@ -125,7 +125,7 @@ public class CommentLogic {
      * business rules are not met
      */
     public CommentEntity updateComment(CommentEntity commentEntity, Long neighId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Starting update process for comment with id ", commentEntity.getId());
+        LOGGER.log(Level.INFO, "Starting update process for comment with id {0}", commentEntity.getId());
 
         //must have a text
         if (commentEntity.getText() == null) {
@@ -142,7 +142,7 @@ public class CommentLogic {
         commentEntity.setPost(original.getPost());
 
         CommentEntity modified = persistence.update(commentEntity, neighId);
-        LOGGER.log(Level.INFO, "Ended update process for comment with id ", commentEntity.getId());
+        LOGGER.log(Level.INFO, "Ended update process for comment with id {0}", commentEntity.getId());
         return modified;
     }
 

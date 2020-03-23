@@ -59,7 +59,7 @@ public class PostLogic {
 
         //must have a date
         if (postEntity.getPublishDate() == null) {
-            throw new BusinessLogicException("A description has to be specified");
+            throw new BusinessLogicException("A publish date has to be specified");
         }
 
         postEntity.setAuthor(r);
@@ -105,9 +105,9 @@ public class PostLogic {
      * @return entity post found
      */
     public PostEntity getPost(Long id, Long neighID) {
-        LOGGER.log(Level.INFO, "Starting querying process for post with id ", id);
+        LOGGER.log(Level.INFO, "Starting querying process for post with id {0}", id);
         PostEntity resident = persistence.find(id, neighID);
-        LOGGER.log(Level.INFO, "Ended querying process for  post with id", id);
+        LOGGER.log(Level.INFO, "Ended querying process for  post with id {0}", id);
         return resident;
     }
 
@@ -119,7 +119,7 @@ public class PostLogic {
      * @return the entity with the updated post
      */
     public PostEntity updatePost(PostEntity postEntity, Long neighID) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Starting update process for post with id ", postEntity.getId());
+        LOGGER.log(Level.INFO, "Starting update process for post with id {0}", postEntity.getId());
 
         //must have a title
         if (postEntity.getTitle() == null) {
@@ -133,14 +133,14 @@ public class PostLogic {
 
         //must have a date
         if (postEntity.getPublishDate() == null) {
-            throw new BusinessLogicException("A description has to be specified");
+            throw new BusinessLogicException("A publish date has to be specified");
         }
 
         PostEntity original = persistence.find(postEntity.getId(), neighID);
         postEntity.setAuthor(original.getAuthor());
 
         PostEntity modified = persistence.update(postEntity, neighID);
-        LOGGER.log(Level.INFO, "Ended update process for post with id ", postEntity.getId());
+        LOGGER.log(Level.INFO, "Ended update process for post with id {0}", postEntity.getId());
         return modified;
     }
 

@@ -143,9 +143,9 @@ public class ResidentProfileLogic {
      * @return the entity of the wanted resident
      */
     public ResidentProfileEntity getResident(Long id, Long neighID) {
-        LOGGER.log(Level.INFO, "Starting querying process for resident with id ", id);
+        LOGGER.log(Level.INFO, "Starting querying process for resident with id {0}", id);
         ResidentProfileEntity resident = persistence.find(id, neighID);
-        LOGGER.log(Level.INFO, "Ended querying process for  resident with id", id);
+        LOGGER.log(Level.INFO, "Ended querying process for  resident with id {0}", id);
         return resident;
     }
 
@@ -158,7 +158,7 @@ public class ResidentProfileLogic {
     public ResidentProfileEntity getResidentByEmail(String email) {
         LOGGER.log(Level.INFO, "Starting querying process for resident with email ", email);
         ResidentProfileEntity resident = persistence.findByEmail(email);
-        LOGGER.log(Level.INFO, "Ended querying process for  resident with id ", email);
+        LOGGER.log(Level.INFO, "Ended querying process for  resident with id {0}", email);
         return resident;
     }
 
@@ -171,7 +171,7 @@ public class ResidentProfileLogic {
      * @throws BusinessLogicException exception
      */
     public ResidentProfileEntity updateResident(ResidentProfileEntity residentEntity, Long neighID) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Starting update process for resident with id ", residentEntity.getId());
+        LOGGER.log(Level.INFO, "Starting update process for resident with id {0}", residentEntity.getId());
 
         ResidentProfileEntity original = persistence.find(residentEntity.getId(), neighID);
 
@@ -196,7 +196,7 @@ public class ResidentProfileLogic {
         residentEntity.setNeighborhood(neighborhood);
         
         ResidentProfileEntity modified = persistence.update(residentEntity, neighID);
-        LOGGER.log(Level.INFO, "Ended update process for resident with id ", residentEntity.getId());
+        LOGGER.log(Level.INFO, "Ended update process for resident with id {0}", residentEntity.getId());
         return modified;
     }
 

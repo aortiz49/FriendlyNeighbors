@@ -96,14 +96,14 @@ public class ResidentLoginLogic {
     }
 
     public ResidentLoginEntity getResidentLogin(Long id) {
-        LOGGER.log(Level.INFO, "Starting querying process for resident login with id ", id);
+        LOGGER.log(Level.INFO, "Starting querying process for resident login with id {0}", id);
         ResidentLoginEntity login = persistence.find(id);
-        LOGGER.log(Level.INFO, "Ended querying process for resident login with id", id);
+        LOGGER.log(Level.INFO, "Ended querying process for resident login with id {0}", id);
         return login;
     }
 
     public ResidentLoginEntity updateResidentLogin(ResidentLoginEntity residentLoginEntity) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Starting update process for resident login with id ", residentLoginEntity.getId());
+        LOGGER.log(Level.INFO, "Starting update process for resident login with id {0}", residentLoginEntity.getId());
 
         //must have a username
         if (residentLoginEntity.getUserName() == null) {
@@ -152,7 +152,7 @@ public class ResidentLoginLogic {
         }
 
         ResidentLoginEntity modified = persistence.update(residentLoginEntity);
-        LOGGER.log(Level.INFO, "Ended update process for resident login with id ", residentLoginEntity.getId());
+        LOGGER.log(Level.INFO, "Ended update process for resident login with id {0}", residentLoginEntity.getId());
         return modified;
 
     }

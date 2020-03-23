@@ -72,14 +72,14 @@ public class NotificationLogic {
     }
 
     public NotificationEntity getNotification(Long id) {
-        LOGGER.log(Level.INFO, "Starting querying process for notification with id ", id);
+        LOGGER.log(Level.INFO, "Starting querying process for notification with id {0}", id);
         NotificationEntity notification = persistence.find(id);
-        LOGGER.log(Level.INFO, "Ended querying process for  notification with id", id);
+        LOGGER.log(Level.INFO, "Ended querying process for  notification with id {0}", id);
         return notification;
     }
 
     public NotificationEntity updateNotification(NotificationEntity notificationEntity) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Starting update process for notification with id ", notificationEntity.getId());
+        LOGGER.log(Level.INFO, "Starting update process for notification with id {0}", notificationEntity.getId());
 
         // Date posted can not be null
         if (notificationEntity.getPublishDate() == null) {
@@ -103,7 +103,7 @@ public class NotificationLogic {
         }
 
         NotificationEntity modified = persistence.update(notificationEntity);
-        LOGGER.log(Level.INFO, "Ended update process for notification with id ", notificationEntity.getId());
+        LOGGER.log(Level.INFO, "Ended update process for notification with id {0}", notificationEntity.getId());
         return modified;
     }
 }

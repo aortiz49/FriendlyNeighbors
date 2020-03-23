@@ -5,7 +5,6 @@
  */
 package co.edu.uniandes.csw.neighborhood.resources;
 
-import co.edu.uniandes.csw.neighborhood.dtos.PostDTO;
 import co.edu.uniandes.csw.neighborhood.dtos.PostDetailDTO;
 import co.edu.uniandes.csw.neighborhood.ejb.PostLogic;
 import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
@@ -23,7 +22,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
@@ -139,5 +137,24 @@ public class PostResource {
         return list;
     }
 
+        
+       /**
+     *
+     * Connects /posts route with /comments route which are dependent of
+     * post resource, by redirecting to the comment managing the URL segment
+     * in charge of the members
+     *
+     * @param postsId id from post from which the resource is being accessed
+     * @param neighId parent neighborhood
+     * @return groups resource from the specified post
+     */
+    @Path("{postsId: \\d+}/comments")
+    public Class<CommentPostResource> getCommentPostResource(@PathParam("postsId") Long postsId,@PathParam("neighborhoodId") Long neighId ) {
+        if (postLogic.getPost(postsId, neighId) == null) {
+            throw new WebApplicationException("Resource /posts/" + postsId + " does not exist.", 404);
+        }
+        return CommentPostResource.class;
+    }
+    
 
 }
