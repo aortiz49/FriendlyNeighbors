@@ -1,74 +1,11 @@
 {
 	"info": {
-		"_postman_id": "64c582a5-bde6-4cf4-bb34-c8dae54bd2f2",
+		"_postman_id": "ad5527fb-0baa-4138-9168-26d6b9b37366",
 		"name": "Comment-Tests.postman_collection",
 		"description": "# Introduction\nWhat does your API do?\n\n# Overview\nThings that the developers should know about\n\n# Authentication\nWhat is the preferred way of using the API?\n\n# Error Codes\nWhat errors and status codes can a user expect?\n\n# Rate limit\nIs there a limit to the number of requests an user can send?",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
-		{
-			"name": "Create comment with nonexisting neighborhood",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "2c9e845f-40eb-4e50-8a3b-2b4c2f298330",
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "aaf6ceef-c993-4bed-b150-d635432d9806",
-						"exec": [
-							"tests[\"The comment must have an existing  neighborhood\"] = responseCode.code === 404;",
-							"tests[\"Expected error message \"] = responseBody.has(\"Resource /neighborhoods/100 does not exist.\");"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blcv@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": 555},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/100/comments",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"100",
-						"comments"
-					]
-				},
-				"description": "Get comment with non-existing neighborhood in the application.\r\n\r\nThe test verifies the generation of error and message \" Resource /neighborhoods/100 does not exist\".\r\n\r\n** Expected http code: 404 **\r\n"
-			},
-			"response": []
-		},
 		{
 			"name": "Create neighborhood for tests",
 			"event": [
@@ -116,8 +53,116 @@
 						"api",
 						"neighborhoods"
 					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create resident for tests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f4515fb8-152f-4e8a-8cdb-0196a0643f3b",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"new_id_R\",data.id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blcd@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
 				},
-				"description": "Get comment with non-existing neighborhood in the application.\r\n\r\nThe test verifies the generation of error and message \" Resource /neighborhoods/100 does not exist\".\r\n\r\n** Expected http code: 404 **\r\n"
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"residents",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create post for tests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f4515fb8-152f-4e8a-8cdb-0196a0643f3b",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"new_id_P\",data.id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"Title\",\n\t\"description\": \"Description\",\n\t\"publishDate\": \"2000-08-20T00:00:00-05:00\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_R}}/posts",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"residents",
+						"{{new_id_R}}",
+						"posts"
+					]
+				}
 			},
 			"response": []
 		},
@@ -198,7 +243,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blcd@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"raw": "{\r\n    \"date\": \"2000-10-20T00:00:00-05:00\",\r\n     \"text\": \"Hola\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -206,7 +251,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/comments/",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/posts/{{new_id_P}}/comments/{{new_id_R}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -217,8 +262,10 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
+						"posts",
+						"{{new_id_P}}",
 						"comments",
-						""
+						"{{new_id_R}}"
 					]
 				},
 				"description": "Create a new comment with the neighborhood specified as a path paramter. The Id is initialized by the BD and must be seen in the response.\r\nFor the test, the id is stored in a variable that will be used in other requests in the collection.\r\n** Expected http code: 200 **\r\n"
@@ -264,7 +311,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"Cra 75\",\r\n    \"email\": \"cb@hotmail.com\",\r\n    \"name\": \"Carlos Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"CB\",\r\n    \"phoneNumber\": \"1422323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"raw": "{\r\n    \"date\": \"2000-10-20T00:00:00-05:00\",\r\n     \"text\": \"Hola\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -272,7 +319,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/comments",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/posts/{{new_id_P}}/comments/{{new_id_R}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -283,7 +330,10 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"comments"
+						"posts",
+						"{{new_id_P}}",
+						"comments",
+						"{{new_id_R}}"
 					]
 				},
 				"description": "Create a new comment with the neighborhood specified as a path paramter. The Id is initialized by the BD and must be seen in the response.\r\nFor the test, the id is stored in a variable that will be used in other requests in the collection.\r\n** Expected http code: 200 **\r\n"
@@ -291,68 +341,15 @@
 			"response": []
 		},
 		{
-			"name": "Create comment with duplicated email",
+			"name": "Create comment with no date",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"id": "22c22c13-4fd9-4544-b1a0-0664707ae6a7",
 						"exec": [
-							"tests[\"An e-mail cannot be duplicated\"] = responseCode.code === 412;",
-							"tests[\"Expected error message\"] = responseBody.has(\"E-mail provided already in use\");"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blcd@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/comments",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
-						"comments"
-					]
-				},
-				"description": "Tries to create a comment with duplicated email in the application.\r\n\r\nThe test verifies the generation of error and message \"E-mail provided already in use\".\r\n\r\n** Expected http code: 412 **\r\n"
-			},
-			"response": []
-		},
-		{
-			"name": "Create comment with no email",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "22c22c13-4fd9-4544-b1a0-0664707ae6a7",
-						"exec": [
-							"tests[\"An e-mail has to be specified\"] = responseCode.code === 412;",
-							"tests[\"Expected error message \"] = responseBody.has(\"An e-mail has to be specified\");"
+							"tests[\"A date has to be specified\"] = responseCode.code === 412;",
+							"tests[\"Expected error message \"] = responseBody.has(\"A date has to be specified\");"
 						],
 						"type": "text/javascript"
 					}
@@ -370,7 +367,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"raw": "{\r\n     \"text\": \"Hola\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -378,7 +375,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/comments",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/posts/{{new_id_P}}/comments/{{new_id_R}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -389,10 +386,13 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"comments"
+						"posts",
+						"{{new_id_P}}",
+						"comments",
+						"{{new_id_R}}"
 					]
 				},
-				"description": "Tries to create a comment with no email.\r\n\r\nThe test verifies the generation of error and message \"An e-mail has to be specified\".\r\n\r\n** Expected http code: 404 **\r\n"
+				"description": "Tries to create a comment with no date.\r\n\r\nThe test verifies the generation of error and message \"A date has to be specified\".\r\n\r\n** Expected http code: 404 **\r\n"
 			},
 			"response": []
 		},
@@ -404,8 +404,8 @@
 					"script": {
 						"id": "22c22c13-4fd9-4544-b1a0-0664707ae6a7",
 						"exec": [
-							"tests[\"A phone has to be specified\"] = responseCode.code === 412;",
-							"tests[\"Expected error message \"] = responseBody.has(\"A phone has to be specified\");"
+							"tests[\"A text has to be specified\"] = responseCode.code === 412;",
+							"tests[\"Expected error message \"] = responseBody.has(\"A text has to be specified\");"
 						],
 						"type": "text/javascript"
 					}
@@ -423,7 +423,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blc@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"raw": "{\r\n    \"date\": \"2000-10-20T00:00:00-05:00\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -431,7 +431,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/comments",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/posts/{{new_id_P}}/comments/{{new_id_R}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -442,116 +442,13 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"comments"
+						"posts",
+						"{{new_id_P}}",
+						"comments",
+						"{{new_id_R}}"
 					]
 				},
-				"description": "Tries to create a comment with no phone.\r\nThe test verifies the generation of error and message \" A phone has to be specified\".\r\n** Expected http code: 412 **\r\n"
-			},
-			"response": []
-		},
-		{
-			"name": "Create comment with no name",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "22c22c13-4fd9-4544-b1a0-0664707ae6a7",
-						"exec": [
-							"tests[\"A name has to be specified\"] = responseCode.code === 412;",
-							"tests[\"Expected error message \"] = responseBody.has(\"A name has to be specified\");"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blc@hotmail.com\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/comments",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
-						"comments"
-					]
-				},
-				"description": "Tries to create a comment with no name.\r\nThe test verifies the generation of error and message \" A name has to be specified\".\r\n** Expected http code: 412 **\r\n"
-			},
-			"response": []
-		},
-		{
-			"name": "Create comment with no proof of residence",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "22c22c13-4fd9-4544-b1a0-0664707ae6a7",
-						"exec": [
-							"tests[\"A proof of residence has to be specified\"] = responseCode.code === 412;",
-							"tests[\"Expected error message \"] = responseBody.has(\"A proof of residence has to be specified\");"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blc@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\"\r\n\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/comments",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
-						"comments"
-					]
-				},
-				"description": "Tries to create a comment with no proof of residence.\r\nThe test verifies the generation of error and message \" A proof of residence has to be specified\".\r\n** Expected http code: 412 **\r\n"
+				"description": "Tries to create a comment with no text.\r\nThe test verifies the generation of error and message \"A text has to be specified\".\r\n** Expected http code: 412 **\r\n"
 			},
 			"response": []
 		},
@@ -592,7 +489,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/comments",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/posts/{{new_id_P}}/comments",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -603,6 +500,8 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
+						"posts",
+						"{{new_id_P}}",
 						"comments"
 					]
 				},
@@ -630,7 +529,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/comments/{{new_id_a1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/posts/{{new_id_P}}/comments/{{new_id_a1}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -641,6 +540,8 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
+						"posts",
+						"{{new_id_P}}",
 						"comments",
 						"{{new_id_a1}}"
 					]
@@ -677,7 +578,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blcff@hotmail.com\",\r\n    \"name\": \"Andres Leonardo Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"raw": "{\r\n    \"date\": \"2000-08-20T00:00:00-05:00\",\r\n     \"text\": \"Adios\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

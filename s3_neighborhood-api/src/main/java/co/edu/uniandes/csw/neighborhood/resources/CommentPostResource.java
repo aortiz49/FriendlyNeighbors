@@ -72,11 +72,14 @@ public class CommentPostResource {
      * @param postsId commentId from post
      * @param neighId parent neighborhood
      * @return JSON {@link CommentDTO} -
-     * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException if rules are not met
+     * @throws
+     * co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException if
+     * rules are not met
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Logic error if not found
      */
     @POST
+    @Path("{authorsId: \\d+}")
     public CommentDTO createComment(@PathParam("postsId") Long postsId, @PathParam("authorsId") Long authorsId, CommentDTO comment, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creating comment for post from resource: input: postsId {0} , commentsId {1}", new Object[]{postsId, comment.getId()});
 

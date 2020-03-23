@@ -98,11 +98,11 @@ public class CommentDTO implements Serializable {
         commentEntity.setId(getId());
         commentEntity.setDate(getDate());
         commentEntity.setText(getText());
-        if (author != null) {
-            commentEntity.setAuthor(author.toEntity());
+        if (getAuthor() != null) {
+            commentEntity.setAuthor(getAuthor().toEntity());
         }
-        if (post != null) {
-            commentEntity.setPost(post.toEntity());
+        if (getPost() != null) {
+            commentEntity.setPost(getPost().toEntity());
         }
 
         return commentEntity;
@@ -148,6 +148,34 @@ public class CommentDTO implements Serializable {
      */
     public void setId(Long Id) {
         this.id = Id;
+    }
+
+    /**
+     * @return the author
+     */
+    public ResidentProfileDTO getAuthor() {
+        return author;
+    }
+
+    /**
+     * @param author the author to set
+     */
+    public void setAuthor(ResidentProfileDTO author) {
+        this.author = author;
+    }
+
+    /**
+     * @return the post
+     */
+    public PostDTO getPost() {
+        return post;
+    }
+
+    /**
+     * @param post the post to set
+     */
+    public void setPost(PostDTO post) {
+        this.post = post;
     }
 
 }
