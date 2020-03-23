@@ -29,7 +29,7 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class GroupIT {
     
-    private static final String COLLECTION = "Group-Tests.postman_collection";
+     private static final String COLLECTION = "Group-Tests.postman_collection";
 
     @Deployment(testable = true)
     public static WebArchive createDeployment() {
