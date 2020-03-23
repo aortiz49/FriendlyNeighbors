@@ -11,33 +11,35 @@ import javax.persistence.ManyToOne;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import uk.co.jemos.podam.common.PodamExclude;
 
+/**
+ * @k.romero
+ */
+public class EventDTO implements Serializable {
 
-/**
-* @k.romero
-*/
-public class EventDTO implements Serializable{
-/**
+    
+    /**
+     * Represents id for this event
+     */
+    private long id;
+    
+    
+    /**
      * The title of the event.
      */
-   private String title;
+    private String title;
 
-   /**
-     * Represents the date  was created
+    /**
+     * Represents the date was created
      */
     @XmlJavaTypeAdapter(DateAdapter.class)
     private Date datePosted;
-    
-    
-    
-    
+
     /**
      * Represents the date group was created
      */
     @XmlJavaTypeAdapter(DateAdapter.class)
     private Date dateOfEvent;
-    
-    
-    
+
     /**
      * The start time of the event.
      */
@@ -60,15 +62,16 @@ public class EventDTO implements Serializable{
     /**
      * The host of the event.
      */
-     private ResidentProfileDTO host;
-     /**
+    private ResidentProfileDTO host;
+    /**
      * The location of the event.
      */
-    
+
     private LocationDTO location;
 //===================================================
 // Getters & Setters
 //===================================================
+
     public String getTitle() {
         return title;
     }
@@ -141,19 +144,20 @@ public class EventDTO implements Serializable{
         this.availability = availability;
     }
 
-    public EventDTO(){super();}
-    
-   
+    public EventDTO() {
+        super();
+    }
+
     public EventDTO(EventEntity entityEvent) {
         this.availability = entityEvent.getAvailability();
         this.description = entityEvent.getDescription();
         this.endTime = entityEvent.getEndTime();
         this.startTime = entityEvent.getStartTime();
-        this.title =  entityEvent.getTitle();
-        if (entityEvent.getLocation()!= null) {
+        this.title = entityEvent.getTitle();
+        if (entityEvent.getLocation() != null) {
             this.location = new LocationDTO(entityEvent.getLocation());
         }
-        if (entityEvent.getHost()!= null) {
+        if (entityEvent.getHost() != null) {
             this.host = new ResidentProfileDTO(entityEvent.getHost());
         }
     }
@@ -171,17 +175,32 @@ public class EventDTO implements Serializable{
         eventEntity.setDescription(getDescription());
         eventEntity.setEndTime(getEndTime());
         eventEntity.setStartTime(getStartTime());
-        eventEntity.setTitle(getTitle());    
+        eventEntity.setTitle(getTitle());
 
-         if (location != null) {
+        if (getLocation() != null) {
             eventEntity.setLocation(getLocation().toEntity());
         }
-         
-          if (host != null) {
+
+        if (getHost() != null) {
             eventEntity.setHost(getHost().toEntity());
         }
         return eventEntity;
     }
+
+    /**
+     * @return the id
+     */
+    public long getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(long id) {
+        this.id = id;
+    }
+
     
     
 }

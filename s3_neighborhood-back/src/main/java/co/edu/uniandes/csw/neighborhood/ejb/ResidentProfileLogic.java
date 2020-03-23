@@ -53,17 +53,16 @@ public class ResidentProfileLogic {
     @Inject
     private NeighborhoodPersistence neighborhoodPersistence;
 
-    @Inject
-    private ResidentProfileNeighborhoodLogic residentNeighborhoodLogic;
 
     /**
      * Creates a resident in persistence
      *
      * @param residentEntity Entity representing resident to create
+     * @param neighId Parent neighborhood
      * @return Persisted entity representing resident
      * @throws BusinessLogicException If a business rule si not met
      */
-    public ResidentProfileEntity createResident(ResidentProfileEntity residentEntity) throws BusinessLogicException {
+    public ResidentProfileEntity createResident(ResidentProfileEntity residentEntity, Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creation process for resident has started");
 
         //1a. E-mail cannot be null 
@@ -76,25 +75,17 @@ public class ResidentProfileLogic {
         }
         verifyBusinessRules(residentEntity);
 
-        // the neighborhood the potential resident belongs to 
-        NeighborhoodEntity neighborhood = residentEntity.getNeighborhood();
+      
+        NeighborhoodEntity persistedNeighborhood = neighborhoodPersistence.find(neighId);
 
-        // 5. The business must have a neighborhood
-        if (neighborhood == null) {
-            throw new BusinessLogicException("The resident must have a neighborhood!");
-        }
-
-        NeighborhoodEntity persistedNeighborhood = neighborhoodPersistence.find(neighborhood.getId());
-
-        // 6. The business must have an existing neighborhood
-        if (persistedNeighborhood == null) {
-            throw new BusinessLogicException("The resident must have an existing  neighborhood!");
-        }
-
-        persistence.create(residentEntity);
+        if(persistedNeighborhood == null)
+            throw new BusinessLogicException("The neighborhood must exist");
         
-        LOGGER.log(Level.INFO, "Creation process for resident eneded");
+        residentEntity.setNeighborhood(persistedNeighborhood);
+        
+        persistence.create(residentEntity);
 
+        LOGGER.log(Level.INFO, "Creation process for resident eneded");
 
         return residentEntity;
     }
@@ -118,39 +109,42 @@ public class ResidentProfileLogic {
     }
 
     /**
-     * Deletes a resident
+     * Deletes a resident from neighborhood
      *
+     * @param neighID parent neighborhood
      * @param id : id from resident to delete
      */
-    public void deleteResident(Long id) {
+    public void deleteResident(Long id, Long neighID) {
 
         LOGGER.log(Level.INFO, "Starting deleting process for resident with id = {0}", id);
-        persistence.delete(id);
+        persistence.delete(id, neighID);
         LOGGER.log(Level.INFO, "Ended deleting process for resident with id = {0}", id);
     }
 
     /**
-     * Gets all residents
+     * Gets all residents from neighborhood
      *
-     * @return A list with all residents
+     * @param neighID parent neighborhood
+     * @return A list with ll residents from neighborhood
      */
-    public List<ResidentProfileEntity> getResidents() {
+    public List<ResidentProfileEntity> getResidents(Long neighID) {
 
         LOGGER.log(Level.INFO, "Starting querying process for all residents");
-        List<ResidentProfileEntity> residents = persistence.findAll();
+        List<ResidentProfileEntity> residents = persistence.findAll(neighID);
         LOGGER.log(Level.INFO, "Ended querying process for all residents");
         return residents;
     }
 
     /**
-     * Returns a resident
+     * Returns a resident from neighborhood
      *
-     * @param id: id from resident to find
+     * @param neighID parent neighborhood
+     * @param id: id from resident to find from neighborhood
      * @return the entity of the wanted resident
      */
-    public ResidentProfileEntity getResident(Long id) {
+    public ResidentProfileEntity getResident(Long id, Long neighID) {
         LOGGER.log(Level.INFO, "Starting querying process for resident with id ", id);
-        ResidentProfileEntity resident = persistence.find(id);
+        ResidentProfileEntity resident = persistence.find(id, neighID);
         LOGGER.log(Level.INFO, "Ended querying process for  resident with id", id);
         return resident;
     }
@@ -158,7 +152,7 @@ public class ResidentProfileLogic {
     /**
      * Returns a resident by email
      *
-     * @param email : email from wanted resident 
+     * @param email : email from wanted resident
      * @return the entity of the wanted resident
      */
     public ResidentProfileEntity getResidentByEmail(String email) {
@@ -169,16 +163,17 @@ public class ResidentProfileLogic {
     }
 
     /**
-     * Updates a resident
+     * Updates a resident from neighborhood
      *
+     * @param neighID parent neighborhood
      * @param residentEntity to be updated
      * @return the entity with the updated resident
      * @throws BusinessLogicException exception
      */
-    public ResidentProfileEntity updateResident(ResidentProfileEntity residentEntity) throws BusinessLogicException {
+    public ResidentProfileEntity updateResident(ResidentProfileEntity residentEntity, Long neighID) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Starting update process for resident with id ", residentEntity.getId());
 
-        ResidentProfileEntity original = persistence.find(residentEntity.getId());
+        ResidentProfileEntity original = persistence.find(residentEntity.getId(), neighID);
 
         //1a. E-mail cannot be null 
         if (residentEntity.getEmail() == null) {
@@ -207,7 +202,7 @@ public class ResidentProfileLogic {
         if (neighborhoodPersistence.find(neighborhood.getId()) == null) {
             throw new BusinessLogicException("The resident must have an existing  neighborhood!");
         }
-        ResidentProfileEntity modified = persistence.update(residentEntity);
+        ResidentProfileEntity modified = persistence.update(residentEntity, neighID);
         LOGGER.log(Level.INFO, "Ended update process for resident with id ", residentEntity.getId());
         return modified;
     }

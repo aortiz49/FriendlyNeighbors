@@ -107,82 +107,132 @@ public class PostEntity extends BaseEntity implements Serializable{
 // Getters & Setters
 //===================================================  
 
+    /**
+     * @return the publishDate
+     */
     public Date getPublishDate() {
         return publishDate;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Integer getNumberOfLikes() {
-        return numberOfLikes;
-    }
-
-    public ResidentProfileEntity getAuthor() {
-        return author;
-    }
-
-    public BusinessEntity getBusiness() {
-        return business;
-    }
-
-    public List<ResidentProfileEntity> getViewers() {
-        return viewers;
-    }
-
-    public List<CommentEntity> getComments() {
-        return comments;
-    }
-
-    public GroupEntity getGroup() {
-        return group;
-    }
-
+    /**
+     * @param publishDate the publishDate to set
+     */
     public void setPublishDate(Date publishDate) {
         this.publishDate = publishDate;
     }
 
+    /**
+     * @return the title
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * @param title the title to set
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * @return the numberOfLikes
+     */
+    public Integer getNumberOfLikes() {
+        return numberOfLikes;
+    }
+
+    /**
+     * @param numberOfLikes the numberOfLikes to set
+     */
     public void setNumberOfLikes(Integer numberOfLikes) {
         this.numberOfLikes = numberOfLikes;
     }
 
+    /**
+     * @return the author
+     */
+    public ResidentProfileEntity getAuthor() {
+        return author;
+    }
+
+    /**
+     * @param author the author to set
+     */
     public void setAuthor(ResidentProfileEntity author) {
         this.author = author;
     }
 
+    /**
+     * @return the business
+     */
+    public BusinessEntity getBusiness() {
+        return business;
+    }
+
+    /**
+     * @param business the business to set
+     */
     public void setBusiness(BusinessEntity business) {
         this.business = business;
     }
 
+    /**
+     * @return the viewers
+     */
+    public List<ResidentProfileEntity> getViewers() {
+        return viewers;
+    }
+
+    /**
+     * @param viewers the viewers to set
+     */
     public void setViewers(List<ResidentProfileEntity> viewers) {
         this.viewers = viewers;
     }
 
+    /**
+     * @return the comments
+     */
+    public List<CommentEntity> getComments() {
+        return comments;
+    }
+
+    /**
+     * @param comments the comments to set
+     */
     public void setComments(List<CommentEntity> comments) {
         this.comments = comments;
     }
 
+    /**
+     * @return the group
+     */
+    public GroupEntity getGroup() {
+        return group;
+    }
+
+    /**
+     * @param group the group to set
+     */
     public void setGroup(GroupEntity group) {
         this.group = group;
     }
 
     
-    
-    
-    
-    
-    
+  
 }

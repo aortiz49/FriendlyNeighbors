@@ -464,7 +464,7 @@
 			"response": []
 		},
 		{
-			"name": "Get member from a non associated group",
+			"name": "Get member from non associated group",
 			"event": [
 				{
 					"listen": "test",

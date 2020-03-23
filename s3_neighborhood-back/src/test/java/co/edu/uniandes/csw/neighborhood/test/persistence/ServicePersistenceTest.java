@@ -1,6 +1,31 @@
+/*
+MIT License
+
+Copyright (c) 2019 Universidad de los Andes - ISIS2603
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+ */
 package co.edu.uniandes.csw.neighborhood.test.persistence;
 
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ServiceEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.persistence.ServicePersistence;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +45,7 @@ import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
- * Persistence test for Neighborhood
+ * Persistence test for Service
  *
  * @author aortiz49
  */
@@ -36,11 +61,16 @@ public class ServicePersistenceTest {
     @Inject
     UserTransaction utx;
 
+    NeighborhoodEntity neighborhood;
+
+    ResidentProfileEntity resident;
+
     private List<ServiceEntity> data = new ArrayList<>();
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
-     * descriptor and beans.xml file for dependencies injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
+     * contains classes, DB descriptor and beans.xml file for dependencies
+     * injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -83,9 +113,21 @@ public class ServicePersistenceTest {
      * Inserts initial data for correct test operation
      */
     private void insertData() {
+
         PodamFactory factory = new PodamFactoryImpl();
+
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        em.persist(neighborhood);
+
+        resident = factory.manufacturePojo(ResidentProfileEntity.class);
+        
+        resident.setNeighborhood(neighborhood);
+        em.persist(resident);
+        
+
         for (int i = 0; i < 3; i++) {
             ServiceEntity entity = factory.manufacturePojo(ServiceEntity.class);
+            entity.setAuthor(resident);
 
             em.persist(entity);
             data.add(entity);
@@ -93,7 +135,7 @@ public class ServicePersistenceTest {
     }
 
     /**
-     * Creating test for Comment.
+     * Test for creating a Service.
      */
     @Test
     public void createServiceTest() {
@@ -105,15 +147,20 @@ public class ServicePersistenceTest {
 
         ServiceEntity entity = em.find(ServiceEntity.class, result.getId());
 
-        Assert.assertEquals(newEntity.getAuthor(), entity.getAuthor());
+        Assert.assertNotNull(newEntity);
+        Assert.assertEquals(entity.getAvailability(), newEntity.getAvailability());
+        Assert.assertEquals(entity.getDescription(), newEntity.getDescription());
+        Assert.assertEquals(entity.getTitle(), newEntity.getTitle());
+
     }
 
     /**
-     * Test for retrieving all neighborhoods from DB.
+     * Test for retrieving all residents from DB.
      */
     @Test
     public void findAllTest() {
-        List<ServiceEntity> list = servicePersistence.findAll();
+
+        List<ServiceEntity> list = servicePersistence.findAll(neighborhood.getId());
         Assert.assertEquals(data.size(), list.size());
         for (ServiceEntity ent : list) {
             boolean found = false;
@@ -127,64 +174,56 @@ public class ServicePersistenceTest {
     }
 
     /**
-     * Test to consult a Service by Title.
+     * Test for a query about a service.
      */
     @Test
-    public void findServiceByTitleTest() {
+    public void getResidentTest() {
         ServiceEntity entity = data.get(0);
-        ServiceEntity newEntity = servicePersistence.findByTitle(entity.getTitle());
-        Assert.assertNotNull(newEntity);
-        Assert.assertEquals(entity.getTitle(), newEntity.getTitle());
-
-        newEntity = servicePersistence.findByTitle(null);
-        Assert.assertNull(newEntity);
-    }
-
-    /**
-     * Test for a query about a Service.
-     */
-    @Test
-    public void getServiceTest() {
-        // get the first bsuiness entity from the table 
-        ServiceEntity entity = data.get(0);
-
-        // using the find method from the Service persistence, returns the 
-        // Service entity matching the id
-        ServiceEntity newEntity = servicePersistence.find(entity.getId());
+        ServiceEntity newEntity = servicePersistence.find(entity.getId(), neighborhood.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getAvailability(), newEntity.getAvailability());
         Assert.assertEquals(entity.getDescription(), newEntity.getDescription());
         Assert.assertEquals(entity.getTitle(), newEntity.getTitle());
-
     }
 
     /**
-     * Test for updating a Service.
+     * Test for a query about a service not belonging to a neighborhood.
+     */
+    @Test(expected = RuntimeException.class)
+    public void getResidentTestNotBelonging() {
+        ServiceEntity entity = data.get(0);
+        servicePersistence.find(entity.getId(), new Long(10000));
+    }
+
+    /**
+     * Test for updating a service.
      */
     @Test
-    public void updateServiceTest() {
+    public void updateResidentTest() {
         ServiceEntity entity = data.get(0);
         PodamFactory factory = new PodamFactoryImpl();
         ServiceEntity newEntity = factory.manufacturePojo(ServiceEntity.class);
 
         newEntity.setId(entity.getId());
+        newEntity.setAuthor(resident);
 
-        servicePersistence.update(newEntity);
+        servicePersistence.update(newEntity, neighborhood.getId());
 
-        ServiceEntity resp = em.find(ServiceEntity.class, entity.getId());
+        ServiceEntity resp = servicePersistence.find(entity.getId(), neighborhood.getId());
 
-        Assert.assertEquals(newEntity.getAuthor(), resp.getAuthor());
-
+        Assert.assertEquals(newEntity.getTitle(), resp.getTitle());
     }
 
     /**
-     * Test for deleting a Service.
+     * Test for deleting a service.
      */
     @Test
-    public void deleteServiceTest() {
+    public void deleteResidentTest() {
         ServiceEntity entity = data.get(0);
-        servicePersistence.delete(entity.getId());
+        servicePersistence.delete(entity.getId(), neighborhood.getId());
         ServiceEntity deleted = em.find(ServiceEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
+
+
 }

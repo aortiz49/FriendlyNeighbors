@@ -24,7 +24,6 @@ SOFTWARE.
 package co.edu.uniandes.csw.neighborhood.resources;
 
 import co.edu.uniandes.csw.neighborhood.dtos.CommentDTO;
-import co.edu.uniandes.csw.neighborhood.dtos.CommentDTO;
 
 import co.edu.uniandes.csw.neighborhood.entities.CommentEntity;
 import co.edu.uniandes.csw.neighborhood.ejb.CommentLogic;
@@ -50,7 +49,7 @@ import javax.ws.rs.WebApplicationException;
 /**
  * Class implementing resource "post/{commentId}/comments".
  *
- * @post v.cardonac1
+ * @author v.cardonac1
  * @version 1.0
  */
 @Consumes(MediaType.APPLICATION_JSON)
@@ -66,28 +65,26 @@ public class CommentPostResource {
     private CommentLogic commentLogic;
 
     /**
-     * Creates a comment with an existing post
+     * Creates a comment with existing post
      *
-     * @param commentsId commentId from comment to be associated
+     * @param comment commentId from comment to be associated
+     * @param authorsId maker of this post
      * @param postsId commentId from post
+     * @param neighId parent neighborhood
      * @return JSON {@link CommentDTO} -
-     * @throws WebApplicationException {@link WebApplicationExceptionMapper} -
+     * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException if rules are not met
+     * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Logic error if not found
      */
     @POST
-    @Path("{commentsId: \\d+}")
-    public CommentDTO createCommentForPost(@PathParam("postsId") Long postsId, CommentDTO comment) throws BusinessLogicException {
+    public CommentDTO createComment(@PathParam("postsId") Long postsId, @PathParam("authorsId") Long authorsId, CommentDTO comment, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creating comment for post from resource: input: postsId {0} , commentsId {1}", new Object[]{postsId, comment.getId()});
 
         CommentEntity entity = null;
 
-        entity = commentLogic.createComment(comment.toEntity());
-        
-        Long commentId = entity.getId();
-        
-        postCommentLogic.associateCommentToPost(commentId, postsId);
+        entity = commentLogic.createComment(comment.toEntity(), postsId, authorsId, neighId);
 
-        CommentDTO dto = new CommentDTO(commentLogic.getComment(commentId));
+        CommentDTO dto = new CommentDTO(commentLogic.getComment(entity.getId(), neighId));
         LOGGER.log(Level.INFO, "Ended creating comment for post from resource: output: {0}", dto.getId());
         return dto;
     }
@@ -96,35 +93,40 @@ public class CommentPostResource {
      * Looks for all the comments associated to a post and returns it
      *
      * @param postsId commentId from post whose comments are wanted
-     * @return JSONArray {@link CommentDTO} - comments found in post. An
-     * empty list if none is found
+     * @param neighId parent neighborhood
+     * @return JSONArray {@link CommentDTO} - comments found in post. An empty
+     * list if none is found
      */
     @GET
-    public List<CommentDTO> getComments(@PathParam("postsId") Long postsId) {
+    public List<CommentDTO> getComments(@PathParam("postsId") Long postsId, @PathParam("neighborhoodId") Long neighId) {
         LOGGER.log(Level.INFO, "Looking for comments from resources: input: {0}", postsId);
-        List<CommentDTO> list = commentsListEntity2DTO(postCommentLogic.getComments(postsId));
+        List<CommentDTO> list = commentsListEntity2DTO(postCommentLogic.getComments(postsId, neighId));
         LOGGER.log(Level.INFO, "Ended looking for comments from resources: output: {0}", list);
         return list;
     }
 
     /**
-     * Looks for a comment with specified ID by URL which is associated with a
+     * Looks for a comment with specified ID by URL which is associated with
      * post and returns it
      *
      * @param commentsId commentId from wanted comment
      * @param postsId commentId from post whose comment is wanted
+     * @param neighId parent neighborhood
      * @return {@link CommentDTO} - comment found inside post
+     * @throws
+     * co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException if
+     * rules are not met
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Logic error if comment not found
      */
     @GET
     @Path("{commentsId: \\d+}")
-    public CommentDTO getComment(@PathParam("postsId") Long postsId, @PathParam("commentsId") Long commentsId) throws BusinessLogicException {
+    public CommentDTO getComment(@PathParam("postsId") Long postsId, @PathParam("commentsId") Long commentsId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Looking for comment: input: postsId {0} , commentsId {1}", new Object[]{postsId, commentsId});
-        if (commentLogic.getComment(commentsId) == null) {
+        if (commentLogic.getComment(commentsId, neighId) == null) {
             throw new WebApplicationException("Resource /comments/" + commentsId + " does not exist.", 404);
         }
-        CommentDTO detailDTO = new CommentDTO(postCommentLogic.getComment(postsId, commentsId));
+        CommentDTO detailDTO = new CommentDTO(postCommentLogic.getComment(postsId, commentsId, neighId));
         LOGGER.log(Level.INFO, "Ended looking for comment: output: {0}", detailDTO);
         return detailDTO;
     }
@@ -133,41 +135,47 @@ public class CommentPostResource {
      *
      * Updates a list from comments inside a post which is received in body
      *
-     * @param postsId commentId from post whose list of comments is to be updated
+     * @param postsId commentId from post whose list of comments is to be
+     * updated
      * @param comments JSONArray {@link CommentDTO} - modified comments list
+     * @param neighId parent neighborhood
      * @return JSONArray {@link CommentDTO} - updated list
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Error if not found
      */
     @PUT
-    public List<CommentDTO> replaceComments(@PathParam("postsId") Long postsId, List<CommentDTO> comments) {
+    public List<CommentDTO> replaceComments(@PathParam("postsId") Long postsId, List<CommentDTO> comments, @PathParam("neighborhoodId") Long neighId) {
         LOGGER.log(Level.INFO, "Replacing post comments from resource: input: postsId {0} , comments {1}", new Object[]{postsId, comments});
         for (CommentDTO comment : comments) {
-            if (commentLogic.getComment(comment.getId()) == null) {
+            if (commentLogic.getComment(comment.getId(), neighId) == null) {
                 throw new WebApplicationException("Resource /comments/" + comments + " does not exist.", 404);
             }
         }
-        List<CommentDTO> lista = commentsListEntity2DTO(postCommentLogic.replaceComments(postsId, commentsListDTO2Entity(comments)));
+        List<CommentDTO> lista = commentsListEntity2DTO(postCommentLogic.replaceComments(postsId, commentsListDTO2Entity(comments), neighId));
         LOGGER.log(Level.INFO, "Ended replacing post comments from resource: output:{0}", lista);
         return lista;
     }
 
     /**
-     * Removes a comment from a post
+     * Removes a comment from post
      *
      * @param postsId commentId from post whose comment is to be removed
      * @param commentsId commentId from comment to be removed
+     * @param neighId parent neighborhood
+     * @throws
+     * co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException if
+     * rules are not met
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Error if not found
      */
     @DELETE
     @Path("{commentsId: \\d+}")
-    public void removeComment(@PathParam("postsId") Long postsId, @PathParam("commentsId") Long commentsId) throws BusinessLogicException {
+    public void removeComment(@PathParam("postsId") Long postsId, @PathParam("commentsId") Long commentsId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Removing comment from post: input: postsId {0} , commentsId {1}", new Object[]{postsId, commentsId});
-        if (commentLogic.getComment(commentsId) == null) {
+        if (commentLogic.getComment(commentsId, neighId) == null) {
             throw new WebApplicationException("Resource /comments/" + commentsId + " does not exist.", 404);
         }
-        postCommentLogic.removeComment(postsId, commentsId);
+        postCommentLogic.removeComment(postsId, commentsId, neighId);
         LOGGER.info("Ended removing comment from post: output: void");
     }
 

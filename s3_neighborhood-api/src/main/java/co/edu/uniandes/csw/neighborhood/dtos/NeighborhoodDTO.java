@@ -97,7 +97,7 @@ public class NeighborhoodDTO implements Serializable {
     }
 
     /**
-     * Creates a NeighborhoodDTO object from a NeighborhoodEntity object.
+     * Creates a NeighborhoodDTO object from NeighborhoodEntity object.
      *
      * @param pNeighborhood neighborhood entity from which to create the new NeighborhoodDTO
      *

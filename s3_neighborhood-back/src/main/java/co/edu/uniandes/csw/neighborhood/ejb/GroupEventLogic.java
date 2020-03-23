@@ -1,216 +1,130 @@
 /*
-MIT License
-
-Copyright (c) 2020 Universidad de los Andes - ISIS2603
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package co.edu.uniandes.csw.neighborhood.ejb;
-//===================================================
-// Imports
-//===================================================
 
 import co.edu.uniandes.csw.neighborhood.entities.GroupEntity;
 import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
+import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
-import co.edu.uniandes.csw.neighborhood.persistence.GroupPersistence;
+
 import co.edu.uniandes.csw.neighborhood.persistence.EventPersistence;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import co.edu.uniandes.csw.neighborhood.persistence.GroupPersistence;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 /**
- * Class that implements the connection for the relations between event and group.
  *
  * @author aortiz49
  */
 @Stateless
 public class GroupEventLogic {
-//==================================================
-// Attributes
-//===================================================
 
-    /**
-     * Logger that outputs to the console.
-     */
-    private static final Logger LOGGER = Logger.getLogger(GroupEventLogic.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(EventLogic.class.getName());
 
-    /**
-     * Dependency injection for event persistence.
-     */
     @Inject
     private EventPersistence eventPersistence;
 
-    /**
-     * Dependency injection for group persistence.
-     */
     @Inject
     private GroupPersistence groupPersistence;
 
-//===================================================
-// Methods
-//===================================================
     /**
-     * Associates a Group to a Event.
+     * Associates event with group
      *
-     * @param pGroupId group id
-     * @param pEventId event id
-     * @return the group instance that was associated to the event
-     * @throws BusinessLogicException when the event or group don't exist
+     * @param neighId parent neighborhood
+     * @param groupId id from group entity
+     * @param eventId id from event
+     * @return associated event
      */
-    public GroupEntity addGroupToEvent(Long pGroupId, Long pEventId) throws BusinessLogicException {
+    public EventEntity associateEventToGroup(Long groupId, Long eventId, Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Initiating association between event with id {0} and  group with id {1}, from neighbothood {2}", new Object[]{eventId, groupId, neighId});
+        GroupEntity groupEntity = groupPersistence.find(groupId, neighId);
+        EventEntity eventEntity = eventPersistence.find(eventId, neighId);
 
-        // creates the logger
-        LOGGER.log(Level.INFO, "Start association between group and event with id = {0}", pGroupId);
-
-        // finds existing event
-        EventEntity eventEntity = eventPersistence.find(pEventId);
-
-        // event must exist
-        if (eventEntity == null) {
-            throw new BusinessLogicException("The event must exist.");
-        }
-
-        // finds existing group
-        GroupEntity groupEntity = groupPersistence.find(pGroupId);
-
-        // group must exist
-        if (groupEntity == null) {
-            throw new BusinessLogicException("The group must exist.");
-        }
-
-        // add the group to the event
-        eventEntity.getGroups().add(groupEntity);
-
-        // add the event to the group
         groupEntity.getEvents().add(eventEntity);
 
-        LOGGER.log(Level.INFO, "End association between group and event with id = {0}", pGroupId);
-        return groupEntity;
+        LOGGER.log(Level.INFO, "Association created between event with id {0} and group with id {1}, from neighbothood {2}", new Object[]{eventId, groupId, neighId});
+        return eventPersistence.find(eventId, neighId);
     }
 
     /**
-     * Gets a collection of group entities associated with a event
+     * Gets a collection of event entities associated with group
      *
-     * @param pEventId the event id
-     * @return collection of group entities associated with a event
+     * @param neighId parent neighborhood
+     * @param groupId id from group entity
+     * @return collection of event entities associated with group
      */
-    public List<GroupEntity> getGroups(Long pEventId) {
-        LOGGER.log(Level.INFO, "Gets all groups belonging to event with id = {0}", pEventId);
-
-        // returns the list of all groups
-        return eventPersistence.find(pEventId).getGroups();
+    public List<EventEntity> getEvents(Long groupId, Long neighId) {
+        LOGGER.log(Level.INFO, "Gets all events belonging to group with id = {0} from neighborhood {1}", new Object[]{groupId, neighId});
+        return groupPersistence.find(groupId, neighId).getEvents();
     }
 
     /**
-     * Gets a service entity associated with a resident
+     * Gets event associated with group
      *
-     * @param pEventId the event id
-     * @param pGroupId Id from associated entity
-     * @return associated entity
-     * @throws BusinessLogicException If group is not associated
+     * @param neighId parent neighborhood
+     * @param groupId id from group
+     * @param eventId id from associated entity
+     * @return associated event
+     * @throws BusinessLogicException If event is not associated
      */
-    public GroupEntity getGroup(Long pEventId, Long pGroupId) throws BusinessLogicException {
-
-        // logs start
-        LOGGER.log(Level.INFO, "Finding group with id = {0} from event with = " + pGroupId, pEventId);
-
-        // gets all the groups in a event
-        List<GroupEntity> groups = eventPersistence.find(pEventId).getGroups();
-
-        // the busines that was found
-        int index = groups.indexOf(groupPersistence.find(pGroupId));
-
-        // logs end
-        LOGGER.log(Level.INFO, "Finish group query with id = {0} from event with = " + pGroupId, pEventId);
-
-        // if the index doesn't exist
-        if (index == -1) {
-            throw new BusinessLogicException("Group is not associated with the event");
+    public EventEntity getEvent(Long groupId, Long eventId, Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Initiating query about event with id {0} from group with id {1}, from neighbothood {2}", new Object[]{eventId, groupId, neighId});
+        List<EventEntity> events = groupPersistence.find(groupId, neighId).getEvents();
+        EventEntity eventEvents = eventPersistence.find(eventId, neighId);
+        int index = events.indexOf(eventEvents);
+        LOGGER.log(Level.INFO, "Finish query about event with id {0} from group with id {1}, from neighbothood {2}", new Object[]{eventId, groupId, neighId});
+        if (index >= 0) {
+            return events.get(index);
         }
-
-        return groups.get(index);
+        throw new BusinessLogicException("There is no association between event and group");
     }
 
     /**
-     * Replaces groups associated with a event
+     * Replaces events associated with group
      *
-     * @param pEventId the event id
-     * @param pNewGroupsList Collection of service to associate with resident
-     * @return A new collection associated to resident
+     * @param neighId parent neighborhood
+     * @param groupId id from group
+     * @param events collection of event to associate with group
+     * @return A new collection associated to group
      */
-    public List<GroupEntity> replaceGroups(Long pEventId, List<GroupEntity> pNewGroupsList) {
-
-        //logs start 
-        LOGGER.log(Level.INFO, "Start replacing groups related to event with id = {0}", pEventId);
-
-        // finds the event
-        EventEntity event = eventPersistence.find(pEventId);
-
-        // finds all the groups
-        List<GroupEntity> currentGroupsList = groupPersistence.findAll();
-
-        // replaces groups attended by a event.
-        // for all groups in the database, check if an group in the new list already exists. 
-        // if the current group exists in the new list but doesn't already contain the event, add 
-        // the event to the current group.
-        for (int i = 0; i < currentGroupsList.size(); i++) {
-            GroupEntity current = currentGroupsList.get(i);
-            if (pNewGroupsList.contains(current) && !current.getEvents().contains(event)) {
-                current.getEvents().add(event);
-
-            } // if the current group already has the event, remove it since it is not in the list
-            // of groups we want the event to have
-            else if (current.getEvents().contains(event)) {
-                current.getEvents().remove(event);
+    public List<EventEntity> replaceEvents(Long groupId, List<EventEntity> events, Long neighId) {
+        LOGGER.log(Level.INFO, "Trying to replace events related to group with id {0} from neighborhood {1}", new Object[]{groupId, neighId});
+        GroupEntity groupEntity = groupPersistence.find(groupId, neighId);
+        List<EventEntity> eventList = eventPersistence.findAll(neighId);
+        for (EventEntity event : eventList) {
+            if (events.contains(event)) {
+                if (!event.getGroups().contains(groupEntity)) {
+                    event.getGroups().add(groupEntity);
+                }
+            } else {
+                event.getGroups().remove(groupEntity);
             }
         }
-
-        // logs end
-        LOGGER.log(Level.INFO, "End replacing groups related to event with id = {0}", pEventId);
-
-        return pNewGroupsList;
+        groupEntity.setEvents(events);
+        LOGGER.log(Level.INFO, "Ended trying to replace events related to group with id {0} from neighborhood {1}", new Object[]{groupId, neighId});
+        return groupEntity.getEvents();
     }
 
     /**
-     * Removes a group from a event.
+     * Unlinks event from group
      *
-     * @param pEventId Id from resident
-     * @param pGroupId Id from service
+     * @param neighId parent neighborhood
+     * @param groupId Id from group
+     * @param eventId Id from event
      */
-    public void removeGroup(Long pEventId, Long pGroupId) {
-        LOGGER.log(Level.INFO, "Start removing a group from event with id = {0}", pGroupId);
-
-        // desired event
-        EventEntity eventEntity = eventPersistence.find(pEventId);
-
-        // group to delete
-        GroupEntity groupEntity = groupPersistence.find(pGroupId);
-
-        // group to remove from event   
-        eventEntity.getGroups().remove(groupEntity);
-
-        // event to remove from group
+    public void removeEvent(Long groupId, Long eventId, Long neighId) {
+        LOGGER.log(Level.INFO, "Deleting association between event with id {0} and  group with id {1}, from neighbothood {2}", new Object[]{eventId, groupId, neighId});
+        EventEntity eventEntity = eventPersistence.find(eventId, neighId);
+        GroupEntity groupEntity = groupPersistence.find(groupId, neighId);
         groupEntity.getEvents().remove(eventEntity);
-
-        LOGGER.log(Level.INFO, "Finished removing a group from event con id = {0}", pGroupId);
+        LOGGER.log(Level.INFO, "Association deleted between event with id {0} and  group with id {1}, from neighbothood {2}", new Object[]{eventId, groupId, neighId});
     }
+
 }

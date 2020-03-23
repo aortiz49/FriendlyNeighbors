@@ -74,7 +74,7 @@ public class ResidentProfileDTO implements Serializable {
     }
 
     /**
-     * Creates a resident DTO from a resident entity.
+     * Creates a resident DTO from resident entity.
      *
      * @param residentEntity entity from which DTO is to be created
      *

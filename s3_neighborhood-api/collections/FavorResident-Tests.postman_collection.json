@@ -360,7 +360,7 @@
 			"response": []
 		},
 		{
-			"name": "Get favor from a non associated resident",
+			"name": "Get favor from non associated resident",
 			"event": [
 				{
 					"listen": "test",
@@ -646,7 +646,7 @@
 			"response": []
 		},
 		{
-			"name": "Remove favor from a non associated resident ",
+			"name": "Remove favor from non associated resident ",
 			"event": [
 				{
 					"listen": "test",

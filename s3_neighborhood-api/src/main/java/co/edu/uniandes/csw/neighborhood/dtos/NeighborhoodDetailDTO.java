@@ -79,7 +79,7 @@ public class NeighborhoodDetailDTO extends NeighborhoodDTO implements Serializab
     }
 
     /**
-     * Creates a detailed neighborhood DTO from a neighborhood entity, including its relations.
+     * Creates a detailed neighborhood DTO from neighborhood entity, including its relations.
      *
      * @param pNeighborhood from which new group DTO will be created
      *

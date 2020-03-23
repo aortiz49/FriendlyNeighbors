@@ -64,22 +64,23 @@ public class GroupMemberResource {
     private ResidentProfileLogic memberLogic;
 
     /**
-     * Associates a member with an existing group
+     * Associates a member with existing group
      *
      * @param membersId id from member to be associated
      * @param groupsId id from group
+     * @param neighId parent neighborhood
      * @return JSON {@link ResidentProfileDetailDTO} -
      * @throws WebApplicationException {@link WebApplicationExceptionMapper} -
      * Logic error if not found
      */
     @POST
     @Path("{membersId: \\d+}")
-    public ResidentProfileDetailDTO associateMemberToGroup(@PathParam("groupsId") Long groupsId, @PathParam("membersId") Long membersId) throws BusinessLogicException {
+    public ResidentProfileDetailDTO associateMemberToGroup(@PathParam("groupsId") Long groupsId, @PathParam("membersId") Long membersId,  @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Associating member to group from resource: input: groupsId {0} , membersId {1}", new Object[]{groupsId, membersId});
-        if (memberLogic.getResident(membersId) == null) {
+        if (memberLogic.getResident(membersId, neighId) == null) {
             throw new WebApplicationException("Resource /members/" + membersId + " does not exist.", 404);
         }
-        ResidentProfileEntity e = groupMemberLogic.associateMemberToGroup(groupsId, membersId);
+        ResidentProfileEntity e = groupMemberLogic.associateMemberToGroup(groupsId, membersId, neighId);
         
         ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO(e);
 
@@ -91,35 +92,38 @@ public class GroupMemberResource {
      * Looks for all the members associated to a group and returns it
      *
      * @param groupsId id from group whose members are wanted
+     * @param neighId parent neighborhood
      * @return JSONArray {@link ResidentProfileDetailDTO} - members found in group. An
      * empty list if none is found
      */
     @GET
-    public List<ResidentProfileDetailDTO> getMembers(@PathParam("groupsId") Long groupsId) {
+    public List<ResidentProfileDetailDTO> getMembers(@PathParam("groupsId") Long groupsId,  @PathParam("neighborhoodId") Long neighId) {
         LOGGER.log(Level.INFO, "Looking for members from resources: input: {0}", groupsId);
-        List<ResidentProfileDetailDTO> list = membersListEntity2DTO(groupMemberLogic.getResidentProfiles(groupsId));
+        List<ResidentProfileDetailDTO> list = membersListEntity2DTO(groupMemberLogic.getMembers(groupsId, neighId));
         LOGGER.log(Level.INFO, "Ended looking for members from resources: output: {0}", list);
         return list;
     }
 
     /**
-     * Looks for a member with specified ID by URL which is associated with a
+     * Looks for a member with specified ID by URL which is associated with 
      * group and returns it
      *
      * @param membersId id from wanted member
      * @param groupsId id from group whose member is wanted
+     * @param neighId parent neighborhood
      * @return {@link ResidentProfileDetailDTO} - member found inside group
+     * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Logic error if member not found
      */
     @GET
     @Path("{membersId: \\d+}")
-    public ResidentProfileDetailDTO getMember(@PathParam("groupsId") Long groupsId, @PathParam("membersId") Long membersId) throws BusinessLogicException {
+    public ResidentProfileDetailDTO getMember(@PathParam("groupsId") Long groupsId, @PathParam("membersId") Long membersId,  @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Looking for member: input: groupsId {0} , membersId {1}", new Object[]{groupsId, membersId});
-        if (memberLogic.getResident(membersId) == null) {
+        if (memberLogic.getResident(membersId, neighId) == null) {
             throw new WebApplicationException("Resource /members/" + membersId + " does not exist.", 404);
         }
-        ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO(groupMemberLogic.getResidentProfile(groupsId, membersId));
+        ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO(groupMemberLogic.getMember(groupsId, membersId, neighId));
         LOGGER.log(Level.INFO, "Ended looking for member: output: {0}", detailDTO);
         return detailDTO;
     }
@@ -130,39 +134,41 @@ public class GroupMemberResource {
      *
      * @param groupsId  id from group whose list of members is to be updated
      * @param members JSONArray {@link ResidentProfileDetailDTO} - modified members list 
+     * @param neighId  parent neighborhood
      * @return JSONArray {@link ResidentProfileDetailDTO} - updated list
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Error if not found
      */
     @PUT
-    public List<ResidentProfileDetailDTO> replaceMembers(@PathParam("groupsId") Long groupsId, List<ResidentProfileDetailDTO> members) {
+    public List<ResidentProfileDetailDTO> replaceMembers(@PathParam("groupsId") Long groupsId, List<ResidentProfileDetailDTO> members,  @PathParam("neighborhoodId") Long neighId) {
         LOGGER.log(Level.INFO, "Replacing group members from resource: input: groupsId {0} , members {1}", new Object[]{groupsId, members});
         for (ResidentProfileDetailDTO member : members) {
-            if (memberLogic.getResident(member.getId()) == null) {
+            if (memberLogic.getResident(member.getId(), neighId) == null) {
                      throw new WebApplicationException("Resource /members/" + members + " does not exist.", 404);
             }
         }
-        List<ResidentProfileDetailDTO> lista = membersListEntity2DTO(groupMemberLogic.replaceResidentProfiles(groupsId, membersListDTO2Entity(members)));
+        List<ResidentProfileDetailDTO> lista = membersListEntity2DTO(groupMemberLogic.replaceMembers(groupsId, membersListDTO2Entity(members), neighId));
         LOGGER.log(Level.INFO, "Ended replacing group members from resource: output:{0}", lista);
         return lista;
     }
 
     /**
-     * Removes a member from a group
+     * Removes a member from group
      *
      * @param groupsId id from group whose member is to be removed
      * @param membersId id from member to be removed
+     * @param neighId parent neighborhood
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Error if not found
      */
     @DELETE
     @Path("{membersId: \\d+}")
-    public void removeMember(@PathParam("groupsId") Long groupsId, @PathParam("membersId") Long membersId) {
+    public void removeMember(@PathParam("groupsId") Long groupsId, @PathParam("membersId") Long membersId,  @PathParam("neighborhoodId") Long neighId) {
         LOGGER.log(Level.INFO, "Removing member from group: input: groupsId {0} , membersId {1}", new Object[]{groupsId, membersId});
-        if (memberLogic.getResident(membersId) == null) {
+        if (memberLogic.getResident(membersId, neighId) == null) {
                  throw new WebApplicationException("Resource /members/" + membersId + " does not exist.", 404);
         }
-        groupMemberLogic.removeResidentProfile(groupsId, membersId);
+        groupMemberLogic.removeMember(groupsId, membersId, neighId);
         LOGGER.info("Ended removing member from group: output: void");
     }
 

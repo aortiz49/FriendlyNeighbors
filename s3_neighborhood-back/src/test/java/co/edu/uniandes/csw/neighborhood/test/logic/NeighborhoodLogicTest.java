@@ -338,7 +338,7 @@ public class NeighborhoodLogicTest {
     }
 
     /**
-     * The deletion of a neighborhood with a residence.
+     * The deletion of a neighborhood with  residence.
      */
     @Test(expected = BusinessLogicException.class)
     public void deleteNeighborhoodWithResidentTest() throws BusinessLogicException {
@@ -346,7 +346,7 @@ public class NeighborhoodLogicTest {
     }
 
     /**
-     * The deletion of a neighborhood with a business.
+     * The deletion of a neighborhood with  business.
      */
     @Test(expected = BusinessLogicException.class)
     public void deleteNeighborhoodWithBusinessTest() throws BusinessLogicException {
@@ -354,7 +354,7 @@ public class NeighborhoodLogicTest {
     }
 
     /**
-     * The deletion of a neighborhood with a location.
+     * The deletion of a neighborhood with  location.
      */
     @Test(expected = BusinessLogicException.class)
     public void deleteNeighborhoodWithLocationTest() throws BusinessLogicException {
@@ -362,7 +362,7 @@ public class NeighborhoodLogicTest {
     }
 
     /**
-     * The deletion of a neighborhood with a group.
+     * The deletion of a neighborhood with  group.
      */
     @Test(expected = BusinessLogicException.class)
     public void deleteNeighborhoodWithGroupTest() throws BusinessLogicException {

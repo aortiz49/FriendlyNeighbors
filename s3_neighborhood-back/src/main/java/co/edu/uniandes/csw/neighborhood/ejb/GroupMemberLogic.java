@@ -32,98 +32,99 @@ public class GroupMemberLogic {
     private ResidentProfilePersistence memberPersistence;
 
     @Inject
-    private GroupPersistence groupsPersistence;
+    private GroupPersistence groupPersistence;
 
     /**
-     * Associates a member with an groups
+     * Associates member with group
      *
-     * @param groupsId ID from groups entity
-     * @param memberId ID from member entity
-     * @return associated member entity
+     * @param neighId parent neighborhood
+     * @param groupId id from group entity
+     * @param memberId id from member
+     * @return associated member
      */
-    public ResidentProfileEntity associateMemberToGroup(Long groupsId, Long memberId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Trying to add member to groups with id = {0}", groupsId);
-        GroupEntity groupsEntity = groupsPersistence.find(groupsId);
-        ResidentProfileEntity memberEntity = memberPersistence.find(memberId);
+    public ResidentProfileEntity associateMemberToGroup(Long groupId, Long memberId, Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Initiating association between member with id {0} and  group with id {1}, from neighbothood {2}", new Object[]{memberId, groupId, neighId});
+        GroupEntity groupEntity = groupPersistence.find(groupId, neighId);
+        ResidentProfileEntity memberEntity = memberPersistence.find(memberId, neighId);
 
-        if (memberEntity.getNeighborhood().getId() != groupsEntity.getNeighborhood().getId()) {
-            throw new BusinessLogicException("Group and member must belong to the same neighborhood");
-        }
+        groupEntity.getMembers().add(memberEntity);
 
-        groupsEntity.getMembers().add(memberEntity);
-
-        LOGGER.log(Level.INFO, "Resident is associated with groups with id = {0}", groupsId);
-        return memberPersistence.find(memberId);
+        LOGGER.log(Level.INFO, "Association created between member with id {0} and group with id {1}, from neighbothood {2}", new Object[]{memberId, groupId, neighId});
+        return memberPersistence.find(memberId, neighId);
     }
 
     /**
-     * Gets a collection of member entities associated with an groups
+     * Gets a collection of member entities associated with group
      *
-     * @param groupsId ID from groups entity
-     * @return collection of member entities associated with an groups
+     * @param neighId parent neighborhood
+     * @param groupId id from group entity
+     * @return collection of member entities associated with group
      */
-    public List<ResidentProfileEntity> getResidentProfiles(Long groupsId) {
-        LOGGER.log(Level.INFO, "Gets all members belonging to groups with id = {0}", groupsId);
-        return groupsPersistence.find(groupsId).getMembers();
+    public List<ResidentProfileEntity> getMembers(Long groupId, Long neighId) {
+        LOGGER.log(Level.INFO, "Gets all members belonging to group with id = {0} from neighborhood {1}", new Object[]{groupId, neighId});
+        return groupPersistence.find(groupId, neighId).getMembers();
     }
 
     /**
-     * Gets an member entity associated with an groups
+     * Gets member associated with group
      *
-     * @param groupsId Id from groups
-     * @param memberId Id from associated entity
-     * @return associated member entity
+     * @param neighId parent neighborhood
+     * @param groupId id from group
+     * @param memberId id from associated entity
+     * @return associated member
      * @throws BusinessLogicException If member is not associated
      */
-    public ResidentProfileEntity getResidentProfile(Long groupsId, Long memberId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Finding member with id = {0} from groups with = " + groupsId, memberId);
-        List<ResidentProfileEntity> members = groupsPersistence.find(groupsId).getMembers();
-        ResidentProfileEntity memberResidentProfiles = memberPersistence.find(memberId);
+    public ResidentProfileEntity getMember(Long groupId, Long memberId, Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Initiating query about member with id {0} from group with id {1}, from neighbothood {2}", new Object[]{memberId, groupId, neighId});
+        List<ResidentProfileEntity> members = groupPersistence.find(groupId, neighId).getMembers();
+        ResidentProfileEntity memberResidentProfiles = memberPersistence.find(memberId, neighId);
         int index = members.indexOf(memberResidentProfiles);
-        LOGGER.log(Level.INFO, "Finished query about member with id = {0} from groups with = " + groupsId, memberId);
+        LOGGER.log(Level.INFO, "Finish query about member with id {0} from group with id {1}, from neighbothood {2}", new Object[]{memberId, groupId, neighId});
         if (index >= 0) {
             return members.get(index);
         }
-        throw new BusinessLogicException("There is no association between member and groups");
+        throw new BusinessLogicException("There is no association between member and group");
     }
 
     /**
-     * Replaces members associated with a groups
+     * Replaces members associated with group
      *
-     * @param groupsId Id from groups
-     * @param members Collection of member to associate with groups
-     * @return A new collection associated to groups
+     * @param neighId parent neighborhood
+     * @param groupId id from group
+     * @param members collection of member to associate with group
+     * @return A new collection associated to group
      */
-    public List<ResidentProfileEntity> replaceResidentProfiles(Long groupsId, List<ResidentProfileEntity> members) {
-        LOGGER.log(Level.INFO, "Trying to replace members related to groups with id = {0}", groupsId);
-        GroupEntity groupsEntity = groupsPersistence.find(groupsId);
-        List<ResidentProfileEntity> memberList = memberPersistence.findAll();
+    public List<ResidentProfileEntity> replaceMembers(Long groupId, List<ResidentProfileEntity> members, Long neighId) {
+        LOGGER.log(Level.INFO, "Trying to replace members related to group with id {0} from neighborhood {1}", new Object[]{groupId, neighId});
+        GroupEntity groupEntity = groupPersistence.find(groupId, neighId);
+        List<ResidentProfileEntity> memberList = memberPersistence.findAll(neighId);
         for (ResidentProfileEntity member : memberList) {
             if (members.contains(member)) {
-                if (!member.getGroups().contains(groupsEntity)) {
-                    member.getGroups().add(groupsEntity);
+                if (!member.getGroups().contains(groupEntity)) {
+                    member.getGroups().add(groupEntity);
                 }
             } else {
-                member.getGroups().remove(groupsEntity);
+                member.getGroups().remove(groupEntity);
             }
         }
-        groupsEntity.setMembers(members);
-        LOGGER.log(Level.INFO, "Ended replacing members related to groups with id = {0}", groupsId);
-        return groupsEntity.getMembers();
+        groupEntity.setMembers(members);
+        LOGGER.log(Level.INFO, "Ended trying to replace members related to group with id {0} from neighborhood {1}", new Object[]{groupId, neighId});
+        return groupEntity.getMembers();
     }
 
     /**
-     * Unlinks a member from a groups
+     * Unlinks member from group
      *
-     * @param groupsId Id from groups
+     * @param neighId parent neighborhood
+     * @param groupId Id from group
      * @param memberId Id from member
      */
-    public void removeResidentProfile(Long groupsId, Long memberId) {
-        LOGGER.log(Level.INFO, "Trying to delete an member from groups with id = {0}", groupsId);
-        ResidentProfileEntity memberEntity = memberPersistence.find(memberId);
-        GroupEntity groupsEntity = groupsPersistence.find(groupsId);
-        groupsEntity.getMembers().remove(memberEntity);
-        LOGGER.log(Level.INFO, "Finished removing an member from groups with id = {0}", groupsId);
+    public void removeMember(Long groupId, Long memberId, Long neighId) {
+        LOGGER.log(Level.INFO, "Deleting association between member with id {0} and  group with id {1}, from neighbothood {2}", new Object[]{memberId, groupId, neighId});
+        ResidentProfileEntity memberEntity = memberPersistence.find(memberId, neighId);
+        GroupEntity groupEntity = groupPersistence.find(groupId, neighId);
+        groupEntity.getMembers().remove(memberEntity);
+        LOGGER.log(Level.INFO, "Association deleted between member with id {0} and  group with id {1}, from neighbothood {2}", new Object[]{memberId, groupId, neighId});
     }
 
 }

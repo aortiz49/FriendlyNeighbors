@@ -48,65 +48,53 @@ public class CommentResidentProfileLogic {
     @Inject
     private ResidentProfilePersistence residentPersistence;
 
-    /**
-     * Associates a comment with a resident
-     *
-     * @param residentId ID from resident entity
-     * @param commentId ID from comment entity
-     * @return associated comment entity
-     */
-    public CommentEntity associateCommentToResident(Long commentId, Long residentId) {
-        LOGGER.log(Level.INFO, "Trying to add comment to resident with id = {0}", residentId);
-        ResidentProfileEntity ResidentProfileEntity = residentPersistence.find(residentId);
-        CommentEntity CommentEntity = commentPersistence.find(commentId);
-        CommentEntity.setAuthor(ResidentProfileEntity);
-        LOGGER.log(Level.INFO, "Comment is associated with resident with id = {0}", residentId);
-        return commentPersistence.find(commentId);
-    }
 
     /**
      * /**
-     * Gets a collection of comments entities associated with a resident
+     * Gets a collection of comments entities associated with  resident
      *
+     * @param neighId ID from parent neighborhood
      * @param residentId ID from resident entity
-     * @return collection of comment entities associated with a resident
+     * @return collection of comment entities associated with  resident
      */
-    public List<CommentEntity> getComments(Long residentId) {
-        LOGGER.log(Level.INFO, "Gets all comments belonging to resident with id = {0}", residentId);
-        return residentPersistence.find(residentId).getComments();
+    public List<CommentEntity> getComments(Long residentId, Long neighId) {
+        LOGGER.log(Level.INFO, "Gets all comments belonging to resident with id {0} from neighborhood {1}", new Object[]{residentId, neighId});
+        return residentPersistence.find(residentId, neighId).getComments();
     }
 
     /**
-     * Gets a comment entity associated with a resident
+     * Gets a comment entity associated with  resident
      *
      * @param residentId Id from resident
+     * @param neighId ID from parent neighborhood
      * @param commentId Id from associated entity
      * @return associated entity
      * @throws BusinessLogicException If comment is not associated
      */
-    public CommentEntity getComment(Long residentId, Long commentId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Finding comment with id = {0} from resident with = " + residentId, commentId);
-        List<CommentEntity> comments = residentPersistence.find(residentId).getComments();
-        CommentEntity CommentEntity = commentPersistence.find(commentId);
+    public CommentEntity getComment(Long residentId, Long commentId, Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Finding comment with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{commentId, residentId, neighId});
+        List<CommentEntity> comments = residentPersistence.find(residentId, neighId).getComments();
+        CommentEntity CommentEntity = commentPersistence.find(commentId, neighId);
         int index = comments.indexOf(CommentEntity);
-        LOGGER.log(Level.INFO, "Finish query about comment with id = {0} from resident with = " + residentId, commentId);
+        LOGGER.log(Level.INFO, "Found comment with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{commentId, residentId, neighId});
         if (index >= 0) {
             return comments.get(index);
         }
-        throw new BusinessLogicException("Comment is no associated with resident");
+        throw new BusinessLogicException("Comment is not associated with resident");
     }
 
     /**
-     * Replaces comments associated with a resident
+     * Replaces comments associated with  resident
      *
+     * @param neighId ID from parent neighborhood
      * @param residentId Id from resident
      * @param comments Collection of comment to associate with resident
      * @return A new collection associated to resident
      */
-    public List<CommentEntity> replaceComments(Long residentId, List<CommentEntity> comments) {
-        LOGGER.log(Level.INFO, "Trying to replace comments related to resident with id = {0}", residentId);
-        ResidentProfileEntity resident = residentPersistence.find(residentId);
-        List<CommentEntity> commentList = commentPersistence.findAll();
+    public List<CommentEntity> replaceComments(Long residentId, List<CommentEntity> comments, Long neighId) {
+        LOGGER.log(Level.INFO, "Trying to replace comments related to resident with id {0} from neighborhood {1}", new Object[]{residentId, neighId});
+        ResidentProfileEntity resident = residentPersistence.find(residentId, neighId);
+        List<CommentEntity> commentList = commentPersistence.findAll(neighId);
         for (CommentEntity comment : commentList) {
             if (comments.contains(comment)) {
                 comment.setAuthor(resident);
@@ -114,8 +102,22 @@ public class CommentResidentProfileLogic {
                 comment.setAuthor(null);
             }
         }
-        LOGGER.log(Level.INFO, "Ended trying to replace comments related to resident with id = {0}", residentId);
+        LOGGER.log(Level.INFO, "Replaced comments related to resident with id {0} from neighborhood {1}", new Object[]{residentId, neighId});
         return comments;
     }
 
+    /**
+     * Removes a comment from resident. Comment is no longer in DB
+     *
+     * @param residentID Id from resident
+     * @param neighId ID from parent neighborhood
+     * @param commentId Id from comment
+     */
+    public void removeComment(Long residentID, Long commentId, Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Deleting comment with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{commentId, residentID, neighId});
+
+        commentPersistence.delete(getComment(residentID, commentId, neighId).getId(), neighId);
+
+        LOGGER.log(Level.INFO, "Deleted comment with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{commentId, residentID, neighId});
+    }
 }

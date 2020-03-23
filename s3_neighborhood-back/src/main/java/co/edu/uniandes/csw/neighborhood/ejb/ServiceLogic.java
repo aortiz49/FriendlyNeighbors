@@ -72,21 +72,31 @@ public class ServiceLogic {
      *
      * @param pServiceEntity the entity of type Service of the new Service to be
      * persisted.
+     * @param residentId author
+     * @param neighId parent neighborhood
      * @return the Service entity after it is persisted
      * @throws BusinessLogicException if the new Service violates the Service
      * rules
      */
-    public ServiceEntity createService(ServiceEntity pServiceEntity) throws BusinessLogicException {
+    public ServiceEntity createService(ServiceEntity pServiceEntity, Long residentId, Long neighId) throws BusinessLogicException {
 
         // starts the logger for CREATE
         LOGGER.log(Level.INFO, "Begin creating a Service");
 
+        ResidentProfileEntity r = residentPersistence.find(residentId, neighId);
+
+        // 1. The service must have a resident
+        if (r == null) {
+            throw new BusinessLogicException("The service must have a resident!");
+        }
+
         // verify Service rules for creating a new Service
-        verifyServiceCreationRules(pServiceEntity);
+        verifyServiceCreationRules(pServiceEntity, r.getNeighborhood().getId());
 
         // create the Service
         ServiceEntity createdEntity = ServicePersistence.create(pServiceEntity);
 
+        pServiceEntity.setAuthor(r);
         // ends the logger for CREATE
         LOGGER.log(Level.INFO, "End creating a businss");
         return createdEntity;
@@ -97,9 +107,9 @@ public class ServiceLogic {
      *
      * @return list of Services
      */
-    public List<ServiceEntity> getServices() {
+    public List<ServiceEntity> getServices(Long neighID) {
         LOGGER.log(Level.INFO, "Begin consulting all Services");
-        List<ServiceEntity> Services = ServicePersistence.findAll();
+        List<ServiceEntity> Services = ServicePersistence.findAll(neighID);
         LOGGER.log(Level.INFO, "End consulting all Services");
         return Services;
     }
@@ -110,9 +120,9 @@ public class ServiceLogic {
      * @param pId
      * @return the found Service, null if not found
      */
-    public ServiceEntity getService(Long pId) {
+    public ServiceEntity getService(Long pId, Long neighID) {
         LOGGER.log(Level.INFO, "Begin search for Service with Id = {0}", pId);
-        ServiceEntity entity = ServicePersistence.find(pId);
+        ServiceEntity entity = ServicePersistence.find(pId, neighID);
         if (entity == null) {
             LOGGER.log(Level.SEVERE, "The Service with Id = {0} doesn't exist", pId);
         }
@@ -121,23 +131,7 @@ public class ServiceLogic {
     }
 
     /**
-     * Finds a Service by name.
-     *
-     * @param pName
-     * @return the found Service, null if not found
-     */
-    public ServiceEntity getServiceByName(String pName) {
-        LOGGER.log(Level.INFO, "Begin search for Service with name = {0}", pName);
-        ServiceEntity ServiceEntity = ServicePersistence.findByTitle(pName);
-        if (ServiceEntity == null) {
-            LOGGER.log(Level.SEVERE, "The Service with name = {0} doesn't exist", pName);
-        }
-        LOGGER.log(Level.INFO, "End search for Service with name = {0}", pName);
-        return ServiceEntity;
-    }
-
-    /**
-     * Update a Service with a given Id.
+     * Update a Service with  given Id.
      *
      * @param pId the id of the service
      * @param pService the new Service
@@ -145,11 +139,11 @@ public class ServiceLogic {
      * @throws BusinessLogicException if the new Service violates the Service
      * rules
      */
-    public ServiceEntity updateService(Long pId, ServiceEntity pService) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Begin the update process for Service with id = {0}", pId);
+    public ServiceEntity updateService(ServiceEntity pService, Long neighID) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Begin the update process for Service with id = {0}", pService.getId());
 
         // update neighborhood
-        ServiceEntity newEntity = ServicePersistence.update(pService);
+        ServiceEntity newEntity = ServicePersistence.update(pService, neighID);
         LOGGER.log(Level.INFO, "End the update process for Service with id = {0}", pService.getTitle());
 
         return newEntity;
@@ -162,14 +156,14 @@ public class ServiceLogic {
      * @throws BusinessLogicException if the deletion failed
      *
      */
-    public void deleteService(Long pServiceId) throws BusinessLogicException {
+    public void deleteService(Long pServiceId, Long neighID) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Begin the delete process for Service with id = {0}", pServiceId);
 
-        if (ServicePersistence.find(pServiceId) == null) {
+        if (ServicePersistence.find(pServiceId, neighID) == null) {
             throw new BusinessLogicException("Service doesn't exist.");
         }
 
-        ServicePersistence.delete(pServiceId);
+        ServicePersistence.delete(pServiceId, neighID);
         LOGGER.log(Level.INFO, "End the delete process for Service with id = {0}", pServiceId);
     }
 
@@ -181,20 +175,13 @@ public class ServiceLogic {
      * @throws BusinessLogicException if the Service doesn't satisfy the Service
      * rules
      */
-    private boolean verifyServiceCreationRules(ServiceEntity pServiceEntity) throws BusinessLogicException {
+    private boolean verifyServiceCreationRules(ServiceEntity pServiceEntity, Long neighID) throws BusinessLogicException {
         boolean valid = true;
 
         // the resident the potential service belongs to 
         ResidentProfileEntity serviceResident = pServiceEntity.getAuthor();
 
-        // 1. The service must have a resident
-        if (serviceResident == null) {
-            throw new BusinessLogicException("The service must have a resident!");
-        } // 2. The resident to which the service will be added to must already exist
-        else if (residentPersistence.find(serviceResident.getId()) == null) {
-            throw new BusinessLogicException("The Service's neighborhood doesn't exist!");
-        }// 3. The description of the service cannot be null
-        else if (pServiceEntity.getDescription() == null) {
+         if (pServiceEntity.getDescription() == null) {
             throw new BusinessLogicException("The Service address cannot be null!");
         } else if (pServiceEntity.getDescription().length() > 250) {
             throw new BusinessLogicException("The service cannot have more than 250 characters");

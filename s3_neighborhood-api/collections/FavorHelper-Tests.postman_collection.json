@@ -463,7 +463,7 @@
 			"response": []
 		},
 		{
-			"name": "Get favor from a non associated helper",
+			"name": "Get favor from non associated helper",
 			"event": [
 				{
 					"listen": "test",

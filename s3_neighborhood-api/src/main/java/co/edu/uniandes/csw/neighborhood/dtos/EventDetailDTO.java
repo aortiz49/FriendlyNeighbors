@@ -70,7 +70,7 @@ public class EventDetailDTO extends EventDTO implements Serializable {
     
     
     /**
-     * Creates a detailed event DTO from a event entity, including its
+     * Creates a detailed event DTO from event entity, including its
      * relations.
      *
      * @param eventEntity from which new event DTO will be created

@@ -78,11 +78,11 @@ public class BusinessResource {
     /**
      *
      * Creates a new business with the information received in the body of the petition and returns
-     * a new identical object with an auto-generated id by the data base.
+     * a new identical object with auto-generated id by the data base.
      *
      * @param pBusiness {@link BusinessDTO} the business to be saved
      *
-     * @return JSON {@link EditorialDTO} the saved business with an auto-generated id
+     * @return JSON {@link EditorialDTO} the saved business with auto-generated id
      * @throws BusinessLogicException {@link BusinessLogicExceptionMapper} if there is an error when
      * creating the business
      */

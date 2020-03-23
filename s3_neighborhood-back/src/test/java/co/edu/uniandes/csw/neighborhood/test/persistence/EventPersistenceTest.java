@@ -1,7 +1,31 @@
+/*
+MIT License
+
+Copyright (c) 2019 Universidad de los Andes - ISIS2603
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+ */
 package co.edu.uniandes.csw.neighborhood.test.persistence;
 
-import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.persistence.EventPersistence;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +47,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 /**
  * Persistence test for Event
  *
- * @author aortiz49
+ * @author albayona
  */
 @RunWith(Arquillian.class)
 public class EventPersistenceTest {
@@ -37,11 +61,16 @@ public class EventPersistenceTest {
     @Inject
     UserTransaction utx;
 
+    NeighborhoodEntity neighborhood;
+
+    ResidentProfileEntity resident;
+
     private List<EventEntity> data = new ArrayList<>();
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
-     * descriptor and beans.xml file for dependencies injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
+     * contains classes, DB descriptor and beans.xml file for dependencies
+     * injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -84,9 +113,21 @@ public class EventPersistenceTest {
      * Inserts initial data for correct test operation
      */
     private void insertData() {
+
         PodamFactory factory = new PodamFactoryImpl();
+
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        em.persist(neighborhood);
+
+        resident = factory.manufacturePojo(ResidentProfileEntity.class);
+        
+        resident.setNeighborhood(neighborhood);
+        em.persist(resident);
+        
+
         for (int i = 0; i < 3; i++) {
             EventEntity entity = factory.manufacturePojo(EventEntity.class);
+            entity.setHost(resident);
 
             em.persist(entity);
             data.add(entity);
@@ -94,7 +135,7 @@ public class EventPersistenceTest {
     }
 
     /**
-     * Creating test for Event.
+     * Test for creating event.
      */
     @Test
     public void createEventTest() {
@@ -106,15 +147,19 @@ public class EventPersistenceTest {
 
         EventEntity entity = em.find(EventEntity.class, result.getId());
 
-        Assert.assertEquals(newEntity.getId(), entity.getId());
+        Assert.assertNotNull(newEntity);
+        Assert.assertEquals(entity.getDatePosted(), newEntity.getDatePosted());
+        Assert.assertEquals(entity.getTitle(), newEntity.getTitle());
+
     }
 
     /**
-     * Test for retrieving all events from DB.
+     * Test for retrieving all residents from DB.
      */
     @Test
     public void findAllTest() {
-        List<EventEntity> list = eventPersistence.findAll();
+
+        List<EventEntity> list = eventPersistence.findAll(neighborhood.getId());
         Assert.assertEquals(data.size(), list.size());
         for (EventEntity ent : list) {
             boolean found = false;
@@ -128,18 +173,57 @@ public class EventPersistenceTest {
     }
 
     /**
-     * Test for a query about a Event.
+     * Test for a query about a event.
      */
     @Test
-    public void getEventTest() {
+    public void getResidentTest() {
         EventEntity entity = data.get(0);
-        EventEntity newEntity = eventPersistence.find(entity.getId());
+        EventEntity newEntity = eventPersistence.find(entity.getId(), neighborhood.getId());
         Assert.assertNotNull(newEntity);
-        Assert.assertEquals(entity.getId(), newEntity.getId());
+        Assert.assertEquals(entity.getDatePosted(), newEntity.getDatePosted());
+        Assert.assertEquals(entity.getTitle(), newEntity.getTitle());
     }
 
     /**
-     * Test to consult an Event by name.
+     * Test for a query about event not belonging to a neighborhood.
+     */
+    @Test(expected = RuntimeException.class)
+    public void getResidentTestNotBelonging() {
+        EventEntity entity = data.get(0);
+        eventPersistence.find(entity.getId(), new Long(10000));
+    }
+
+    /**
+     * Test for updating event.
+     */
+    @Test
+    public void updateResidentTest() {
+        EventEntity entity = data.get(0);
+        PodamFactory factory = new PodamFactoryImpl();
+        EventEntity newEntity = factory.manufacturePojo(EventEntity.class);
+
+        newEntity.setId(entity.getId());
+        newEntity.setHost(resident);
+
+        eventPersistence.update(newEntity, neighborhood.getId());
+
+        EventEntity resp = eventPersistence.find(entity.getId(), neighborhood.getId());
+
+        Assert.assertEquals(newEntity.getTitle(), resp.getTitle());
+    }
+
+    /**
+     * Test for deleting event.
+     */
+    @Test
+    public void deleteResidentTest() {
+        EventEntity entity = data.get(0);
+        eventPersistence.delete(entity.getId(), neighborhood.getId());
+        EventEntity deleted = em.find(EventEntity.class, entity.getId());
+        Assert.assertNull(deleted);
+    }
+    /**
+     * Test to consult event by name.
      */
     @Test
     public void findEventByTitleTest() {
@@ -150,35 +234,6 @@ public class EventPersistenceTest {
 
         newEntity = eventPersistence.findByTitle(null);
         Assert.assertNull(newEntity);
-    }
-
-    /**
-     * Test for updating a Event.
-     */
-    @Test
-    public void updateEventTest() {
-        EventEntity entity = data.get(0);
-        PodamFactory factory = new PodamFactoryImpl();
-        EventEntity newEntity = factory.manufacturePojo(EventEntity.class);
-
-        newEntity.setId(entity.getId());
-
-        eventPersistence.update(newEntity);
-
-        EventEntity resp = em.find(EventEntity.class, entity.getId());
-
-        Assert.assertEquals(newEntity.getId(), resp.getId());
-    }
-
-    /**
-     * Test for deleting a Event.
-     */
-    @Test
-    public void deleteEventTest() {
-        EventEntity entity = data.get(0);
-        eventPersistence.delete(entity.getId());
-        EventEntity deleted = em.find(EventEntity.class, entity.getId());
-        Assert.assertNull(deleted);
     }
 
 }

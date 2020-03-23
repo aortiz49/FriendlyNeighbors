@@ -13,7 +13,9 @@ import javax.inject.Inject;
 
 import co.edu.uniandes.csw.neighborhood.persistence.PostPersistence;
 import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
+import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 
 /**
  *
@@ -27,14 +29,22 @@ public class PostLogic {
     @Inject
     private PostPersistence persistence;
 
+    @Inject
+    private ResidentProfilePersistence residentPersistence;
+
     /**
      * Creates a post
      *
      * @param postEntity post entity to be created
-     * @return crested entity
+     * @param residentId author
+     * @param neighId parent neighborhood 
+     * @return created entity
      * @throws BusinessLogicException if business rules are not met
      */
-    public PostEntity createPost(PostEntity postEntity) throws BusinessLogicException {
+    public PostEntity createPost(PostEntity postEntity, Long residentId, Long neighId) throws BusinessLogicException {
+
+        ResidentProfileEntity r = residentPersistence.find(residentId, neighId);
+
         LOGGER.log(Level.INFO, "Creation process for post has started");
 
         //must have a title
@@ -52,57 +62,64 @@ public class PostLogic {
             throw new BusinessLogicException("A description has to be specified");
         }
 
-        PostEntity entity = persistence.create(postEntity);
+        postEntity.setAuthor(r);
+        
+
+        persistence.create(postEntity);
         LOGGER.log(Level.INFO, "Creation process for post eneded");
 
-        return persistence.find(entity.getId());
+        return postEntity;
     }
 
     /**
-     * Deletes a post by ID
+     * Deletes a post by ID from neighborhood
      *
+     * @param neighID parent neighborhood
      * @param id of post to be deleted
      */
-    public void deletePost(Long id) {
+    public void deletePost(Long id, Long neighID) {
 
         LOGGER.log(Level.INFO, "Starting deleting process for post with id = {0}", id);
-        persistence.delete(id);
+        persistence.delete(id, neighID);
         LOGGER.log(Level.INFO, "Ended deleting process for post with id = {0}", id);
     }
 
     /**
-     * Get all post entities
+     * Get all post entities from neighborhood
      *
+     * @param neighID parent neighborhood
      * @return all of post entities
      */
-    public List<PostEntity> getPosts() {
+    public List<PostEntity> getPosts(Long neighID) {
 
         LOGGER.log(Level.INFO, "Starting querying process for all posts");
-        List<PostEntity> residents = persistence.findAll();
+        List<PostEntity> residents = persistence.findAll(neighID);
         LOGGER.log(Level.INFO, "Ended querying process for all posts");
         return residents;
     }
 
     /**
-     * Gets a post by id
+     * Gets a post by id from neighborhood
      *
+     * @param neighID parent neighborhood
      * @param id from entity post
      * @return entity post found
      */
-    public PostEntity getPost(Long id) {
+    public PostEntity getPost(Long id, Long neighID) {
         LOGGER.log(Level.INFO, "Starting querying process for post with id ", id);
-        PostEntity resident = persistence.find(id);
+        PostEntity resident = persistence.find(id, neighID);
         LOGGER.log(Level.INFO, "Ended querying process for  post with id", id);
         return resident;
     }
 
     /**
-     * Updates a post
+     * Updates a post from neighborhood
      *
+     * @param neighID parent neighborhood
      * @param postEntity to be updated
      * @return the entity with the updated post
      */
-    public PostEntity updatePost(PostEntity postEntity) throws BusinessLogicException {
+    public PostEntity updatePost(PostEntity postEntity, Long neighID) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Starting update process for post with id ", postEntity.getId());
 
         //must have a title
@@ -120,7 +137,7 @@ public class PostLogic {
             throw new BusinessLogicException("A description has to be specified");
         }
 
-        PostEntity modified = persistence.update(postEntity);
+        PostEntity modified = persistence.update(postEntity, neighID);
         LOGGER.log(Level.INFO, "Ended update process for post with id ", postEntity.getId());
         return modified;
     }

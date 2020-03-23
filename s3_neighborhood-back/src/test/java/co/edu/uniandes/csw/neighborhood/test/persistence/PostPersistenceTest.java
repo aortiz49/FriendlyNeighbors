@@ -23,7 +23,9 @@ SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.test.persistence;
 
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.persistence.PostPersistence;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +54,6 @@ public class PostPersistenceTest {
 
     @Inject
     private PostPersistence postPersistence;
-    
 
     @PersistenceContext
     private EntityManager em;
@@ -60,12 +61,16 @@ public class PostPersistenceTest {
     @Inject
     UserTransaction utx;
 
+    NeighborhoodEntity neighborhood;
+
+    ResidentProfileEntity resident;
+
     private List<PostEntity> data = new ArrayList<>();
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara.
-     * jar contains classes, DB descriptor and
-     * beans.xml file for dependencies injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
+     * contains classes, DB descriptor and beans.xml file for dependencies
+     * injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -77,7 +82,7 @@ public class PostPersistenceTest {
     }
 
     /**
-     * Initial test configuration. 
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -98,7 +103,7 @@ public class PostPersistenceTest {
     }
 
     /**
-     * Clears tables involved in tests 
+     * Clears tables involved in tests
      */
     private void clearData() {
         em.createQuery("delete from PostEntity").executeUpdate();
@@ -108,9 +113,21 @@ public class PostPersistenceTest {
      * Inserts initial data for correct test operation
      */
     private void insertData() {
+
         PodamFactory factory = new PodamFactoryImpl();
+
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        em.persist(neighborhood);
+
+        resident = factory.manufacturePojo(ResidentProfileEntity.class);
+        
+        resident.setNeighborhood(neighborhood);
+        em.persist(resident);
+        
+
         for (int i = 0; i < 3; i++) {
             PostEntity entity = factory.manufacturePojo(PostEntity.class);
+            entity.setAuthor(resident);
 
             em.persist(entity);
             data.add(entity);
@@ -118,7 +135,7 @@ public class PostPersistenceTest {
     }
 
     /**
-     * Creating test for Post.
+     * Test for creating a Post.
      */
     @Test
     public void createPostTest() {
@@ -130,6 +147,7 @@ public class PostPersistenceTest {
 
         PostEntity entity = em.find(PostEntity.class, result.getId());
 
+        Assert.assertNotNull(newEntity);
         Assert.assertEquals(newEntity.getTitle(), entity.getTitle());
         Assert.assertEquals(newEntity.getAuthor(), entity.getAuthor());
         Assert.assertEquals(newEntity.getBusiness(), entity.getBusiness());
@@ -140,13 +158,14 @@ public class PostPersistenceTest {
         Assert.assertEquals(newEntity.getViewers(), entity.getViewers());
 
     }
-    
+
     /**
-     * Test for retrieving all posts from DB.
+     * Test for retrieving all residents from DB.
      */
-        @Test
+    @Test
     public void findAllTest() {
-        List<PostEntity> list = postPersistence.findAll();
+
+        List<PostEntity> list = postPersistence.findAll(neighborhood.getId());
         Assert.assertEquals(data.size(), list.size());
         for (PostEntity ent : list) {
             boolean found = false;
@@ -158,47 +177,63 @@ public class PostPersistenceTest {
             Assert.assertTrue(found);
         }
     }
-    
+
     /**
-     * Test for a query about a Post.
+     * Test for a query about a post.
      */
     @Test
-    public void getPostTest() {
+    public void getResidentTest() {
         PostEntity entity = data.get(0);
-        PostEntity newEntity = postPersistence.find(entity.getId());
+        PostEntity newEntity = postPersistence.find(entity.getId(), neighborhood.getId());
         Assert.assertNotNull(newEntity);
-        Assert.assertEquals(entity.getPublishDate(), newEntity.getPublishDate());
-        Assert.assertEquals(entity.getTitle(), newEntity.getTitle());
+        Assert.assertEquals(newEntity.getTitle(), entity.getTitle());
+        Assert.assertEquals(newEntity.getAuthor(), entity.getAuthor());
+        Assert.assertEquals(newEntity.getBusiness(), entity.getBusiness());
+        Assert.assertEquals(newEntity.getComments(), entity.getComments());
+        Assert.assertEquals(newEntity.getDescription(), entity.getDescription());
+        Assert.assertEquals(newEntity.getGroup(), entity.getGroup());
+        Assert.assertEquals(newEntity.getId(), entity.getId());
+        Assert.assertEquals(newEntity.getViewers(), entity.getViewers());
     }
 
-     /**
-     * Test for updating a Post.
+    /**
+     * Test for a query about a post not belonging to a neighborhood.
+     */
+    @Test(expected = RuntimeException.class)
+    public void getResidentTestNotBelonging() {
+        PostEntity entity = data.get(0);
+        postPersistence.find(entity.getId(), new Long(10000));
+    }
+
+    /**
+     * Test for updating a post.
      */
     @Test
-    public void updatePostTest() {
+    public void updateResidentTest() {
         PostEntity entity = data.get(0);
         PodamFactory factory = new PodamFactoryImpl();
         PostEntity newEntity = factory.manufacturePojo(PostEntity.class);
 
         newEntity.setId(entity.getId());
+        newEntity.setAuthor(resident);
 
-        postPersistence.update(newEntity);
+        postPersistence.update(newEntity, neighborhood.getId());
 
-        PostEntity resp = em.find(PostEntity.class, entity.getId());
+        PostEntity resp = postPersistence.find(entity.getId(), neighborhood.getId());
 
-        Assert.assertEquals(newEntity.getPublishDate(), resp.getPublishDate());
+        Assert.assertEquals(newEntity.getTitle(), resp.getTitle());
     }
-    
-     /**
-     * Test for deleting a Post.
+
+    /**
+     * Test for deleting a post.
      */
     @Test
-    public void deletePostTest() {
+    public void deleteResidentTest() {
         PostEntity entity = data.get(0);
-        postPersistence.delete(entity.getId());
+        postPersistence.delete(entity.getId(), neighborhood.getId());
         PostEntity deleted = em.find(PostEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
-     
-    
+
+
 }

@@ -48,51 +48,35 @@ public class FavorResidentProfileLogic {
     @Inject
     private ResidentProfilePersistence residentPersistence;
 
-    /**
-     * Associates a favor with a resident
-     *
-     * @param residentId ID from resident entity
-     * @param favorId ID from favor entity
-     * @return associated favor entity
-     */
-    public FavorEntity associateFavorToResident(Long favorId, Long residentId) {
-        LOGGER.log(Level.INFO, "Trying to associate favor to resident with id = {0}", residentId);
-        ResidentProfileEntity ResidentProfileEntity = residentPersistence.find(residentId);
-        
-        FavorEntity FavorEntity = favorPersistence.find(favorId);
-        
-        FavorEntity.setAuthor(ResidentProfileEntity);
-        
-        LOGGER.log(Level.INFO, "Favor is associated with resident with id = {0}", residentId);
-        return favorPersistence.find(favorId);
-    }
 
     /**
      * /**
-     * Gets a collection of favors entities associated with a resident
+     * Gets a collection of favors entities associated with  resident
      *
+     * @param neighId ID from parent neighborhood
      * @param residentId ID from resident entity
-     * @return collection of favor entities associated with a resident
+     * @return collection of favor entities associated with  resident
      */
-    public List<FavorEntity> getFavors(Long residentId) {
-        LOGGER.log(Level.INFO, "Gets all favors belonging to resident with id = {0}", residentId);
-        return residentPersistence.find(residentId).getFavorsRequested();
+    public List<FavorEntity> getFavors(Long residentId, Long neighId) {
+        LOGGER.log(Level.INFO, "Gets all favors belonging to resident with id {0} from neighborhood {1}", new Object[]{residentId, neighId});
+        return residentPersistence.find(residentId, neighId).getFavorsRequested();
     }
 
     /**
-     * Gets a favor entity associated with a resident
+     * Gets a favor entity associated with  resident
      *
      * @param residentId Id from resident
+     * @param neighId ID from parent neighborhood
      * @param favorId Id from associated entity
      * @return associated entity
      * @throws BusinessLogicException If favor is not associated
      */
-    public FavorEntity getFavor(Long residentId, Long favorId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Finding favor with id = {0} from resident with = " + residentId, favorId);
-        List<FavorEntity> favors = residentPersistence.find(residentId).getFavorsRequested();
-        FavorEntity FavorEntity = favorPersistence.find(favorId);
+    public FavorEntity getFavor(Long residentId, Long favorId, Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Finding favor with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{favorId, residentId, neighId});
+        List<FavorEntity> favors = residentPersistence.find(residentId, neighId).getFavorsRequested();
+        FavorEntity FavorEntity = favorPersistence.find(favorId, neighId);
         int index = favors.indexOf(FavorEntity);
-        LOGGER.log(Level.INFO, "Finish query about favor with id = {0} from resident with = " + residentId, favorId);
+        LOGGER.log(Level.INFO, "Found favor with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{favorId, residentId, neighId});
         if (index >= 0) {
             return favors.get(index);
         }
@@ -100,16 +84,17 @@ public class FavorResidentProfileLogic {
     }
 
     /**
-     * Replaces favors associated with a resident
+     * Replaces favors associated with  resident
      *
+     * @param neighId ID from parent neighborhood
      * @param residentId Id from resident
      * @param favors Collection of favor to associate with resident
      * @return A new collection associated to resident
      */
-    public List<FavorEntity> replaceFavors(Long residentId, List<FavorEntity> favors) {
-        LOGGER.log(Level.INFO, "Trying to replace favors related to resident with id = {0}", residentId);
-        ResidentProfileEntity resident = residentPersistence.find(residentId);
-        List<FavorEntity> favorList = favorPersistence.findAll();
+    public List<FavorEntity> replaceFavors(Long residentId, List<FavorEntity> favors, Long neighId) {
+        LOGGER.log(Level.INFO, "Trying to replace favors related to resident with id {0} from neighborhood {1}", new Object[]{residentId, neighId});
+        ResidentProfileEntity resident = residentPersistence.find(residentId, neighId);
+        List<FavorEntity> favorList = favorPersistence.findAll(neighId);
         for (FavorEntity favor : favorList) {
             if (favors.contains(favor)) {
                 favor.setAuthor(resident);
@@ -117,20 +102,22 @@ public class FavorResidentProfileLogic {
                 favor.setAuthor(null);
             }
         }
-        LOGGER.log(Level.INFO, "Ended trying to replace favors related to resident with id = {0}", residentId);
+        LOGGER.log(Level.INFO, "Replaced favors related to resident with id {0} from neighborhood {1}", new Object[]{residentId, neighId});
         return favors;
     }
 
     /**
-     * Removes a favor from a resident. Favor is no longer in DB
+     * Removes a favor from resident. Favor is no longer in DB
      *
-     *
+     * @param residentID Id from resident
+     * @param neighId ID from parent neighborhood
      * @param favorId Id from favor
      */
-    public void removeFavor(Long residentID, Long favorId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Trying to delete a favor from resident with id = {0}", favorId);
-        favorPersistence.delete(getFavor(residentID, favorId).getId());
+    public void removeFavor(Long residentID, Long favorId, Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Deleting favor with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{favorId, residentID, neighId});
 
-        LOGGER.log(Level.INFO, "Finished removing a favor from resident with id = {0}", favorId);
+        favorPersistence.delete(getFavor(residentID, favorId, neighId).getId(), neighId);
+
+        LOGGER.log(Level.INFO, "Deleted favor with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{favorId, residentID, neighId});
     }
 }

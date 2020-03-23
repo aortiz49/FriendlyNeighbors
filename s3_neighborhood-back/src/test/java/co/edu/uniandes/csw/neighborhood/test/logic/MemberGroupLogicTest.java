@@ -32,16 +32,17 @@ public class MemberGroupLogicTest {
     private PodamFactory factory = new PodamFactoryImpl();
 
     @Inject
-    private MemberGroupLogic memberGroupLogic;
+    private MemberGroupLogic residentGroupLogic;
 
     @Inject
     private GroupLogic groupLogic;
-    
+
+
     @Inject
     private NeighborhoodPersistence neighPersistence;
-    
-    private NeighborhoodEntity neighborhood;
 
+    private NeighborhoodEntity neighborhood;
+    
 
     @PersistenceContext
     private EntityManager em;
@@ -49,7 +50,7 @@ public class MemberGroupLogicTest {
     @Inject
     private UserTransaction utx;
 
-    private ResidentProfileEntity member = new ResidentProfileEntity();
+    private ResidentProfileEntity resident = new ResidentProfileEntity();
     private List<GroupEntity> data = new ArrayList<>();
 
     /**
@@ -92,38 +93,39 @@ public class MemberGroupLogicTest {
      * Clears tables involved in tests
      */
     private void clearData() {
-        em.createQuery("delete from ResidentProfileEntity").executeUpdate();
         em.createQuery("delete from GroupEntity").executeUpdate();
+        em.createQuery("delete from ResidentProfileEntity").executeUpdate();
+
     }
 
     /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
-
         neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
         neighPersistence.create(neighborhood);
 
-        member = factory.manufacturePojo(ResidentProfileEntity.class);
-        member.setId(1L);
-        member.setGroups(new ArrayList<>());
-        member.setNeighborhood(neighborhood);
-        em.persist(member);
+
+        resident = factory.manufacturePojo(ResidentProfileEntity.class);
+        resident.setNeighborhood(neighborhood);
+        em.persist(resident);
 
         for (int i = 0; i < 3; i++) {
             GroupEntity entity = factory.manufacturePojo(GroupEntity.class);
             entity.setNeighborhood(neighborhood);
-            
+
             entity.setMembers(new ArrayList<>());
-            entity.getMembers().add(member);
+            entity.getMembers().add(resident);
+
             em.persist(entity);
             data.add(entity);
-            member.getGroups().add(entity);
+            resident.getGroups().add(entity);
         }
+
     }
 
     /**
-     * Test to associate an group with a member
+     * Test to associate group with  resident
      *
      *
      * @throws BusinessLogicException
@@ -131,26 +133,28 @@ public class MemberGroupLogicTest {
     @Test
     public void addGroupTest() throws BusinessLogicException {
         GroupEntity newGroup = factory.manufacturePojo(GroupEntity.class);
-        newGroup.setNeighborhood(neighborhood);
-        groupLogic.createGroup(newGroup);
-        GroupEntity groupEntity = memberGroupLogic.associateGroupToMember(member.getId(), newGroup.getId());
+        
+        groupLogic.createGroup(newGroup,neighborhood.getId());
+
+        GroupEntity groupEntity = residentGroupLogic.associateGroupToMember(resident.getId(), newGroup.getId(), neighborhood.getId());
         Assert.assertNotNull(groupEntity);
 
         Assert.assertEquals(groupEntity.getId(), newGroup.getId());
         Assert.assertEquals(groupEntity.getDescription(), newGroup.getDescription());
 
-        GroupEntity lastGroup = memberGroupLogic.getGroup(member.getId(), newGroup.getId());
+        GroupEntity lastGroup = residentGroupLogic.getGroup(resident.getId(), newGroup.getId(), neighborhood.getId());
 
         Assert.assertEquals(lastGroup.getId(), newGroup.getId());
 
     }
 
     /**
-     * Test for getting a collection of group entities associated with a member
+     * Test for getting  collection of group entities associated with 
+     * resident
      */
     @Test
     public void getGroupsTest() {
-        List<GroupEntity> groupEntities = memberGroupLogic.getGroups(member.getId());
+        List<GroupEntity> groupEntities = residentGroupLogic.getGroups(resident.getId(), neighborhood.getId());
 
         Assert.assertEquals(data.size(), groupEntities.size());
 
@@ -160,14 +164,14 @@ public class MemberGroupLogicTest {
     }
 
     /**
-     * Test for getting an group entity associated with a a member
+     * Test for getting group entity associated with resident
      *
      * @throws BusinessLogicException
      */
     @Test
     public void getGroupTest() throws BusinessLogicException {
         GroupEntity groupEntity = data.get(0);
-        GroupEntity group = memberGroupLogic.getGroup(member.getId(), groupEntity.getId());
+        GroupEntity group = residentGroupLogic.getGroup(resident.getId(), groupEntity.getId(), neighborhood.getId());
         Assert.assertNotNull(group);
 
         Assert.assertEquals(groupEntity.getId(), group.getId());
@@ -176,7 +180,7 @@ public class MemberGroupLogicTest {
     }
 
     /**
-     * Test for replacing groups associated with a member
+     * Test for replacing groups associated with  resident
      *
      * @throws BusinessLogicException
      */
@@ -187,28 +191,27 @@ public class MemberGroupLogicTest {
         for (int i = 0; i < 3; i++) {
             GroupEntity entity = factory.manufacturePojo(GroupEntity.class);
             entity.setMembers(new ArrayList<>());
-            entity.getMembers().add(member);
-            entity.setNeighborhood(neighborhood);
-            groupLogic.createGroup(entity);
+            entity.getMembers().add(resident);
+            groupLogic.createGroup(entity, neighborhood.getId());
             newCollection.add(entity);
         }
-        memberGroupLogic.replaceGroups(member.getId(), newCollection);
-        List<GroupEntity> groupEntities = memberGroupLogic.getGroups(member.getId());
+        residentGroupLogic.replaceGroups(resident.getId(), newCollection, neighborhood.getId());
+        List<GroupEntity> groupEntities = residentGroupLogic.getGroups(resident.getId(), neighborhood.getId());
         for (GroupEntity aNuevaLista : newCollection) {
             Assert.assertTrue(groupEntities.contains(aNuevaLista));
         }
     }
 
     /**
-     * Test for removing an group from member
+     * Test for removing group from resident
      *
      */
     @Test
     public void removeGroupTest() {
         for (GroupEntity group : data) {
-            memberGroupLogic.removeGroup(member.getId(), group.getId());
+            residentGroupLogic.removeGroup(resident.getId(), group.getId(), neighborhood.getId());
         }
-        Assert.assertTrue(memberGroupLogic.getGroups(member.getId()).isEmpty());
+        Assert.assertTrue(residentGroupLogic.getGroups(resident.getId(), neighborhood.getId()).isEmpty());
     }
 
 }

@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -33,52 +34,51 @@ public class HelperFavorLogic {
     private ResidentProfilePersistence helperPersistence;
 
     /**
-     * Associates an favor with a helper
+     * Associates favor with helper
      *
-     * @param helperId ID from helper entity
-     * @param favorId ID from favor entity
-     * @return associated favor entity
+     * @param neighId parent neighborhood
+     * @param helperId id from helper entity
+     * @param favorId id from favor
+     * @return associated favor
      */
-    public FavorEntity associateFavorToHelper(Long helperId, Long favorId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Trying to associate favor with helper with id = {0}", helperId);
-        ResidentProfileEntity helperEntity = helperPersistence.find(helperId);
-        FavorEntity favorEntity = favorPersistence.find(favorId);
-
-        if (helperEntity.getNeighborhood().getId() != favorEntity.getAuthor().getNeighborhood().getId()) {
-            throw new BusinessLogicException("Favor and helper must belong to the same neighborhood");
-        }
+    public FavorEntity associateFavorToHelper(Long helperId, Long favorId, Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Initiating association between favor with id {0} and  helper with id {1}, from neighbothood {2}", new Object[]{favorId, helperId, neighId});
+        ResidentProfileEntity helperEntity = helperPersistence.find(helperId, neighId);
+        FavorEntity favorEntity = favorPersistence.find(favorId, neighId);
 
         favorEntity.getCandidates().add(helperEntity);
 
-        LOGGER.log(Level.INFO, "Favor is associated with helper with id = {0}", helperId);
-        return favorPersistence.find(favorId);
+        LOGGER.log(Level.INFO, "Association created between favor with id {0} and  helper with id  {1}, from neighbothood {2}", new Object[]{favorId, helperId, neighId});
+        return favorPersistence.find(favorId, neighId);
     }
 
     /**
-     * Gets a collection of favor entities associated with a helper
+     * Gets a collection of favor entities associated with helper
      *
-     * @param helperId ID from helper entity
-     * @return collection of favor entities associated with a helper
+     * @param neighId parent neighborhood
+     * @param helperId id from helper entity
+     * @return collection of favor entities associated with helper
      */
-    public List<FavorEntity> getFavors(Long helperId) {
-        LOGGER.log(Level.INFO, "Gets all favors belonging to helper with id = {0}", helperId);
-        return helperPersistence.find(helperId).getFavorsToHelp();
+    public List<FavorEntity> getFavors(Long helperId, Long neighId) {
+        LOGGER.log(Level.INFO, "Gets all favors belonging to helper with id {0} from neighborhood {1}", new Object[]{helperId, neighId});
+        return helperPersistence.find(helperId, neighId).getFavorsToHelp();
     }
 
     /**
-     * Gets an favor entity associated with a a helper
+     * Gets an favor associated with helper
      *
-     * @param helperId Id from helper
-     * @param favorId Id from associated entity
-     * @return associated entity
+     * @param neighId parent neighborhood
+     * @param helperId id from helper
+     * @param favorId id from associated entity
+     * @return associated favor
      * @throws BusinessLogicException If favor is not associated
      */
-    public FavorEntity getFavor(Long helperId, Long favorId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Finding favor with id = {0} from helper with = " + helperId, favorId);
-        List<FavorEntity> favors = helperPersistence.find(helperId).getFavorsToHelp();
-        FavorEntity favorFavors = favorPersistence.find(favorId);
+    public FavorEntity getFavor(Long helperId, Long favorId, Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Initiating query about favor with id {0} from helper with {1}, from neighbothood {2}", new Object[]{favorId, helperId, neighId});
+        List<FavorEntity> favors = helperPersistence.find(helperId, neighId).getFavorsToHelp();
+        FavorEntity favorFavors = favorPersistence.find(favorId, neighId);
         int index = favors.indexOf(favorFavors);
-        LOGGER.log(Level.INFO, "Finish query about favor with id = {0} from helper with = " + helperId, favorId);
+        LOGGER.log(Level.INFO, "Finish query about favor with id {0} from helper with {1}, from neighbothood {2}", new Object[]{favorId, helperId, neighId});
         if (index >= 0) {
             return favors.get(index);
         }
@@ -86,16 +86,17 @@ public class HelperFavorLogic {
     }
 
     /**
-     * Replaces favors associated with a helper
+     * Replaces favors associated with helper
      *
-     * @param helperId Id from helper
-     * @param favors Collection of favor to associate with helper
+     * @param neighId parent neighborhood
+     * @param helperId id from helper
+     * @param favors collection of favor to associate with helper
      * @return A new collection associated to helper
      */
-    public List<FavorEntity> replaceFavors(Long helperId, List<FavorEntity> favors) {
-        LOGGER.log(Level.INFO, "Trying to replace favors related to helper with id = {0}", helperId);
-        ResidentProfileEntity helperEntity = helperPersistence.find(helperId);
-        List<FavorEntity> favorList = favorPersistence.findAll();
+    public List<FavorEntity> replaceFavors(Long helperId, List<FavorEntity> favors, Long neighId) {
+        LOGGER.log(Level.INFO, "Trying to replace favors related to helper with id {0} from neighborhood {1}", new Object[]{helperId, neighId});
+        ResidentProfileEntity helperEntity = helperPersistence.find(helperId, neighId);
+        List<FavorEntity> favorList = favorPersistence.findAll(neighId);
         for (FavorEntity favor : favorList) {
             if (favors.contains(favor)) {
                 if (!favor.getCandidates().contains(helperEntity)) {
@@ -106,21 +107,22 @@ public class HelperFavorLogic {
             }
         }
         helperEntity.setFavorsToHelp(favors);
-        LOGGER.log(Level.INFO, "Ended trying to replace favors related to helper with id = {0}", helperId);
+        LOGGER.log(Level.INFO, "Ended trying to replace favors related to helper with id {0} from neighborhood {1}", new Object[]{helperId, neighId});
         return helperEntity.getFavorsToHelp();
     }
 
     /**
-     * Unlinks an favor from a helper
+     * Unlinks favor from helper
      *
+     * @param neighId parent neighborhood
      * @param helperId Id from helper
      * @param favorId Id from favor
      */
-    public void removeFavor(Long helperId, Long favorId) {
-        LOGGER.log(Level.INFO, "Trying to delete an favor from helper with id = {0}", helperId);
-        ResidentProfileEntity helperEntity = helperPersistence.find(helperId);
-        FavorEntity favorEntity = favorPersistence.find(favorId);
+    public void removeFavor(Long helperId, Long favorId, Long neighId) {
+        LOGGER.log(Level.INFO, "Deleting association between favor with id {0} and  helper with id {1}, from neighbothood {2}", new Object[]{favorId, helperId, neighId});
+        ResidentProfileEntity helperEntity = helperPersistence.find(helperId, neighId);
+        FavorEntity favorEntity = favorPersistence.find(favorId, neighId);
         favorEntity.getCandidates().remove(helperEntity);
-        LOGGER.log(Level.INFO, "Finished removing an favor from helper with id = {0}", helperId);
+        LOGGER.log(Level.INFO, "Association deleted between favor with id {0} and  helper with id {1}, from neighbothood {2}", new Object[]{favorId, helperId, neighId});
     }
 }

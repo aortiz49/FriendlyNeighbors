@@ -170,7 +170,7 @@ public class BusinessNeighborhoodLogicTest {
 //===================================================
 
     /**
-     * Tests the association of a business with a neighborhood.
+     * Tests the association of a business with  neighborhood.
      *
      * @throws BusinessLogicException if the association fails
      */
@@ -192,7 +192,7 @@ public class BusinessNeighborhoodLogicTest {
     }
 
     /**
-     * Tests the consultation of all business entities associated with a neighborhood.
+     * Tests the consultation of all business entities associated with  neighborhood.
      */
     @Test
     public void getBusinessesTest() {
@@ -206,7 +206,7 @@ public class BusinessNeighborhoodLogicTest {
     }
 
     /**
-     * Tests the consultation of a business entity associated with a neighborhood.
+     * Tests the consultation of a business entity associated with  neighborhood.
      *
      * @throws BusinessLogicException if the business is not found
      */

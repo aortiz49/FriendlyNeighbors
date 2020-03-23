@@ -1,14 +1,18 @@
 /*
 MIT License
+
 Copyright (c) 2017 Universidad de los Andes - ISIS2603
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
+
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,9 +27,11 @@ import co.edu.uniandes.csw.neighborhood.ejb.CommentLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.PostLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.CommentPostLogic;
 import co.edu.uniandes.csw.neighborhood.entities.CommentEntity;
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
+import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
 import co.edu.uniandes.csw.neighborhood.persistence.PostPersistence;
 import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 import java.util.ArrayList;
@@ -49,15 +55,13 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
  * @author albayona
  */
 @RunWith(Arquillian.class)
-public class CommentPostLogicTest {
+public class CommentPostTest {
 
     private PodamFactory factory = new PodamFactoryImpl();
 
     @Inject
-    private ResidentProfilePersistence residentPersistence;
-    @Inject
     private CommentPostLogic postCommentLogic;
-    
+
     @Inject
     private CommentLogic commentLogic;
 
@@ -67,7 +71,22 @@ public class CommentPostLogicTest {
     @Inject
     private UserTransaction utx;
 
-    private List<PostEntity> data = new ArrayList<PostEntity>();
+    private NeighborhoodEntity neighborhood;
+
+    private ResidentProfileEntity resident;
+
+    private PostEntity post;
+
+    @Inject
+    private NeighborhoodPersistence neighborhoodPersistence;
+
+    @Inject
+    private PostPersistence postPersistence;
+
+    @Inject
+    private ResidentProfilePersistence residentPersistence;
+
+    private List<PostEntity> postData = new ArrayList<PostEntity>();
 
     private List<CommentEntity> commentsData = new ArrayList();
 
@@ -86,8 +105,8 @@ public class CommentPostLogicTest {
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
 
-   /**
-     * Initial test configuration. 
+    /**
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -106,7 +125,7 @@ public class CommentPostLogicTest {
         }
     }
 
-       /**
+    /**
      * Clears tables involved in tests
      */
     private void clearData() {
@@ -114,90 +133,86 @@ public class CommentPostLogicTest {
         em.createQuery("delete from PostEntity").executeUpdate();
     }
 
-        /**
+    /**
      * Inserts initial data for correct test operation
      */
-    private void insertData() {
-        for (int i = 0; i < 3; i++) {
-            CommentEntity comments = factory.manufacturePojo(CommentEntity.class);
-            em.persist(comments);
-            commentsData.add(comments);
-        }
-        
-        ResidentProfileEntity resident = factory.manufacturePojo(ResidentProfileEntity.class);
+    private void insertData() throws BusinessLogicException {
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        neighborhoodPersistence.create(neighborhood);
+
+        resident = factory.manufacturePojo(ResidentProfileEntity.class);
+        resident.setNeighborhood(neighborhood);
+
         residentPersistence.create(resident);
-        
-      
+
+        post = factory.manufacturePojo(PostEntity.class);
+        post.setAuthor(resident);
+
+        postPersistence.create(post);
+
         for (int i = 0; i < 3; i++) {
             PostEntity entity = factory.manufacturePojo(PostEntity.class);
+
             entity.setAuthor(resident);
+
             em.persist(entity);
-            data.add(entity);
-            if (i == 0) {
-                commentsData.get(i).setPost(entity);
-            }
+            postData.add(entity);
         }
+
+        for (int i = 0; i < 3; i++) {
+            CommentEntity comment = factory.manufacturePojo(CommentEntity.class);
+
+            if (i == 0) {
+                commentLogic.createComment(comment, postData.get(0).getId(), resident.getId(),  neighborhood.getId());
+            } else {
+                commentLogic.createComment(comment, postData.get(i).getId(), resident.getId(), neighborhood.getId());
+            }
+
+            commentsData.add(comment);
+        }
+
     }
 
     /**
-     * Test to associate a comment with a resident 
-     *
-     *
-     * @throws BusinessLogicException
-     */
-    @Test
-    public void addCommentsTest() {
-        PostEntity entity = data.get(0);
-        CommentEntity commentEntity = commentsData.get(1);
-
-        
-        CommentEntity response = postCommentLogic.associateCommentToPost(commentEntity.getId(), entity.getId());
-
-        Assert.assertNotNull(response);
-        Assert.assertEquals(commentEntity.getId(), response.getId());
-    }
-
-    /**
-     * Test for getting a collection of comment entities associated with a resident
+     * Test for getting  collection of comment entities associated with  post
      */
     @Test
     public void getCommentsTest() {
-        List<CommentEntity> list = postCommentLogic.getComments(data.get(0).getId());
+        List<CommentEntity> list = postCommentLogic.getComments(postData.get(0).getId(), neighborhood.getId());
 
         Assert.assertEquals(1, list.size());
     }
 
     /**
-     * Test for getting a comment entity associated with a resident
+     * Test for getting  comment entity associated with  post
      *
      * @throws BusinessLogicException
      */
     @Test
     public void getCommentTest() throws BusinessLogicException {
-        PostEntity entity = data.get(0);
+        PostEntity entity = postData.get(0);
         CommentEntity commentEntity = commentsData.get(0);
-        CommentEntity response = postCommentLogic.getComment(entity.getId(), commentEntity.getId());
+        CommentEntity response = postCommentLogic.getComment(entity.getId(), commentEntity.getId(), neighborhood.getId());
 
         Assert.assertEquals(commentEntity.getId(), response.getId());
-        Assert.assertEquals(commentEntity.getText(), response.getText());
+        Assert.assertEquals(commentEntity.getAuthor(), response.getAuthor());
 
     }
 
     /**
-     * Test for getting a comment from a non-author user 
+     * Test for getting  comment from non-author user
      *
      * @throws BusinessLogicException
      */
     @Test(expected = BusinessLogicException.class)
     public void getNonRealatedCommentTest() throws BusinessLogicException {
-        PostEntity entity = data.get(0);
+        PostEntity entity = postData.get(0);
         CommentEntity commentEntity = commentsData.get(1);
-        postCommentLogic.getComment(entity.getId(), commentEntity.getId());
+        postCommentLogic.getComment(entity.getId(), commentEntity.getId(), neighborhood.getId());
     }
-    
-    
-        /**
-     * Test for replacing comments associated with a post
+
+    /**
+     * Test for replacing comments associated with  post
      *
      * @throws BusinessLogicException
      */
@@ -207,33 +222,28 @@ public class CommentPostLogicTest {
         List<CommentEntity> newCollection = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             CommentEntity entity = factory.manufacturePojo(CommentEntity.class);
-            entity.setPost(data.get(0));
 
-            commentLogic.createComment(entity);
+            commentLogic.createComment(entity, postData.get(0).getId(), resident.getId(), neighborhood.getId());
 
             newCollection.add(entity);
         }
-        postCommentLogic.replaceComments(data.get(0).getId(), newCollection);
-        List<CommentEntity> comments = postCommentLogic.getComments(data.get(0).getId());
+        postCommentLogic.replaceComments(postData.get(0).getId(), newCollection, neighborhood.getId());
+        List<CommentEntity> comments = postCommentLogic.getComments(postData.get(0).getId(), neighborhood.getId());
         for (CommentEntity newE : newCollection) {
             Assert.assertTrue(comments.contains(newE));
         }
     }
 
     /**
-     * Test for removing an comment from post
+     * Test for removing  comment from post
      *
      */
     @Test
     public void removeCommentTest() throws BusinessLogicException {
-   
-            postCommentLogic.removeComment(data.get(0).getId(), commentsData.get(0).getId());
 
-        Assert.assertTrue(postCommentLogic.getComments(data.get(0).getId()).isEmpty());
+        postCommentLogic.removeComment(postData.get(0).getId(), commentsData.get(0).getId(), neighborhood.getId());
+
+        Assert.assertTrue(postCommentLogic.getComments(postData.get(0).getId(), neighborhood.getId()).isEmpty());
     }
-    
-    
-
-
 
 }

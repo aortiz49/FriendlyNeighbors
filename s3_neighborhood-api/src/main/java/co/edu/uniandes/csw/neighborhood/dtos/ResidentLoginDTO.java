@@ -80,7 +80,7 @@ public class ResidentLoginDTO implements Serializable {
     }
 
     /**
-     * Creates a ResidentLoginDTO object from a ResidentLoginEntity object.
+     * Creates a ResidentLoginDTO object from ResidentLoginEntity object.
      *
      * @param pResidentLogin resident login entity from which to create the new ResidentLoginDTO
      *

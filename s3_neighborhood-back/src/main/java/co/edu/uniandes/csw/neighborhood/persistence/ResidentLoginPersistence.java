@@ -30,7 +30,7 @@ public class ResidentLoginPersistence {
      * Creates a login within DB
      *
      * @param le login object to be created in DB
-     * @return returns the created entity with an id given by DB.
+     * @return returns the created entity with id given by DB.
      */
     public ResidentLoginEntity create(ResidentLoginEntity le){
         
@@ -44,7 +44,7 @@ public class ResidentLoginPersistence {
     /**
      * Returns all logins from DB.
      *
-     * @return a list with all logins found in DB.
+     * @return a list with ll logins found in DB.
      */
     public List<ResidentLoginEntity> findAll() {
         LOGGER.log(Level.INFO, "Querying for all logins");

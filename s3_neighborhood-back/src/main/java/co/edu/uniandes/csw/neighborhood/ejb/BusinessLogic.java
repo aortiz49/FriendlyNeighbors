@@ -135,7 +135,7 @@ public class BusinessLogic {
     }
 
     /**
-     * Update a business with a given Id.
+     * Update a business with  given Id.
      *
      * @param pBusinessId the Id of the business to update
      * @param pBusiness the new business

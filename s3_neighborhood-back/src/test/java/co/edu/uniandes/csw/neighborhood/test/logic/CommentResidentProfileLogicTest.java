@@ -27,8 +27,12 @@ import co.edu.uniandes.csw.neighborhood.ejb.CommentLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.ResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.CommentResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.entities.CommentEntity;
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
+import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
+import co.edu.uniandes.csw.neighborhood.persistence.PostPersistence;
 import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,18 +61,30 @@ public class CommentResidentProfileLogicTest {
 
     @Inject
     private CommentResidentProfileLogic residentCommentLogic;
-    
+
     @Inject
     private CommentLogic commentLogic;
 
+    @Inject
+    private NeighborhoodPersistence neighborhoodPersistence;
+
+    @Inject
+    private PostPersistence postPersistence;
+
+    @Inject
+    private ResidentProfilePersistence residentPersistence;
+
     @PersistenceContext
     private EntityManager em;
-    
 
     @Inject
     private UserTransaction utx;
 
-    private List<ResidentProfileEntity> data = new ArrayList<ResidentProfileEntity>();
+    private NeighborhoodEntity neighborhood;
+
+    private PostEntity post;
+
+    private List<ResidentProfileEntity> residentData = new ArrayList<ResidentProfileEntity>();
 
     private List<CommentEntity> commentsData = new ArrayList();
 
@@ -112,85 +128,82 @@ public class CommentResidentProfileLogicTest {
      */
     private void clearData() {
         em.createQuery("delete from CommentEntity").executeUpdate();
+        em.createQuery("delete from PostEntity").executeUpdate();
         em.createQuery("delete from ResidentProfileEntity").executeUpdate();
     }
 
     /**
      * Inserts initial data for correct test operation
      */
-    private void insertData() {
-        for (int i = 0; i < 3; i++) {
-            CommentEntity comments = factory.manufacturePojo(CommentEntity.class);
-            em.persist(comments);
-            commentsData.add(comments);
-        }
+    private void insertData() throws BusinessLogicException {
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        em.persist(neighborhood);
+
         for (int i = 0; i < 3; i++) {
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
+
+            entity.setNeighborhood(neighborhood);
             em.persist(entity);
-            data.add(entity);
-            if (i == 0) {
-                commentsData.get(i).setAuthor(entity);
-            }
+            residentData.add(entity);
         }
+
+        post = factory.manufacturePojo(PostEntity.class);
+        post.setAuthor(residentData.get(1));
+        postPersistence.create(post);
+
+        for (int i = 0; i < 3; i++) {
+            CommentEntity comment = factory.manufacturePojo(CommentEntity.class);
+
+            if (i == 0) {
+                commentLogic.createComment(comment, post.getId(), residentData.get(0).getId(), neighborhood.getId());
+            } else {
+                commentLogic.createComment(comment, post.getId(), residentData.get(i).getId(), neighborhood.getId());
+            }
+
+            commentsData.add(comment);
+        }
+
     }
 
     /**
-     * Test to associate a comment with a resident
-     *
-     *
-     * @throws BusinessLogicException
-     */
-    @Test
-    public void addCommentsTest() {
-        ResidentProfileEntity entity = data.get(0);
-        CommentEntity commentEntity = commentsData.get(1);
-        CommentEntity response = residentCommentLogic.associateCommentToResident(commentEntity.getId(), entity.getId());
-
-        Assert.assertNotNull(response);
-        Assert.assertEquals(commentEntity.getId(), response.getId());
-    }
-
-    /**
-     * Test for getting a collection of comment entities associated with a
+     * Test for getting  collection of comment entities associated with 
      * resident
      */
     @Test
     public void getCommentsTest() {
-        List<CommentEntity> list = residentCommentLogic.getComments(data.get(0).getId());
+        List<CommentEntity> list = residentCommentLogic.getComments(residentData.get(0).getId(), neighborhood.getId());
 
         Assert.assertEquals(1, list.size());
     }
 
     /**
-     * Test for getting a comment entity associated with a resident
+     * Test for getting  comment entity associated with  resident
      *
      * @throws BusinessLogicException
      */
     @Test
     public void getCommentTest() throws BusinessLogicException {
-        ResidentProfileEntity entity = data.get(0);
+        ResidentProfileEntity entity = residentData.get(0);
         CommentEntity commentEntity = commentsData.get(0);
-        CommentEntity response = residentCommentLogic.getComment(entity.getId(), commentEntity.getId());
+        CommentEntity response = residentCommentLogic.getComment(entity.getId(), commentEntity.getId(), neighborhood.getId());
 
         Assert.assertEquals(commentEntity.getId(), response.getId());
-        Assert.assertEquals(commentEntity.getText(), response.getText());
-
     }
 
     /**
-     * Test for getting a comment from a non-author user
+     * Test for getting  comment from non-author user
      *
      * @throws BusinessLogicException
      */
     @Test(expected = BusinessLogicException.class)
     public void getNonRealatedCommentTest() throws BusinessLogicException {
-        ResidentProfileEntity entity = data.get(0);
+        ResidentProfileEntity entity = residentData.get(0);
         CommentEntity commentEntity = commentsData.get(1);
-        residentCommentLogic.getComment(entity.getId(), commentEntity.getId());
+        residentCommentLogic.getComment(entity.getId(), commentEntity.getId(), neighborhood.getId());
     }
-    
-        /**
-     * Test for replacing comments associated with a resident
+
+    /**
+     * Test for replacing comments associated with  resident
      *
      * @throws BusinessLogicException
      */
@@ -200,19 +213,28 @@ public class CommentResidentProfileLogicTest {
         List<CommentEntity> newCollection = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             CommentEntity entity = factory.manufacturePojo(CommentEntity.class);
-            entity.setAuthor(data.get(0));
 
-            commentLogic.createComment(entity);
+        commentLogic.createComment(entity, post.getId(), residentData.get(0).getId(), neighborhood.getId());
 
             newCollection.add(entity);
         }
-        residentCommentLogic.replaceComments(data.get(0).getId(), newCollection);
-        List<CommentEntity> comments = residentCommentLogic.getComments(data.get(0).getId());
+        residentCommentLogic.replaceComments(residentData.get(0).getId(), newCollection, neighborhood.getId());
+        List<CommentEntity> comments = residentCommentLogic.getComments(residentData.get(0).getId(), neighborhood.getId());
         for (CommentEntity newE : newCollection) {
             Assert.assertTrue(comments.contains(newE));
         }
     }
 
+    /**
+     * Test for removing  comment from resident
+     *
+     */
+    @Test
+    public void removeCommentTest() throws BusinessLogicException {
 
+        residentCommentLogic.removeComment(residentData.get(0).getId(), commentsData.get(0).getId(), neighborhood.getId());
+
+        Assert.assertTrue(residentCommentLogic.getComments(residentData.get(0).getId(), neighborhood.getId()).isEmpty());
+    }
 
 }

@@ -37,7 +37,7 @@ import javax.persistence.TypedQuery;
 
 /**
  * Class that manages the persistence for the Business. It connects via the Entity Manager in
- * javax.persistance with a SQL database.
+ * javax.persistance with  SQL database.
  *
  * @author aortiz49
  */
@@ -66,7 +66,7 @@ public class BusinessPersistence {
      * Persists a business in the database.
      *
      * @param pBusinessEntity business object to be created in the database
-     * @return the created business with an id given by the database
+     * @return the created business with id given by the database
      */
     public BusinessEntity create(BusinessEntity pBusinessEntity) {
         // logs a message

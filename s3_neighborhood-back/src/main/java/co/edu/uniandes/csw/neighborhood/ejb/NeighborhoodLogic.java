@@ -131,7 +131,7 @@ public class NeighborhoodLogic {
     }
 
     /**
-     * Update a neighborhood with a given name.
+     * Update a neighborhood with  given name.
      *
      * @param pNeighborhoodId the Id of the neighborhood to update
      * @param pNeighborhood the new neighborhood

@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -33,52 +34,51 @@ public class ViewerPostLogic {
     private ResidentProfilePersistence viewerPersistence;
 
     /**
-     * Associates an post with a viewer
+     * Associates post with viewer
      *
-     * @param viewerId ID from viewer entity
-     * @param postId ID from post entity
-     * @return associated post entity
+     * @param neighId parent neighborhood
+     * @param viewerId id from viewer entity
+     * @param postId id from post
+     * @return associated post
      */
-    public PostEntity associatePostToViewer(Long viewerId, Long postId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Trying to associate post with viewer with id = {0}", viewerId);
-        ResidentProfileEntity viewerEntity = viewerPersistence.find(viewerId);
-        PostEntity postEntity = postPersistence.find(postId);
-
-        if (viewerEntity.getNeighborhood().getId() != postEntity.getAuthor().getNeighborhood().getId()) {
-            throw new BusinessLogicException("Viewer and post must belong to the same neighborhood");
-        }
+    public PostEntity associatePostToViewer(Long viewerId, Long postId, Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Initiating association between post with id {0} and  viewer with id {1}, from neighbothood {2}", new Object[]{postId, viewerId, neighId});
+        ResidentProfileEntity viewerEntity = viewerPersistence.find(viewerId, neighId);
+        PostEntity postEntity = postPersistence.find(postId, neighId);
 
         postEntity.getViewers().add(viewerEntity);
 
-        LOGGER.log(Level.INFO, "Post is associated with viewer with id = {0}", viewerId);
-        return postPersistence.find(postId);
+        LOGGER.log(Level.INFO, "Association created between post with id {0} and  viewer with id  {1}, from neighbothood {2}", new Object[]{postId, viewerId, neighId});
+        return postPersistence.find(postId, neighId);
     }
 
     /**
-     * Gets a collection of post entities associated with a viewer
+     * Gets a collection of post entities associated with viewer
      *
-     * @param viewerId ID from viewer entity
-     * @return collection of post entities associated with a viewer
+     * @param neighId parent neighborhood
+     * @param viewerId id from viewer entity
+     * @return collection of post entities associated with viewer
      */
-    public List<PostEntity> getPosts(Long viewerId) {
-        LOGGER.log(Level.INFO, "Gets all posts belonging to viewer with id = {0}", viewerId);
-        return viewerPersistence.find(viewerId).getPostsToView();
+    public List<PostEntity> getPosts(Long viewerId, Long neighId) {
+        LOGGER.log(Level.INFO, "Gets all posts belonging to viewer with id {0} from neighborhood {1}", new Object[]{viewerId, neighId});
+        return viewerPersistence.find(viewerId, neighId).getPostsToView();
     }
 
     /**
-     * Gets an post entity associated with a a viewer
+     * Gets post associated with viewer
      *
-     * @param viewerId Id from viewer
-     * @param postId Id from associated entity
-     * @return associated entity
+     * @param neighId parent neighborhood
+     * @param viewerId id from viewer
+     * @param postId id from associated entity
+     * @return associated post
      * @throws BusinessLogicException If post is not associated
      */
-    public PostEntity getPost(Long viewerId, Long postId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Finding post with id = {0} from viewer with = " + viewerId, postId);
-        List<PostEntity> posts = viewerPersistence.find(viewerId).getPostsToView();
-        PostEntity postPosts = postPersistence.find(postId);
+    public PostEntity getPost(Long viewerId, Long postId, Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Initiating query about post with id {0} from viewer with {1}, from neighbothood {2}", new Object[]{postId, viewerId, neighId});
+        List<PostEntity> posts = viewerPersistence.find(viewerId, neighId).getPostsToView();
+        PostEntity postPosts = postPersistence.find(postId, neighId);
         int index = posts.indexOf(postPosts);
-        LOGGER.log(Level.INFO, "Finish query about post with id = {0} from viewer with = " + viewerId, postId);
+        LOGGER.log(Level.INFO, "Finish query about post with id {0} from viewer with {1}, from neighbothood {2}", new Object[]{postId, viewerId, neighId});
         if (index >= 0) {
             return posts.get(index);
         }
@@ -86,16 +86,17 @@ public class ViewerPostLogic {
     }
 
     /**
-     * Replaces posts associated with a viewer
+     * Replaces posts associated with viewer
      *
-     * @param viewerId Id from viewer
-     * @param posts Collection of post to associate with viewer
+     * @param neighId parent neighborhood
+     * @param viewerId id from viewer
+     * @param posts collection of post to associate with viewer
      * @return A new collection associated to viewer
      */
-    public List<PostEntity> replacePosts(Long viewerId, List<PostEntity> posts) {
-        LOGGER.log(Level.INFO, "Trying to replace posts related to viewer with id = {0}", viewerId);
-        ResidentProfileEntity viewerEntity = viewerPersistence.find(viewerId);
-        List<PostEntity> postList = postPersistence.findAll();
+    public List<PostEntity> replacePosts(Long viewerId, List<PostEntity> posts, Long neighId) {
+        LOGGER.log(Level.INFO, "Trying to replace posts related to viewer with id {0} from neighborhood {1}", new Object[]{viewerId, neighId});
+        ResidentProfileEntity viewerEntity = viewerPersistence.find(viewerId, neighId);
+        List<PostEntity> postList = postPersistence.findAll(neighId);
         for (PostEntity post : postList) {
             if (posts.contains(post)) {
                 if (!post.getViewers().contains(viewerEntity)) {
@@ -106,21 +107,22 @@ public class ViewerPostLogic {
             }
         }
         viewerEntity.setPostsToView(posts);
-        LOGGER.log(Level.INFO, "Ended trying to replace posts related to viewer with id = {0}", viewerId);
+        LOGGER.log(Level.INFO, "Ended trying to replace posts related to viewer with id {0} from neighborhood {1}", new Object[]{viewerId, neighId});
         return viewerEntity.getPostsToView();
     }
 
     /**
-     * Unlinks an post from a viewer
+     * Unlinks post from viewer
      *
+     * @param neighId parent neighborhood
      * @param viewerId Id from viewer
      * @param postId Id from post
      */
-    public void removePost(Long viewerId, Long postId) {
-        LOGGER.log(Level.INFO, "Trying to delete an post from viewer with id = {0}", viewerId);
-        ResidentProfileEntity viewerEntity = viewerPersistence.find(viewerId);
-        PostEntity postEntity = postPersistence.find(postId);
+    public void removePost(Long viewerId, Long postId, Long neighId) {
+        LOGGER.log(Level.INFO, "Deleting association between post with id {0} and  viewer with id {1}, from neighbothood {2}", new Object[]{postId, viewerId, neighId});
+        ResidentProfileEntity viewerEntity = viewerPersistence.find(viewerId, neighId);
+        PostEntity postEntity = postPersistence.find(postId, neighId);
         postEntity.getViewers().remove(viewerEntity);
-        LOGGER.log(Level.INFO, "Finished removing an post from viewer with id = {0}", viewerId);
+        LOGGER.log(Level.INFO, "Association deleted between post with id {0} and  viewer with id {1}, from neighbothood {2}", new Object[]{postId, viewerId, neighId});
     }
 }

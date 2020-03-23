@@ -34,52 +34,51 @@ public class EventAttendeeLogic {
     private EventPersistence eventPersistence;
 
     /**
-     * Associates a attendee with an event
+     * Associates attendee with event
      *
-     * @param eventId ID from event entity
-     * @param attendeeId ID from attendee
+     * @param neighId parent neighborhood
+     * @param eventId id from event entity
+     * @param attendeeId id from attendee
      * @return associated attendee
      */
-    public ResidentProfileEntity associateResidentProfileToEvent(Long eventId, Long attendeeId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Trying to add attendee to event with id = {0}", eventId);
-        EventEntity eventEntity = eventPersistence.find(eventId);
-        ResidentProfileEntity attendeeEntity = attendeePersistence.find(attendeeId);
-
-        if (attendeeEntity.getNeighborhood().getId() != eventEntity.getHost().getNeighborhood().getId()) {
-            throw new BusinessLogicException("Event and attendee must belong to the same neighborhood");
-        }
+    public ResidentProfileEntity associateAttendeeToEvent(Long eventId, Long attendeeId, Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Initiating association between attendee with id {0} and  event with id {1}, from neighbothood {2}", new Object[]{attendeeId, eventId, neighId});
+        EventEntity eventEntity = eventPersistence.find(eventId, neighId);
+        ResidentProfileEntity attendeeEntity = attendeePersistence.find(attendeeId, neighId);
 
         eventEntity.getAttendees().add(attendeeEntity);
 
-        LOGGER.log(Level.INFO, "Resident is associated with event with id = {0}", eventId);
-        return attendeePersistence.find(attendeeId);
+        LOGGER.log(Level.INFO, "Association created between attendee with id {0} and event with id {1}, from neighbothood {2}", new Object[]{attendeeId, eventId, neighId});
+        return attendeePersistence.find(attendeeId, neighId);
     }
 
     /**
-     * Gets a collection of attendee entities associated with an event
+     * Gets a collection of attendee entities associated with event
      *
-     * @param eventId ID from event entity
-     * @return collection of attendee entities associated with an event
+     * @param neighId parent neighborhood
+     * @param eventId id from event entity
+     * @return collection of attendee entities associated with event
      */
-    public List<ResidentProfileEntity> getResidentProfiles(Long eventId) {
-        LOGGER.log(Level.INFO, "Gets all attendees belonging to event with id = {0}", eventId);
-        return eventPersistence.find(eventId).getAttendees();
+    public List<ResidentProfileEntity> getAttendees(Long eventId, Long neighId) {
+        LOGGER.log(Level.INFO, "Gets all attendees belonging to event with id = {0} from neighborhood {1}", new Object[]{eventId, neighId});
+        return eventPersistence.find(eventId, neighId).getAttendees();
     }
 
     /**
-     * Gets an attendee associated with an event
+     * Gets attendee associated with event
      *
-     * @param eventId Id from event
-     * @param attendeeId Id from associated entity
+     * @param neighId parent neighborhood
+     * @param eventId id from event
+     * @param attendeeId id from associated entity
      * @return associated attendee
      * @throws BusinessLogicException If attendee is not associated
      */
-    public ResidentProfileEntity getResidentProfile(Long eventId, Long attendeeId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Finding attendee with id = {0} from event with = " + eventId, attendeeId);
-        List<ResidentProfileEntity> attendees = eventPersistence.find(eventId).getAttendees();
-        ResidentProfileEntity attendeeResidentProfiles = attendeePersistence.find(attendeeId);
+    public ResidentProfileEntity getAttendee(Long eventId, Long attendeeId, Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Initiating query about attendee with id {0} from event with id {1}, from neighbothood {2}", new Object[]{attendeeId, eventId, neighId});
+        List<ResidentProfileEntity> attendees = eventPersistence.find(eventId, neighId).getAttendees();
+        ResidentProfileEntity attendeeResidentProfiles = attendeePersistence.find(attendeeId, neighId);
         int index = attendees.indexOf(attendeeResidentProfiles);
-        LOGGER.log(Level.INFO, "Finish query about attendee with id = {0} from event with = " + eventId, attendeeId);
+        LOGGER.log(Level.INFO, "Finish query about attendee with id {0} from event with id {1}, from neighbothood {2}", new Object[]{attendeeId, eventId, neighId});
         if (index >= 0) {
             return attendees.get(index);
         }
@@ -87,16 +86,17 @@ public class EventAttendeeLogic {
     }
 
     /**
-     * Replaces attendees associated with a event
+     * Replaces attendees associated with event
      *
-     * @param eventId Id from event
-     * @param attendees Collection of attendee to associate with event
+     * @param neighId parent neighborhood
+     * @param eventId id from event
+     * @param attendees collection of attendee to associate with event
      * @return A new collection associated to event
      */
-    public List<ResidentProfileEntity> replaceResidentProfiles(Long eventId, List<ResidentProfileEntity> attendees) {
-        LOGGER.log(Level.INFO, "Trying to replace attendees related to event with id = {0}", eventId);
-        EventEntity eventEntity = eventPersistence.find(eventId);
-        List<ResidentProfileEntity> attendeeList = attendeePersistence.findAll();
+    public List<ResidentProfileEntity> replaceAttendees(Long eventId, List<ResidentProfileEntity> attendees, Long neighId) {
+        LOGGER.log(Level.INFO, "Trying to replace attendees related to event with id {0} from neighborhood {1}", new Object[]{eventId, neighId});
+        EventEntity eventEntity = eventPersistence.find(eventId, neighId);
+        List<ResidentProfileEntity> attendeeList = attendeePersistence.findAll(neighId);
         for (ResidentProfileEntity attendee : attendeeList) {
             if (attendees.contains(attendee)) {
                 if (!attendee.getEventsToAttend().contains(eventEntity)) {
@@ -107,22 +107,23 @@ public class EventAttendeeLogic {
             }
         }
         eventEntity.setAttendees(attendees);
-        LOGGER.log(Level.INFO, "Ended trying to replace attendees related to event with id = {0}", eventId);
+        LOGGER.log(Level.INFO, "Ended trying to replace attendees related to event with id {0} from neighborhood {1}", new Object[]{eventId, neighId});
         return eventEntity.getAttendees();
     }
 
     /**
-     * Unlinks an attendee from a event
+     * Unlinks attendee from event
      *
+     * @param neighId parent neighborhood
      * @param eventId Id from event
      * @param attendeeId Id from attendee
      */
-    public void removeResidentProfile(Long eventId, Long attendeeId) {
-        LOGGER.log(Level.INFO, "Trying to delete an attendee from event with id = {0}", eventId);
-        ResidentProfileEntity attendeeEntity = attendeePersistence.find(attendeeId);
-        EventEntity eventEntity = eventPersistence.find(eventId);
+    public void removeAttendee(Long eventId, Long attendeeId, Long neighId) {
+        LOGGER.log(Level.INFO, "Deleting association between attendee with id {0} and  event with id {1}, from neighbothood {2}", new Object[]{attendeeId, eventId, neighId});
+        ResidentProfileEntity attendeeEntity = attendeePersistence.find(attendeeId, neighId);
+        EventEntity eventEntity = eventPersistence.find(eventId, neighId);
         eventEntity.getAttendees().remove(attendeeEntity);
-        LOGGER.log(Level.INFO, "Finished removing an attendee from event with id = {0}", eventId);
+        LOGGER.log(Level.INFO, "Association deleted between attendee with id {0} and  event with id {1}, from neighbothood {2}", new Object[]{attendeeId, eventId, neighId});
     }
 
 }

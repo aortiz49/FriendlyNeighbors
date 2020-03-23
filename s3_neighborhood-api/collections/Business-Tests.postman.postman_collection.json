@@ -237,7 +237,7 @@
 			"response": []
 		},
 		{
-			"name": "Creates a business with a null name",
+			"name": "Creates a business with  null name",
 			"event": [
 				{
 					"listen": "test",

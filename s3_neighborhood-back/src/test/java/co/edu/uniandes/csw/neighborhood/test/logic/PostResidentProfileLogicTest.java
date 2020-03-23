@@ -27,6 +27,7 @@ import co.edu.uniandes.csw.neighborhood.ejb.PostLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.ResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.PostResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
@@ -57,18 +58,19 @@ public class PostResidentProfileLogicTest {
 
     @Inject
     private PostResidentProfileLogic residentPostLogic;
-    
+
     @Inject
     private PostLogic postLogic;
 
     @PersistenceContext
     private EntityManager em;
-    
 
     @Inject
     private UserTransaction utx;
 
-    private List<ResidentProfileEntity> data = new ArrayList<ResidentProfileEntity>();
+    private NeighborhoodEntity neighborhood;
+
+    private List<ResidentProfileEntity> residentData = new ArrayList<ResidentProfileEntity>();
 
     private List<PostEntity> postsData = new ArrayList();
 
@@ -118,59 +120,53 @@ public class PostResidentProfileLogicTest {
     /**
      * Inserts initial data for correct test operation
      */
-    private void insertData() {
-        for (int i = 0; i < 3; i++) {
-            PostEntity posts = factory.manufacturePojo(PostEntity.class);
-            em.persist(posts);
-            postsData.add(posts);
-        }
+    private void insertData() throws BusinessLogicException {
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        em.persist(neighborhood);
+
         for (int i = 0; i < 3; i++) {
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
+
+            entity.setNeighborhood(neighborhood);
             em.persist(entity);
-            data.add(entity);
-            if (i == 0) {
-                postsData.get(i).setAuthor(entity);
-            }
+            residentData.add(entity);
         }
+
+        for (int i = 0; i < 3; i++) {
+            PostEntity post = factory.manufacturePojo(PostEntity.class);
+
+            if (i == 0) {
+                postLogic.createPost(post, residentData.get(0).getId(), neighborhood.getId());
+            } else {
+                postLogic.createPost(post, residentData.get(i).getId(), neighborhood.getId());
+            }
+
+            postsData.add(post);
+        }
+
     }
 
     /**
-     * Test to associate a post with a resident
-     *
-     *
-     * @throws BusinessLogicException
-     */
-    @Test
-    public void addPostsTest() {
-        ResidentProfileEntity entity = data.get(0);
-        PostEntity postEntity = postsData.get(1);
-        PostEntity response = residentPostLogic.associatePostToResident(postEntity.getId(), entity.getId());
-
-        Assert.assertNotNull(response);
-        Assert.assertEquals(postEntity.getId(), response.getId());
-    }
-
-    /**
-     * Test for getting a collection of post entities associated with a
+     * Test for getting  collection of post entities associated with 
      * resident
      */
     @Test
     public void getPostsTest() {
-        List<PostEntity> list = residentPostLogic.getPosts(data.get(0).getId());
+        List<PostEntity> list = residentPostLogic.getPosts(residentData.get(0).getId(), neighborhood.getId());
 
         Assert.assertEquals(1, list.size());
     }
 
     /**
-     * Test for getting a post entity associated with a resident
+     * Test for getting  post entity associated with  resident
      *
      * @throws BusinessLogicException
      */
     @Test
     public void getPostTest() throws BusinessLogicException {
-        ResidentProfileEntity entity = data.get(0);
+        ResidentProfileEntity entity = residentData.get(0);
         PostEntity postEntity = postsData.get(0);
-        PostEntity response = residentPostLogic.getPost(entity.getId(), postEntity.getId());
+        PostEntity response = residentPostLogic.getPost(entity.getId(), postEntity.getId(), neighborhood.getId());
 
         Assert.assertEquals(postEntity.getId(), response.getId());
         Assert.assertEquals(postEntity.getDescription(), response.getDescription());
@@ -178,19 +174,19 @@ public class PostResidentProfileLogicTest {
     }
 
     /**
-     * Test for getting a post from a non-author user
+     * Test for getting  post from non-author user
      *
      * @throws BusinessLogicException
      */
     @Test(expected = BusinessLogicException.class)
     public void getNonRealatedPostTest() throws BusinessLogicException {
-        ResidentProfileEntity entity = data.get(0);
+        ResidentProfileEntity entity = residentData.get(0);
         PostEntity postEntity = postsData.get(1);
-        residentPostLogic.getPost(entity.getId(), postEntity.getId());
+        residentPostLogic.getPost(entity.getId(), postEntity.getId(), neighborhood.getId());
     }
-    
-        /**
-     * Test for replacing posts associated with a resident
+
+    /**
+     * Test for replacing posts associated with  resident
      *
      * @throws BusinessLogicException
      */
@@ -200,29 +196,28 @@ public class PostResidentProfileLogicTest {
         List<PostEntity> newCollection = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             PostEntity entity = factory.manufacturePojo(PostEntity.class);
-            entity.setAuthor(data.get(0));
 
-            postLogic.createPost(entity);
+            postLogic.createPost(entity, residentData.get(0).getId(), neighborhood.getId());
 
             newCollection.add(entity);
         }
-        residentPostLogic.replacePosts(data.get(0).getId(), newCollection);
-        List<PostEntity> posts = residentPostLogic.getPosts(data.get(0).getId());
+        residentPostLogic.replacePosts(residentData.get(0).getId(), newCollection, neighborhood.getId());
+        List<PostEntity> posts = residentPostLogic.getPosts(residentData.get(0).getId(), neighborhood.getId());
         for (PostEntity newE : newCollection) {
             Assert.assertTrue(posts.contains(newE));
         }
     }
 
     /**
-     * Test for removing an post from resident
+     * Test for removing  post from resident
      *
      */
     @Test
     public void removePostTest() throws BusinessLogicException {
-   
-            residentPostLogic.removePost(data.get(0).getId(), postsData.get(0).getId());
 
-        Assert.assertTrue(residentPostLogic.getPosts(data.get(0).getId()).isEmpty());
+        residentPostLogic.removePost(residentData.get(0).getId(), postsData.get(0).getId(), neighborhood.getId());
+
+        Assert.assertTrue(residentPostLogic.getPosts(residentData.get(0).getId(), neighborhood.getId()).isEmpty());
     }
 
 }

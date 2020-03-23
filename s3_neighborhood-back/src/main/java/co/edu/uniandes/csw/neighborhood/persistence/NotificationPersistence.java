@@ -29,7 +29,7 @@ public class NotificationPersistence {
      * Method to persist the entity in the database.
      *
      * @param notificationEntity notification object to be created in the database.
-     * @return returns the entity created with an id given by the database.
+     * @return returns the entity created with id given by the database.
      */
     public NotificationEntity create(NotificationEntity notificationEntity) {
         LOGGER.log(Level.INFO, "Creating a new notification");
@@ -41,7 +41,7 @@ public class NotificationPersistence {
     /**
      * Returns all notifications from the database.
      *
-     * @return a list with all the notifications found in the database, "select u from NotificationEntity u" is like a "select 
+     * @return a list with ll the notifications found in the database, "select u from NotificationEntity u" is like a "select 
      * from NotificationEntity;" - "SELECT * FROM table_name" en SQL.
      */
     public List<NotificationEntity> findAll() {

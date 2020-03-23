@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.test.persistence;
 
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 import java.util.ArrayList;
@@ -58,6 +59,8 @@ public class ResidentProfilePersistenceTest {
 
     @Inject
     UserTransaction utx;
+    
+    private NeighborhoodEntity neighborhood;
 
     private List<ResidentProfileEntity> data = new ArrayList<>();
 
@@ -107,10 +110,16 @@ public class ResidentProfilePersistenceTest {
      * Inserts initial data for correct test operation
      */
     private void insertData() {
+        
         PodamFactory factory = new PodamFactoryImpl();
+        
+         neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+         em.persist(neighborhood);
+         
         for (int i = 0; i < 3; i++) {
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
-
+            entity.setNeighborhood(neighborhood);
+            
             em.persist(entity);
             data.add(entity);
         }
@@ -146,7 +155,9 @@ public class ResidentProfilePersistenceTest {
      */
     @Test
     public void findAllTest() {
-        List<ResidentProfileEntity> list = residentPersistence.findAll();
+        
+
+        List<ResidentProfileEntity> list = residentPersistence.findAll(neighborhood.getId());
         Assert.assertEquals(data.size(), list.size());
         for (ResidentProfileEntity ent : list) {
             boolean found = false;
@@ -165,7 +176,7 @@ public class ResidentProfilePersistenceTest {
     @Test
     public void getResidentTest() {
         ResidentProfileEntity entity = data.get(0);
-        ResidentProfileEntity newEntity = residentPersistence.find(entity.getId());
+        ResidentProfileEntity newEntity = residentPersistence.find(entity.getId(), neighborhood.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getName(), newEntity.getName());
         Assert.assertEquals(entity.getNickname(), newEntity.getNickname());
@@ -173,9 +184,16 @@ public class ResidentProfilePersistenceTest {
         Assert.assertEquals(entity.getPhoneNumber(), newEntity.getPhoneNumber());
         Assert.assertEquals(entity.getPreferences(), newEntity.getPreferences());
         Assert.assertEquals(entity.getProofOfResidence(), newEntity.getProofOfResidence());
-
     }
-
+    
+     /**
+     * Test for a query about a resident not belonging to a neighborhood.
+     */
+    @Test(expected = RuntimeException.class)
+    public void getResidentTestNotBelonging() {
+         ResidentProfileEntity entity = data.get(0);
+        residentPersistence.find(entity.getId(), new Long(10000));
+    }
     /**
      * Test for updating a resident.
      */
@@ -186,10 +204,11 @@ public class ResidentProfilePersistenceTest {
         ResidentProfileEntity newEntity = factory.manufacturePojo(ResidentProfileEntity.class);
 
         newEntity.setId(entity.getId());
+        newEntity.setNeighborhood(neighborhood);
+        
+        residentPersistence.update(newEntity, neighborhood.getId());
 
-        residentPersistence.update(newEntity);
-
-        ResidentProfileEntity resp = em.find(ResidentProfileEntity.class, entity.getId());
+        ResidentProfileEntity resp = residentPersistence.find(entity.getId(), neighborhood.getId());
 
         Assert.assertEquals(newEntity.getName(), resp.getName());
     }
@@ -200,7 +219,7 @@ public class ResidentProfilePersistenceTest {
     @Test
     public void deleteResidentTest() {
         ResidentProfileEntity entity = data.get(0);
-        residentPersistence.delete(entity.getId());
+        residentPersistence.delete(entity.getId(), neighborhood.getId());
         ResidentProfileEntity deleted = em.find(ResidentProfileEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }

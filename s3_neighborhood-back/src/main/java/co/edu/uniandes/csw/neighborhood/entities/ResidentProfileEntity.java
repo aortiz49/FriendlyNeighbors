@@ -18,7 +18,7 @@ import javax.persistence.OneToOne;
 import uk.co.jemos.podam.common.PodamExclude;
 
 /**
- * This class represent a resident in a neighborhood
+ * This class represents a resident in a neighborhood
  *
  * @author albayona
  */
@@ -179,6 +179,12 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
         return phoneNumber;
     }
 
+    
+//===================================================
+// Getters & Setters
+//=================================================== 
+    
+    
     /**
      * @param phoneNumber the phoneNumber to set
      */

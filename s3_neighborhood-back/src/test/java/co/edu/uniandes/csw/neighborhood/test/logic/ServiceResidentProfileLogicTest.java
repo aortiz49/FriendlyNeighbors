@@ -27,6 +27,7 @@ import co.edu.uniandes.csw.neighborhood.ejb.ServiceLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.ResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.ServiceResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.entities.ServiceEntity;
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
@@ -57,18 +58,19 @@ public class ServiceResidentProfileLogicTest {
 
     @Inject
     private ServiceResidentProfileLogic residentServiceLogic;
-    
+
     @Inject
     private ServiceLogic serviceLogic;
 
     @PersistenceContext
     private EntityManager em;
-    
 
     @Inject
     private UserTransaction utx;
 
-    private List<ResidentProfileEntity> data = new ArrayList<ResidentProfileEntity>();
+    private NeighborhoodEntity neighborhood;
+
+    private List<ResidentProfileEntity> residentData = new ArrayList<ResidentProfileEntity>();
 
     private List<ServiceEntity> servicesData = new ArrayList();
 
@@ -118,59 +120,53 @@ public class ServiceResidentProfileLogicTest {
     /**
      * Inserts initial data for correct test operation
      */
-    private void insertData() {
-        for (int i = 0; i < 3; i++) {
-            ServiceEntity services = factory.manufacturePojo(ServiceEntity.class);
-            em.persist(services);
-            servicesData.add(services);
-        }
+    private void insertData() throws BusinessLogicException {
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        em.persist(neighborhood);
+
         for (int i = 0; i < 3; i++) {
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
+
+            entity.setNeighborhood(neighborhood);
             em.persist(entity);
-            data.add(entity);
-            if (i == 0) {
-                servicesData.get(i).setAuthor(entity);
-            }
+            residentData.add(entity);
         }
+
+        for (int i = 0; i < 3; i++) {
+            ServiceEntity service = factory.manufacturePojo(ServiceEntity.class);
+
+            if (i == 0) {
+                serviceLogic.createService(service, residentData.get(0).getId(), neighborhood.getId());
+            } else {
+                serviceLogic.createService(service, residentData.get(i).getId(), neighborhood.getId());
+            }
+
+            servicesData.add(service);
+        }
+
     }
 
     /**
-     * Test to associate a service with a resident
-     *
-     *
-     * @throws BusinessLogicException
-     */
-    @Test
-    public void addServicesTest() {
-        ResidentProfileEntity entity = data.get(0);
-        ServiceEntity serviceEntity = servicesData.get(1);
-        ServiceEntity response = residentServiceLogic.associateServiceToResident(serviceEntity.getId(), entity.getId());
-
-        Assert.assertNotNull(response);
-        Assert.assertEquals(serviceEntity.getId(), response.getId());
-    }
-
-    /**
-     * Test for getting a collection of service entities associated with a
+     * Test for getting  collection of service entities associated with 
      * resident
      */
     @Test
     public void getServicesTest() {
-        List<ServiceEntity> list = residentServiceLogic.getServices(data.get(0).getId());
+        List<ServiceEntity> list = residentServiceLogic.getServices(residentData.get(0).getId(), neighborhood.getId());
 
         Assert.assertEquals(1, list.size());
     }
 
     /**
-     * Test for getting a service entity associated with a resident
+     * Test for getting  service entity associated with  resident
      *
      * @throws BusinessLogicException
      */
     @Test
     public void getServiceTest() throws BusinessLogicException {
-        ResidentProfileEntity entity = data.get(0);
+        ResidentProfileEntity entity = residentData.get(0);
         ServiceEntity serviceEntity = servicesData.get(0);
-        ServiceEntity response = residentServiceLogic.getService(entity.getId(), serviceEntity.getId());
+        ServiceEntity response = residentServiceLogic.getService(entity.getId(), serviceEntity.getId(), neighborhood.getId());
 
         Assert.assertEquals(serviceEntity.getId(), response.getId());
         Assert.assertEquals(serviceEntity.getDescription(), response.getDescription());
@@ -178,19 +174,19 @@ public class ServiceResidentProfileLogicTest {
     }
 
     /**
-     * Test for getting a service from a non-author user
+     * Test for getting  service from non-author user
      *
      * @throws BusinessLogicException
      */
     @Test(expected = BusinessLogicException.class)
     public void getNonRealatedServiceTest() throws BusinessLogicException {
-        ResidentProfileEntity entity = data.get(0);
+        ResidentProfileEntity entity = residentData.get(0);
         ServiceEntity serviceEntity = servicesData.get(1);
-        residentServiceLogic.getService(entity.getId(), serviceEntity.getId());
+        residentServiceLogic.getService(entity.getId(), serviceEntity.getId(), neighborhood.getId());
     }
-    
-        /**
-     * Test for replacing services associated with a resident
+
+    /**
+     * Test for replacing services associated with  resident
      *
      * @throws BusinessLogicException
      */
@@ -200,29 +196,28 @@ public class ServiceResidentProfileLogicTest {
         List<ServiceEntity> newCollection = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             ServiceEntity entity = factory.manufacturePojo(ServiceEntity.class);
-            entity.setAuthor(data.get(0));
 
-            serviceLogic.createService(entity);
+            serviceLogic.createService(entity, residentData.get(0).getId(), neighborhood.getId());
 
             newCollection.add(entity);
         }
-        residentServiceLogic.replaceServices(data.get(0).getId(), newCollection);
-        List<ServiceEntity> services = residentServiceLogic.getServices(data.get(0).getId());
+        residentServiceLogic.replaceServices(residentData.get(0).getId(), newCollection, neighborhood.getId());
+        List<ServiceEntity> services = residentServiceLogic.getServices(residentData.get(0).getId(), neighborhood.getId());
         for (ServiceEntity newE : newCollection) {
             Assert.assertTrue(services.contains(newE));
         }
     }
 
     /**
-     * Test for removing an service from resident
+     * Test for removing  service from resident
      *
      */
     @Test
     public void removeServiceTest() throws BusinessLogicException {
-   
-            residentServiceLogic.removeService(data.get(0).getId(), servicesData.get(0).getId());
 
-        Assert.assertTrue(residentServiceLogic.getServices(data.get(0).getId()).isEmpty());
+        residentServiceLogic.removeService(residentData.get(0).getId(), servicesData.get(0).getId(), neighborhood.getId());
+
+        Assert.assertTrue(residentServiceLogic.getServices(residentData.get(0).getId(), neighborhood.getId()).isEmpty());
     }
 
 }

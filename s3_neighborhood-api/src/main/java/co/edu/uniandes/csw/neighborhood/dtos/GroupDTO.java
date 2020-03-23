@@ -47,7 +47,7 @@ public class GroupDTO {
     }
 
     /**
-     * Creates a group DTO from a group entity.
+     * Creates a group DTO from group entity.
      *
      * @param entityGroup entity from which DTO is to be created
      *

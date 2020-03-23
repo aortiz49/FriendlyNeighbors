@@ -1,7 +1,31 @@
+/*
+MIT License
 
+Copyright (c) 2019 Universidad de los Andes - ISIS2603
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+ */
 package co.edu.uniandes.csw.neighborhood.test.persistence;
 
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.entities.CommentEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.persistence.CommentPersistence;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +47,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 /**
  * Persistence test for Comment
  *
- * @author albayona
+ * @author aortiz49
  */
 @RunWith(Arquillian.class)
 public class CommentPersistenceTest {
@@ -37,12 +61,16 @@ public class CommentPersistenceTest {
     @Inject
     UserTransaction utx;
 
+    NeighborhoodEntity neighborhood;
+
+    ResidentProfileEntity resident;
+
     private List<CommentEntity> data = new ArrayList<>();
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara.
-     * jar contains classes, DB descriptor and
-     * beans.xml file for dependencies injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
+     * contains classes, DB descriptor and beans.xml file for dependencies
+     * injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -54,7 +82,7 @@ public class CommentPersistenceTest {
     }
 
     /**
-     * Initial test configuration. 
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -75,7 +103,7 @@ public class CommentPersistenceTest {
     }
 
     /**
-     * Clears tables involved in tests 
+     * Clears tables involved in tests
      */
     private void clearData() {
         em.createQuery("delete from CommentEntity").executeUpdate();
@@ -85,9 +113,21 @@ public class CommentPersistenceTest {
      * Inserts initial data for correct test operation
      */
     private void insertData() {
+
         PodamFactory factory = new PodamFactoryImpl();
+
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        em.persist(neighborhood);
+
+        resident = factory.manufacturePojo(ResidentProfileEntity.class);
+        
+        resident.setNeighborhood(neighborhood);
+        em.persist(resident);
+        
+
         for (int i = 0; i < 3; i++) {
             CommentEntity entity = factory.manufacturePojo(CommentEntity.class);
+            entity.setAuthor(resident);
 
             em.persist(entity);
             data.add(entity);
@@ -95,7 +135,7 @@ public class CommentPersistenceTest {
     }
 
     /**
-     * Creating test for Comment.
+     * Test for creating comment.
      */
     @Test
     public void createCommentTest() {
@@ -107,19 +147,19 @@ public class CommentPersistenceTest {
 
         CommentEntity entity = em.find(CommentEntity.class, result.getId());
 
-        Assert.assertEquals(newEntity.getText(), entity.getText());
-        Assert.assertEquals(newEntity.getId(), entity.getId());
-        Assert.assertEquals(newEntity.getPost(), entity.getPost());
-        Assert.assertEquals(newEntity.getDate(), entity.getDate());
+        Assert.assertNotNull(newEntity);
+        Assert.assertEquals(entity.getDate(), newEntity.getDate());
+        Assert.assertEquals(entity.getText(), newEntity.getText());
 
     }
-    
-     /**
-     * Test for retrieving all comments from DB.
+
+    /**
+     * Test for retrieving all residents from DB.
      */
-        @Test
+    @Test
     public void findAllTest() {
-        List<CommentEntity> list = commentPersistence.findAll();
+
+        List<CommentEntity> list = commentPersistence.findAll(neighborhood.getId());
         Assert.assertEquals(data.size(), list.size());
         for (CommentEntity ent : list) {
             boolean found = false;
@@ -131,48 +171,58 @@ public class CommentPersistenceTest {
             Assert.assertTrue(found);
         }
     }
-    
+
     /**
-     * Test for a query about a Comment.
+     * Test for a query about comment.
      */
     @Test
-    public void getCommentTest() {
+    public void getResidentTest() {
         CommentEntity entity = data.get(0);
-        CommentEntity newEntity = commentPersistence.find(entity.getId());
+        CommentEntity newEntity = commentPersistence.find(entity.getId(), neighborhood.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getDate(), newEntity.getDate());
         Assert.assertEquals(entity.getText(), newEntity.getText());
     }
 
-     /**
-     * Test for updating a Comment.
+    /**
+     * Test for a query about a comment not belonging to a neighborhood.
+     */
+    @Test(expected = RuntimeException.class)
+    public void getResidentTestNotBelonging() {
+        CommentEntity entity = data.get(0);
+        commentPersistence.find(entity.getId(), new Long(10000));
+    }
+
+    /**
+     * Test for updating comment.
      */
     @Test
-    public void updateCommentTest() {
+    public void updateResidentTest() {
         CommentEntity entity = data.get(0);
         PodamFactory factory = new PodamFactoryImpl();
         CommentEntity newEntity = factory.manufacturePojo(CommentEntity.class);
 
         newEntity.setId(entity.getId());
+        newEntity.setAuthor(resident);
 
-        commentPersistence.update(newEntity);
+        commentPersistence.update(newEntity, neighborhood.getId());
 
-        CommentEntity resp = em.find(CommentEntity.class, entity.getId());
+       CommentEntity resp =  commentPersistence.find(entity.getId(), neighborhood.getId());
 
-        Assert.assertEquals(newEntity.getDate(), resp.getDate());
+        Assert.assertNotNull(newEntity);
+        Assert.assertEquals(resp.getDate(), resp.getDate());
+        Assert.assertEquals(resp.getText(), resp.getText());
     }
-    
-     /**
-     * Test for deleting a Comment.
+
+    /**
+     * Test for deleting comment.
      */
     @Test
-    public void deleteCommentTest() {
+    public void deleteResidentTest() {
         CommentEntity entity = data.get(0);
-        commentPersistence.delete(entity.getId());
+        commentPersistence.delete(entity.getId(), neighborhood.getId());
         CommentEntity deleted = em.find(CommentEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
-    
-    
-    
+
 }

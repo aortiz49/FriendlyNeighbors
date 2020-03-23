@@ -29,7 +29,7 @@ public class LocationPersistence {
      * Method to persist the entity in the database.
      *
      * @param locationEntity location object to be created in the database.
-     * @return returns the entity created with an id given by the database.
+     * @return returns the entity created with id given by the database.
      */
     public LocationEntity create(LocationEntity locationEntity) {
         LOGGER.log(Level.INFO, "Creating a new location");
@@ -41,7 +41,7 @@ public class LocationPersistence {
     /**
      * Returns all location from the database.
      *
-     * @return a list with all the locations found in the database, "select u from LocationEntity u" is like a "select 
+     * @return a list with ll the locations found in the database, "select u from LocationEntity u" is like a "select 
      * from LocationEntity;" - "SELECT * FROM table_name" en SQL.
      */
     public List<LocationEntity> findAll() {

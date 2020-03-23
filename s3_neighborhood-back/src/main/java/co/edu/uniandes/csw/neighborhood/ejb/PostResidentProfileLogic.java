@@ -48,65 +48,53 @@ public class PostResidentProfileLogic {
     @Inject
     private ResidentProfilePersistence residentPersistence;
 
-    /**
-     * Associates a post with a resident
-     *
-     * @param residentId ID from resident entity
-     * @param postId ID from post entity
-     * @return associated post entity
-     */
-    public PostEntity associatePostToResident(Long postId, Long residentId) {
-        LOGGER.log(Level.INFO, "Trying to add post to resident with id = {0}", residentId);
-        ResidentProfileEntity ResidentProfileEntity = residentPersistence.find(residentId);
-        PostEntity PostEntity = postPersistence.find(postId);
-        PostEntity.setAuthor(ResidentProfileEntity);
-        LOGGER.log(Level.INFO, "Post is associated with resident with id = {0}", residentId);
-        return postPersistence.find(postId);
-    }
 
     /**
      * /**
-     * Gets a collection of posts entities associated with a resident
+     * Gets a collection of posts entities associated with  resident
      *
+     * @param neighId ID from parent neighborhood
      * @param residentId ID from resident entity
-     * @return collection of post entities associated with a resident
+     * @return collection of post entities associated with  resident
      */
-    public List<PostEntity> getPosts(Long residentId) {
-        LOGGER.log(Level.INFO, "Gets all posts belonging to resident with id = {0}", residentId);
-        return residentPersistence.find(residentId).getPosts();
+    public List<PostEntity> getPosts(Long residentId, Long neighId) {
+        LOGGER.log(Level.INFO, "Gets all posts belonging to resident with id {0} from neighborhood {1}", new Object[]{residentId, neighId});
+        return residentPersistence.find(residentId, neighId).getPosts();
     }
 
     /**
-     * Gets a post entity associated with a resident
+     * Gets a post entity associated with  resident
      *
      * @param residentId Id from resident
+     * @param neighId ID from parent neighborhood
      * @param postId Id from associated entity
      * @return associated entity
-     * @throws BusinessLogicException If event is not associated
+     * @throws BusinessLogicException If post is not associated
      */
-    public PostEntity getPost(Long residentId, Long postId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Finding event with id = {0} from resident with = " + residentId, postId);
-        List<PostEntity> posts = residentPersistence.find(residentId).getPosts();
-        PostEntity PostEntity = postPersistence.find(postId);
+    public PostEntity getPost(Long residentId, Long postId, Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Finding post with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{postId, residentId, neighId});
+        List<PostEntity> posts = residentPersistence.find(residentId, neighId).getPosts();
+        PostEntity PostEntity = postPersistence.find(postId, neighId);
         int index = posts.indexOf(PostEntity);
-        LOGGER.log(Level.INFO, "Finish query about event with id = {0} from resident with = " + residentId, postId);
+        LOGGER.log(Level.INFO, "Found post with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{postId, residentId, neighId});
         if (index >= 0) {
             return posts.get(index);
         }
-        throw new BusinessLogicException("Post is no associated with resident");
+        throw new BusinessLogicException("Post is not associated with resident");
     }
 
     /**
-     * Replaces posts associated with a resident
+     * Replaces posts associated with  resident
      *
+     * @param neighId ID from parent neighborhood
      * @param residentId Id from resident
      * @param posts Collection of post to associate with resident
      * @return A new collection associated to resident
      */
-    public List<PostEntity> replacePosts(Long residentId, List<PostEntity> posts) {
-        LOGGER.log(Level.INFO, "Trying to replace posts related to resident with id = {0}", residentId);
-        ResidentProfileEntity resident = residentPersistence.find(residentId);
-        List<PostEntity> postList = postPersistence.findAll();
+    public List<PostEntity> replacePosts(Long residentId, List<PostEntity> posts, Long neighId) {
+        LOGGER.log(Level.INFO, "Trying to replace posts related to resident with id {0} from neighborhood {1}", new Object[]{residentId, neighId});
+        ResidentProfileEntity resident = residentPersistence.find(residentId, neighId);
+        List<PostEntity> postList = postPersistence.findAll(neighId);
         for (PostEntity post : postList) {
             if (posts.contains(post)) {
                 post.setAuthor(resident);
@@ -114,20 +102,22 @@ public class PostResidentProfileLogic {
                 post.setAuthor(null);
             }
         }
-        LOGGER.log(Level.INFO, "Ended trying to replace posts related to resident with id = {0}", residentId);
+        LOGGER.log(Level.INFO, "Replaced posts related to resident with id {0} from neighborhood {1}", new Object[]{residentId, neighId});
         return posts;
     }
 
     /**
-     * Removes a post from a resident. Post is no longer in DB
+     * Removes a post from resident. Post is no longer in DB
      *
-     *
+     * @param residentID Id from resident
+     * @param neighId ID from parent neighborhood
      * @param postId Id from post
      */
-    public void removePost(Long residentID, Long postId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Trying to delete a post from resident with id = {0}", postId);
-        postPersistence.delete(getPost(residentID, postId).getId());
+    public void removePost(Long residentID, Long postId, Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Deleting post with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{postId, residentID, neighId});
 
-        LOGGER.log(Level.INFO, "Finished removing a post from resident with id = {0}", postId);
+        postPersistence.delete(getPost(residentID, postId, neighId).getId(), neighId);
+
+        LOGGER.log(Level.INFO, "Deleted post with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{postId, residentID, neighId});
     }
 }

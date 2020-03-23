@@ -13,11 +13,13 @@ import javax.inject.Inject;
 
 import co.edu.uniandes.csw.neighborhood.persistence.FavorPersistence;
 import co.edu.uniandes.csw.neighborhood.entities.FavorEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
+import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 
 /**
  *
- * @author * @author  *
+ * @author * @author *
  */
 @Stateless
 public class FavorLogic {
@@ -27,9 +29,15 @@ public class FavorLogic {
     @Inject
     private FavorPersistence persistence;
 
-    public FavorEntity createFavor(FavorEntity favorEntity) throws BusinessLogicException {
+    @Inject
+    private ResidentProfilePersistence residentPersistence;
+
+    public FavorEntity createFavor(FavorEntity favorEntity, Long residentId, Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creation process for favor has started");
 
+        
+        ResidentProfileEntity r = residentPersistence.find(residentId, neighId);
+        
         //must have a title
         if (favorEntity.getTitle() == null) {
             throw new BusinessLogicException("A title has to be specified");
@@ -49,37 +57,39 @@ public class FavorLogic {
         if (favorEntity.getDatePosted() == null) {
             throw new BusinessLogicException("A date has to be specified");
         }
+        
+        favorEntity.setAuthor(r);
 
-       FavorEntity entity =  persistence.create(favorEntity);
-       
+        persistence.create(favorEntity);
+
         LOGGER.log(Level.INFO, "Creation process for favor eneded");
 
         return favorEntity;
     }
 
-    public void deleteFavor(Long id) {
+    public void deleteFavor(Long id, Long neighID) {
 
         LOGGER.log(Level.INFO, "Starting deleting process for favor with id = {0}", id);
-        persistence.delete(id);
+        persistence.delete(id, neighID);
         LOGGER.log(Level.INFO, "Ended deleting process for favor with id = {0}", id);
     }
 
-    public List<FavorEntity> getFavors() {
+    public List<FavorEntity> getFavors(Long neighID) {
 
         LOGGER.log(Level.INFO, "Starting querying process for all favors");
-        List<FavorEntity> residents = persistence.findAll();
+        List<FavorEntity> residents = persistence.findAll(neighID);
         LOGGER.log(Level.INFO, "Ended querying process for all favors");
         return residents;
     }
 
-    public FavorEntity getFavor(Long id) {
+    public FavorEntity getFavor(Long id, Long neighID) {
         LOGGER.log(Level.INFO, "Starting querying process for favor with id ", id);
-        FavorEntity resident = persistence.find(id);
+        FavorEntity resident = persistence.find(id, neighID);
         LOGGER.log(Level.INFO, "Ended querying process for  favor with id", id);
         return resident;
     }
 
-    public FavorEntity updateFavor(FavorEntity favorEntity) throws BusinessLogicException {
+    public FavorEntity updateFavor(FavorEntity favorEntity, Long neighID) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Starting update process for favor with id ", favorEntity.getId());
 
         //must have a title
@@ -102,7 +112,7 @@ public class FavorLogic {
             throw new BusinessLogicException("A date has to be specified");
         }
 
-        FavorEntity modified = persistence.update(favorEntity);
+        FavorEntity modified = persistence.update(favorEntity, neighID);
         LOGGER.log(Level.INFO, "Ended update process for favor with id ", favorEntity.getId());
         return modified;
     }

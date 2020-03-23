@@ -100,7 +100,7 @@ public class BusinessDTO implements Serializable {
     }
 
     /**
-     * Creates a BusinessDTO object from a BusinessEntity object.
+     * Creates a BusinessDTO object from BusinessEntity object.
      *
      * @param pBusiness business entity from which to create the new BusinessDTO
      *

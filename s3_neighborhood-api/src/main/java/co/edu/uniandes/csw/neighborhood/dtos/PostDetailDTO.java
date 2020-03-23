@@ -46,7 +46,7 @@ public class PostDetailDTO extends PostDTO implements Serializable {
     
     
     /**
-     * Creates a detailed post DTO from a post entity, including its
+     * Creates a detailed post DTO from post entity, including its
      * relations.
      * 
      *

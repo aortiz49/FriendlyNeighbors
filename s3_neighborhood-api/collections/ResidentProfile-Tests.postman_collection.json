@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5af2c86d-fed5-44f1-a7c1-da94b267ced9",
+		"_postman_id": "64c582a5-bde6-4cf4-bb34-c8dae54bd2f2",
 		"name": "ResidentProfile-Tests.postman_collection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -23,8 +23,7 @@
 					"script": {
 						"id": "aaf6ceef-c993-4bed-b150-d635432d9806",
 						"exec": [
-							"tests[\"The resident must have an existing  neighborhood\"] = responseCode.code === 412;",
-							"tests[\"Expected error message\"] = responseBody.has(\"The resident must have an existing  neighborhood!\")"
+							"tests[\"The resident must have an existing  neighborhood\"] = responseCode.code === 404;"
 						],
 						"type": "text/javascript"
 					}
@@ -50,7 +49,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/100/residents",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -59,6 +58,8 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
+						"neighborhoods",
+						"100",
 						"residents"
 					]
 				}
@@ -136,7 +137,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents/22",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/22",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -145,6 +146,8 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
 						"residents",
 						"22"
 					]
@@ -199,7 +202,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents/",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -208,6 +211,8 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
 						"residents",
 						""
 					]
@@ -262,7 +267,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -271,6 +276,8 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
 						"residents"
 					]
 				}
@@ -312,7 +319,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -321,6 +328,8 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
 						"residents"
 					]
 				}
@@ -362,7 +371,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -371,6 +380,8 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
 						"residents"
 					]
 				}
@@ -412,7 +423,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -421,6 +432,8 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
 						"residents"
 					]
 				}
@@ -462,7 +475,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -471,6 +484,8 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
 						"residents"
 					]
 				}
@@ -512,7 +527,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -521,6 +536,8 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
 						"residents"
 					]
 				}
@@ -564,7 +581,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -573,6 +590,8 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
 						"residents"
 					]
 				}
@@ -599,7 +618,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents/{{new_id_a1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_a1}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -608,6 +627,8 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
 						"residents",
 						"{{new_id_a1}}"
 					]
@@ -651,7 +672,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents/{{new_id_a1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_a1}}/",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -660,8 +681,11 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
 						"residents",
-						"{{new_id_a1}}"
+						"{{new_id_a1}}",
+						""
 					]
 				}
 			},
@@ -702,7 +726,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents/2222",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/2222",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -711,6 +735,8 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
 						"residents",
 						"2222"
 					]
@@ -736,7 +762,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents/{{new_id_a1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_a1}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -745,6 +771,8 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
 						"residents",
 						"{{new_id_a1}}"
 					]
@@ -770,7 +798,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents/{{new_id_a2}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_a2}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -779,6 +807,8 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
 						"residents",
 						"{{new_id_a2}}"
 					]
@@ -821,7 +851,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/residents/22",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/22",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -830,8 +860,60 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
 						"residents",
 						"22"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete neighborhood",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bad7ce88-801b-42bb-b50a-da3eb62d7308",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}"
 					]
 				}
 			},

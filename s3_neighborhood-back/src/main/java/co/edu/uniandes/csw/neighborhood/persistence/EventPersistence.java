@@ -1,29 +1,6 @@
-/*
-MIT License
-Copyright (c) 2020 Universidad de los Andes - ISIS2603
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
- */
 package co.edu.uniandes.csw.neighborhood.persistence;
-//===================================================
-// Imports
-//===================================================
 
 import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
-import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,85 +10,107 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
- * Class that manages the persistence for the Event. It connects via the Entity Manager in
- * javax.persistance with a SQL database.
+ * This class handles persistence for EventEntity. The connection is set by
+ * Entity Manager from javax.persistence to the SQL DB.
  *
  * @author aortiz49
  */
 @Stateless
 public class EventPersistence {
-//===================================================
-// Attributes
-//===================================================
 
-    /**
-     * Logger to log messages for the event persistence.
-     */
-    private static final Logger LOGGER = Logger.getLogger(
-            EventPersistence.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(EventPersistence.class.getName());
 
-    /**
-     * The entity manager that will access the Event table.
-     */
     @PersistenceContext(unitName = "neighborhoodPU")
     protected EntityManager em;
 
-    //===================================================
-    // CRUD Methods
-    //===================================================
     /**
-     * Persists a event in the database.
+     * Creates a event within DB
      *
-     * @param pEventEntity event object to be created in the database
-     * @return the created event with an id given by the database
+     * @param eventEntity event object to be created in DB
+     * @return returns the created entity with id given by DB.
      */
-    public EventEntity create(EventEntity pEventEntity) {
-        // logs a message
-        LOGGER.log(Level.INFO, "Creating a new event");
+    public EventEntity create(EventEntity eventEntity) {
+        LOGGER.log(Level.INFO, "Creating a new event ");
 
-        // makes the entity instance managed and persistent
-        em.persist(pEventEntity);
+        em.persist(eventEntity);
         LOGGER.log(Level.INFO, "Event created");
-
-        return pEventEntity;
+        return eventEntity;
     }
 
     /**
-     * Returns all events in the database.
+     * Returns all events from DB belonging to a neighborhood.
      *
-     * @return a list containing every event in the database. select u from EventEntity u" is akin
-     * to a "SELECT * from EventEntity" in SQL.
+     * @param neighborhood_id: id from parent neighborhood.
+     * @return a list with ll events found in DB belonging to a neighborhood.
      */
-    public List<EventEntity> findAll() {
-        // log the consultation
-        LOGGER.log(Level.INFO, "Consulting all events");
+    public List<EventEntity> findAll(Long neighID) {
 
-        // Create a typed event entity query to find all neighborhoods 
-        // in the database. 
-        TypedQuery<EventEntity> query = em.createQuery(
-                "select u from EventEntity u", EventEntity.class);
+        LOGGER.log(Level.INFO, "Querying for all events from neighborhood ", neighID);
+
+        TypedQuery query = em.createQuery("Select e From EventEntity e where e.host.neighborhood.id = :neighID", EventEntity.class);
+
+        query = query.setParameter("neighID", neighID);
 
         return query.getResultList();
     }
 
     /**
-     * Looks for a event with the id given by the parameter.
+     * Looks for a event with the id and neighborhood id given by argument
      *
-     * @param pEventId the id corresponding to the event
-     * @return the found event
+     * @param eventId: id from event to be found.
+     * @param neighborhood_id: id from parent neighborhood.
+     * @return a event.
      */
-    public EventEntity find(Long pEventId) {
-        LOGGER.log(Level.INFO, "Consulting event with id={0}",
-                pEventId);
+    public EventEntity find(Long eventId, Long neighborhood_id) {
+        LOGGER.log(Level.INFO, "Querying for event with id {0} belonging to neighborhood  {1}", new Object[]{eventId, neighborhood_id});
 
-        return em.find(EventEntity.class, pEventId);
+        EventEntity e = em.find(EventEntity.class, eventId);
+        if (e != null) {
+            if (e.getHost() == null || e.getHost().getNeighborhood() == null || e.getHost().getNeighborhood().getId() != neighborhood_id) {
+                throw new RuntimeException("Event " + eventId + " does not belong to neighborhood " + neighborhood_id);
+            }
+        }
+
+        return e;
+    }
+
+    /**
+     * Updates a event with the modified event given by argument belonging to a
+     * neighborhood.
+     *
+     * @param eventEntity: the modified event.
+     * @param neighborhood_id: id from parent neighborhood.
+     * @return the updated event
+     */
+    public EventEntity update(EventEntity eventEntity, Long neighborhood_id) {
+        LOGGER.log(Level.INFO, "Updating event with id={0}", eventEntity.getId());
+
+        find(eventEntity.getId(), neighborhood_id);
+
+        return em.merge(eventEntity);
+    }
+
+    /**
+     * Deletes from DB a event with the id given by argument belonging to a
+     * neighborhood.
+     *
+     * @param neighborhood_id: id from parent neighborhood.
+     * @param eventId: id from event to be deleted.
+     */
+    public void delete(Long eventId, Long neighborhood_id) {
+
+        LOGGER.log(Level.INFO, "Deleting event with id={0}", eventId);
+        EventEntity e = find(eventId, neighborhood_id);
+
+        em.remove(e);
     }
 
     /**
      * Finds am event by title.
      *
      * @param pName the title of the event to search for
-     * @return null if the event doesn't exist. If the event exists, return the first one
+     * @return null if the event doesn't exist. If the event exists, return the
+     * first one
      */
     public EventEntity findByTitle(String pTitle) {
         LOGGER.log(Level.INFO, "Consulting event by title ", pTitle);
@@ -133,38 +132,6 @@ public class EventPersistence {
         }
         LOGGER.log(Level.INFO, "Exiting consultation of event by title ", pTitle);
         return result;
-    }
-
-    /**
-     * Updates an event.
-     *
-     * @param pEventEntity the event with the modifications. For example, the name could have
-     * changed. In that case, we must use this update method.
-     * @return the event with the updated changes
-     */
-    public EventEntity update(EventEntity pEventEntity) {
-        LOGGER.log(Level.INFO, "Updating event with id = {0}",
-                pEventEntity.getId());
-        return em.merge(pEventEntity);
-    }
-
-    /**
-     * Deletes an event.
-     * <p>
-     *
-     * Deletes the event with the associated Id.
-     *
-     * @param pEventId the id of the event to be deleted
-     */
-    public void delete(Long pEventId) {
-        LOGGER.log(Level.INFO, "Deleting event with id = {0}",
-                pEventId);
-        EventEntity reviewEntity = em.find(EventEntity.class,
-                pEventId);
-        em.remove(reviewEntity);
-        LOGGER.log(Level.INFO,
-                "Exiting the deletion of event with id = {0}",
-                pEventId);
     }
 
 }

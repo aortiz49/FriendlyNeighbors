@@ -43,7 +43,6 @@ public class HelperFavorLogicTest {
 
     private NeighborhoodEntity neighborhood;
     
-    private ResidentProfileEntity author;
 
     @PersistenceContext
     private EntityManager em;
@@ -111,15 +110,12 @@ public class HelperFavorLogicTest {
         resident.setFavorsToHelp(new ArrayList<>());
         resident.setNeighborhood(neighborhood);
 
-        em.persist(resident);
 
-        author = factory.manufacturePojo(ResidentProfileEntity.class);
-        author.setNeighborhood(neighborhood);
-        em.persist(author);
+        em.persist(resident);
 
         for (int i = 0; i < 3; i++) {
             FavorEntity entity = factory.manufacturePojo(FavorEntity.class);
-            entity.setAuthor(author);
+            entity.setAuthor(resident);
 
             entity.setCandidates(new ArrayList<>());
             entity.getCandidates().add(resident);
@@ -132,7 +128,7 @@ public class HelperFavorLogicTest {
     }
 
     /**
-     * Test to associate an favor with a resident
+     * Test to associate favor with  resident
      *
      *
      * @throws BusinessLogicException
@@ -140,29 +136,28 @@ public class HelperFavorLogicTest {
     @Test
     public void addFavorTest() throws BusinessLogicException {
         FavorEntity newFavor = factory.manufacturePojo(FavorEntity.class);
-        newFavor.setAuthor(author);
         
-        favorLogic.createFavor(newFavor);
+        favorLogic.createFavor(newFavor, resident.getId(), neighborhood.getId());
 
-        FavorEntity favorEntity = residentFavorLogic.associateFavorToHelper(resident.getId(), newFavor.getId());
+        FavorEntity favorEntity = residentFavorLogic.associateFavorToHelper(resident.getId(), newFavor.getId(), neighborhood.getId());
         Assert.assertNotNull(favorEntity);
 
         Assert.assertEquals(favorEntity.getId(), newFavor.getId());
         Assert.assertEquals(favorEntity.getDescription(), newFavor.getDescription());
 
-        FavorEntity lastFavor = residentFavorLogic.getFavor(resident.getId(), newFavor.getId());
+        FavorEntity lastFavor = residentFavorLogic.getFavor(resident.getId(), newFavor.getId(), neighborhood.getId());
 
         Assert.assertEquals(lastFavor.getId(), newFavor.getId());
 
     }
 
     /**
-     * Test for getting a collection of favor entities associated with a
+     * Test for getting  collection of favor entities associated with 
      * resident
      */
     @Test
     public void getFavorsTest() {
-        List<FavorEntity> favorEntities = residentFavorLogic.getFavors(resident.getId());
+        List<FavorEntity> favorEntities = residentFavorLogic.getFavors(resident.getId(), neighborhood.getId());
 
         Assert.assertEquals(data.size(), favorEntities.size());
 
@@ -172,14 +167,14 @@ public class HelperFavorLogicTest {
     }
 
     /**
-     * Test for getting an favor entity associated with a a resident
+     * Test for getting  favor entity associated with  resident
      *
      * @throws BusinessLogicException
      */
     @Test
     public void getFavorTest() throws BusinessLogicException {
         FavorEntity favorEntity = data.get(0);
-        FavorEntity favor = residentFavorLogic.getFavor(resident.getId(), favorEntity.getId());
+        FavorEntity favor = residentFavorLogic.getFavor(resident.getId(), favorEntity.getId(), neighborhood.getId());
         Assert.assertNotNull(favor);
 
         Assert.assertEquals(favorEntity.getId(), favor.getId());
@@ -188,7 +183,7 @@ public class HelperFavorLogicTest {
     }
 
     /**
-     * Test for replacing favors associated with a resident
+     * Test for replacing favors associated with  resident
      *
      * @throws BusinessLogicException
      */
@@ -200,26 +195,26 @@ public class HelperFavorLogicTest {
             FavorEntity entity = factory.manufacturePojo(FavorEntity.class);
             entity.setCandidates(new ArrayList<>());
             entity.getCandidates().add(resident);
-            favorLogic.createFavor(entity);
+            favorLogic.createFavor(entity, resident.getId(), neighborhood.getId());
             newCollection.add(entity);
         }
-        residentFavorLogic.replaceFavors(resident.getId(), newCollection);
-        List<FavorEntity> favorEntities = residentFavorLogic.getFavors(resident.getId());
+        residentFavorLogic.replaceFavors(resident.getId(), newCollection, neighborhood.getId());
+        List<FavorEntity> favorEntities = residentFavorLogic.getFavors(resident.getId(), neighborhood.getId());
         for (FavorEntity aNuevaLista : newCollection) {
             Assert.assertTrue(favorEntities.contains(aNuevaLista));
         }
     }
 
     /**
-     * Test for removing an favor from resident
+     * Test for removing  favor from resident
      *
      */
     @Test
     public void removeFavorTest() {
         for (FavorEntity favor : data) {
-            residentFavorLogic.removeFavor(resident.getId(), favor.getId());
+            residentFavorLogic.removeFavor(resident.getId(), favor.getId(), neighborhood.getId());
         }
-        Assert.assertTrue(residentFavorLogic.getFavors(resident.getId()).isEmpty());
+        Assert.assertTrue(residentFavorLogic.getFavors(resident.getId(), neighborhood.getId()).isEmpty());
     }
 
 }

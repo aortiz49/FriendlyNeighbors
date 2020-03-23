@@ -47,6 +47,8 @@ public class GroupLogicTest {
     @Inject
     private NeighborhoodPersistence neighPersistence;
 
+    private NeighborhoodEntity neighborhood;
+
     /**
      * The entity manager that will verify data directly with the database.
      */
@@ -116,11 +118,13 @@ public class GroupLogicTest {
         // creates a factory to generate objects with random data
         PodamFactory factory = new PodamFactoryImpl();
 
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        em.persist(neighborhood);
+
         for (int i = 0; i < 3; i++) {
 
-            GroupEntity entity
-                    = factory.manufacturePojo(GroupEntity.class);
-
+            GroupEntity entity = factory.manufacturePojo(GroupEntity.class);
+            entity.setNeighborhood(neighborhood);
             // add the data to the table
             em.persist(entity);
 
@@ -148,7 +152,7 @@ public class GroupLogicTest {
             // invokes the method to be tested (create): it creates a table in the 
             // database. The parameter of this method is the newly created object from 
             // the podam factory which has an id associated to it. 
-            GroupEntity result = groupLogic.createGroup(newGroup);
+            GroupEntity result = groupLogic.createGroup(newGroup, neighborhood.getId());
 
             // verify that the created object is not null
             Assert.assertNotNull(result);
@@ -170,11 +174,11 @@ public class GroupLogicTest {
     }
 
     /**
-     * Test for getting all groups
+     * Test for getting ll groups
      */
     @Test
     public void getGroupsTest() {
-        List<GroupEntity> list = groupLogic.getGroups();
+        List<GroupEntity> list = groupLogic.getGroups(neighborhood.getId());
         Assert.assertEquals(data.size(), list.size());
         for (GroupEntity entity : list) {
             boolean found = false;
@@ -188,12 +192,12 @@ public class GroupLogicTest {
     }
 
     /**
-     * Test for getting a group
+     * Test for getting  group
      */
     @Test
     public void getGroupTest() {
         GroupEntity entity = data.get(0);
-        GroupEntity resultEntity = groupLogic.getGroup(entity.getId());
+        GroupEntity resultEntity = groupLogic.getGroup(entity.getId(), neighborhood.getId());
         Assert.assertNotNull(resultEntity);
         Assert.assertEquals(entity.getId(), resultEntity.getId());
         Assert.assertEquals(entity.getName(), resultEntity.getName());
@@ -208,7 +212,7 @@ public class GroupLogicTest {
             GroupEntity entity = data.get(0);
             GroupEntity pojoEntity = factory.manufacturePojo(GroupEntity.class);
             pojoEntity.setId(entity.getId());
-            groupLogic.updateGroup(pojoEntity);
+            groupLogic.updateGroup(pojoEntity, neighborhood.getId());
             GroupEntity resp = em.find(GroupEntity.class, entity.getId());
             Assert.assertEquals(pojoEntity.getId(), resp.getId());
             Assert.assertEquals(pojoEntity.getName(), resp.getName());
@@ -223,7 +227,7 @@ public class GroupLogicTest {
     @Test
     public void deleteGroupTest() throws BusinessLogicException {
         GroupEntity entity = data.get(1);
-        groupLogic.deleteGroup(entity.getId());
+        groupLogic.deleteGroup(entity.getId(), neighborhood.getId());
         GroupEntity deleted = em.find(GroupEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
@@ -235,7 +239,7 @@ public class GroupLogicTest {
     public void createResidentsWithNoDate() throws BusinessLogicException {
         GroupEntity newEntity = factory.manufacturePojo(GroupEntity.class);
         newEntity.setDateCreated(null);
-        groupLogic.createGroup(newEntity);
+        groupLogic.createGroup(newEntity, neighborhood.getId());
     }
 
     /**
@@ -245,7 +249,7 @@ public class GroupLogicTest {
     public void createResidentsWithNoName() throws BusinessLogicException {
         GroupEntity newEntity = factory.manufacturePojo(GroupEntity.class);
         newEntity.setName(null);
-        groupLogic.createGroup(newEntity);
+        groupLogic.createGroup(newEntity, neighborhood.getId());
     }
 
     /**
@@ -255,18 +259,9 @@ public class GroupLogicTest {
     public void createResidentsWithNoDescription() throws BusinessLogicException {
         GroupEntity newEntity = factory.manufacturePojo(GroupEntity.class);
         newEntity.setDescription(null);
-        groupLogic.createGroup(newEntity);
+        groupLogic.createGroup(newEntity, neighborhood.getId());
     }
 
-    /**
-     * Test for creating a resident with no neighborhood
-     */
-    @Test(expected = BusinessLogicException.class)
-    public void createResidentsWithNoNeighborhood() throws BusinessLogicException {
-        GroupEntity newEntity = factory.manufacturePojo(GroupEntity.class);
-        newEntity.setNeighborhood(null);
-        groupLogic.createGroup(newEntity);
-    }
 
     /**
      * Test for updating a resident with no date
@@ -275,7 +270,7 @@ public class GroupLogicTest {
     public void updateResidentsWithNoDate() throws BusinessLogicException {
         GroupEntity newEntity = data.get(0);
         newEntity.setDateCreated(null);
-        groupLogic.updateGroup(newEntity);
+        groupLogic.updateGroup(newEntity, neighborhood.getId());
     }
 
     /**
@@ -285,7 +280,7 @@ public class GroupLogicTest {
     public void updateResidentsWithNoName() throws BusinessLogicException {
         GroupEntity newEntity = data.get(0);
         newEntity.setName(null);
-        groupLogic.updateGroup(newEntity);
+        groupLogic.updateGroup(newEntity, neighborhood.getId());
     }
 
     /**
@@ -295,7 +290,7 @@ public class GroupLogicTest {
     public void updateResidentsWithNoDescription() throws BusinessLogicException {
         GroupEntity newEntity = data.get(0);
         newEntity.setDescription(null);
-        groupLogic.updateGroup(newEntity);
+        groupLogic.updateGroup(newEntity, neighborhood.getId());
     }
 
     /**
@@ -305,6 +300,6 @@ public class GroupLogicTest {
     public void updateResidentsWithNoNeighborhood() throws BusinessLogicException {
         GroupEntity newEntity = data.get(0);
         newEntity.setNeighborhood(null);
-        groupLogic.updateGroup(newEntity);
+        groupLogic.updateGroup(newEntity, new Long(-100));
     }
 }

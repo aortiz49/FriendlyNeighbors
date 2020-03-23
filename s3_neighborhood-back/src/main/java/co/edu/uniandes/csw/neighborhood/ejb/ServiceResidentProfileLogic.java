@@ -48,51 +48,35 @@ public class ServiceResidentProfileLogic {
     @Inject
     private ResidentProfilePersistence residentPersistence;
 
-    /**
-     * Associates a service with a resident
-     *
-     * @param residentId ID from resident entity
-     * @param serviceId ID from service entity
-     * @return associated service entity
-     */
-    public ServiceEntity associateServiceToResident(Long serviceId, Long residentId) {
-        LOGGER.log(Level.INFO, "Trying to add service to resident with id = {0}", residentId);
-        ResidentProfileEntity ResidentProfileEntity = residentPersistence.find(residentId);
-        
-        ServiceEntity ServiceEntity = servicePersistence.find(serviceId);
-        
-        ServiceEntity.setAuthor(ResidentProfileEntity);
-        
-        LOGGER.log(Level.INFO, "Service is associated with resident with id = {0}", residentId);
-        return servicePersistence.find(serviceId);
-    }
 
     /**
      * /**
-     * Gets a collection of services entities associated with a resident
+     * Gets a collection of services entities associated with  resident
      *
+     * @param neighId ID from parent neighborhood
      * @param residentId ID from resident entity
-     * @return collection of service entities associated with a resident
+     * @return collection of service entities associated with  resident
      */
-    public List<ServiceEntity> getServices(Long residentId) {
-        LOGGER.log(Level.INFO, "Gets all services belonging to resident with id = {0}", residentId);
-        return residentPersistence.find(residentId).getServices();
+    public List<ServiceEntity> getServices(Long residentId, Long neighId) {
+        LOGGER.log(Level.INFO, "Gets all services belonging to resident with id {0} from neighborhood {1}", new Object[]{residentId, neighId});
+        return residentPersistence.find(residentId, neighId).getServices();
     }
 
     /**
-     * Gets a service entity associated with a resident
+     * Gets a service entity associated with  resident
      *
      * @param residentId Id from resident
+     * @param neighId ID from parent neighborhood
      * @param serviceId Id from associated entity
      * @return associated entity
      * @throws BusinessLogicException If service is not associated
      */
-    public ServiceEntity getService(Long residentId, Long serviceId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Finding service with id = {0} from resident with = " + residentId, serviceId);
-        List<ServiceEntity> services = residentPersistence.find(residentId).getServices();
-        ServiceEntity ServiceEntity = servicePersistence.find(serviceId);
+    public ServiceEntity getService(Long residentId, Long serviceId, Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Finding service with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{serviceId, residentId, neighId});
+        List<ServiceEntity> services = residentPersistence.find(residentId, neighId).getServices();
+        ServiceEntity ServiceEntity = servicePersistence.find(serviceId, neighId);
         int index = services.indexOf(ServiceEntity);
-        LOGGER.log(Level.INFO, "Finish query about service with id = {0} from resident with = " + residentId, serviceId);
+        LOGGER.log(Level.INFO, "Found service with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{serviceId, residentId, neighId});
         if (index >= 0) {
             return services.get(index);
         }
@@ -100,16 +84,17 @@ public class ServiceResidentProfileLogic {
     }
 
     /**
-     * Replaces services associated with a resident
+     * Replaces services associated with  resident
      *
+     * @param neighId ID from parent neighborhood
      * @param residentId Id from resident
      * @param services Collection of service to associate with resident
      * @return A new collection associated to resident
      */
-    public List<ServiceEntity> replaceServices(Long residentId, List<ServiceEntity> services) {
-        LOGGER.log(Level.INFO, "Trying to replace services related to resident with id = {0}", residentId);
-        ResidentProfileEntity resident = residentPersistence.find(residentId);
-        List<ServiceEntity> serviceList = servicePersistence.findAll();
+    public List<ServiceEntity> replaceServices(Long residentId, List<ServiceEntity> services, Long neighId) {
+        LOGGER.log(Level.INFO, "Trying to replace services related to resident with id {0} from neighborhood {1}", new Object[]{residentId, neighId});
+        ResidentProfileEntity resident = residentPersistence.find(residentId, neighId);
+        List<ServiceEntity> serviceList = servicePersistence.findAll(neighId);
         for (ServiceEntity service : serviceList) {
             if (services.contains(service)) {
                 service.setAuthor(resident);
@@ -117,20 +102,22 @@ public class ServiceResidentProfileLogic {
                 service.setAuthor(null);
             }
         }
-        LOGGER.log(Level.INFO, "Ended trying to replace services related to resident with id = {0}", residentId);
+        LOGGER.log(Level.INFO, "Replaced services related to resident with id {0} from neighborhood {1}", new Object[]{residentId, neighId});
         return services;
     }
 
     /**
-     * Removes a service from a resident. Service is no longer in DB
+     * Removes a service from resident. Service is no longer in DB
      *
-     *
+     * @param residentID Id from resident
+     * @param neighId ID from parent neighborhood
      * @param serviceId Id from service
      */
-    public void removeService(Long residentID, Long serviceId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Trying to delete a service from resident with id = {0}", serviceId);
-        servicePersistence.delete(getService(residentID, serviceId).getId());
+    public void removeService(Long residentID, Long serviceId, Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Deleting service with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{serviceId, residentID, neighId});
 
-        LOGGER.log(Level.INFO, "Finished removing a service from resident with id = {0}", serviceId);
+        servicePersistence.delete(getService(residentID, serviceId, neighId).getId(), neighId);
+
+        LOGGER.log(Level.INFO, "Deleted service with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{serviceId, residentID, neighId});
     }
 }

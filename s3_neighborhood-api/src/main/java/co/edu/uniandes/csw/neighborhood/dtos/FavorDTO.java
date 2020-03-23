@@ -15,7 +15,7 @@ public class FavorDTO {
     // Attributes
     //===================================================
     /**
-     * Represents id for this group
+     * Represents id for this favor
      */
     private long id;
     

@@ -1,21 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package co.edu.uniandes.csw.neighborhood.persistence;
 
 import co.edu.uniandes.csw.neighborhood.entities.ServiceEntity;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
-import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**
+ * This class handles persistence for ServiceEntity. The connection is set by
+ * Entity Manager from javax.persistence to the SQL DB.
  *
  * @author aortiz49
  */
@@ -28,94 +24,86 @@ public class ServicePersistence {
     protected EntityManager em;
 
     /**
-     * Method to persist the entity in the database.
+     * Creates a service within DB
      *
-     * @param serviceEntity service object to be created in the database.
-     * @return returns the entity created with an id given by the database.
+     * @param serviceEntity service object to be created in DB
+     * @return returns the created entity with id given by DB.
      */
     public ServiceEntity create(ServiceEntity serviceEntity) {
-        LOGGER.log(Level.INFO, "Creating a new service");
+        LOGGER.log(Level.INFO, "Creating a new service ");
+
         em.persist(serviceEntity);
         LOGGER.log(Level.INFO, "Service created");
         return serviceEntity;
     }
 
     /**
-     * Returns all services from the database.
+     * Returns all services from DB belonging to a neighborhood.
      *
-     * @return a list with all the services found in the database, "select u
-     * from ServiceEntity u" is like a "select from ServiceEntity;" -
-     * "SELECT * FROM table_name" en SQL.
+     * @param neighborhood_id: id from parent neighborhood.
+     * @return a list with ll services found in DB belonging to a neighborhood.
      */
-    public List<ServiceEntity> findAll() {
-        LOGGER.log(Level.INFO, "Consulting all services");
-        Query q = em.createQuery("select u from ServiceEntity u");
-        return q.getResultList();
+    public List<ServiceEntity> findAll(Long neighID) {
+
+        LOGGER.log(Level.INFO, "Querying for all services from neighborhood ", neighID);
+
+        TypedQuery query = em.createQuery("Select e From ServiceEntity e where e.author.neighborhood.id = :neighID", ServiceEntity.class);
+
+        query = query.setParameter("neighID", neighID);
+
+        return query.getResultList();
     }
 
     /**
-     * Searches for service with the id that is sent as an
-     * argument
+     * Looks for a service with the id and neighborhood id given by argument
      *
-     * @param serviceId: id corresponding to the service sought
+     * @param serviceId: id from service to be found.
+     * @param neighborhood_id: id from parent neighborhood.
      * @return a service.
      */
-    public ServiceEntity find(Long serviceId) {
-        LOGGER.log(Level.INFO, "Consulting notification with the id = {0}", 
-                serviceId);
-        return em.find(ServiceEntity.class, serviceId);
+    public ServiceEntity find(Long serviceId, Long neighborhood_id) {
+        LOGGER.log(Level.INFO, "Querying for service with id " + serviceId + " belonging to " + neighborhood_id);
 
-    }
-    
-    /**
-     * Finds a service by name.
-     *
-     * @param pTitle the name of the service to
-     * @return null if the service doesn't exist. If the service exists, return the first one
-     */
-    public ServiceEntity findByTitle(String pTitle) {
-        LOGGER.log(Level.INFO, "Consulting business by title ", pTitle);
+        ServiceEntity e = em.find(ServiceEntity.class, serviceId);
 
-        // creates a query to search for services with the title given by the parameter. ":pTitle" is a placeholder that must be replaced
-        TypedQuery query = em.createQuery("Select e From ServiceEntity e where e.title = :pTitle", ServiceEntity.class);
-
-        // the "pName" placeholder is replaced with the name of the parameter
-        query = query.setParameter("pTitle", pTitle);
-
-        // invokes the query and returns a list of results
-        List<ServiceEntity> sameTitle = query.getResultList();
-        ServiceEntity result;
-        if (sameTitle == null || sameTitle.isEmpty()) {
-            result = null;
-        } else {
-            result = sameTitle.get(0);
+        if (e != null) {
+            if (e.getAuthor() == null || e.getAuthor().getNeighborhood() == null || e.getAuthor().getNeighborhood().getId() != neighborhood_id) {
+                throw new RuntimeException("Service " + serviceId + " does not belong to neighborhood " + neighborhood_id);
+            }
         }
-        LOGGER.log(Level.INFO, "Exiting consultation of service by title ", pTitle);
-        return result;
+
+        return e;
     }
 
     /**
-     * Updates a service.
+     * Updates a service with the modified service given by argument belonging
+     * to a neighborhood.
      *
-     * @param serviceEntity: the service that comes with the new changes.
-     * @return a service with the changes applied
+     * @param serviceEntity: the modified service.
+     * @param neighborhood_id: id from parent neighborhood.
+     * @return the updated service
      */
-    public ServiceEntity update(ServiceEntity serviceEntity) {
-        LOGGER.log(Level.INFO, "Updating service with the id = {0}", serviceEntity.getId());
+    public ServiceEntity update(ServiceEntity serviceEntity, Long neighborhood_id) {
+        LOGGER.log(Level.INFO, "Updating service with id={0}", serviceEntity.getId());
+
+        find(serviceEntity.getId(), neighborhood_id);
+
         return em.merge(serviceEntity);
     }
 
     /**
+     * Deletes from DB a service with the id given by argument belonging to a
+     * neighborhood.
      *
-     * Deletes a service from the database receiving the id of the
-     * notification as an argument
-     *
-     * @param serviceId: id corresponding to the service to delete.
+     * @param neighborhood_id: id from parent neighborhood.
+     * @param serviceId: id from service to be deleted.
      */
-    public void delete(Long serviceId) {
-        LOGGER.log(Level.INFO, "Deleting notification with id = {0}", 
-                serviceId);
-        ServiceEntity entity = em.find(ServiceEntity.class, serviceId);
-        em.remove(entity);
+    public void delete(Long serviceId, Long neighborhood_id) {
+
+        LOGGER.log(Level.INFO, "Deleting service wit id={0}", serviceId);
+        ServiceEntity e = find(serviceId, neighborhood_id);
+
+        em.remove(e);
     }
+
 }

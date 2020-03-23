@@ -86,7 +86,7 @@ public class ServiceDTO implements Serializable {
     }
 
     /**
-     * Creates a ServiceDTO object from a ServiceEntity object.
+     * Creates a ServiceDTO object from ServiceEntity object.
      *
      * @param pService resident login entity from which to create the new ResidentLoginDTO
      *

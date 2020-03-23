@@ -65,26 +65,25 @@ public class ServiceResidentProfileResource {
     private ServiceLogic serviceLogic;
 
     /**
-     * Creates a service with an existing resident
+     * Creates a service with existing resident
      *
+     * @param service serviceId from service to be associated
      * @param residentsId serviceId from resident
+     * @param neighId parent neighborhood
      * @return JSON {@link ServiceDTO} -
-     * @throws WebApplicationException {@link WebApplicationExceptionMapper} -
+     * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException if rules are not met
+     * @throws WebApplicationException {@link WebApplicationExceptionMapper} 
      * Logic error if not found
      */
     @POST
-    public ServiceDTO createServiceForResidentProfile(@PathParam("residentsId") Long residentsId, ServiceDTO service) throws BusinessLogicException {
+    public ServiceDTO createService(@PathParam("residentsId") Long residentsId, ServiceDTO service,  @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creating service for resident from resource: input: residentsId {0} , servicesId {1}", new Object[]{residentsId, service.getId()});
 
         ServiceEntity entity = null;
 
-        entity = serviceLogic.createService(service.toEntity());
+        entity = serviceLogic.createService(service.toEntity(), residentsId, neighId);
         
-        Long serviceId = entity.getId();
-        
-        residentServiceLogic.associateServiceToResident(serviceId, residentsId);
-
-        ServiceDTO dto = new ServiceDTO(serviceLogic.getService(serviceId));
+        ServiceDTO dto = new ServiceDTO(serviceLogic.getService(entity.getId(), neighId));
         LOGGER.log(Level.INFO, "Ended creating service for resident from resource: output: {0}", dto.getId());
         return dto;
     }
@@ -93,37 +92,40 @@ public class ServiceResidentProfileResource {
      * Looks for all the services associated to a resident and returns it
      *
      * @param residentsId serviceId from resident whose services are wanted
+     * @param neighId parent neighborhood
      * @return JSONArray {@link ServiceDTO} - services found in resident. An
      * empty list if none is found
      */
     @GET
-    public List<ServiceDTO> getServices(@PathParam("residentsId") Long residentsId) {
+    public List<ServiceDTO> getServices(@PathParam("residentsId") Long residentsId, @PathParam("neighborhoodId") Long neighId) {
         LOGGER.log(Level.INFO, "Looking for services from resources: input: {0}", residentsId);
-        List<ServiceDTO> list = servicesListEntity2DTO(residentServiceLogic.getServices(residentsId));
+        List<ServiceDTO> list = servicesListEntity2DTO(residentServiceLogic.getServices(residentsId, neighId));
         LOGGER.log(Level.INFO, "Ended looking for services from resources: output: {0}", list);
         return list;
     }
 
     /**
-     * Looks for a service with specified ID by URL which is associated with a
+     * Looks for a service with specified ID by URL which is associated with 
      * resident and returns it
      *
      * @param servicesId serviceId from wanted service
      * @param residentsId serviceId from resident whose service is wanted
+     * @param neighId parent neighborhood
      * @return {@link ServiceDTO} - service found inside resident
+     * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException if rules are not met
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Logic error if service not found
      */
     @GET
     @Path("{servicesId: \\d+}")
-    public ServiceDTO getService(@PathParam("authorsId") Long residentsId, @PathParam("servicesId") Long servicesId) throws BusinessLogicException {
+    public ServiceDTO getService(@PathParam("residentsId") Long residentsId, @PathParam("servicesId") Long servicesId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Looking for service: input: residentsId {0} , servicesId {1}", new Object[]{residentsId, servicesId});
-        if (serviceLogic.getService(servicesId) == null) {
+        if (serviceLogic.getService(servicesId, neighId) == null) {
             throw new WebApplicationException("Resource /services/" + servicesId + " does not exist.", 404);
         }
-        ServiceDTO dto = new ServiceDTO(residentServiceLogic.getService(residentsId, servicesId));
-        LOGGER.log(Level.INFO, "Ended looking for service: output: {0}", dto);
-        return dto;
+        ServiceDTO detailDTO = new ServiceDTO(residentServiceLogic.getService(residentsId, servicesId, neighId));
+        LOGGER.log(Level.INFO, "Ended looking for service: output: {0}", detailDTO);
+        return detailDTO;
     }
 
     /**
@@ -132,39 +134,42 @@ public class ServiceResidentProfileResource {
      *
      * @param residentsId serviceId from resident whose list of services is to be updated
      * @param services JSONArray {@link ServiceDTO} - modified services list
+     * @param neighId parent neighborhood
      * @return JSONArray {@link ServiceDTO} - updated list
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Error if not found
      */
     @PUT
-    public List<ServiceDTO> replaceServices(@PathParam("residentsId") Long residentsId, List<ServiceDTO> services) {
+    public List<ServiceDTO> replaceServices(@PathParam("residentsId") Long residentsId, List<ServiceDTO> services, @PathParam("neighborhoodId") Long neighId) {
         LOGGER.log(Level.INFO, "Replacing resident services from resource: input: residentsId {0} , services {1}", new Object[]{residentsId, services});
         for (ServiceDTO service : services) {
-            if (serviceLogic.getService(service.getId()) == null) {
+            if (serviceLogic.getService(service.getId(), neighId) == null) {
                 throw new WebApplicationException("Resource /services/" + services + " does not exist.", 404);
             }
         }
-        List<ServiceDTO> lista = servicesListEntity2DTO(residentServiceLogic.replaceServices(residentsId, servicesListDTO2Entity(services)));
+        List<ServiceDTO> lista = servicesListEntity2DTO(residentServiceLogic.replaceServices(residentsId, servicesListDTO2Entity(services), neighId));
         LOGGER.log(Level.INFO, "Ended replacing resident services from resource: output:{0}", lista);
         return lista;
     }
 
     /**
-     * Removes a service from a resident
+     * Removes a service from resident
      *
      * @param residentsId serviceId from resident whose service is to be removed
      * @param servicesId serviceId from service to be removed
-     * @throws WebApplicationException {@link WebApplicationExceptionMapper}
+     * @param neighId parent neighborhood
+     * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException if rules are not met
+     * @throws WebApplicationException {@link WebApplicationExceptionMapper} 
      * Error if not found
      */
     @DELETE
     @Path("{servicesId: \\d+}")
-    public void removeService(@PathParam("residentsId") Long residentsId, @PathParam("servicesId") Long servicesId) throws BusinessLogicException {
+    public void removeService(@PathParam("residentsId") Long residentsId, @PathParam("servicesId") Long servicesId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Removing service from resident: input: residentsId {0} , servicesId {1}", new Object[]{residentsId, servicesId});
-        if (serviceLogic.getService(servicesId) == null) {
+        if (serviceLogic.getService(servicesId, neighId) == null) {
             throw new WebApplicationException("Resource /services/" + servicesId + " does not exist.", 404);
         }
-        residentServiceLogic.removeService(residentsId, servicesId);
+        residentServiceLogic.removeService(residentsId, servicesId, neighId);
         LOGGER.info("Ended removing service from resident: output: void");
     }
 

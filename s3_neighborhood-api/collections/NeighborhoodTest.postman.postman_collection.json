@@ -177,7 +177,7 @@
 			"response": []
 		},
 		{
-			"name": "Create neighborhood with a null name",
+			"name": "Create neighborhood with  null name",
 			"event": [
 				{
 					"listen": "test",

@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package  co.edu.uniandes.csw.neighborhood.resources;
+package co.edu.uniandes.csw.neighborhood.resources;
 
 import co.edu.uniandes.csw.neighborhood.dtos.ResidentProfileDetailDTO;
 import co.edu.uniandes.csw.neighborhood.ejb.FavorHelperLogic;
@@ -64,22 +64,25 @@ public class FavorHelperResource {
     private ResidentProfileLogic helperLogic;
 
     /**
-     * Associates a helper with an existing favor
+     * Associates a helper with existing favor
      *
      * @param helpersId id from helper to be associated
      * @param favorsId id from favor
+     * @param neighId parent neighborhood
      * @return JSON {@link ResidentProfileDetailDTO} -
      * @throws WebApplicationException {@link WebApplicationExceptionMapper} -
      * Logic error if not found
      */
     @POST
     @Path("{helpersId: \\d+}")
-    public ResidentProfileDetailDTO associateHelperToFavor(@PathParam("favorsId") Long favorsId, @PathParam("helpersId") Long helpersId) throws BusinessLogicException {
+    public ResidentProfileDetailDTO associateHelperToFavor(@PathParam("favorsId") Long favorsId, @PathParam("helpersId") Long helpersId,  @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Associating helper to favor from resource: input: favorsId {0} , helpersId {1}", new Object[]{favorsId, helpersId});
-        if (helperLogic.getResident(helpersId) == null) {
+        if (helperLogic.getResident(helpersId, neighId) == null) {
             throw new WebApplicationException("Resource /helpers/" + helpersId + " does not exist.", 404);
         }
-        ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO(favorHelperLogic.associateResidentProfileToFavor(favorsId, helpersId));
+        ResidentProfileEntity e = favorHelperLogic.associateHelperToFavor(favorsId, helpersId, neighId);
+        
+        ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO(e);
 
         LOGGER.log(Level.INFO, "Ended associating helper to favor from resource: output: {0}", detailDTO);
         return detailDTO;
@@ -89,35 +92,38 @@ public class FavorHelperResource {
      * Looks for all the helpers associated to a favor and returns it
      *
      * @param favorsId id from favor whose helpers are wanted
+     * @param neighId parent neighborhood
      * @return JSONArray {@link ResidentProfileDetailDTO} - helpers found in favor. An
      * empty list if none is found
      */
     @GET
-    public List<ResidentProfileDetailDTO> getHelpers(@PathParam("favorsId") Long favorsId) {
+    public List<ResidentProfileDetailDTO> getHelpers(@PathParam("favorsId") Long favorsId,  @PathParam("neighborhoodId") Long neighId) {
         LOGGER.log(Level.INFO, "Looking for helpers from resources: input: {0}", favorsId);
-        List<ResidentProfileDetailDTO> list = helpersListEntity2DTO(favorHelperLogic.getResidentProfiles(favorsId));
+        List<ResidentProfileDetailDTO> list = helpersListEntity2DTO(favorHelperLogic.getHelpers(favorsId, neighId));
         LOGGER.log(Level.INFO, "Ended looking for helpers from resources: output: {0}", list);
         return list;
     }
 
     /**
-     * Looks for a helper with specified ID by URL which is associated with a
+     * Looks for a helper with specified ID by URL which is associated with 
      * favor and returns it
      *
      * @param helpersId id from wanted helper
      * @param favorsId id from favor whose helper is wanted
+     * @param neighId parent neighborhood
      * @return {@link ResidentProfileDetailDTO} - helper found inside favor
+     * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Logic error if helper not found
      */
     @GET
     @Path("{helpersId: \\d+}")
-    public ResidentProfileDetailDTO getHelper(@PathParam("favorsId") Long favorsId, @PathParam("helpersId") Long helpersId) throws BusinessLogicException {
+    public ResidentProfileDetailDTO getHelper(@PathParam("favorsId") Long favorsId, @PathParam("helpersId") Long helpersId,  @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Looking for helper: input: favorsId {0} , helpersId {1}", new Object[]{favorsId, helpersId});
-        if (helperLogic.getResident(helpersId) == null) {
+        if (helperLogic.getResident(helpersId, neighId) == null) {
             throw new WebApplicationException("Resource /helpers/" + helpersId + " does not exist.", 404);
         }
-        ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO(favorHelperLogic.getResidentProfile(favorsId, helpersId));
+        ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO(favorHelperLogic.getHelper(favorsId, helpersId, neighId));
         LOGGER.log(Level.INFO, "Ended looking for helper: output: {0}", detailDTO);
         return detailDTO;
     }
@@ -128,39 +134,41 @@ public class FavorHelperResource {
      *
      * @param favorsId  id from favor whose list of helpers is to be updated
      * @param helpers JSONArray {@link ResidentProfileDetailDTO} - modified helpers list 
+     * @param neighId  parent neighborhood
      * @return JSONArray {@link ResidentProfileDetailDTO} - updated list
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Error if not found
      */
     @PUT
-    public List<ResidentProfileDetailDTO> replaceHelpers(@PathParam("favorsId") Long favorsId, List<ResidentProfileDetailDTO> helpers) {
+    public List<ResidentProfileDetailDTO> replaceHelpers(@PathParam("favorsId") Long favorsId, List<ResidentProfileDetailDTO> helpers,  @PathParam("neighborhoodId") Long neighId) {
         LOGGER.log(Level.INFO, "Replacing favor helpers from resource: input: favorsId {0} , helpers {1}", new Object[]{favorsId, helpers});
         for (ResidentProfileDetailDTO helper : helpers) {
-            if (helperLogic.getResident(helper.getId()) == null) {
+            if (helperLogic.getResident(helper.getId(), neighId) == null) {
                      throw new WebApplicationException("Resource /helpers/" + helpers + " does not exist.", 404);
             }
         }
-        List<ResidentProfileDetailDTO> lista = helpersListEntity2DTO(favorHelperLogic.replaceResidentProfiles(favorsId, helpersListDTO2Entity(helpers)));
+        List<ResidentProfileDetailDTO> lista = helpersListEntity2DTO(favorHelperLogic.replaceHelpers(favorsId, helpersListDTO2Entity(helpers), neighId));
         LOGGER.log(Level.INFO, "Ended replacing favor helpers from resource: output:{0}", lista);
         return lista;
     }
 
     /**
-     * Removes a helper from a favor
+     * Removes a helper from favor
      *
      * @param favorsId id from favor whose helper is to be removed
      * @param helpersId id from helper to be removed
+     * @param neighId parent neighborhood
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Error if not found
      */
     @DELETE
     @Path("{helpersId: \\d+}")
-    public void removeHelper(@PathParam("favorsId") Long favorsId, @PathParam("helpersId") Long helpersId) {
+    public void removeHelper(@PathParam("favorsId") Long favorsId, @PathParam("helpersId") Long helpersId,  @PathParam("neighborhoodId") Long neighId) {
         LOGGER.log(Level.INFO, "Removing helper from favor: input: favorsId {0} , helpersId {1}", new Object[]{favorsId, helpersId});
-        if (helperLogic.getResident(helpersId) == null) {
+        if (helperLogic.getResident(helpersId, neighId) == null) {
                  throw new WebApplicationException("Resource /helpers/" + helpersId + " does not exist.", 404);
         }
-        favorHelperLogic.removeResidentProfile(favorsId, helpersId);
+        favorHelperLogic.removeHelper(favorsId, helpersId, neighId);
         LOGGER.info("Ended removing helper from favor: output: void");
     }
 

@@ -65,22 +65,24 @@ public class MemberGroupResource {
     private GroupLogic groupLogic;
 
     /**
-     * Associates a group with an existing member
+     * Associates a group with existing member
      *
      * @param groupsId id from group to be associated
      * @param membersId id from member
+     * @param neighId parent neighborhood
      * @return JSON {@link GroupDetailDTO} -
+     * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException
      * @throws WebApplicationException {@link WebApplicationExceptionMapper} -
      * Logic error if not found
      */
     @POST
     @Path("{groupsId: \\d+}")
-    public GroupDetailDTO associateGroupToResidentProfile(@PathParam("membersId") Long membersId, @PathParam("groupsId") Long groupsId) throws BusinessLogicException {
+    public GroupDetailDTO associateGroupToResidentProfile(@PathParam("membersId") Long membersId, @PathParam("groupsId") Long groupsId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Associating group to member from resource: input: membersId {0} , groupsId {1}", new Object[]{membersId, groupsId});
-        if (groupLogic.getGroup(groupsId) == null) {
+        if (groupLogic.getGroup(groupsId, neighId) == null) {
             throw new WebApplicationException("Resource /groups/" + groupsId + " does not exist.", 404);
         }
-        GroupDetailDTO detailDTO = new GroupDetailDTO(memberGroupLogic.associateGroupToMember(membersId, groupsId));
+        GroupDetailDTO detailDTO = new GroupDetailDTO(memberGroupLogic.associateGroupToMember(membersId, groupsId, neighId));
         LOGGER.log(Level.INFO, "Ended associating group to member from resource: output: {0}", detailDTO);
         return detailDTO;
     }
@@ -89,35 +91,37 @@ public class MemberGroupResource {
      * Looks for all the groups associated to a member and returns it
      *
      * @param membersId id from member whose groups are wanted
+     * @param neighId parent neighborhood
      * @return JSONArray {@link GroupDetailDTO} - groups found in member. An
      * empty list if none is found
      */
     @GET
-    public List<GroupDetailDTO> getGroups(@PathParam("membersId") Long membersId) {
+    public List<GroupDetailDTO> getGroups(@PathParam("membersId") Long membersId, @PathParam("neighborhoodId") Long neighId) {
         LOGGER.log(Level.INFO, "Looking for groups from resources: input: {0}", membersId);
-        List<GroupDetailDTO> list = groupsListEntity2DTO(memberGroupLogic.getGroups(membersId));
+        List<GroupDetailDTO> list = groupsListEntity2DTO(memberGroupLogic.getGroups(membersId, neighId));
         LOGGER.log(Level.INFO, "Ended looking for groups from resources: output: {0}", list);
         return list;
     }
 
     /**
-     * Looks for a group with specified ID by URL which is associated with a
+     * Looks for a group with specified ID by URL which is associated with 
      * member and returns it
      *
      * @param groupsId id from wanted group
      * @param membersId id from member whose group is wanted
+     * @param neighId parent neighborhood
      * @return {@link GroupDetailDTO} - group found inside member
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Logic error if group not found
      */
     @GET
     @Path("{groupsId: \\d+}")
-    public GroupDetailDTO getGroup(@PathParam("membersId") Long membersId, @PathParam("groupsId") Long groupsId) throws BusinessLogicException {
+    public GroupDetailDTO getGroup(@PathParam("membersId") Long membersId, @PathParam("groupsId") Long groupsId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Looking for group: input: membersId {0} , groupsId {1}", new Object[]{membersId, groupsId});
-        if (groupLogic.getGroup(groupsId) == null) {
+        if (groupLogic.getGroup(groupsId, neighId) == null) {
             throw new WebApplicationException("Resource /groups/" + groupsId + " does not exist.", 404);
         }
-        GroupDetailDTO detailDTO = new GroupDetailDTO(memberGroupLogic.getGroup(membersId, groupsId));
+        GroupDetailDTO detailDTO = new GroupDetailDTO(memberGroupLogic.getGroup(membersId, groupsId, neighId));
         LOGGER.log(Level.INFO, "Ended looking for group: output: {0}", detailDTO);
         return detailDTO;
     }
@@ -128,39 +132,41 @@ public class MemberGroupResource {
      *
      * @param membersId  id from member whose list of groups is to be updated
      * @param groups JSONArray {@link GroupDetailDTO} - modified groups list 
+     * @param neighId parent neighborhood
      * @return JSONArray {@link GroupDetailDTO} - updated list
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Error if not found
      */
     @PUT
-    public List<GroupDetailDTO> replaceGroups(@PathParam("membersId") Long membersId, List<GroupDetailDTO> groups) {
+    public List<GroupDetailDTO> replaceGroups(@PathParam("membersId") Long membersId, List<GroupDetailDTO> groups, @PathParam("neighborhoodId") Long neighId) {
         LOGGER.log(Level.INFO, "Replacing member groups from resource: input: membersId {0} , groups {1}", new Object[]{membersId, groups});
         for (GroupDetailDTO group : groups) {
-            if (groupLogic.getGroup(group.getId()) == null) {
+            if (groupLogic.getGroup(group.getId(), neighId) == null) {
                      throw new WebApplicationException("Resource /groups/" + groups + " does not exist.", 404);
             }
         }
-        List<GroupDetailDTO> lista = groupsListEntity2DTO(memberGroupLogic.replaceGroups(membersId, groupsListDTO2Entity(groups)));
+        List<GroupDetailDTO> lista = groupsListEntity2DTO(memberGroupLogic.replaceGroups(membersId, groupsListDTO2Entity(groups), neighId));
         LOGGER.log(Level.INFO, "Ended replacing member groups from resource: output:{0}", lista);
         return lista;
     }
 
     /**
-     * Removes a group from a member
+     * Removes a group from member
      *
      * @param membersId id from member whose group is to be removed
      * @param groupsId id from group to be removed
+     * @param neighId parent neighborhood
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Error if not found
      */
     @DELETE
     @Path("{groupsId: \\d+}")
-    public void removeGroup(@PathParam("membersId") Long membersId, @PathParam("groupsId") Long groupsId) {
+    public void removeGroup(@PathParam("membersId") Long membersId, @PathParam("groupsId") Long groupsId, @PathParam("neighborhoodId") Long neighId) {
         LOGGER.log(Level.INFO, "Removing group from member: input: membersId {0} , groupsId {1}", new Object[]{membersId, groupsId});
-        if (groupLogic.getGroup(groupsId) == null) {
+        if (groupLogic.getGroup(groupsId, neighId) == null) {
                  throw new WebApplicationException("Resource /groups/" + groupsId + " does not exist.", 404);
         }
-        memberGroupLogic.removeGroup(membersId, groupsId);
+        memberGroupLogic.removeGroup(membersId, groupsId, neighId);
         LOGGER.info("Ended removing group from member: output: void");
     }
 

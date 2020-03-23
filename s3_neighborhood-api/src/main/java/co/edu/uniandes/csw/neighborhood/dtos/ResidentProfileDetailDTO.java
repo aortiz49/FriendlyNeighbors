@@ -81,7 +81,7 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
 
     
     /**
-     * Creates a detailed resident DTO from a resident entity, including its
+     * Creates a detailed resident DTO from resident entity, including its
      * relations.
      *
      * @param residentEntity from which new group DTO will be created

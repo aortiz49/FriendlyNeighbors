@@ -41,7 +41,7 @@ public class GroupDetailDTO extends GroupDTO implements Serializable {
     
     
     /**
-     * Creates a detailed group DTO from a group entity, including its
+     * Creates a detailed group DTO from group entity, including its
      * relations.
      *
      * @param groupEntity from which new group DTO will be created

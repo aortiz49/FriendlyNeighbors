@@ -108,10 +108,10 @@ public class BusinessNeighborhoodLogic {
     }
 
     /**
-     * Gets a collection of business entities associated with a neighborhood
+     * Gets a collection of business entities associated with  neighborhood
      *
      * @param pNeighborhoodId the neighborhood id
-     * @return collection of business entities associated with a neighborhood
+     * @return collection of business entities associated with  neighborhood
      */
     public List<BusinessEntity> getBusinesses(Long pNeighborhoodId) {
         LOGGER.log(Level.INFO, "Gets all businesses belonging to neighborhood with id = {0}", pNeighborhoodId);
@@ -121,7 +121,7 @@ public class BusinessNeighborhoodLogic {
     }
 
     /**
-     * Gets a service entity associated with a resident
+     * Gets a service entity associated with  resident
      *
      * @param pNeighborhoodId the neighborhood id
      * @param pBusinessId Id from associated entity
@@ -151,7 +151,7 @@ public class BusinessNeighborhoodLogic {
     }
 
     /**
-     * Replaces businesses associated with a neighborhood
+     * Replaces businesses associated with  neighborhood
      *
      * @param pNeighborhoodId the neighborhood id
      * @param pNewBusinessesList Collection of service to associate with resident
@@ -189,7 +189,7 @@ public class BusinessNeighborhoodLogic {
     }
 
     /**
-     * Removes a business from a neighborhood.
+     * Removes a business from neighborhood.
      *
      * @param pNeighborhoodId Id from resident
      * @param pBusinessId Id from service
@@ -209,6 +209,6 @@ public class BusinessNeighborhoodLogic {
         // group to remove from event
         business.setNeighborhood(null);
 
-        LOGGER.log(Level.INFO, "Finished removing an event from group con id = {0}", pBusinessId);
+        LOGGER.log(Level.INFO, "Finished removing  event from group con id = {0}", pBusinessId);
     }
 }

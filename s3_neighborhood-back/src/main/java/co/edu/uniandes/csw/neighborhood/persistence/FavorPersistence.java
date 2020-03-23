@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package co.edu.uniandes.csw.neighborhood.persistence;
 
 import co.edu.uniandes.csw.neighborhood.entities.FavorEntity;
@@ -15,74 +10,100 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
+ * This class handles persistence for FavorEntity. The connection is set by
+ * Entity Manager from javax.persistence to the SQL DB.
  *
  * @author v.cardonac1
  */
 @Stateless
 public class FavorPersistence {
-    
+
     private static final Logger LOGGER = Logger.getLogger(FavorPersistence.class.getName());
 
     @PersistenceContext(unitName = "neighborhoodPU")
     protected EntityManager em;
-    
+
     /**
-     * Method to persist the entity in the database.
+     * Creates a favor within DB
      *
-     * @param favorEntity favor object to be created in the database.
-     * @return returns the entity created with an id given by the database.
+     * @param favorEntity favor object to be created in DB
+     * @return returns the created entity with id given by DB.
      */
     public FavorEntity create(FavorEntity favorEntity) {
-        LOGGER.log(Level.INFO, "Creating a new favor");
+        LOGGER.log(Level.INFO, "Creating a new favor ");
+
         em.persist(favorEntity);
         LOGGER.log(Level.INFO, "Favor created");
         return favorEntity;
     }
-    
+
     /**
-     * Returns all favors from the database.
+     * Returns all favors from DB belonging to a neighborhood.
      *
-     * @return a list with all the favors found in the database, "select u from FavorEntity u" is like a "select 
-     * from FavorEntity;" - "SELECT * FROM table_name" en SQL.
+     * @param neighborhood_id: id from parent neighborhood.
+     * @return a list with ll favors found in DB belonging to a neighborhood.
      */
-    public List<FavorEntity> findAll() {
-        LOGGER.log(Level.INFO, "Consulting all favors");
-        TypedQuery q = em.createQuery("select u from FavorEntity u", FavorEntity.class);
-        return q.getResultList();
+    public List<FavorEntity> findAll(Long neighID) {
+
+        LOGGER.log(Level.INFO, "Querying for all favors from neighborhood ", neighID);
+
+        TypedQuery query = em.createQuery("Select e From FavorEntity e where e.author.neighborhood.id = :neighID", FavorEntity.class);
+
+        query = query.setParameter("neighID", neighID);
+
+        return query.getResultList();
     }
-    
+
     /**
-     * Search if there is any favor with the id that is sent as an argument
+     * Looks for a favor with the id and neighborhood id given by argument
      *
-     * @param favorId: id corresponding to the favor sought
+     * @param favorId: id from favor to be found.
+     * @param neighborhood_id: id from parent neighborhood.
      * @return a favor.
      */
-    public FavorEntity find(Long favorId) {
-        LOGGER.log(Level.INFO, "Consulting favor with the id = {0}", favorId);
-        return em.find(FavorEntity.class, favorId);
-        
+    public FavorEntity find(Long favorId, Long neighborhood_id) {
+        LOGGER.log(Level.INFO, "Querying for favor with id {0} belonging to neighborhood  {1}", new Object[]{favorId, neighborhood_id});
+
+        FavorEntity e = em.find(FavorEntity.class, favorId);
+
+        if (e != null) {
+            if (e.getAuthor() == null || e.getAuthor().getNeighborhood() == null || e.getAuthor().getNeighborhood().getId() != neighborhood_id) {
+                throw new RuntimeException("Favor " + favorId + " does not belong to neighborhood " + neighborhood_id);
+            }
+        }
+
+        return e;
     }
-    
+
     /**
-     * update a favor.
+     * Updates a favor with the modified favor given by argument belonging to a
+     * neighborhood.
      *
-     * @param favorEntity: the favor that comes with the new changes.
-     * @return a favor with the changes applied
+     * @param favorEntity: the modified favor.
+     * @param neighborhood_id: id from parent neighborhood.
+     * @return the updated favor
      */
-    public FavorEntity update(FavorEntity favorEntity) {
-        LOGGER.log(Level.INFO, "Updating favor with the id = {0}", favorEntity.getId());
+    public FavorEntity update(FavorEntity favorEntity, Long neighborhood_id) {
+        LOGGER.log(Level.INFO, "Updating favor with id={0}", favorEntity.getId());
+
+        find(favorEntity.getId(), neighborhood_id);
+
         return em.merge(favorEntity);
     }
 
     /**
+     * Deletes from DB a favor with the id given by argument belonging to a
+     * neighborhood.
      *
-     * Delete a favor from the database receiving the id of the favor as an argument
-     *
-     * @param favorId: id corresponding to the favor to delete.
+     * @param neighborhood_id: id from parent neighborhood.
+     * @param favorId: id from favor to be deleted.
      */
-    public void delete(Long favorId) {
-        LOGGER.log(Level.INFO, "Deleting favor with id = {0}", favorId);
-        FavorEntity entity = em.find(FavorEntity.class, favorId);
-        em.remove(entity);
+    public void delete(Long favorId, Long neighborhood_id) {
+
+        LOGGER.log(Level.INFO, "Deleting favor with id={0}", favorId);
+        FavorEntity e = find(favorId, neighborhood_id);
+
+        em.remove(e);
     }
+
 }

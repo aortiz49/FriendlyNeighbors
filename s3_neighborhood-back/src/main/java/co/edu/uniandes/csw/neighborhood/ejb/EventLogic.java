@@ -23,12 +23,13 @@ SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.ejb;
 
-import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
 import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
 import co.edu.uniandes.csw.neighborhood.entities.LocationEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.EventPersistence;
 import co.edu.uniandes.csw.neighborhood.persistence.LocationPersistence;
+import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,18 +64,26 @@ public class EventLogic {
     @Inject
     private LocationPersistence locationPersistence;
 
+    @Inject
+    private ResidentProfilePersistence residentPersistence;
+
     /**
      * Creates a new event.
      *
      * @param pEventEntity the event entity to be persisted.
      * @return the persisted event entity
-     * @throws BusinessLogicException if the event creation violates the business rules
+     * @throws BusinessLogicException if the event creation violates the
+     * business rules
      */
-    public EventEntity createEvent(EventEntity pEventEntity) throws BusinessLogicException {
+    public EventEntity createEvent(EventEntity pEventEntity, Long residentId, Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Start the event creation process");
+
+        ResidentProfileEntity r = residentPersistence.find(residentId, neighId);
 
         // verify business rules
         verifyBusinessCreationRules(pEventEntity);
+
+        pEventEntity.setHost(r);
 
         // create the event
         eventPersistence.create(pEventEntity);
@@ -87,9 +96,9 @@ public class EventLogic {
      *
      * @return list of events
      */
-    public List<EventEntity> getAllEvents() {
+    public List<EventEntity> getEvents(Long neighId) {
         LOGGER.log(Level.INFO, "Begin consulting all events");
-        List<EventEntity> events = eventPersistence.findAll();
+        List<EventEntity> events = eventPersistence.findAll(neighId);
         LOGGER.log(Level.INFO, "End consulting all events");
         return events;
     }
@@ -99,9 +108,9 @@ public class EventLogic {
      *
      * @return the found event, null if not found
      */
-    public EventEntity getEvent(Long pId) {
+    public EventEntity getEvent(Long pId, Long neighId) {
         LOGGER.log(Level.INFO, "Begin search for event with Id = {0}", pId);
-        EventEntity entity = eventPersistence.find(pId);
+        EventEntity entity = eventPersistence.find(pId, neighId);
         if (entity == null) {
             LOGGER.log(Level.SEVERE, "The event with Id = {0} doesn't exist", pId);
         }
@@ -125,18 +134,19 @@ public class EventLogic {
     }
 
     /**
-     * Updates an event with a given Id.
+     * Updates an event with  given Id.
      *
      * @param pEventId the Id of the event to update
      * @param pEvent the new event
      * @return the event entity after the update
-     * @throws BusinessLogicException if the new event violates the business rules
+     * @throws BusinessLogicException if the new event violates the business
+     * rules
      */
-    public EventEntity updateEvent(Long pEventId, EventEntity pEvent) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Begin the update process for event with id = {0}", pEventId);
+    public EventEntity updateEvent(EventEntity pEvent, Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Begin the update process for event with id = {0}", pEvent.getId());
 
         // update event
-        EventEntity newEntity = eventPersistence.update(pEvent);
+        EventEntity newEntity = eventPersistence.update(pEvent, neighId);
         LOGGER.log(Level.INFO, "End the update process for event with id = {0}", pEvent.getId());
         return newEntity;
     }
@@ -147,9 +157,9 @@ public class EventLogic {
      * @param eventId the ID of the event to be deleted
      *
      */
-    public void deleteEvent(Long eventId) throws BusinessLogicException {
+    public void deleteEvent(Long eventId, Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Begin the deletion process for event with id = {0}", eventId);
-        eventPersistence.delete(eventId);
+        eventPersistence.delete(eventId, neighId);
         LOGGER.log(Level.INFO, "End the deletion process for event with id = {0}", eventId);
     }
 
@@ -158,7 +168,8 @@ public class EventLogic {
      *
      * @param pEventEntity event to verify
      * @return true if the business is valid. False otherwise
-     * @throws BusinessLogicException if the event doesn't satisfy the business rules
+     * @throws BusinessLogicException if the event doesn't satisfy the business
+     * rules
      */
     private boolean verifyBusinessCreationRules(EventEntity pEventEntity) throws BusinessLogicException {
         boolean valid = true;

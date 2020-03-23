@@ -66,27 +66,25 @@ public class FavorResidentProfileResource {
     private FavorLogic favorLogic;
 
     /**
-     * Creates a favor with an existing resident
+     * Creates a favor with existing resident
      *
-     * @param favorsId favorId from favor to be associated
+     * @param favor favorId from favor to be associated
      * @param residentsId favorId from resident
+     * @param neighId parent neighborhood
      * @return JSON {@link FavorDetailDTO} -
-     * @throws WebApplicationException {@link WebApplicationExceptionMapper} -
+     * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException if rules are not met
+     * @throws WebApplicationException {@link WebApplicationExceptionMapper} 
      * Logic error if not found
      */
     @POST
-    public FavorDetailDTO createFavorForResidentProfile(@PathParam("residentsId") Long residentsId, FavorDTO favor) throws BusinessLogicException {
+    public FavorDetailDTO createFavor(@PathParam("residentsId") Long residentsId, FavorDTO favor,  @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creating favor for resident from resource: input: residentsId {0} , favorsId {1}", new Object[]{residentsId, favor.getId()});
 
         FavorEntity entity = null;
 
-        entity = favorLogic.createFavor(favor.toEntity());
+        entity = favorLogic.createFavor(favor.toEntity(), residentsId, neighId);
         
-        Long favorId = entity.getId();
-        
-        residentFavorLogic.associateFavorToResident(favorId, residentsId);
-
-        FavorDetailDTO dto = new FavorDetailDTO(favorLogic.getFavor(favorId));
+        FavorDetailDTO dto = new FavorDetailDTO(favorLogic.getFavor(entity.getId(), neighId));
         LOGGER.log(Level.INFO, "Ended creating favor for resident from resource: output: {0}", dto.getId());
         return dto;
     }
@@ -95,35 +93,38 @@ public class FavorResidentProfileResource {
      * Looks for all the favors associated to a resident and returns it
      *
      * @param residentsId favorId from resident whose favors are wanted
+     * @param neighId parent neighborhood
      * @return JSONArray {@link FavorDetailDTO} - favors found in resident. An
      * empty list if none is found
      */
     @GET
-    public List<FavorDetailDTO> getFavors(@PathParam("residentsId") Long residentsId) {
+    public List<FavorDetailDTO> getFavors(@PathParam("residentsId") Long residentsId, @PathParam("neighborhoodId") Long neighId) {
         LOGGER.log(Level.INFO, "Looking for favors from resources: input: {0}", residentsId);
-        List<FavorDetailDTO> list = favorsListEntity2DTO(residentFavorLogic.getFavors(residentsId));
+        List<FavorDetailDTO> list = favorsListEntity2DTO(residentFavorLogic.getFavors(residentsId, neighId));
         LOGGER.log(Level.INFO, "Ended looking for favors from resources: output: {0}", list);
         return list;
     }
 
     /**
-     * Looks for a favor with specified ID by URL which is associated with a
+     * Looks for a favor with specified ID by URL which is associated with 
      * resident and returns it
      *
      * @param favorsId favorId from wanted favor
      * @param residentsId favorId from resident whose favor is wanted
+     * @param neighId parent neighborhood
      * @return {@link FavorDetailDTO} - favor found inside resident
+     * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException if rules are not met
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Logic error if favor not found
      */
     @GET
     @Path("{favorsId: \\d+}")
-    public FavorDetailDTO getFavor(@PathParam("residentsId") Long residentsId, @PathParam("favorsId") Long favorsId) throws BusinessLogicException {
+    public FavorDetailDTO getFavor(@PathParam("residentsId") Long residentsId, @PathParam("favorsId") Long favorsId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Looking for favor: input: residentsId {0} , favorsId {1}", new Object[]{residentsId, favorsId});
-        if (favorLogic.getFavor(favorsId) == null) {
+        if (favorLogic.getFavor(favorsId, neighId) == null) {
             throw new WebApplicationException("Resource /favors/" + favorsId + " does not exist.", 404);
         }
-        FavorDetailDTO detailDTO = new FavorDetailDTO(residentFavorLogic.getFavor(residentsId, favorsId));
+        FavorDetailDTO detailDTO = new FavorDetailDTO(residentFavorLogic.getFavor(residentsId, favorsId, neighId));
         LOGGER.log(Level.INFO, "Ended looking for favor: output: {0}", detailDTO);
         return detailDTO;
     }
@@ -134,39 +135,42 @@ public class FavorResidentProfileResource {
      *
      * @param residentsId favorId from resident whose list of favors is to be updated
      * @param favors JSONArray {@link FavorDetailDTO} - modified favors list
+     * @param neighId parent neighborhood
      * @return JSONArray {@link FavorDetailDTO} - updated list
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Error if not found
      */
     @PUT
-    public List<FavorDetailDTO> replaceFavors(@PathParam("residentsId") Long residentsId, List<FavorDetailDTO> favors) {
+    public List<FavorDetailDTO> replaceFavors(@PathParam("residentsId") Long residentsId, List<FavorDetailDTO> favors, @PathParam("neighborhoodId") Long neighId) {
         LOGGER.log(Level.INFO, "Replacing resident favors from resource: input: residentsId {0} , favors {1}", new Object[]{residentsId, favors});
         for (FavorDetailDTO favor : favors) {
-            if (favorLogic.getFavor(favor.getId()) == null) {
+            if (favorLogic.getFavor(favor.getId(), neighId) == null) {
                 throw new WebApplicationException("Resource /favors/" + favors + " does not exist.", 404);
             }
         }
-        List<FavorDetailDTO> lista = favorsListEntity2DTO(residentFavorLogic.replaceFavors(residentsId, favorsListDTO2Entity(favors)));
+        List<FavorDetailDTO> lista = favorsListEntity2DTO(residentFavorLogic.replaceFavors(residentsId, favorsListDTO2Entity(favors), neighId));
         LOGGER.log(Level.INFO, "Ended replacing resident favors from resource: output:{0}", lista);
         return lista;
     }
 
     /**
-     * Removes a favor from a resident
+     * Removes a favor from resident
      *
      * @param residentsId favorId from resident whose favor is to be removed
      * @param favorsId favorId from favor to be removed
-     * @throws WebApplicationException {@link WebApplicationExceptionMapper}
+     * @param neighId parent neighborhood
+     * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException if rules are not met
+     * @throws WebApplicationException {@link WebApplicationExceptionMapper} 
      * Error if not found
      */
     @DELETE
     @Path("{favorsId: \\d+}")
-    public void removeFavor(@PathParam("residentsId") Long residentsId, @PathParam("favorsId") Long favorsId) throws BusinessLogicException {
+    public void removeFavor(@PathParam("residentsId") Long residentsId, @PathParam("favorsId") Long favorsId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Removing favor from resident: input: residentsId {0} , favorsId {1}", new Object[]{residentsId, favorsId});
-        if (favorLogic.getFavor(favorsId) == null) {
+        if (favorLogic.getFavor(favorsId, neighId) == null) {
             throw new WebApplicationException("Resource /favors/" + favorsId + " does not exist.", 404);
         }
-        residentFavorLogic.removeFavor(residentsId, favorsId);
+        residentFavorLogic.removeFavor(residentsId, favorsId, neighId);
         LOGGER.info("Ended removing favor from resident: output: void");
     }
 

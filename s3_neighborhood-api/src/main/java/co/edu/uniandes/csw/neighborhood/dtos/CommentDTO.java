@@ -70,7 +70,7 @@ public class CommentDTO implements Serializable {
     }
 
     /**
-     * Creates a comment DTO from a comment entity.
+     * Creates a comment DTO from comment entity.
      *
      * @param entityComment entity from which DTO is to be created
      *

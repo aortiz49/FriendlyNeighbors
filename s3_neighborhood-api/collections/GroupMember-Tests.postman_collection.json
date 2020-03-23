@@ -463,7 +463,7 @@
 			"response": []
 		},
 		{
-			"name": "Get group from a non associated member",
+			"name": "Get group from non associated member",
 			"event": [
 				{
 					"listen": "test",

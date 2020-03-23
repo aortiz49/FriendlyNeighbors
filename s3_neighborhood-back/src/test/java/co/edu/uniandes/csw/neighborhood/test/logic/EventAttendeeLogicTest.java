@@ -105,13 +105,15 @@ public class EventAttendeeLogicTest {
         event = factory.manufacturePojo(EventEntity.class);
         event.setId(1L);
         event.setAttendees(new ArrayList<>());
-        
-        
-         ResidentProfileEntity author = factory.manufacturePojo(ResidentProfileEntity.class);
-         author.setNeighborhood(neighborhood);
-         em.persist(author);
 
-         
+        LocationEntity location = factory.manufacturePojo(LocationEntity.class);
+        em.persist(location);
+
+        ResidentProfileEntity author = factory.manufacturePojo(ResidentProfileEntity.class);
+        author.setNeighborhood(neighborhood);
+        em.persist(author);
+
+        event.setLocation(location);
         event.setHost(author);
 
         em.persist(event);
@@ -131,7 +133,7 @@ public class EventAttendeeLogicTest {
     }
 
     /**
-     * Test to associate a resident with an event
+     * Test to associate resident with event
      *
      *
      * @throws BusinessLogicException
@@ -142,27 +144,26 @@ public class EventAttendeeLogicTest {
 
         newResidentProfile.setNeighborhood(neighborhood);
 
-        residentLogic.createResident(newResidentProfile);
+        residentLogic.createResident(newResidentProfile, neighborhood.getId());
 
-        ResidentProfileEntity residentEntity = eventResidentProfileLogic.associateResidentProfileToEvent(event.getId(), newResidentProfile.getId());
+        ResidentProfileEntity residentEntity = eventResidentProfileLogic.associateAttendeeToEvent(event.getId(), newResidentProfile.getId(), neighborhood.getId());
         Assert.assertNotNull(residentEntity);
 
         Assert.assertEquals(residentEntity.getId(), newResidentProfile.getId());
         Assert.assertEquals(residentEntity.getAddress(), newResidentProfile.getAddress());
 
-        ResidentProfileEntity lastResident = eventResidentProfileLogic.getResidentProfile(event.getId(), newResidentProfile.getId());
+        ResidentProfileEntity lastResident = eventResidentProfileLogic.getAttendee(event.getId(), newResidentProfile.getId(), neighborhood.getId());
 
         Assert.assertEquals(lastResident.getId(), newResidentProfile.getId());
 
     }
 
     /**
-     * Test for getting a collection of resident entities associated with an
-     * event
+     * Test for getting collection of resident entities associated with event
      */
     @Test
     public void getResidentProfilesTest() {
-        List<ResidentProfileEntity> residentEntities = eventResidentProfileLogic.getResidentProfiles(event.getId());
+        List<ResidentProfileEntity> residentEntities = eventResidentProfileLogic.getAttendees(event.getId(), neighborhood.getId());
 
         Assert.assertEquals(data.size(), residentEntities.size());
 
@@ -172,14 +173,14 @@ public class EventAttendeeLogicTest {
     }
 
     /**
-     * Test for getting a resident entity associated with an event
+     * Test for getting resident entity associated with event
      *
      * @throws BusinessLogicException
      */
     @Test
     public void getResidentTest() throws BusinessLogicException {
         ResidentProfileEntity residentEntity = data.get(0);
-        ResidentProfileEntity resident = eventResidentProfileLogic.getResidentProfile(event.getId(), residentEntity.getId());
+        ResidentProfileEntity resident = eventResidentProfileLogic.getAttendee(event.getId(), residentEntity.getId(), neighborhood.getId());
         Assert.assertNotNull(resident);
 
         Assert.assertEquals(residentEntity.getId(), resident.getId());
@@ -188,12 +189,11 @@ public class EventAttendeeLogicTest {
     }
 
     /**
-     * Test for replacing residents associated with an event
+     * Test for replacing residents associated with event
      *
      * @throws BusinessLogicException
      */
     @Test
-
     public void replaceResidentProfilesTest() throws BusinessLogicException {
         List<ResidentProfileEntity> newCollection = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -201,28 +201,27 @@ public class EventAttendeeLogicTest {
             entity.setEventsToAttend(new ArrayList<>());
             entity.getEventsToAttend().add(event);
 
-            entity.setNeighborhood(neighborhood);
-            residentLogic.createResident(entity);
+            residentLogic.createResident(entity, neighborhood.getId());
 
             newCollection.add(entity);
         }
-        eventResidentProfileLogic.replaceResidentProfiles(event.getId(), newCollection);
-        List<ResidentProfileEntity> residentEntities = eventResidentProfileLogic.getResidentProfiles(event.getId());
+        eventResidentProfileLogic.replaceAttendees(event.getId(), newCollection, neighborhood.getId());
+        List<ResidentProfileEntity> residentEntities = eventResidentProfileLogic.getAttendees(event.getId(), neighborhood.getId());
         for (ResidentProfileEntity aNuevaLista : newCollection) {
             Assert.assertTrue(residentEntities.contains(aNuevaLista));
         }
     }
 
     /**
-     * Test for removing a resident from an event
+     * Test for removing resident from event
      *
      */
     @Test
     public void removeResidentTest() {
         for (ResidentProfileEntity resident : data) {
-            eventResidentProfileLogic.removeResidentProfile(event.getId(), resident.getId());
+            eventResidentProfileLogic.removeAttendee(event.getId(), resident.getId(), neighborhood.getId());
         }
-        Assert.assertTrue(eventResidentProfileLogic.getResidentProfiles(event.getId()).isEmpty());
+        Assert.assertTrue(eventResidentProfileLogic.getAttendees(event.getId(), neighborhood.getId()).isEmpty());
     }
 
 }

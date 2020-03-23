@@ -87,6 +87,11 @@ public class GroupEntity extends BaseEntity implements Serializable {
             orphanRemoval = true)
     private List<PostEntity> posts = new ArrayList<>();
 
+    
+//===================================================
+// Getters & Setters
+//=================================================== 
+
     /**
      * @return the dateCreated
      */
@@ -158,6 +163,20 @@ public class GroupEntity extends BaseEntity implements Serializable {
     }
 
     /**
+     * @return the events
+     */
+    public List<EventEntity> getEvents() {
+        return events;
+    }
+
+    /**
+     * @param events the events to set
+     */
+    public void setEvents(List<EventEntity> events) {
+        this.events = events;
+    }
+
+    /**
      * @return the posts
      */
     public List<PostEntity> getPosts() {
@@ -170,15 +189,7 @@ public class GroupEntity extends BaseEntity implements Serializable {
     public void setPosts(List<PostEntity> posts) {
         this.posts = posts;
     }
-
-    public List<EventEntity> getEvents() {
-        return events;
-    }
-
-    public void setEvents(List<EventEntity> events) {
-        this.events = events;
-    }
     
-    
+   
 
 }

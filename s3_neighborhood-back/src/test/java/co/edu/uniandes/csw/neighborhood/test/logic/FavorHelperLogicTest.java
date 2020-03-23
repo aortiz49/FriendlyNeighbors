@@ -131,7 +131,7 @@ public class FavorHelperLogicTest {
     }
 
     /**
-     * Test to associate a resident with an favor
+     * Test to associate resident with favor
      *
      *
      * @throws BusinessLogicException
@@ -142,27 +142,27 @@ public class FavorHelperLogicTest {
 
         newResidentProfile.setNeighborhood(neighborhood);
 
-        residentLogic.createResident(newResidentProfile);
+        residentLogic.createResident(newResidentProfile, neighborhood.getId());
 
-        ResidentProfileEntity residentEntity = favorResidentProfileLogic.associateResidentProfileToFavor(favor.getId(), newResidentProfile.getId());
+        ResidentProfileEntity residentEntity = favorResidentProfileLogic.associateHelperToFavor(favor.getId(), newResidentProfile.getId(), neighborhood.getId());
         Assert.assertNotNull(residentEntity);
 
         Assert.assertEquals(residentEntity.getId(), newResidentProfile.getId());
         Assert.assertEquals(residentEntity.getAddress(), newResidentProfile.getAddress());
 
-        ResidentProfileEntity lastResident = favorResidentProfileLogic.getResidentProfile(favor.getId(), newResidentProfile.getId());
+        ResidentProfileEntity lastResident = favorResidentProfileLogic.getHelper(favor.getId(), newResidentProfile.getId(), neighborhood.getId());
 
         Assert.assertEquals(lastResident.getId(), newResidentProfile.getId());
 
     }
 
     /**
-     * Test for getting a collection of resident entities associated with an
+     * Test for getting  collection of resident entities associated with
      * favor
      */
     @Test
     public void getResidentProfilesTest() {
-        List<ResidentProfileEntity> residentEntities = favorResidentProfileLogic.getResidentProfiles(favor.getId());
+        List<ResidentProfileEntity> residentEntities = favorResidentProfileLogic.getHelpers(favor.getId(), neighborhood.getId());
 
         Assert.assertEquals(data.size(), residentEntities.size());
 
@@ -172,14 +172,14 @@ public class FavorHelperLogicTest {
     }
 
     /**
-     * Test for getting a resident entity associated with an favor
+     * Test for getting  resident entity associated with favor
      *
      * @throws BusinessLogicException
      */
     @Test
     public void getResidentTest() throws BusinessLogicException {
         ResidentProfileEntity residentEntity = data.get(0);
-        ResidentProfileEntity resident = favorResidentProfileLogic.getResidentProfile(favor.getId(), residentEntity.getId());
+        ResidentProfileEntity resident = favorResidentProfileLogic.getHelper(favor.getId(), residentEntity.getId(), neighborhood.getId());
         Assert.assertNotNull(resident);
 
         Assert.assertEquals(residentEntity.getId(), resident.getId());
@@ -188,7 +188,7 @@ public class FavorHelperLogicTest {
     }
 
     /**
-     * Test for replacing residents associated with an favor
+     * Test for replacing residents associated with favor
      *
      * @throws BusinessLogicException
      */
@@ -201,28 +201,28 @@ public class FavorHelperLogicTest {
             entity.setFavorsToHelp(new ArrayList<>());
             entity.getFavorsToHelp().add(favor);
 
-            entity.setNeighborhood(neighborhood);
-            residentLogic.createResident(entity);
+         
+            residentLogic.createResident(entity, neighborhood.getId());
 
             newCollection.add(entity);
         }
-        favorResidentProfileLogic.replaceResidentProfiles(favor.getId(), newCollection);
-        List<ResidentProfileEntity> residentEntities = favorResidentProfileLogic.getResidentProfiles(favor.getId());
+        favorResidentProfileLogic.replaceHelpers(favor.getId(), newCollection, neighborhood.getId());
+        List<ResidentProfileEntity> residentEntities = favorResidentProfileLogic.getHelpers(favor.getId(), neighborhood.getId());
         for (ResidentProfileEntity aNuevaLista : newCollection) {
             Assert.assertTrue(residentEntities.contains(aNuevaLista));
         }
     }
 
     /**
-     * Test for removing a resident from an favor
+     * Test for removing  resident from  favor
      *
      */
     @Test
     public void removeResidentTest() {
         for (ResidentProfileEntity resident : data) {
-            favorResidentProfileLogic.removeResidentProfile(favor.getId(), resident.getId());
+            favorResidentProfileLogic.removeHelper(favor.getId(), resident.getId(), neighborhood.getId());
         }
-        Assert.assertTrue(favorResidentProfileLogic.getResidentProfiles(favor.getId()).isEmpty());
+        Assert.assertTrue(favorResidentProfileLogic.getHelpers(favor.getId(), neighborhood.getId()).isEmpty());
     }
 
 }

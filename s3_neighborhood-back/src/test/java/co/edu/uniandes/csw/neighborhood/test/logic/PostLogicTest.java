@@ -52,6 +52,10 @@ public class PostLogicTest {
     @Inject
     private ResidentProfilePersistence residentPersistence;
 
+    private NeighborhoodEntity neighborhood;
+
+    private ResidentProfileEntity resident;
+
     /**
      * The entity manager that will verify data directly with the database.
      */
@@ -120,10 +124,21 @@ public class PostLogicTest {
         // creates a factory to generate objects with random data
         PodamFactory factory = new PodamFactoryImpl();
 
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        em.persist(neighborhood);
+        
+
+        resident = factory.manufacturePojo(ResidentProfileEntity.class);
+        resident.setNeighborhood(neighborhood);
+
+        residentPersistence.create(resident);
+
+
         for (int i = 0; i < 3; i++) {
 
-            PostEntity entity
-                    = factory.manufacturePojo(PostEntity.class);
+            PostEntity entity = factory.manufacturePojo(PostEntity.class);
+            
+            entity.setAuthor(resident);
 
             // add the data to the table
             em.persist(entity);
@@ -156,7 +171,7 @@ public class PostLogicTest {
         // the podam factory which has an id associated to it. 
         PostEntity result = null;
         try {
-            result = postLogic.createPost(newPost);
+            result = postLogic.createPost(newPost, resident.getId(), neigh.getId());
         } catch (BusinessLogicException ex) {
             Logger.getLogger(PostLogicTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -179,11 +194,11 @@ public class PostLogicTest {
     }
 
     /**
-     * Test for getting all posts
+     * Test for getting ll posts
      */
     @Test
     public void getPostsTest() {
-        List<PostEntity> list = postLogic.getPosts();
+        List<PostEntity> list = postLogic.getPosts(neighborhood.getId());
         Assert.assertEquals(data.size(), list.size());
         for (PostEntity entity : list) {
             boolean found = false;
@@ -197,12 +212,12 @@ public class PostLogicTest {
     }
 
     /**
-     * Test for getting a post
+     * Test for getting  post
      */
     @Test
     public void getPostTest() {
         PostEntity entity = data.get(0);
-        PostEntity resultEntity = postLogic.getPost(entity.getId());
+        PostEntity resultEntity = postLogic.getPost(entity.getId(), neighborhood.getId());
         Assert.assertNotNull(resultEntity);
         Assert.assertEquals(entity.getId(), resultEntity.getId());
         Assert.assertEquals(entity.getDescription(), resultEntity.getDescription());
@@ -219,7 +234,7 @@ public class PostLogicTest {
         PostEntity entity = data.get(0);
         PostEntity pojoEntity = factory.manufacturePojo(PostEntity.class);
         pojoEntity.setId(entity.getId());
-        postLogic.updatePost(pojoEntity);
+        postLogic.updatePost(pojoEntity, neighborhood.getId());
         PostEntity resp = em.find(PostEntity.class, entity.getId());
         Assert.assertEquals(pojoEntity.getId(), resp.getId());
         Assert.assertEquals(pojoEntity.getDescription(), resp.getDescription());
@@ -234,7 +249,7 @@ public class PostLogicTest {
     @Test
     public void deletePostTest() throws BusinessLogicException {
         PostEntity entity = data.get(1);
-        postLogic.deletePost(entity.getId());
+        postLogic.deletePost(entity.getId(), neighborhood.getId());
         PostEntity deleted = em.find(PostEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
@@ -246,7 +261,7 @@ public class PostLogicTest {
     public void createPostWithNoTitle() throws BusinessLogicException {
         PostEntity newEntity = factory.manufacturePojo(PostEntity.class);
         newEntity.setTitle(null);
-        postLogic.createPost(newEntity);
+        postLogic.createPost(newEntity, resident.getId(), neighborhood.getId());
     }
 
     /**
@@ -256,7 +271,7 @@ public class PostLogicTest {
     public void createPostWithNoDescription() throws BusinessLogicException {
         PostEntity newEntity = factory.manufacturePojo(PostEntity.class);
         newEntity.setDescription(null);
-        postLogic.createPost(newEntity);
+        postLogic.createPost(newEntity, resident.getId(), neighborhood.getId());
     }
 
     /**
@@ -266,6 +281,6 @@ public class PostLogicTest {
     public void createPostWithNoDate() throws BusinessLogicException {
         PostEntity newEntity = factory.manufacturePojo(PostEntity.class);
         newEntity.setPublishDate(null);
-        postLogic.createPost(newEntity);
+        postLogic.createPost(newEntity, resident.getId(), neighborhood.getId());
     }
 }

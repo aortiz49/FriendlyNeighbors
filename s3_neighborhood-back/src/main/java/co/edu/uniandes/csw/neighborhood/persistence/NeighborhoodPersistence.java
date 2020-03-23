@@ -38,7 +38,7 @@ import javax.persistence.TypedQuery;
 
 /**
  * Class that manages the persistence for the Neighborhood. It connects via the Entity Manager in
- * javax.persistance with a SQL database.
+ * javax.persistance with  SQL database.
  *
  * @author aortiz49
  */
@@ -66,7 +66,7 @@ public class NeighborhoodPersistence {
      * Persists a neighborhood in the database.
      *
      * @param pNeighborhoodEntity neighborhood object to be created in the databse
-     * @return the created neighborhood with an id given by the databse
+     * @return the created neighborhood with id given by the databse
      */
     public NeighborhoodEntity create(NeighborhoodEntity pNeighborhoodEntity) {
         // logs a message
