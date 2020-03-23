@@ -211,4 +211,43 @@ public class ResidentProfileResource {
         return FavorResidentProfileResource.class;
     }
 
+       
+
+   /**
+     *
+     * Connects /residents route with /posts route which are dependent of
+     * resident resource, by redirecting to the service managing the URL segment
+     * in charge of the members
+     *
+     * @param residentsId id from resident from which the resource is being accessed
+     * @param neighId parent neighborhood
+     * @return groups resource from the specified resident
+     */
+    @Path("{residentsId: \\d+}/posts")
+    public Class<PostResidentProfileResource> getPostResidentProfileResource(@PathParam("residentsId") Long residentsId,@PathParam("neighborhoodId") Long neighId ) {
+        if (residentLogic.getResident(residentsId, neighId) == null) {
+            throw new WebApplicationException("Resource /residents/" + residentsId + " does not exist.", 404);
+        }
+        return PostResidentProfileResource.class;
+    }
+
+    
+       /**
+     *
+     * Connects /residents route with /services route which are dependent of
+     * resident resource, by redirecting to the service managing the URL segment
+     * in charge of the members
+     *
+     * @param residentsId id from resident from which the resource is being accessed
+     * @param neighId parent neighborhood
+     * @return groups resource from the specified resident
+     */
+    @Path("{residentsId: \\d+}/services")
+    public Class<ServiceResidentProfileResource> getServiceResidentProfileResource(@PathParam("residentsId") Long residentsId,@PathParam("neighborhoodId") Long neighId ) {
+        if (residentLogic.getResident(residentsId, neighId) == null) {
+            throw new WebApplicationException("Resource /residents/" + residentsId + " does not exist.", 404);
+        }
+        return ServiceResidentProfileResource.class;
+    }
+    
 }
