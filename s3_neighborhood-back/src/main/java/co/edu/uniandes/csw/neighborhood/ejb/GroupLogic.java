@@ -141,16 +141,9 @@ public class GroupLogic {
             throw new BusinessLogicException("A creation date has to be specified");
         }
 
-        NeighborhoodEntity neighborhood = groupEntity.getNeighborhood();
+        NeighborhoodEntity neighborhood = neighborhoodPersistence.find(neighId);
 
-        // must have a neighborhood
-        if (neighborhood == null) {
-            throw new BusinessLogicException("The group must have a neighborhood!");
-        }
-        // must have an existing neighborhood
-        if (neighborhoodPersistence.find(neighborhood.getId()) == null) {
-            throw new BusinessLogicException("The group must have an existing  neighborhood!");
-        }
+        groupEntity.setNeighborhood(neighborhood);
 
         GroupEntity modified = persistence.update(groupEntity, neighId);
         LOGGER.log(Level.INFO, "Ended update process for group with id ", groupEntity.getId());

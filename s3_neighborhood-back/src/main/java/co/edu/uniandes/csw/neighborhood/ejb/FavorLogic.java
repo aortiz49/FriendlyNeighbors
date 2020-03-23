@@ -5,6 +5,7 @@
  */
 package co.edu.uniandes.csw.neighborhood.ejb;
 
+import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,9 +36,8 @@ public class FavorLogic {
     public FavorEntity createFavor(FavorEntity favorEntity, Long residentId, Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creation process for favor has started");
 
-        
         ResidentProfileEntity r = residentPersistence.find(residentId, neighId);
-        
+
         //must have a title
         if (favorEntity.getTitle() == null) {
             throw new BusinessLogicException("A title has to be specified");
@@ -57,7 +57,7 @@ public class FavorLogic {
         if (favorEntity.getDatePosted() == null) {
             throw new BusinessLogicException("A date has to be specified");
         }
-        
+
         favorEntity.setAuthor(r);
 
         persistence.create(favorEntity);
@@ -111,6 +111,9 @@ public class FavorLogic {
         if (favorEntity.getDatePosted() == null) {
             throw new BusinessLogicException("A date has to be specified");
         }
+
+        FavorEntity original = persistence.find(favorEntity.getId(), neighID);
+        favorEntity.setAuthor(original.getAuthor());
 
         FavorEntity modified = persistence.update(favorEntity, neighID);
         LOGGER.log(Level.INFO, "Ended update process for favor with id ", favorEntity.getId());

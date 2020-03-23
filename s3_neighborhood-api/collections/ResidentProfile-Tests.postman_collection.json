@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "64c582a5-bde6-4cf4-bb34-c8dae54bd2f2",
 		"name": "ResidentProfile-Tests.postman_collection",
+		"description": "# Introduction\nWhat does your API do?\n\n# Overview\nThings that the developers should know about\n\n# Authentication\nWhat is the preferred way of using the API?\n\n# Error Codes\nWhat errors and status codes can a user expect?\n\n# Rate limit\nIs there a limit to the number of requests an user can send?",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -23,7 +24,8 @@
 					"script": {
 						"id": "aaf6ceef-c993-4bed-b150-d635432d9806",
 						"exec": [
-							"tests[\"The resident must have an existing  neighborhood\"] = responseCode.code === 404;"
+							"tests[\"The resident must have an existing  neighborhood\"] = responseCode.code === 404;",
+							"tests[\"Expected error message \"] = responseBody.has(\"Resource /neighborhoods/100 does not exist.\");"
 						],
 						"type": "text/javascript"
 					}
@@ -62,7 +64,8 @@
 						"100",
 						"residents"
 					]
-				}
+				},
+				"description": "Get resident with non-existing neighborhood in the application.\r\n\r\nThe test verifies the generation of error and message \" Resource /neighborhoods/100 does not exist\".\r\n\r\n** Expected http code: 404 **\r\n"
 			},
 			"response": []
 		},
@@ -76,8 +79,7 @@
 						"exec": [
 							"var data = JSON.parse(responseBody);",
 							"postman.setGlobalVariable(\"new_id_N\",data.id);",
-							"tests[\"Creation of neighborhood for tests\"] = responseCode.code === 200;",
-							"console.log(data.id);"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -114,7 +116,8 @@
 						"api",
 						"neighborhoods"
 					]
-				}
+				},
+				"description": "Get resident with non-existing neighborhood in the application.\r\n\r\nThe test verifies the generation of error and message \" Resource /neighborhoods/100 does not exist\".\r\n\r\n** Expected http code: 404 **\r\n"
 			},
 			"response": []
 		},
@@ -151,7 +154,8 @@
 						"residents",
 						"22"
 					]
-				}
+				},
+				"description": "Gets resident that does not exist in the application.\r\n\r\nThe test verifies the generation of error and message \"The resource / residents / 22 does not exist.\".\r\n\r\n** Expected http code: 404 **\r\n"
 			},
 			"response": []
 		},
@@ -216,7 +220,8 @@
 						"residents",
 						""
 					]
-				}
+				},
+				"description": "Create a new resident with the neighborhood specified as a path paramter. The Id is initialized by the BD and must be seen in the response.\r\nFor the test, the id is stored in a variable that will be used in other requests in the collection.\r\n** Expected http code: 200 **\r\n"
 			},
 			"response": []
 		},
@@ -280,7 +285,8 @@
 						"{{new_id_N}}",
 						"residents"
 					]
-				}
+				},
+				"description": "Create a new resident with the neighborhood specified as a path paramter. The Id is initialized by the BD and must be seen in the response.\r\nFor the test, the id is stored in a variable that will be used in other requests in the collection.\r\n** Expected http code: 200 **\r\n"
 			},
 			"response": []
 		},
@@ -332,7 +338,8 @@
 						"{{new_id_N}}",
 						"residents"
 					]
-				}
+				},
+				"description": "Tries to create a resident with duplicated email in the application.\r\n\r\nThe test verifies the generation of error and message \"E-mail provided already in use\".\r\n\r\n** Expected http code: 412 **\r\n"
 			},
 			"response": []
 		},
@@ -384,7 +391,8 @@
 						"{{new_id_N}}",
 						"residents"
 					]
-				}
+				},
+				"description": "Tries to create a resident with no email.\r\n\r\nThe test verifies the generation of error and message \"An e-mail has to be specified\".\r\n\r\n** Expected http code: 404 **\r\n"
 			},
 			"response": []
 		},
@@ -397,7 +405,7 @@
 						"id": "22c22c13-4fd9-4544-b1a0-0664707ae6a7",
 						"exec": [
 							"tests[\"A phone has to be specified\"] = responseCode.code === 412;",
-							""
+							"tests[\"Expected error message \"] = responseBody.has(\"A phone has to be specified\");"
 						],
 						"type": "text/javascript"
 					}
@@ -436,7 +444,8 @@
 						"{{new_id_N}}",
 						"residents"
 					]
-				}
+				},
+				"description": "Tries to create a resident with no phone.\r\nThe test verifies the generation of error and message \" A phone has to be specified\".\r\n** Expected http code: 412 **\r\n"
 			},
 			"response": []
 		},
@@ -449,7 +458,7 @@
 						"id": "22c22c13-4fd9-4544-b1a0-0664707ae6a7",
 						"exec": [
 							"tests[\"A name has to be specified\"] = responseCode.code === 412;",
-							""
+							"tests[\"Expected error message \"] = responseBody.has(\"A name has to be specified\");"
 						],
 						"type": "text/javascript"
 					}
@@ -488,7 +497,8 @@
 						"{{new_id_N}}",
 						"residents"
 					]
-				}
+				},
+				"description": "Tries to create a resident with no name.\r\nThe test verifies the generation of error and message \" A name has to be specified\".\r\n** Expected http code: 412 **\r\n"
 			},
 			"response": []
 		},
@@ -501,7 +511,7 @@
 						"id": "22c22c13-4fd9-4544-b1a0-0664707ae6a7",
 						"exec": [
 							"tests[\"A proof of residence has to be specified\"] = responseCode.code === 412;",
-							""
+							"tests[\"Expected error message \"] = responseBody.has(\"A proof of residence has to be specified\");"
 						],
 						"type": "text/javascript"
 					}
@@ -540,7 +550,8 @@
 						"{{new_id_N}}",
 						"residents"
 					]
-				}
+				},
+				"description": "Tries to create a resident with no proof of residence.\r\nThe test verifies the generation of error and message \" A proof of residence has to be specified\".\r\n** Expected http code: 412 **\r\n"
 			},
 			"response": []
 		},
@@ -594,7 +605,8 @@
 						"{{new_id_N}}",
 						"residents"
 					]
-				}
+				},
+				"description": "Consult all the residents of a neighborhood.\r\nThe petition has no body.\r\n\r\nFor the test, it is verified that the set of residents in the answer has more than one.\r\n\r\n** Expected http code: 200 **\r\n"
 			},
 			"response": []
 		},
@@ -632,7 +644,8 @@
 						"residents",
 						"{{new_id_a1}}"
 					]
-				}
+				},
+				"description": "Gets resident with the neighborhood specified as a path parameter. \r\nThe petition has no body.\r\nThe desired resident id is sent by the request URL.\r\n** Expected http code: 200 **\r\n"
 			},
 			"response": []
 		},
@@ -687,7 +700,8 @@
 						"{{new_id_a1}}",
 						""
 					]
-				}
+				},
+				"description": "Esdits resident with the neighborhood specified as a path parameter. \r\nThe petition has no body.\r\nThe desired resident id is sent by the request URL.\r\n** Expected http code: 200 **\r\n"
 			},
 			"response": []
 		},
@@ -700,7 +714,7 @@
 						"id": "bad7ce88-801b-42bb-b50a-da3eb62d7308",
 						"exec": [
 							"tests[\"A nonexisting resident should not be edited\"] = responseCode.code === 404;",
-							""
+							"tests[\"Expected error message \"] = responseBody.has(\"Resource /residents/22 does not exist.\");"
 						],
 						"type": "text/javascript"
 					}
@@ -726,7 +740,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/2222",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/22",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -738,9 +752,10 @@
 						"neighborhoods",
 						"{{new_id_N}}",
 						"residents",
-						"2222"
+						"22"
 					]
-				}
+				},
+				"description": "Edits resident that does not exist in the application.\r\n\r\nThe test verifies the generation of error and message \"The resource / residents / 22 does not exist.\".\r\n\r\n** Expected http code: 404 **\r\n"
 			},
 			"response": []
 		},
@@ -776,7 +791,8 @@
 						"residents",
 						"{{new_id_a1}}"
 					]
-				}
+				},
+				"description": "Deletes resident. The previously created resident is sent.\r\n** Expected HTTP Code: 204 **\r\n"
 			},
 			"response": []
 		},
@@ -812,7 +828,8 @@
 						"residents",
 						"{{new_id_a2}}"
 					]
-				}
+				},
+				"description": "Deletes resident. The previously created resident is sent.\r\n** Expected HTTP Code: 204 **\r\n"
 			},
 			"response": []
 		},
@@ -865,7 +882,8 @@
 						"residents",
 						"22"
 					]
-				}
+				},
+				"description": "Deletes resident that does not exist in the application.\r\n\r\nThe test verifies the generation of error and message \"The resource / residents / 22 does not exist.\".\r\n\r\n** Expected http code: 404 **\r\n"
 			},
 			"response": []
 		},

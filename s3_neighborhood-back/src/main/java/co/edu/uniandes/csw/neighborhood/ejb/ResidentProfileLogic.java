@@ -191,17 +191,10 @@ public class ResidentProfileLogic {
 
         verifyBusinessRules(residentEntity);
 
-        // the neighborhood the potential resident belongs to 
-        NeighborhoodEntity neighborhood = residentEntity.getNeighborhood();
+        NeighborhoodEntity neighborhood = neighborhoodPersistence.find(neighID);
 
-        // 5. The business must have a neighborhood
-        if (neighborhood == null) {
-            throw new BusinessLogicException("The resident must have a neighborhood!");
-        }
-        // 6. The business must have an existing neighborhood
-        if (neighborhoodPersistence.find(neighborhood.getId()) == null) {
-            throw new BusinessLogicException("The resident must have an existing  neighborhood!");
-        }
+        residentEntity.setNeighborhood(neighborhood);
+        
         ResidentProfileEntity modified = persistence.update(residentEntity, neighID);
         LOGGER.log(Level.INFO, "Ended update process for resident with id ", residentEntity.getId());
         return modified;

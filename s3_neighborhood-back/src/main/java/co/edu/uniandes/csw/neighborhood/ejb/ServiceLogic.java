@@ -131,7 +131,7 @@ public class ServiceLogic {
     }
 
     /**
-     * Update a Service with  given Id.
+     * Update a Service with given Id.
      *
      * @param pId the id of the service
      * @param pService the new Service
@@ -143,6 +143,11 @@ public class ServiceLogic {
         LOGGER.log(Level.INFO, "Begin the update process for Service with id = {0}", pService.getId());
 
         // update neighborhood
+        
+        
+        ServiceEntity original = ServicePersistence.find(pService.getId(), neighID);
+        pService.setAuthor(original.getAuthor());
+        
         ServiceEntity newEntity = ServicePersistence.update(pService, neighID);
         LOGGER.log(Level.INFO, "End the update process for Service with id = {0}", pService.getTitle());
 
@@ -181,12 +186,14 @@ public class ServiceLogic {
         // the resident the potential service belongs to 
         ResidentProfileEntity serviceResident = pServiceEntity.getAuthor();
 
-         if (pServiceEntity.getDescription() == null) {
+        if (pServiceEntity.getDescription() == null) {
             throw new BusinessLogicException("The Service address cannot be null!");
         } else if (pServiceEntity.getDescription().length() > 250) {
             throw new BusinessLogicException("The service cannot have more than 250 characters");
 
         }
+
+
 
         return valid;
 

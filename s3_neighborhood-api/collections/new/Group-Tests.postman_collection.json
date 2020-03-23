@@ -1,8 +1,7 @@
 {
 	"info": {
-		"_postman_id": "d0441d7d-2869-4a69-a25c-19df50da281b",
-		"name": "Group-Tests.postman_collection",
-		"description": "# Introduction\nWhat does your API do?\n\n# Overview\nThings that the developers should know about\n\n# Authentication\nWhat is the preferred way of using the API?\n\n# Error Codes\nWhat errors and status codes can a user expect?\n\n# Rate limit\nIs there a limit to the number of requests an user can send?",
+		"_postman_id": "2a73326a-d085-4406-b23e-1a5c63eddf50",
+		"name": "Group-Tests.postman_collection copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -24,8 +23,8 @@
 					"script": {
 						"id": "aaf6ceef-c993-4bed-b150-d635432d9806",
 						"exec": [
-							"tests[\"The group must have an existing  neighborhood\"] = responseCode.code === 404;",
-							"tests[\"Expected error message \"] = responseBody.has(\"Resource /neighborhoods/100 does not exist.\");"
+							"tests[\"The group must have an existing  neighborhood\"] = responseCode.code === 412;",
+							"tests[\"Expected error message\"] = responseBody.has(\"must have a neighborhood\")"
 						],
 						"type": "text/javascript"
 					}
@@ -43,7 +42,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blcv@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": 555},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"raw": "{\r\n    \"dateCreated\": \"2000-08-20T00:00:00-05:00\",\r\n    \"name\": \"name\",\r\n     \"description\": \"desc\"\r\n\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -51,7 +50,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/100/groups",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/groups",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -60,12 +59,9 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
-						"neighborhoods",
-						"100",
 						"groups"
 					]
-				},
-				"description": "Get group with non-existing neighborhood in the application.\r\n\r\nThe test verifies the generation of error and message \" Resource /neighborhoods/100 does not exist\".\r\n\r\n** Expected http code: 404 **\r\n"
+				}
 			},
 			"response": []
 		},
@@ -79,7 +75,8 @@
 						"exec": [
 							"var data = JSON.parse(responseBody);",
 							"postman.setGlobalVariable(\"new_id_N\",data.id);",
-							""
+							"tests[\"Creation of neighborhood for tests\"] = responseCode.code === 200;",
+							"console.log(data.id);"
 						],
 						"type": "text/javascript"
 					}
@@ -97,7 +94,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"name\": \"XX\",\n\t\"id\": \"1\"\n\t\n}",
+					"raw": "{\n\t\"name\": \"Normandia\",\n\t\"id\": \"1\"\n\t\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -116,8 +113,7 @@
 						"api",
 						"neighborhoods"
 					]
-				},
-				"description": "Get group with non-existing neighborhood in the application.\r\n\r\nThe test verifies the generation of error and message \" Resource /neighborhoods/100 does not exist\".\r\n\r\n** Expected http code: 404 **\r\n"
+				}
 			},
 			"response": []
 		},
@@ -140,7 +136,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/groups/22",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/groups/22",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -149,13 +145,10 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
 						"groups",
 						"22"
 					]
-				},
-				"description": "Gets group that does not exist in the application.\r\n\r\nThe test verifies the generation of error and message \"The resource / groups / 22 does not exist.\".\r\n\r\n** Expected http code: 404 **\r\n"
+				}
 			},
 			"response": []
 		},
@@ -198,7 +191,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"dateCreated\": \"2000-08-20T00:00:00-05:00\",\r\n    \"name\": \"Dogs\",\r\n     \"description\": \"None\"\r\n}",
+					"raw": "{\r\n    \"dateCreated\": \"2000-08-20T00:00:00-05:00\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"name\": \"name1\",\r\n     \"description\": \"desc1\"\r\n\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -206,7 +199,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/groups/",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/groups/",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -215,13 +208,10 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
 						"groups",
 						""
 					]
-				},
-				"description": "Create a new group with the neighborhood specified as a path paramter. The Id is initialized by the BD and must be seen in the response.\r\nFor the test, the id is stored in a variable that will be used in other requests in the collection.\r\n** Expected http code: 200 **\r\n"
+				}
 			},
 			"response": []
 		},
@@ -264,7 +254,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"dateCreated\": \"2000-08-20T00:00:00-05:00\",\r\n    \"name\": \"Pets\",\r\n     \"description\": \"None\"\r\n}",
+					"raw": "{\r\n    \"dateCreated\": \"2000-08-20T00:00:00-05:00\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"name\": \"name2\",\r\n     \"description\": \"desc2\"\r\n\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -272,7 +262,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/groups",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/groups",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -281,65 +271,9 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
 						"groups"
 					]
-				},
-				"description": "Create a new group with the neighborhood specified as a path paramter. The Id is initialized by the BD and must be seen in the response.\r\nFor the test, the id is stored in a variable that will be used in other requests in the collection.\r\n** Expected http code: 200 **\r\n"
-			},
-			"response": []
-		},
-		{
-			"name": "Create group with no date",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "22c22c13-4fd9-4544-b1a0-0664707ae6a7",
-						"exec": [
-							"tests[\"An creation date has to be specified\"] = responseCode.code === 412;",
-							"tests[\"Expected error message \"] = responseBody.has(\"A creation date has to be specified\");"
-						],
-						"type": "text/javascript"
-					}
 				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Dogs\",\r\n     \"description\": \"None\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/groups",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
-						"groups"
-					]
-				},
-				"description": "Tries to create a group with no date.\r\n\r\nThe test verifies the generation of error and message \"A creation date has to be specified\".\r\n\r\n** Expected http code: 404 **\r\n"
 			},
 			"response": []
 		},
@@ -352,7 +286,7 @@
 						"id": "22c22c13-4fd9-4544-b1a0-0664707ae6a7",
 						"exec": [
 							"tests[\"A name has to be specified\"] = responseCode.code === 412;",
-							"tests[\"Expected error message \"] = responseBody.has(\"A name has to be specified\");"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -370,7 +304,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"dateCreated\": \"2000-08-20T00:00:00-05:00\",\r\n     \"description\": \"None\"\r\n}",
+					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blc@hotmail.com\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -378,7 +312,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/groups",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/groups",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -387,25 +321,22 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
 						"groups"
 					]
-				},
-				"description": "Tries to create a group with no name.\r\nThe test verifies the generation of error and message \"A name has to be specified\".\r\n** Expected http code: 412 **\r\n"
+				}
 			},
 			"response": []
 		},
 		{
-			"name": "Create group with no description",
+			"name": "Create group with no name description",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"id": "22c22c13-4fd9-4544-b1a0-0664707ae6a7",
 						"exec": [
-							"tests[\"A description has to be specified\"] = responseCode.code === 412;",
-							"tests[\"Expected error message \"] = responseBody.has(\"A description has to be specified\");"
+							"tests[\"A name has to be specified\"] = responseCode.code === 412;",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -423,7 +354,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"dateCreated\": \"2000-08-20T00:00:00-05:00\",\r\n    \"name\": \"Dogs\"\r\n}",
+					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blc@hotmail.com\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -431,7 +362,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/groups",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/groups",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -440,12 +371,59 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
 						"groups"
 					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create group with no date",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "22c22c13-4fd9-4544-b1a0-0664707ae6a7",
+						"exec": [
+							"tests[\"A name has to be specified\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blc@hotmail.com\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
 				},
-				"description": "Tries to create a group with no description.\r\nThe test verifies the generation of error and message \"A description has to be specified\".\r\n** Expected http code: 412 **\r\n"
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/groups",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"groups"
+					]
+				}
 			},
 			"response": []
 		},
@@ -486,7 +464,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/groups",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/groups",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -495,12 +473,9 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
 						"groups"
 					]
-				},
-				"description": "Consult all the groups of a neighborhood.\r\nThe petition has no body.\r\n\r\nFor the test, it is verified that the set of groups in the answer has more than one.\r\n\r\n** Expected http code: 200 **\r\n"
+				}
 			},
 			"response": []
 		},
@@ -524,7 +499,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/groups/{{new_id_a1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/groups/{{new_id_a1}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -533,13 +508,10 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
 						"groups",
 						"{{new_id_a1}}"
 					]
-				},
-				"description": "Gets group with the neighborhood specified as a path parameter. \r\nThe petition has no body.\r\nThe desired group id is sent by the request URL.\r\n** Expected http code: 200 **\r\n"
+				}
 			},
 			"response": []
 		},
@@ -571,7 +543,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"dateCreated\": \"2000-10-20T00:00:00-05:00\",\r\n    \"name\": \"Cats\",\r\n     \"description\": \"None\"\r\n}",
+					"raw": "{\r\n    \"dateCreated\": \"2000-08-20T00:00:00-05:00\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"name\": \"nameEdited\",\r\n     \"description\": \"descEdited\"\r\n\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -579,7 +551,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/groups/{{new_id_a1}}/",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/groups/{{new_id_a1}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -588,14 +560,10 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
 						"groups",
-						"{{new_id_a1}}",
-						""
+						"{{new_id_a1}}"
 					]
-				},
-				"description": "Esdits group with the neighborhood specified as a path parameter. \r\nThe petition has no body.\r\nThe desired group id is sent by the request URL.\r\n** Expected http code: 200 **\r\n"
+				}
 			},
 			"response": []
 		},
@@ -626,7 +594,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"dateCreated\": \"2000-10-20T00:00:00-05:00\",\r\n    \"name\": \"Cats\",\r\n     \"description\": \"None\"\r\n}",
+					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blcff@hotmail.com\",\r\n    \"name\": \"Andres Leonardo Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -634,7 +602,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/groups/22",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/groups/22",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -643,13 +611,10 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
 						"groups",
 						"22"
 					]
-				},
-				"description": "Edits group that does not exist in the application.\r\n\r\nThe test verifies the generation of error and message \"The resource / groups / 22 does not exist.\".\r\n\r\n** Expected http code: 404 **\r\n"
+				}
 			},
 			"response": []
 		},
@@ -671,7 +636,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/groups/{{new_id_a1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/groups/{{new_id_a1}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -680,13 +645,10 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
 						"groups",
 						"{{new_id_a1}}"
 					]
-				},
-				"description": "Deletes group. The previously created group is sent.\r\n** Expected HTTP Code: 204 **\r\n"
+				}
 			},
 			"response": []
 		},
@@ -708,7 +670,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/groups/{{new_id_a2}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/groups/{{new_id_a2}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -717,13 +679,10 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
 						"groups",
 						"{{new_id_a2}}"
 					]
-				},
-				"description": "Deletes group. The previously created group is sent.\r\n** Expected HTTP Code: 204 **\r\n"
+				}
 			},
 			"response": []
 		},
@@ -762,7 +721,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/groups/22",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/groups/22",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -771,61 +730,8 @@
 					"path": [
 						"s3_neighborhood-api",
 						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
 						"groups",
 						"22"
-					]
-				},
-				"description": "Deletes group that does not exist in the application.\r\n\r\nThe test verifies the generation of error and message \"The resource / groups / 22 does not exist.\".\r\n\r\n** Expected http code: 404 **\r\n"
-			},
-			"response": []
-		},
-		{
-			"name": "Delete neighborhood",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "bad7ce88-801b-42bb-b50a-da3eb62d7308",
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"{{new_id_N}}"
 					]
 				}
 			},

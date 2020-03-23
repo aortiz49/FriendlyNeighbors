@@ -146,6 +146,10 @@ public class EventLogic {
         LOGGER.log(Level.INFO, "Begin the update process for event with id = {0}", pEvent.getId());
 
         // update event
+        
+        EventEntity original = eventPersistence.find(pEvent.getId(), neighId);
+        pEvent.setHost(original.getHost());
+        
         EventEntity newEntity = eventPersistence.update(pEvent, neighId);
         LOGGER.log(Level.INFO, "End the update process for event with id = {0}", pEvent.getId());
         return newEntity;
@@ -187,6 +191,8 @@ public class EventLogic {
         else if (pEventEntity.getTitle() == null) {
             throw new BusinessLogicException("The event title cannot be null.");
         }
+        
+       
 
         return valid;
     }

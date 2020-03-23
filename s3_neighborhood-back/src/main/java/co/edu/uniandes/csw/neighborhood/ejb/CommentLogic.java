@@ -53,7 +53,7 @@ public class CommentLogic {
 
         PostEntity p = postPersistence.find(postId, neighId);
         ResidentProfileEntity r = residentPersistence.find(authorId, neighId);
-        
+
         //must have a text
         if (commentEntity.getText() == null) {
             throw new BusinessLogicException("A text has to be specified");
@@ -136,6 +136,10 @@ public class CommentLogic {
         if (commentEntity.getDate() == null) {
             throw new BusinessLogicException("A date has to be specified");
         }
+
+        CommentEntity original = persistence.find(commentEntity.getId(), neighId);
+        commentEntity.setAuthor(original.getAuthor());
+        commentEntity.setPost(original.getPost());
 
         CommentEntity modified = persistence.update(commentEntity, neighId);
         LOGGER.log(Level.INFO, "Ended update process for comment with id ", commentEntity.getId());

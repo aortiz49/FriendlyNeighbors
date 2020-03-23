@@ -37,7 +37,7 @@ public class PostLogic {
      *
      * @param postEntity post entity to be created
      * @param residentId author
-     * @param neighId parent neighborhood 
+     * @param neighId parent neighborhood
      * @return created entity
      * @throws BusinessLogicException if business rules are not met
      */
@@ -63,7 +63,6 @@ public class PostLogic {
         }
 
         postEntity.setAuthor(r);
-        
 
         persistence.create(postEntity);
         LOGGER.log(Level.INFO, "Creation process for post eneded");
@@ -136,6 +135,9 @@ public class PostLogic {
         if (postEntity.getPublishDate() == null) {
             throw new BusinessLogicException("A description has to be specified");
         }
+
+        PostEntity original = persistence.find(postEntity.getId(), neighID);
+        postEntity.setAuthor(original.getAuthor());
 
         PostEntity modified = persistence.update(postEntity, neighID);
         LOGGER.log(Level.INFO, "Ended update process for post with id ", postEntity.getId());
