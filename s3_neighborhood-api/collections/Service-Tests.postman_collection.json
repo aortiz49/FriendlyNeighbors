@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "23367eaf-e850-45b3-9d3c-715f41ff2dce",
-		"name": "Comment-Tests.postman_collection",
+		"_postman_id": "68b21271-c36f-4114-b1d1-9efba6e8bd7e",
+		"name": "Service-Tests.postman_collection",
 		"description": "# Introduction\nWhat does your API do?\n\n# Overview\nThings that the developers should know about\n\n# Authentication\nWhat is the preferred way of using the API?\n\n# Error Codes\nWhat errors and status codes can a user expect?\n\n# Rate limit\nIs there a limit to the number of requests an user can send?",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -66,7 +66,7 @@
 						"id": "f4515fb8-152f-4e8a-8cdb-0196a0643f3b",
 						"exec": [
 							"var data = JSON.parse(responseBody);",
-							"postman.setGlobalVariable(\"new_id_R\",data.id);",
+							"postman.setGlobalVariable(\"new_id_P\",data.id);",
 							""
 						],
 						"type": "text/javascript"
@@ -112,70 +112,15 @@
 			"response": []
 		},
 		{
-			"name": "Create post for tests",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "f4515fb8-152f-4e8a-8cdb-0196a0643f3b",
-						"exec": [
-							"var data = JSON.parse(responseBody);",
-							"postman.setGlobalVariable(\"new_id_P\",data.id);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"title\": \"Title\",\n\t\"description\": \"Description\",\n\t\"publishDate\": \"2000-08-20T00:00:00-05:00\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_R}}/posts",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
-						"residents",
-						"{{new_id_R}}",
-						"posts"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get a nonexistent comment",
+			"name": "Get a nonexistent service",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"id": "00672231-442c-41bf-908d-960c5416facb",
 						"exec": [
-							"tests[\"A nonexisting comment should not be found\"] = responseCode.code === 404;",
-							"tests[\"Expected error message \"] = responseBody.has(\"Resource /comments/22 does not exist.\");"
+							"tests[\"A nonexisting service should not be found\"] = responseCode.code === 404;",
+							"tests[\"Expected error message \"] = responseBody.has(\"Resource /services/22 does not exist.\");"
 						],
 						"type": "text/javascript"
 					}
@@ -185,7 +130,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/comments/22",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/services/22",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -196,16 +141,16 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"comments",
+						"services",
 						"22"
 					]
 				},
-				"description": "Gets comment that does not exist in the application.\r\n\r\nThe test verifies the generation of error and message \"The resource / comments / 22 does not exist.\".\r\n\r\n** Expected http code: 404 **\r\n"
+				"description": "Gets service that does not exist in the application.\r\n\r\nThe test verifies the generation of error and message \"The resource / services / 22 does not exist.\".\r\n\r\n** Expected http code: 404 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Create comment1",
+			"name": "Create service1",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -243,7 +188,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"date\": \"2000-10-20T00:00:00-05:00\",\r\n     \"text\": \"Hola\"\r\n}",
+					"raw": "{\r\n    \"datePosted\": \"2000-10-20T00:00:00-05:00\",\r\n     \"title\": \"NN\",\r\n      \"description\": \"NN\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -251,7 +196,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/posts/{{new_id_P}}/comments/{{new_id_R}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_P}}/services",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -262,18 +207,17 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"posts",
+						"residents",
 						"{{new_id_P}}",
-						"comments",
-						"{{new_id_R}}"
+						"services"
 					]
 				},
-				"description": "Creates a new comment with neighborhood, post and author specified as path parameter. The Id is initialized by the BD and must be seen in the response.\r\nFor the test, the id is stored in a variable that will be used in other requests in the collection.\r\n** Expected http code: 200 **\r\n"
+				"description": "Creates a new service with neighborhood, post and author specified as path parameter. The Id is initialized by the BD and must be seen in the response.\r\nFor the test, the id is stored in a variable that will be used in other requests in the collection.\r\n** Expected http code: 200 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Create comment2",
+			"name": "Create service2",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -311,7 +255,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"date\": \"2000-10-20T00:00:00-05:00\",\r\n     \"text\": \"Hola\"\r\n}",
+					"raw": "{\r\n    \"datePosted\": \"2000-10-20T00:00:00-05:00\",\r\n     \"title\": \"NN\",\r\n      \"description\": \"NN\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -319,7 +263,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/posts/{{new_id_P}}/comments/{{new_id_R}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_P}}/services",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -330,130 +274,17 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"posts",
+						"residents",
 						"{{new_id_P}}",
-						"comments",
-						"{{new_id_R}}"
+						"services"
 					]
 				},
-				"description": "Creates a new comment with neighborhood, post and author specified as path parameter. The Id is initialized by the BD and must be seen in the response.\r\nFor the test, the id is stored in a variable that will be used in other requests in the collection.\r\n** Expected http code: 200 **\r\n"
+				"description": "Creates a new service with neighborhood, post and author specified as path parameter. The Id is initialized by the BD and must be seen in the response.\r\nFor the test, the id is stored in a variable that will be used in other requests in the collection.\r\n** Expected http code: 200 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Create comment with no date",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "22c22c13-4fd9-4544-b1a0-0664707ae6a7",
-						"exec": [
-							"tests[\"A date has to be specified\"] = responseCode.code === 412;",
-							"tests[\"Expected error message \"] = responseBody.has(\"A date has to be specified\");"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n     \"text\": \"Hola\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/posts/{{new_id_P}}/comments/{{new_id_R}}",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
-						"posts",
-						"{{new_id_P}}",
-						"comments",
-						"{{new_id_R}}"
-					]
-				},
-				"description": "Tries to create a comment with no date.\r\n\r\nThe test verifies the generation of error and message \"A date has to be specified\".\r\n\r\n** Expected http code: 404 **\r\n"
-			},
-			"response": []
-		},
-		{
-			"name": "Create comment with no phone",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "22c22c13-4fd9-4544-b1a0-0664707ae6a7",
-						"exec": [
-							"tests[\"A text has to be specified\"] = responseCode.code === 412;",
-							"tests[\"Expected error message \"] = responseBody.has(\"A text has to be specified\");"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"date\": \"2000-10-20T00:00:00-05:00\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/posts/{{new_id_P}}/comments/{{new_id_R}}",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
-						"posts",
-						"{{new_id_P}}",
-						"comments",
-						"{{new_id_R}}"
-					]
-				},
-				"description": "Tries to create a comment with no text.\r\nThe test verifies the generation of error and message \"A text has to be specified\".\r\n** Expected http code: 412 **\r\n"
-			},
-			"response": []
-		},
-		{
-			"name": "Get all comments",
+			"name": "Get all services",
 			"event": [
 				{
 					"listen": "test",
@@ -489,7 +320,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/comments",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/services",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -500,15 +331,15 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"comments"
+						"services"
 					]
 				},
-				"description": "Consult all the comments of a neighborhood.\r\nThe petition has no body.\r\n\r\nFor the test, it is verified that the set of comments in the answer has more than one.\r\n\r\n** Expected http code: 200 **\r\n"
+				"description": "Consult all the services of a neighborhood.\r\nThe petition has no body.\r\n\r\nFor the test, it is verified that the set of services in the answer has more than one.\r\n\r\n** Expected http code: 200 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Get a comment",
+			"name": "Get a service",
 			"event": [
 				{
 					"listen": "test",
@@ -527,7 +358,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/comments/{{new_id_a1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/services/{{new_id_a1}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -538,16 +369,16 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"comments",
+						"services",
 						"{{new_id_a1}}"
 					]
 				},
-				"description": "Gets comment with the neighborhood specified as a path parameter. \r\nThe petition has no body.\r\nThe desired comment id is sent by the request URL.\r\n** Expected http code: 200 **\r\n"
+				"description": "Gets service with the neighborhood specified as a path parameter. \r\nThe petition has no body.\r\nThe desired service id is sent by the request URL.\r\n** Expected http code: 200 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Edit a comment",
+			"name": "Edit a service",
 			"event": [
 				{
 					"listen": "test",
@@ -582,7 +413,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/comments/{{new_id_a1}}/",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/services/{{new_id_a1}}/",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -593,25 +424,25 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"comments",
+						"services",
 						"{{new_id_a1}}",
 						""
 					]
 				},
-				"description": "Esdits comment with the neighborhood specified as a path parameter. \r\nThe petition has no body.\r\nThe desired comment id is sent by the request URL.\r\n** Expected http code: 200 **\r\n"
+				"description": "Esdits service with the neighborhood specified as a path parameter. \r\nThe petition has no body.\r\nThe desired service id is sent by the request URL.\r\n** Expected http code: 200 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Edit a nonexisting comment",
+			"name": "Edit a nonexisting service",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"id": "bad7ce88-801b-42bb-b50a-da3eb62d7308",
 						"exec": [
-							"tests[\"A nonexisting comment should not be edited\"] = responseCode.code === 404;",
-							"tests[\"Expected error message \"] = responseBody.has(\"Resource /comments/22 does not exist.\");"
+							"tests[\"A nonexisting service should not be edited\"] = responseCode.code === 404;",
+							"tests[\"Expected error message \"] = responseBody.has(\"Resource /services/22 does not exist.\");"
 						],
 						"type": "text/javascript"
 					}
@@ -637,7 +468,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/comments/22",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/services/22",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -648,16 +479,16 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"comments",
+						"services",
 						"22"
 					]
 				},
-				"description": "Edits comment that does not exist in the application.\r\n\r\nThe test verifies the generation of error and message \"The resource / comments / 22 does not exist.\".\r\n\r\n** Expected http code: 404 **\r\n"
+				"description": "Edits service that does not exist in the application.\r\n\r\nThe test verifies the generation of error and message \"The resource / services / 22 does not exist.\".\r\n\r\n** Expected http code: 404 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Delete a comment1",
+			"name": "Delete a service1",
 			"event": [
 				{
 					"listen": "test",
@@ -674,7 +505,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/comments/{{new_id_a1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/services/{{new_id_a1}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -685,16 +516,16 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"comments",
+						"services",
 						"{{new_id_a1}}"
 					]
 				},
-				"description": "Deletes comment. The previously created comment is sent.\r\n** Expected HTTP Code: 204 **\r\n"
+				"description": "Deletes service. The previously created service is sent.\r\n** Expected HTTP Code: 204 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Delete a comment2",
+			"name": "Delete a service2",
 			"event": [
 				{
 					"listen": "test",
@@ -711,7 +542,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/comments/{{new_id_a2}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/services/{{new_id_a2}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -722,11 +553,11 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"comments",
+						"services",
 						"{{new_id_a2}}"
 					]
 				},
-				"description": "Deletes comment. The previously created comment is sent.\r\n** Expected HTTP Code: 204 **\r\n"
+				"description": "Deletes service. The previously created service is sent.\r\n** Expected HTTP Code: 204 **\r\n"
 			},
 			"response": []
 		},
@@ -764,7 +595,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_R}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_P}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -776,58 +607,7 @@
 						"neighborhoods",
 						"{{new_id_N}}",
 						"residents",
-						"{{new_id_R}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete post",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "bad7ce88-801b-42bb-b50a-da3eb62d7308",
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/posts",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
-						"posts"
+						"{{new_id_P}}"
 					]
 				}
 			},
