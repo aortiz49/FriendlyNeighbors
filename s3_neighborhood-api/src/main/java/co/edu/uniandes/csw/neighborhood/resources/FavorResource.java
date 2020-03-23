@@ -136,6 +136,26 @@ public class FavorResource {
         }
         return list;
     }
+    
+        /**
+     *
+     * Connects /favors route with /helpers route which are dependent of favor
+     * resource, by redirecting to the service managing the URL segment in
+     * charge of the helpers
+     *
+     * @param favorsId id from favor from which the resource is being accessed
+     * @param neighId parent neighborhood
+     * @return helpers resource from the specified favor
+     */
+
+    @Path("{favorsId: \\d+}/helpers")
+    public Class<FavorHelperResource> getFavorHelperResource(@PathParam("favorsId") Long favorsId, @PathParam("neighborhoodId") Long neighId) {
+        if (favorLogic.getFavor(favorsId, neighId) == null) {
+            throw new WebApplicationException("Resource /favors/" + favorsId + " does not exist.", 404);
+        }
+        return FavorHelperResource.class;
+    }
+
 
 
 }

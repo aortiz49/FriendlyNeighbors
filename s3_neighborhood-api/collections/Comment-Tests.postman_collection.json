@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f26a0cbb-c962-4c69-85c8-bf63111b9b71",
+		"_postman_id": "70ec735c-fc05-418f-969b-9bca97ed7519",
 		"name": "Comment-Tests.postman_collection",
 		"description": "# Introduction\nWhat does your API do?\n\n# Overview\nThings that the developers should know about\n\n# Authentication\nWhat is the preferred way of using the API?\n\n# Error Codes\nWhat errors and status codes can a user expect?\n\n# Rate limit\nIs there a limit to the number of requests an user can send?",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -735,15 +735,14 @@
 			"response": []
 		},
 		{
-			"name": "Delete a nonexisting comment",
+			"name": "Delete resident",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"id": "bad7ce88-801b-42bb-b50a-da3eb62d7308",
 						"exec": [
-							"tests[\"A nonexisting comment should not be deleted\"] = responseCode.code === 404;",
-							"tests[\"Expected error message \"] = responseBody.has(\"Resource /comments/22 does not exist.\");"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -769,7 +768,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/comments/22",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_R}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -780,11 +779,61 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"comments",
-						"22"
+						"residents",
+						"{{new_id_R}}"
 					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bad7ce88-801b-42bb-b50a-da3eb62d7308",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
 				},
-				"description": "Deletes comment that does not exist in the application.\r\n\r\nThe test verifies the generation of error and message \"The resource / comments / 22 does not exist.\".\r\n\r\n** Expected http code: 404 **\r\n"
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/posts",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"posts"
+					]
+				}
 			},
 			"response": []
 		},
