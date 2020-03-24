@@ -1,6 +1,8 @@
 package co.edu.uniandes.csw.neighborhood.test.persistence;
 
 import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.persistence.BusinessPersistence;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +30,12 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 public class BusinessPersistenceTest {
 
     /**
-     * The business persistence object to test. The container will inject an
-     * instance of this class.
+     * Creates BusinessEntity POJOs.
+     */
+    private PodamFactory factory = new PodamFactoryImpl();
+
+    /**
+     * The business persistence object to test. The container will inject an instance of this class.
      */
     @Inject
     private BusinessPersistence businessPersistence;
@@ -52,9 +58,18 @@ public class BusinessPersistenceTest {
     private List<BusinessEntity> data = new ArrayList<>();
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
-     * contains classes, DB descriptor and beans.xml file for dependencies
-     * injector resolution.
+     * The neighborhood used for the tests.
+     */
+    private NeighborhoodEntity neighborhood;
+
+    /**
+     * The owner used for the tests.
+     */
+    private ResidentProfileEntity owner;
+
+    /**
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
+     * descriptor and beans.xml file for dependencies injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -102,18 +117,28 @@ public class BusinessPersistenceTest {
      * Inserts initial data for correct test operation
      */
     private void insertData() {
-        // creates a factory to generate objects with random data
-        PodamFactory factory = new PodamFactoryImpl();
+        // creates the neighborhood where the business is located
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        neighborhood.setName("Salitre");
+        em.persist(neighborhood);
 
+        // creates the owner of the businesses
+        owner = factory.manufacturePojo(ResidentProfileEntity.class);
+        owner.setNeighborhood(neighborhood);
+        em.persist(owner);
+
+        // creates 3 businesses 
         for (int i = 0; i < 3; i++) {
-            // 3 random BusinessEntity objects will be created
             BusinessEntity entity = factory.manufacturePojo(BusinessEntity.class);
 
-            // add the data to the table
+            entity.setNeighborhood(neighborhood);
+            entity.setOwner(owner);
             em.persist(entity);
-
-            // add the data to the list of test objects
             data.add(entity);
+
+            // add the business to the neighborhood
+            neighborhood.getBusinesses().add(data.get(i));
+
         }
     }
 
@@ -122,8 +147,6 @@ public class BusinessPersistenceTest {
      */
     @Test
     public void createBusinessTest() {
-        // creates a factory to construct random objects    
-        PodamFactory factory = new PodamFactoryImpl();
 
         // uses the factory to create a ranbdom BusinessEntity object
         BusinessEntity newEntity = factory.manufacturePojo(BusinessEntity.class);
@@ -154,7 +177,7 @@ public class BusinessPersistenceTest {
     @Test
     public void findAllTest() {
         // testing the findAll method of the persistence class
-        List<BusinessEntity> list = businessPersistence.findAll();
+        List<BusinessEntity> list = businessPersistence.findAll(neighborhood.getId());
 
         // verifies that the number of objects from findAll is the same as the
         // number of objects in the data list
@@ -197,7 +220,7 @@ public class BusinessPersistenceTest {
 
         // using the find method from the business persistence, returns the 
         // business entity matching the id
-        BusinessEntity newEntity = businessPersistence.find(entity.getId());
+        BusinessEntity newEntity = businessPersistence.find(entity.getId(),neighborhood.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getAddress(), newEntity.getAddress());
         Assert.assertEquals(entity.getOpeningTime(), newEntity.getOpeningTime());
@@ -255,6 +278,6 @@ public class BusinessPersistenceTest {
 
         // verifies that the result is null, since it should have been deleted
         Assert.assertNull(deleted);
-        
+
     }
 }

@@ -30,8 +30,11 @@ SOFTWARE.
 import co.edu.uniandes.csw.neighborhood.ejb.BusinessLogic;
 import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.BusinessPersistence;
+import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
+import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -95,6 +98,16 @@ public class BusinessLogicTest {
     private List<BusinessEntity> data = new ArrayList<>();
 
     /**
+     * The neighborhood used for the tests.
+     */
+    private NeighborhoodEntity neighborhood;
+
+    /**
+     * The owner used for the tests.
+     */
+    private ResidentProfileEntity owner;
+
+    /**
      *
      * Configures the test.
      *
@@ -106,19 +119,25 @@ public class BusinessLogicTest {
         return ShrinkWrap.create(JavaArchive.class)
                 .addPackage(BusinessEntity.class.getPackage())
                 .addPackage(BusinessLogic.class.getPackage())
-                .addPackage(BusinessPersistence.class.getPackage())
+                .addPackage(NeighborhoodPersistence.class.getPackage())
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
 
     /**
-     * Initial test configuration.
+     * Initial test configuration that will run before each test.
      */
     @Before
     public void configTest() {
         try {
             utx.begin();
+            em.joinTransaction();
+
+            // clears the data in the database directly using the EntityManager
+            // and UserTransaction
             clearData();
+
+            // creates the new data
             insertData();
             utx.commit();
         } catch (IllegalStateException | SecurityException | HeuristicMixedException
@@ -136,7 +155,6 @@ public class BusinessLogicTest {
      */
     private void clearData() {
         em.createQuery("delete from BusinessEntity").executeUpdate();
-        em.createQuery("delete from NeighborhoodEntity").executeUpdate();
     }
 
     /**
@@ -144,23 +162,29 @@ public class BusinessLogicTest {
      */
     private void insertData() {
 
-        // creates 3 businesses 
-        for (int i = 0; i < 3; i++) {
-            BusinessEntity entity = factory.manufacturePojo(BusinessEntity.class);
-            em.persist(entity);
-            data.add(entity);
-        }
-
         // creates the neighborhood where the business is located
-        NeighborhoodEntity neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
         neighborhood.setName("Salitre");
         em.persist(neighborhood);
 
-        // add the business to the neighborhood
-        neighborhood.getBusinesses().add(data.get(0));
+        // creates the owner of the businesses
+        owner = factory.manufacturePojo(ResidentProfileEntity.class);
+        owner.setNeighborhood(neighborhood);
+        em.persist(owner);
 
-        // add the neighborhood to the business
-        data.get(0).setNeighborhood(neighborhood);
+        // creates 3 businesses 
+        for (int i = 0; i < 3; i++) {
+            BusinessEntity entity = factory.manufacturePojo(BusinessEntity.class);
+
+            entity.setNeighborhood(neighborhood);
+            entity.setOwner(owner);
+            em.persist(entity);
+            data.add(entity);
+
+            // add the business to the neighborhood
+            neighborhood.getBusinesses().add(data.get(i));
+
+        }
 
     }
 
@@ -190,7 +214,7 @@ public class BusinessLogicTest {
         Assert.assertEquals(newEntity.getAddress(), entity.getAddress());
         Assert.assertEquals(newEntity.getLatitude(), entity.getLatitude(), 0.0001);
         Assert.assertEquals(newEntity.getLongitude(), entity.getLongitude(), 0.0001);
-        Assert.assertEquals(newEntity.getRating(), entity.getRating(),.0001);
+        Assert.assertEquals(newEntity.getRating(), entity.getRating(), .0001);
 
     }
 
@@ -248,7 +272,7 @@ public class BusinessLogicTest {
      */
     @Test
     public void getBusinessesTest() {
-        List<BusinessEntity> list = businessLogic.getBusinesses();
+        List<BusinessEntity> list = businessLogic.getBusinesses(neighborhood.getId());
         Assert.assertEquals(data.size(), list.size());
 
         for (BusinessEntity entity : list) {
@@ -270,7 +294,7 @@ public class BusinessLogicTest {
     @Test
     public void getBusinessTest() {
         BusinessEntity entity = data.get(0);
-        BusinessEntity resultEntity = businessLogic.getBusiness(entity.getId());
+        BusinessEntity resultEntity = businessLogic.getBusiness(entity.getId(), neighborhood.getId());
         Assert.assertNotNull(resultEntity);
         Assert.assertEquals(entity.getId(), resultEntity.getId());
         Assert.assertEquals(entity.getName(), resultEntity.getName());

@@ -27,6 +27,7 @@ package co.edu.uniandes.csw.neighborhood.persistence;
 //===================================================
 
 import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,7 +38,7 @@ import javax.persistence.TypedQuery;
 
 /**
  * Class that manages the persistence for the Business. It connects via the Entity Manager in
- * javax.persistance with  SQL database.
+ * javax.persistance with SQL database.
  *
  * @author aortiz49
  */
@@ -66,6 +67,7 @@ public class BusinessPersistence {
      * Persists a business in the database.
      *
      * @param pBusinessEntity business object to be created in the database
+     *
      * @return the created business with id given by the database
      */
     public BusinessEntity create(BusinessEntity pBusinessEntity) {
@@ -74,7 +76,7 @@ public class BusinessPersistence {
 
         // makes the entity instance managed and persistent
         em.persist(pBusinessEntity);
-        
+
         LOGGER.log(Level.INFO, "Business created");
 
         return pBusinessEntity;
@@ -83,17 +85,22 @@ public class BusinessPersistence {
     /**
      * Returns all businesses in the database.
      *
+     * @param pNeighborhoodId the id from parent neighborhood.
+     *
      * @return a list containing every business in the database. "select u from BusinessUntity u" is
      * akin to: "SELECT * from BusinessEntity" in SQL.
      */
-    public List<BusinessEntity> findAll() {
+    public List<BusinessEntity> findAll(Long pNeighborhoodId) {
         // log the consultation
         LOGGER.log(Level.INFO, "Consulting all businesses");
 
         // Create a typed business entity query to find all businesses 
         // in the database. 
-        TypedQuery<BusinessEntity> query = em.createQuery(
-                "select u from BusinessEntity u", BusinessEntity.class);
+        TypedQuery query = em.createQuery(
+                "Select e From BusinessEntity e where e.owner.neighborhood.id = :pNeighborhoodId",
+                BusinessEntity.class);
+
+        query = query.setParameter("pNeighborhoodId", pNeighborhoodId);
 
         return query.getResultList();
     }
@@ -102,13 +109,20 @@ public class BusinessPersistence {
      * Looks for a business with the id given by the parameter.
      *
      * @param pBusinessId the id corresponding to the business
+     * @param pNeighborhoodId the id from parent neighborhood.
+     *
      * @return the found business
      */
-    public BusinessEntity find(Long pBusinessId) {
-        LOGGER.log(Level.INFO, "Consulting business with id={0}",
-                pBusinessId);
+    public BusinessEntity find(Long pBusinessId, Long pNeighborhoodId) {
+        LOGGER.log(Level.INFO, "Querying for business with id {0} belonging to neighborhood  {1}",
+                new Object[]{pBusinessId, pNeighborhoodId});
 
-        return em.find(BusinessEntity.class, pBusinessId);
+        BusinessEntity foundbusiness = em.find(BusinessEntity.class, pBusinessId);
+        if (!foundbusiness.getNeighborhood().getId().equals(pNeighborhoodId)) {
+            throw new RuntimeException("Business " + pBusinessId + " does not belong to neighborhood " + pNeighborhoodId);
+        }
+
+        return foundbusiness;
     }
 
     /**
@@ -129,11 +143,13 @@ public class BusinessPersistence {
         // invokes the query and returns a list of results
         List<BusinessEntity> sameName = query.getResultList();
         BusinessEntity result;
+
         if (sameName == null || sameName.isEmpty()) {
             result = null;
         } else {
             result = sameName.get(0);
         }
+
         LOGGER.log(Level.INFO, "Exiting consultation of business by name ", pName);
         return result;
     }
@@ -163,7 +179,7 @@ public class BusinessPersistence {
         LOGGER.log(Level.INFO, "Deleting business with id = {0}", pBusinessId);
         BusinessEntity reviewEntity = em.find(BusinessEntity.class, pBusinessId);
         em.remove(reviewEntity);
-        LOGGER.log(Level.INFO,"Exiting the deletion of business with id = {0}",pBusinessId);
+        LOGGER.log(Level.INFO, "Exiting the deletion of business with id = {0}", pBusinessId);
     }
 
 }

@@ -31,6 +31,8 @@ import co.edu.uniandes.csw.neighborhood.persistence.BusinessPersistence;
 import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
 import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
+import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -66,6 +68,12 @@ public class BusinessLogic {
     @Inject
     private NeighborhoodPersistence neighborhoodPersistence;
 
+    /**
+     * The injected resident profile persistence object.
+     */
+    @Inject
+    private ResidentProfilePersistence residentProfilePersistence;
+
 //===================================================
 // CRUD Methods
 //===================================================
@@ -95,11 +103,13 @@ public class BusinessLogic {
     /**
      * Returns all the businesses in the database.
      *
+     * @param pNeighborhoodId the id from parent neighborhood.
+     *
      * @return list of businesses
      */
-    public List<BusinessEntity> getBusinesses() {
+    public List<BusinessEntity> getBusinesses(Long pNeighborhoodId) {
         LOGGER.log(Level.INFO, "Begin consulting all businesses");
-        List<BusinessEntity> businesses = businessPersistence.findAll();
+        List<BusinessEntity> businesses = businessPersistence.findAll(pNeighborhoodId);
         LOGGER.log(Level.INFO, "End consulting all businesses");
         return businesses;
     }
@@ -107,21 +117,27 @@ public class BusinessLogic {
     /**
      * Finds a business by ID.
      *
+     * @param pBusinessId the id corresponding to the business
+     * @param pNeighborhoodId the id from parent neighborhood.
+     *
      * @return the found business, null if not found
      */
-    public BusinessEntity getBusiness(Long pId) {
-        LOGGER.log(Level.INFO, "Begin search for business with Id = {0}", pId);
-        BusinessEntity entity = businessPersistence.find(pId);
+    public BusinessEntity getBusiness(Long pBusinessId, Long pNeighborhoodId) {
+        LOGGER.log(Level.INFO, "Begin search for business with Id = {0}", pBusinessId);
+        BusinessEntity entity = businessPersistence.find(pBusinessId, pNeighborhoodId);
+
         if (entity == null) {
-            LOGGER.log(Level.SEVERE, "The business with Id = {0} doesn't exist", pId);
+            LOGGER.log(Level.SEVERE, "The business with Id = {0} doesn't exist", pBusinessId);
         }
-        LOGGER.log(Level.INFO, "End search for bsiness with Id = {0}", pId);
+        LOGGER.log(Level.INFO, "End search for bsiness with Id = {0}", pBusinessId);
         return entity;
     }
 
     /**
      * Finds a business by name.
      *
+     * @param pName the name of the business to find
+     * 
      * @return the found business, null if not found
      */
     public BusinessEntity getBusinessByName(String pName) {
@@ -135,15 +151,15 @@ public class BusinessLogic {
     }
 
     /**
-     * Update a business with  given Id.
+     * Update a business with given Id.
      *
      * @param pBusinessId the Id of the business to update
      * @param pBusiness the new business
      * @return the business entity after the update
      * @throws BusinessLogicException if the new business violates the business rules
      */
-    public BusinessEntity updateBusiness(Long pId, BusinessEntity pBusiness) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Begin the update process for business with id = {0}", pId);
+    public BusinessEntity updateBusiness(Long pBusinessId, BusinessEntity pBusiness) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Begin the update process for business with id = {0}", pBusinessId);
 
         // update neighborhood
         BusinessEntity newEntity = businessPersistence.update(pBusiness);
@@ -167,6 +183,7 @@ public class BusinessLogic {
      * Verifies that the the business is valid.
      *
      * @param pBusinessEntity business to verify
+     * 
      * @return true if the business is valid. False otherwise
      * @throws BusinessLogicException if the business doesn't satisfy the business rules
      */
@@ -179,21 +196,39 @@ public class BusinessLogic {
         // 1. The business must have a neighborhood
         if (businessNeighborhood == null) {
             throw new BusinessLogicException("The business must have a neighborhood!");
-        } // 2. The neighborhood to which the business will be added to must already exist
-        else if (neighborhoodPersistence.find(businessNeighborhood.getId()) == null) {
+        }
+
+        // 2. The neighborhood to which the business will be added to must already exist
+        if (neighborhoodPersistence.find(businessNeighborhood.getId()) == null) {
             throw new BusinessLogicException("The neighborhood " + businessNeighborhood + " doesn't exist!");
-        } // 3. No two businesses can have the same name
-        else if (businessPersistence.findByName(pBusinessEntity.getName()) != null) {
+        }
+
+        // 3. No two businesses can have the same name
+        if (businessPersistence.findByName(pBusinessEntity.getName()) != null) {
             throw new BusinessLogicException("The neighborhood already has a business with that name!");
-        } // 4. The address of the business cannot be null
-        else if (pBusinessEntity.getAddress() == null) {
+        }
+
+        // 4. The address of the business cannot be null
+        if (pBusinessEntity.getAddress() == null) {
             throw new BusinessLogicException("The business address cannot be null!");
-        } // 5. The name of the business cannot be null
-        else if (pBusinessEntity.getName() == null) {
+        }
+
+        // 5. The name of the business cannot be null
+        if (pBusinessEntity.getName() == null) {
             throw new BusinessLogicException("The business name cannot be null!");
         }
 
-        return valid;
+        // 6. The owner of the business
+        ResidentProfileEntity businessOwner = pBusinessEntity.getOwner();
+        if (businessOwner == null) {
+            throw new BusinessLogicException("The business must have an owner!");
+        }
 
+        // 7. The owner of the business must already exist
+        if (residentProfilePersistence.find(businessOwner.getId(), businessNeighborhood.getId()) == null) {
+            throw new BusinessLogicException("The business owner must exist!");
+        }
+
+        return valid;
     }
 }
