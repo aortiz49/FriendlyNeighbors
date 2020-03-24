@@ -329,7 +329,7 @@ public class BusinessLogicTest {
         newEntity.setId(entity.getId());
 
         // update the business with the new information
-        businessLogic.updateBusiness(entity.getId(), newEntity);
+        businessLogic.updateBusiness(newEntity, neighborhood.getId());
 
         // find the business in the database
         BusinessEntity resp = em.find(BusinessEntity.class, entity.getId());
@@ -348,7 +348,7 @@ public class BusinessLogicTest {
         BusinessEntity entity = data.get(0);
 
         // delete the business
-        businessLogic.deleteBusiness(entity.getId());
+        businessLogic.deleteBusiness(entity.getId(),neighborhood.getId());
 
     }
 

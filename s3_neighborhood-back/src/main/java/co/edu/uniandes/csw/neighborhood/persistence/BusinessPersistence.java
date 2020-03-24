@@ -159,11 +159,15 @@ public class BusinessPersistence {
      *
      * @param pBusinessEntity the business with the modifications. For example, the name could have
      * changed. In that case, we must use this update method.
+     * @param pNeighborhoodId the id from parent neighborhood.
+     *
      * @return the business with the updated changes
      */
-    public BusinessEntity update(BusinessEntity pBusinessEntity) {
+    public BusinessEntity update(BusinessEntity pBusinessEntity, Long pNeighborhoodId) {
         LOGGER.log(Level.INFO, "Updating business with id = {0}",
                 pBusinessEntity.getId());
+
+        find(pBusinessEntity.getId(), pNeighborhoodId);
         return em.merge(pBusinessEntity);
     }
 
@@ -174,11 +178,13 @@ public class BusinessPersistence {
      * Deletes the business with the associated Id.
      *
      * @param pBusinessId the id of the business to be deleted
+     * @param pNeighborhoodId the id from parent neighborhood.
      */
-    public void delete(Long pBusinessId) {
+    public void delete(Long pBusinessId, Long pNeighborhoodId) {
         LOGGER.log(Level.INFO, "Deleting business with id = {0}", pBusinessId);
-        BusinessEntity reviewEntity = em.find(BusinessEntity.class, pBusinessId);
-        em.remove(reviewEntity);
+        BusinessEntity business = find(pBusinessId, pNeighborhoodId);
+
+        em.remove(business);
         LOGGER.log(Level.INFO, "Exiting the deletion of business with id = {0}", pBusinessId);
     }
 

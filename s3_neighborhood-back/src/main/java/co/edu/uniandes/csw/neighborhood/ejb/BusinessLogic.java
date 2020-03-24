@@ -137,7 +137,7 @@ public class BusinessLogic {
      * Finds a business by name.
      *
      * @param pName the name of the business to find
-     * 
+     *
      * @return the found business, null if not found
      */
     public BusinessEntity getBusinessByName(String pName) {
@@ -153,16 +153,17 @@ public class BusinessLogic {
     /**
      * Update a business with given Id.
      *
-     * @param pBusinessId the Id of the business to update
      * @param pBusiness the new business
+     * @param pNeighborhoodId the id from parent neighborhood.
+     *
      * @return the business entity after the update
      * @throws BusinessLogicException if the new business violates the business rules
      */
-    public BusinessEntity updateBusiness(Long pBusinessId, BusinessEntity pBusiness) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Begin the update process for business with id = {0}", pBusinessId);
+    public BusinessEntity updateBusiness(BusinessEntity pBusiness, Long pNeighborhoodId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Begin the update process for business with id = {0}", pBusiness.getId());
 
         // update neighborhood
-        BusinessEntity newEntity = businessPersistence.update(pBusiness);
+        BusinessEntity newEntity = businessPersistence.update(pBusiness, pNeighborhoodId);
         LOGGER.log(Level.INFO, "End the update process for business with id = {0}", pBusiness.getName());
         return newEntity;
     }
@@ -171,11 +172,12 @@ public class BusinessLogic {
      * Deletes a business by ID.
      *
      * @param businessId the ID of the book to be deleted
+     * @param pNeighborhoodId the id from parent neighborhood.
      *
      */
-    public void deleteBusiness(Long businessId) throws BusinessLogicException {
+    public void deleteBusiness(Long businessId, Long pNeighborhoodId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Begin the delete process for business with id = {0}", businessId);
-        businessPersistence.delete(businessId);
+        businessPersistence.delete(businessId,pNeighborhoodId);
         LOGGER.log(Level.INFO, "End the delete process for business with id = {0}", businessId);
     }
 
@@ -183,7 +185,7 @@ public class BusinessLogic {
      * Verifies that the the business is valid.
      *
      * @param pBusinessEntity business to verify
-     * 
+     *
      * @return true if the business is valid. False otherwise
      * @throws BusinessLogicException if the business doesn't satisfy the business rules
      */

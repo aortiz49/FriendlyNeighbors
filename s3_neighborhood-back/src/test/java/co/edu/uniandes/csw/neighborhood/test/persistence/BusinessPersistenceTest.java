@@ -248,7 +248,7 @@ public class BusinessPersistenceTest {
 
         // invokes the method being tested to see if the entity updated with 
         // the values from new entity
-        businessPersistence.update(newEntity);
+        businessPersistence.update(newEntity,neighborhood.getId());
 
         // resp is the updated entity from the table
         BusinessEntity resp = em.find(BusinessEntity.class, entity.getId());
@@ -270,7 +270,7 @@ public class BusinessPersistenceTest {
         BusinessEntity entity = data.get(0);
 
         // invokes the method to be tested from the persistence class
-        businessPersistence.delete(entity.getId());
+        businessPersistence.delete(entity.getId(),neighborhood.getId());
 
         // tries to obtain the deleted entry
         BusinessEntity deleted = em.find(BusinessEntity.class,

@@ -84,7 +84,7 @@ public class PostPersistence {
      */
     public PostEntity update(PostEntity postEntity, Long neighborhood_id) {
         LOGGER.log(Level.INFO, "Updating post with id={0}", postEntity.getId());
-
+        
         find(postEntity.getId(), neighborhood_id);
 
         return em.merge(postEntity);
