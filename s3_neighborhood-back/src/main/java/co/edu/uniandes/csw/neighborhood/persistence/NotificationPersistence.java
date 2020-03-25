@@ -41,13 +41,14 @@ public class NotificationPersistence {
     /**
      * Returns all notifications from the database.
      *
+     * @param neighID
      * @return a list with ll the notifications found in the database, "select u from NotificationEntity u" is like a "select 
      * from NotificationEntity;" - "SELECT * FROM table_name" en SQL.
      */
-    public List<NotificationEntity> findAll(Long n) {
-        LOGGER.log(Level.INFO, "Querying for all posts from neighborhood ", n);
-        TypedQuery query = em.createQuery("Select e From PostEntity e where e.author.neighborhood.id = :neighID", NotificationEntity.class);
-        query = query.setParameter("neighID", n);
+    public List<NotificationEntity> findAll(Long neighID) {
+        LOGGER.log(Level.INFO, "Querying for all posts from neighborhood ", neighID);
+        TypedQuery query = em.createQuery("Select e From NotificationEntity e where e.author.neighborhood.id = :neighID", NotificationEntity.class);
+        query = query.setParameter("neighID", neighID);
 
         return query.getResultList();
     }
