@@ -202,6 +202,12 @@ public class BusinessLogicTest {
 
         // sets the owner
         newEntity.setOwner(data.get(0).getOwner());
+        
+        // sets the opening time
+        newEntity.setOpeningTime("07:35 AM");
+        
+        // sets the closing time
+        newEntity.setClosingTime("09:15 PM");
 
         // persist the created business, should not be null
         BusinessEntity result = businessLogic.createBusiness(newEntity,neighborhood.getId());
@@ -333,7 +339,14 @@ public class BusinessLogicTest {
 
         // set owner
         newEntity.setOwner(entity.getOwner());
-
+        
+         // sets the opening time
+        newEntity.setOpeningTime("07:35 AM");
+        
+        // sets the closing time
+        newEntity.setClosingTime("09:15 PM");
+        
+        
         // update the business with the new information
         businessLogic.updateBusiness(newEntity, neighborhood.getId());
 

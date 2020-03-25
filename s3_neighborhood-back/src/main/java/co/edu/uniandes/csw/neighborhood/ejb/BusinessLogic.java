@@ -33,6 +33,10 @@ import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -91,6 +95,12 @@ public class BusinessLogic {
         // starts the logger for CREATE
         LOGGER.log(Level.INFO, "Begin creating a business");
 
+        
+        // 1. No two businesses can have the same name
+        if (businessPersistence.findByName(pBusinessEntity.getName()) != null) {
+            throw new BusinessLogicException("The neighborhood already has a business with that name!");
+        }
+        
         // verify business rules for creating a new business
         verifyBusinessCreationRules(pBusinessEntity);
 
@@ -170,30 +180,20 @@ public class BusinessLogic {
         // find original business
         BusinessEntity original = businessPersistence.find(pBusinessEntity.getId(), pNeighborhoodId);
 
-        // 3. No two businesses can have the same name
+        // No two businesses can have the same name
         if (!original.getName().equals(pBusinessEntity.getName())) {
 
             if (businessPersistence.findByName(pBusinessEntity.getName()) != null) {
                 throw new BusinessLogicException("The neighborhood already has a business with that name!");
             }
         }
+        
+        // verify that the new business meets the rules
+        verifyBusinessCreationRules(pBusinessEntity);
 
-        // 4. The address of the business cannot be null
-        if (pBusinessEntity.getAddress() == null) {
-            throw new BusinessLogicException("The business address cannot be null!");
-        }
-
-        // 5. The name of the business cannot be null
-        if (pBusinessEntity.getName() == null) {
-            throw new BusinessLogicException("The business name cannot be null!");
-        }
-
-        // 6. The owner of the business
-        ResidentProfileEntity businessOwner = pBusinessEntity.getOwner();
-        if (businessOwner == null) {
-            throw new BusinessLogicException("The business must have an owner!");
-        }
-
+        // set the business's neighborhood 
+        pBusinessEntity.setNeighborhood(neighborhoodPersistence.find(pNeighborhoodId));
+        
         // update business
         BusinessEntity newEntity = businessPersistence.update(pBusinessEntity, pNeighborhoodId);
 
@@ -225,11 +225,6 @@ public class BusinessLogic {
      */
     private boolean verifyBusinessCreationRules(BusinessEntity pBusinessEntity) throws BusinessLogicException {
         boolean valid = true;
-
-        // 1. No two businesses can have the same name
-        if (businessPersistence.findByName(pBusinessEntity.getName()) != null) {
-            throw new BusinessLogicException("The neighborhood already has a business with that name!");
-        }
 
         // 2. The address of the business cannot be null
         if (pBusinessEntity.getAddress() == null) {
@@ -267,16 +262,24 @@ public class BusinessLogic {
             throw new BusinessLogicException("The business opening time cannot be null!");
         }
 
-        // Parse the opening time
-        String[] openParts = openingTime.split(":");
+        // date format for the opening and closing times
+        DateFormat timeFormat = new SimpleDateFormat("hh:mm aa");
 
-        
-        if (openParts.length != 2) {
-            throw new BusinessLogicException("The business opening time is incorrect!");
+        // placeholder dates represening the times
+        Date open = null;
+        Date close = null;
+
+        // 8.Opening and closing times must be legal hh:mm aa format
+        try {
+            open = timeFormat.parse(openingTime);
+            close = timeFormat.parse(closingTime);
+        } catch (ParseException e) {
+            throw new BusinessLogicException("The business times have an illegal format!");
         }
-        
-        if (openParts.length != 2) {
-            throw new BusinessLogicException("The business opening time is incorrect!");
+
+        // 9. Opening time must come before the closing time
+        if (open.compareTo(close) > 0) {
+            throw new BusinessLogicException("The business opening time must come before the closing time!");
         }
 
         return valid;
