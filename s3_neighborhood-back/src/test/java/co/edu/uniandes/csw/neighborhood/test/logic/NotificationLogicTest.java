@@ -1,32 +1,18 @@
 /*
-MIT License
-
-Copyright (c) 2020 Universidad de los Andes - ISIS2603
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package co.edu.uniandes.csw.neighborhood.test.logic;
 
 import co.edu.uniandes.csw.neighborhood.ejb.NotificationLogic;
 import co.edu.uniandes.csw.neighborhood.entities.NotificationEntity;
-import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
+
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
+import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
+import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -40,6 +26,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,7 +35,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
  *
- * @author v.cardonac1
+ * @author albayona
  */
 @RunWith(Arquillian.class)
 public class NotificationLogicTest {
@@ -57,6 +44,16 @@ public class NotificationLogicTest {
 
     @Inject
     private NotificationLogic notificationLogic;
+
+    @Inject
+    private NeighborhoodPersistence neighPersistence;
+
+    @Inject
+    private ResidentProfilePersistence residentPersistence;
+
+    private NeighborhoodEntity neighborhood;
+
+    private ResidentProfileEntity resident;
 
     /**
      * The entity manager that will verify data directly with the database.
@@ -117,7 +114,6 @@ public class NotificationLogicTest {
      */
     private void clearData() {
         em.createQuery("delete from NotificationEntity").executeUpdate();
-        em.createQuery("delete from NeighborhoodEntity").executeUpdate();
     }
 
     /**
@@ -127,10 +123,21 @@ public class NotificationLogicTest {
         // creates a factory to generate objects with random data
         PodamFactory factory = new PodamFactoryImpl();
 
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        em.persist(neighborhood);
+        
+
+        resident = factory.manufacturePojo(ResidentProfileEntity.class);
+        resident.setNeighborhood(neighborhood);
+
+        residentPersistence.create(resident);
+
+
         for (int i = 0; i < 3; i++) {
 
-            NotificationEntity entity
-                    = factory.manufacturePojo(NotificationEntity.class);
+            NotificationEntity entity = factory.manufacturePojo(NotificationEntity.class);
+            
+            entity.setAuthor(resident);
 
             // add the data to the table
             em.persist(entity);
@@ -140,18 +147,30 @@ public class NotificationLogicTest {
         }
     }
 
+    /**
+     * Test for creating a notification
+     */
     @Test
     public void createNotificationTest() {
 
+        NeighborhoodEntity neigh = factory.manufacturePojo(NeighborhoodEntity.class);
+        neighPersistence.create(neigh);
+
+        ResidentProfileEntity resident = factory.manufacturePojo(ResidentProfileEntity.class);
+        resident.setNeighborhood(neigh);
+
+        residentPersistence.create(resident);
+
         // uses the factory to create a ranbdom NeighborhoodEntity object
         NotificationEntity newNotification = factory.manufacturePojo(NotificationEntity.class);
+        newNotification.setAuthor(resident);
 
         // invokes the method to be tested (create): it creates a table in the 
         // database. The parameter of this method is the newly created object from 
         // the podam factory which has an id associated to it. 
         NotificationEntity result = null;
         try {
-            result = notificationLogic.createNotification(newNotification);
+            result = notificationLogic.createNotification(newNotification, resident.getId(), neigh.getId());
         } catch (BusinessLogicException ex) {
             Logger.getLogger(NotificationLogicTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -170,15 +189,15 @@ public class NotificationLogicTest {
         // compares if the name of the new object generated by the factory matched
         // the name of the object in the database
         Assert.assertEquals(newNotification.getDescription(), entity.getDescription());
-        Assert.assertEquals(newNotification.getHeader(), entity.getHeader());
-        Assert.assertEquals(newNotification.getPriority(), entity.getPriority());
-        Assert.assertEquals(newNotification.getPublishDate(), entity.getPublishDate());
 
     }
 
+    /**
+     * Test for getting ll notifications
+     */
     @Test
     public void getNotificationsTest() {
-        List<NotificationEntity> list = notificationLogic.getNotifications();
+        List<NotificationEntity> list = notificationLogic.getNotifications(neighborhood.getId());
         Assert.assertEquals(data.size(), list.size());
         for (NotificationEntity entity : list) {
             boolean found = false;
@@ -191,34 +210,76 @@ public class NotificationLogicTest {
         }
     }
 
+    /**
+     * Test for getting  notification
+     */
     @Test
     public void getNotificationTest() {
         NotificationEntity entity = data.get(0);
-        NotificationEntity resultEntity = notificationLogic.getNotification(entity.getId());
+        NotificationEntity resultEntity = notificationLogic.getNotification(entity.getId(), neighborhood.getId());
         Assert.assertNotNull(resultEntity);
         Assert.assertEquals(entity.getId(), resultEntity.getId());
         Assert.assertEquals(entity.getDescription(), resultEntity.getDescription());
     }
 
+    /**
+     * Test for updating a notification
+     *
+     * @throws BusinessLogicException
+     */
     @Test
     public void updateNotificationTest() throws BusinessLogicException {
 
         NotificationEntity entity = data.get(0);
         NotificationEntity pojoEntity = factory.manufacturePojo(NotificationEntity.class);
         pojoEntity.setId(entity.getId());
-        notificationLogic.updateNotification(pojoEntity);
+        notificationLogic.updateNotification(pojoEntity, neighborhood.getId());
         NotificationEntity resp = em.find(NotificationEntity.class, entity.getId());
         Assert.assertEquals(pojoEntity.getId(), resp.getId());
         Assert.assertEquals(pojoEntity.getDescription(), resp.getDescription());
 
     }
 
+    /**
+     * Test for deleting a notification
+     *
+     * @throws BusinessLogicException
+     */
     @Test
     public void deleteNotificationTest() throws BusinessLogicException {
         NotificationEntity entity = data.get(1);
-        notificationLogic.deleteNotification(entity.getId());
+        notificationLogic.deleteNotification(entity.getId(), neighborhood.getId());
         NotificationEntity deleted = em.find(NotificationEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
 
+    /**
+     * Test for creating a notification with no title
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createNotificationWithNoTitle() throws BusinessLogicException {
+        NotificationEntity newEntity = factory.manufacturePojo(NotificationEntity.class);
+        newEntity.setHeader(null);
+        notificationLogic.createNotification(newEntity, resident.getId(), neighborhood.getId());
+    }
+
+    /**
+     * Test for creating a notification with no description
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createNotificationWithNoDescription() throws BusinessLogicException {
+        NotificationEntity newEntity = factory.manufacturePojo(NotificationEntity.class);
+        newEntity.setDescription(null);
+        notificationLogic.createNotification(newEntity, resident.getId(), neighborhood.getId());
+    }
+
+    /**
+     * Test for creating a notification with no date
+     */
+    @Test(expected = BusinessLogicException.class)
+    public void createNotificationWithNoDate() throws BusinessLogicException {
+        NotificationEntity newEntity = factory.manufacturePojo(NotificationEntity.class);
+        newEntity.setPublishDate(null);
+        notificationLogic.createNotification(newEntity, resident.getId(), neighborhood.getId());
+    }
 }
