@@ -6,8 +6,10 @@
 package co.edu.uniandes.csw.neighborhood.ejb;
 
 import co.edu.uniandes.csw.neighborhood.entities.NotificationEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.NotificationPersistence;
+import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,10 +27,12 @@ public class NotificationLogic {
 
     @Inject
     private NotificationPersistence persistence;
+    @Inject
+    private ResidentProfilePersistence residentPersistence;
 
-    public NotificationEntity createNotification(NotificationEntity notificationEntity) throws BusinessLogicException {
+    public NotificationEntity createNotification(NotificationEntity notificationEntity, Long residentId, Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creation process for notification has started");
-
+        ResidentProfileEntity r = residentPersistence.find(residentId, neighId);
         // Date posted can not be null
         if (notificationEntity.getPublishDate() == null) {
             throw new BusinessLogicException("A date has to be specified");
@@ -49,36 +53,36 @@ public class NotificationLogic {
         if (notificationEntity.getDescription().length() > 250) {
             throw new BusinessLogicException("Description length must be less than 250 characters");
         }
-
+        notificationEntity.setAuthor(r);
         persistence.create(notificationEntity);
         LOGGER.log(Level.INFO, "Creation process for notification eneded");
 
         return notificationEntity;
     }
 
-    public void deleteNotification(Long id) {
+    public void deleteNotification(Long id, Long neighID) {
 
         LOGGER.log(Level.INFO, "Starting deleting process for notification with id = {0}", id);
-        persistence.delete(id);
+        persistence.delete(id, neighID);
         LOGGER.log(Level.INFO, "Ended deleting process for notification with id = {0}", id);
     }
 
-    public List<NotificationEntity> getNotifications() {
+    public List<NotificationEntity> getNotifications(Long neighID) {
 
         LOGGER.log(Level.INFO, "Starting querying process for all notifications");
-        List<NotificationEntity> notifications = persistence.findAll();
+        List<NotificationEntity> notifications = persistence.findAll(neighID);
         LOGGER.log(Level.INFO, "Ended querying process for all notifications");
         return notifications;
     }
 
-    public NotificationEntity getNotification(Long id) {
+    public NotificationEntity getNotification(Long id, Long neighID) {
         LOGGER.log(Level.INFO, "Starting querying process for notification with id {0}", id);
-        NotificationEntity notification = persistence.find(id);
+        NotificationEntity notification = persistence.find(id, neighID);
         LOGGER.log(Level.INFO, "Ended querying process for  notification with id {0}", id);
         return notification;
     }
 
-    public NotificationEntity updateNotification(NotificationEntity notificationEntity) throws BusinessLogicException {
+    public NotificationEntity updateNotification(NotificationEntity notificationEntity, Long neighID) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Starting update process for notification with id {0}", notificationEntity.getId());
 
         // Date posted can not be null
@@ -101,8 +105,9 @@ public class NotificationLogic {
         if (notificationEntity.getDescription().length() > 250) {
             throw new BusinessLogicException("Description length must be less than 250 characters");
         }
-
-        NotificationEntity modified = persistence.update(notificationEntity);
+        NotificationEntity original = persistence.find(notificationEntity.getId(), neighID);
+        notificationEntity.setAuthor(original.getAuthor());
+        NotificationEntity modified = persistence.update(notificationEntity, neighID);
         LOGGER.log(Level.INFO, "Ended update process for notification with id {0}", notificationEntity.getId());
         return modified;
     }

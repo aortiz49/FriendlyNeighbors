@@ -12,7 +12,7 @@ import javax.ejb.Stateless;
 import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -44,10 +44,12 @@ public class NotificationPersistence {
      * @return a list with ll the notifications found in the database, "select u from NotificationEntity u" is like a "select 
      * from NotificationEntity;" - "SELECT * FROM table_name" en SQL.
      */
-    public List<NotificationEntity> findAll() {
-        LOGGER.log(Level.INFO, "Consulting all notifications");
-        Query q = em.createQuery("select u from NotificationEntity u");
-        return q.getResultList();
+    public List<NotificationEntity> findAll(Long n) {
+        LOGGER.log(Level.INFO, "Querying for all posts from neighborhood ", n);
+        TypedQuery query = em.createQuery("Select e From PostEntity e where e.author.neighborhood.id = :neighID", NotificationEntity.class);
+        query = query.setParameter("neighID", n);
+
+        return query.getResultList();
     }
     
     /**
@@ -56,10 +58,15 @@ public class NotificationPersistence {
      * @param notificationId: id corresponding to the notification sought
      * @return a notification.
      */
-    public NotificationEntity find(Long notificationId) {
+    public NotificationEntity find(Long notificationId, Long neighborhood_id) {
         LOGGER.log(Level.INFO, "Consulting notification with the id = {0}", notificationId);
-        return em.find(NotificationEntity.class, notificationId);
-        
+        NotificationEntity e = em.find(NotificationEntity.class, notificationId);
+        if (e != null) {
+            if (e.getAuthor() == null || e.getAuthor().getNeighborhood() == null || e.getAuthor().getNeighborhood().getId() != neighborhood_id) {
+                throw new RuntimeException("Notification " + notificationId + " does not belong to neighborhood " + neighborhood_id);
+            }
+        }
+        return e;
     }
     
     /**
@@ -68,8 +75,10 @@ public class NotificationPersistence {
      * @param notificationEntity: the notification that comes with the new changes.
      * @return a notification with the changes applied
      */
-    public NotificationEntity update(NotificationEntity notificationEntity) {
+    public NotificationEntity update(NotificationEntity notificationEntity, Long neighborhood_id) {
         LOGGER.log(Level.INFO, "Updating notification with the id = {0}", notificationEntity.getId());
+        find(notificationEntity.getId(), neighborhood_id);
+
         return em.merge(notificationEntity);
     }
 
@@ -79,9 +88,10 @@ public class NotificationPersistence {
      *
      * @param notificationId: id corresponding to the notification to delete.
      */
-    public void delete(Long notificationId) {
+    public void delete(Long notificationId, Long neighborhood_id) {
         LOGGER.log(Level.INFO, "Deleting notification with id = {0}", notificationId);
-        NotificationEntity entity = em.find(NotificationEntity.class, notificationId);
-        em.remove(entity);
+        NotificationEntity e = find(notificationId, neighborhood_id);
+
+        em.remove(e);
     }
 }
