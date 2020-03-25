@@ -115,7 +115,7 @@ public class BusinessResource {
      * Otherwise, an empty list.
      */
     @GET
-    public List<BusinessDTO> getBusinesses(@PathParam("neighborhoodId") Long pNeighborhoodId) {
+    public List<BusinessDTO> getBusinesses(@PathParam("neighborhoodsId") Long pNeighborhoodId) {
         LOGGER.info("Looking for all businesses from resources: input: void");
         List<BusinessDTO> businesses = listEntity2DTO(businessLogic.getBusinesses(pNeighborhoodId));
         LOGGER.log(Level.INFO, "Ended looking for all businesses from resources: output: {0}", businesses);
@@ -174,7 +174,7 @@ public class BusinessResource {
             throw new WebApplicationException("Resource /neighborhoods/" + pBusinessId
                     + " does not exist.", 404);
         }
-        
+
         BusinessDTO detailDTO = new BusinessDTO(businessLogic.updateBusiness(pBusiness.toEntity(),
                 pNeighborhoodId));
 
@@ -194,17 +194,44 @@ public class BusinessResource {
      */
     @DELETE
     @Path("{businessesId: \\d+}")
-    public void deleteBusiness(@PathParam("businessesId") Long pBusinessId, 
+    public void deleteBusiness(@PathParam("businessesId") Long pBusinessId,
             @PathParam("neighbrohoodId") Long pNeighborhoodId) throws WebApplicationException {
-        
+
         LOGGER.log(Level.INFO, "businessResource deleteBusiness: input: {0}", pBusinessId);
-        
-        if (businessLogic.getBusiness(pBusinessId,pNeighborhoodId) == null) {
+
+        if (businessLogic.getBusiness(pBusinessId, pNeighborhoodId) == null) {
             throw new WebApplicationException("The resource /neighbors/" + pBusinessId + " does not exist.", 404);
         }
+
+        businessLogic.deleteBusiness(pBusinessId, pNeighborhoodId);
+
+        LOGGER.info("businessResource deleteBusiness: output: void");
+    }
+
+    /**
+     * Deletes the business with the associated id received by the URL.
+     *
+     * @param pNeighborhoodId the neighborhood containing the business
+     *
+     * @throws WebApplicationException {@link WebApplicationExceptionMapper} Logic error if not
+     * found
+     */
+    @DELETE
+    public void deleteAllBusinesses(@PathParam("neighborhoodsId") Long pNeighborhoodId)
+            throws WebApplicationException {
+
+        LOGGER.log(Level.INFO, "businessResource deleteBusinesses");
+
+        List<BusinessDTO> businesses = listEntity2DTO(businessLogic.getBusinesses(pNeighborhoodId));
+
+        if(businesses.size()==0){
+            throw new WebApplicationException("There are no businesses to delete", 404);
+        }
         
-        businessLogic.deleteBusiness(pBusinessId,pNeighborhoodId);
-        
+        for (int i = 0; i < businesses.size(); i++) {
+            businessLogic.deleteBusiness(businesses.get(i).getId(), pNeighborhoodId);
+        }
+
         LOGGER.info("businessResource deleteBusiness: output: void");
     }
 

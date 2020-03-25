@@ -78,9 +78,9 @@ public class NeighborhoodResource {
 // REST API
 //===================================================
     /**
-     * Creates a new neighborhood with the information received in the body of the petition and returns
-     * a new identical object with and auto-generated id by the database. 
-     * 
+     * Creates a new neighborhood with the information received in the body of the petition and
+     * returns a new identical object with and auto-generated id by the database.
+     *
      * @param pNeighborhood {@link NeighborhoodDTO} the business to be saved
      *
      * @return
@@ -151,16 +151,32 @@ public class NeighborhoodResource {
     public void deleteNeighborhood(@PathParam("neighborhoodsId") Long neighborhoodsId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "neighborhoodResource deleteNeighborhood: input: {0}", neighborhoodsId);
         if (logic.getNeighborhood(neighborhoodsId) == null) {
-            throw new WebApplicationException("The resource /neighbors/" + neighborhoodsId + " does not exist.", 404);
+            throw new WebApplicationException("The resource /neighborhoods/" + neighborhoodsId + " does not exist.", 404);
         }
         logic.deleteNeighborhood(neighborhoodsId);
         LOGGER.info("neighborhoodResource deleteNeighborhood: output: void");
     }
 
+    @DELETE
+    @Path("{neighborhoodsId: \\d+}")
+    public void deleteAllNeighborhoods() throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "neighborhoodResource deleteNeighborhoods");
+        if (logic.getNeighborhoods().size() == 0) {
+            throw new WebApplicationException("There are no neighborhoods", 404);
+        }
+
+        for (int i = 0; i < logic.getNeighborhoods().size(); i++) {
+            Long currId = logic.getNeighborhoods().get(i).getId();
+            logic.deleteNeighborhood(currId);
+            LOGGER.log(Level.INFO, "neighborhoodResource deleteNeighborhood: input: {0}", currId);
+        }
+
+    }
+
     @Path("{neighborhoodsId: \\d+}/businesses")
     public Class<BusinessResource> getBusinessResource(@PathParam("businessesId") Long neighborhoodsId) {
         if (logic.getNeighborhood(neighborhoodsId) == null) {
-            throw new WebApplicationException("The resource recurso /neighborhoods/" + neighborhoodsId + " no existe.", 404);
+            throw new WebApplicationException("The resource /neighborhoods/" + neighborhoodsId + " no existe.", 404);
         }
         return BusinessResource.class;
     }
@@ -168,7 +184,7 @@ public class NeighborhoodResource {
     @Path("{neighborhoodsId: \\d+}/locations")
     public Class<LocationResource> getLocationResource(@PathParam("locationsId") Long neighborhoodsId) {
         if (logic.getNeighborhood(neighborhoodsId) == null) {
-            throw new WebApplicationException("The resource recurso /neighborhoods/" + neighborhoodsId + " no existe.", 404);
+            throw new WebApplicationException("The resource /neighborhoods/" + neighborhoodsId + " no existe.", 404);
         }
         return LocationResource.class;
     }
