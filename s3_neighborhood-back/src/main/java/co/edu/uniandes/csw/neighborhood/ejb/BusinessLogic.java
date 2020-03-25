@@ -153,32 +153,79 @@ public class BusinessLogic {
     /**
      * Update a business with given Id.
      *
-     * @param pBusiness the new business
+     * @param pBusinessEntity the new business
      * @param pNeighborhoodId the id from parent neighborhood.
      *
      * @return the business entity after the update
      * @throws BusinessLogicException if the new business violates the business rules
      */
-    public BusinessEntity updateBusiness(BusinessEntity pBusiness, Long pNeighborhoodId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Begin the update process for business with id = {0}", pBusiness.getId());
+    public BusinessEntity updateBusiness(BusinessEntity pBusinessEntity, Long pNeighborhoodId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Begin the update process for business with id = {0}", pBusinessEntity.getId());
 
-        // update neighborhood
-        BusinessEntity newEntity = businessPersistence.update(pBusiness, pNeighborhoodId);
-        LOGGER.log(Level.INFO, "End the update process for business with id = {0}", pBusiness.getName());
+        // the neighborhood the potential business belongs to 
+        NeighborhoodEntity businessNeighborhood = pBusinessEntity.getNeighborhood();
+
+        // 1. The business must have a neighborhood
+        if (businessNeighborhood == null) {
+            throw new BusinessLogicException("The business must have a neighborhood!");
+        }
+
+        // 2. The neighborhood to which the business will be added to must already exist
+        if (neighborhoodPersistence.find(businessNeighborhood.getId()) == null) {
+            throw new BusinessLogicException("The neighborhood " + businessNeighborhood + " doesn't exist!");
+        }
+
+        // find original business
+        BusinessEntity original = businessPersistence.find(pBusinessEntity.getId(), pNeighborhoodId);
+
+        // 3. No two businesses can have the same name
+        if (!original.getName().equals(pBusinessEntity.getName())) {
+
+            if (businessPersistence.findByName(pBusinessEntity.getName()) != null) {
+                throw new BusinessLogicException("The neighborhood already has a business with that name!");
+            }
+        }
+
+        // 4. The address of the business cannot be null
+        if (pBusinessEntity.getAddress() == null) {
+            throw new BusinessLogicException("The business address cannot be null!");
+        }
+
+        // 5. The name of the business cannot be null
+        if (pBusinessEntity.getName() == null) {
+            throw new BusinessLogicException("The business name cannot be null!");
+        }
+
+        // 6. The owner of the business
+        ResidentProfileEntity businessOwner = pBusinessEntity.getOwner();
+        if (businessOwner == null) {
+            throw new BusinessLogicException("The business must have an owner!");
+        }
+
+        // 7. The owner of the business must already exist
+        if (residentProfilePersistence.find(businessOwner.getId(), businessNeighborhood.getId()) == null) {
+            throw new BusinessLogicException("The business owner must exist!");
+        }
+
+        // update business
+        BusinessEntity newEntity = businessPersistence.update(pBusinessEntity, pNeighborhoodId);
+
+        LOGGER.log(Level.INFO, "End the update process for business with id = {0}", pBusinessEntity.getName());
         return newEntity;
+
     }
 
     /**
      * Deletes a business by ID.
      *
-     * @param businessId the ID of the book to be deleted
+     * @param pBusinessId the ID of the business to be deleted
      * @param pNeighborhoodId the id from parent neighborhood.
      *
      */
-    public void deleteBusiness(Long businessId, Long pNeighborhoodId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Begin the delete process for business with id = {0}", businessId);
-        businessPersistence.delete(businessId,pNeighborhoodId);
-        LOGGER.log(Level.INFO, "End the delete process for business with id = {0}", businessId);
+    public void deleteBusiness(Long pBusinessId, Long pNeighborhoodId) {
+        LOGGER.log(Level.INFO, "Begin the delete process for business with id = {0}", pBusinessId);
+        businessPersistence.delete(pBusinessId, pNeighborhoodId);
+        LOGGER.log(Level.INFO, "End the delete process for business with id = {0}", pBusinessId);
     }
 
     /**

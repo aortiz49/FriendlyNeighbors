@@ -328,6 +328,12 @@ public class BusinessLogicTest {
         // set the id of the random business to the id of the first one from the data set
         newEntity.setId(entity.getId());
 
+        // set neighborhood
+        newEntity.setNeighborhood(entity.getNeighborhood());
+
+        // set owner
+        newEntity.setOwner(entity.getOwner());
+
         // update the business with the new information
         businessLogic.updateBusiness(newEntity, neighborhood.getId());
 
@@ -348,7 +354,7 @@ public class BusinessLogicTest {
         BusinessEntity entity = data.get(0);
 
         // delete the business
-        businessLogic.deleteBusiness(entity.getId(),neighborhood.getId());
+        businessLogic.deleteBusiness(entity.getId(), neighborhood.getId());
 
     }
 

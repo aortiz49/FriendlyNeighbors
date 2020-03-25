@@ -46,8 +46,8 @@ public class PostResource {
      * Looks for all posts on application and returns them.
      *
      * @param neighId parent neighborhood
-     * @return JSONArray {@link PostDetailDTO} - All the posts on
-     * application if found. Otherwise, an empty list.
+     * @return JSONArray {@link PostDetailDTO} - All the posts on application if found. Otherwise,
+     * an empty list.
      */
     @GET
     public List<PostDetailDTO> getPosts(@PathParam("neighborhoodId") Long neighId) {
@@ -63,12 +63,12 @@ public class PostResource {
      * @param postsId Id from wanted post. Must be a sequence of digits.
      * @param neighId parent neighborhood
      * @return JSON {@link PostDetailDTO} - Wanted post DTO
-     * @throws WebApplicationException {@link WebApplicationExceptionMapper} -
-     * Logic error if not found
+     * @throws WebApplicationException {@link WebApplicationExceptionMapper} - Logic error if not
+     * found
      */
     @GET
     @Path("{postsId: \\d+}")
-    public PostDetailDTO getPost(@PathParam("postsId") Long postsId, @PathParam("neighborhoodId") Long neighId) {
+    public PostDetailDTO getPost(@PathParam("postsId") Long postsId, @PathParam("neighborhoodId") Long neighId) throws WebApplicationException {
         LOGGER.log(Level.INFO, "Looking for  post from resource: input: {0}", postsId);
         PostEntity postEntity = postLogic.getPost(postsId, neighId);
         if (postEntity == null) {
@@ -80,15 +80,14 @@ public class PostResource {
     }
 
     /**
-     * Updates post with id from URL with the information contained in
-     * request body.
+     * Updates post with id from URL with the information contained in request body. 52
      *
      * @param postsId ID from post to be updated. Must be a sequence of digits.
      * @param neighId parent neighborhood
      * @param post {@link PostDetailDTO} Post to be updated.
      * @return JSON {@link PostDetailDTO} - Updated post
-     * @throws WebApplicationException {@link WebApplicationExceptionMapper} -
-     * Logic error if not found
+     * @throws WebApplicationException {@link WebApplicationExceptionMapper} - Logic error if not
+     * found
      */
     @PUT
     @Path("{postsId: \\d+}")
@@ -98,7 +97,7 @@ public class PostResource {
         if (postLogic.getPost(postsId, neighId) == null) {
             throw new WebApplicationException("Resource /posts/" + postsId + " does not exist.", 404);
         }
-        PostDetailDTO detailDTO = new PostDetailDTO(postLogic.updatePost(post.toEntity(), neighId ));
+        PostDetailDTO detailDTO = new PostDetailDTO(postLogic.updatePost(post.toEntity(), neighId));
         LOGGER.log(Level.INFO, "Ended updating post from resource: output: {0}", detailDTO);
 
         return detailDTO;
@@ -109,8 +108,8 @@ public class PostResource {
      *
      * @param postsId id from post to be deleted
      * @param neighId parent neighborhood
-     * @throws WebApplicationException {@link WebApplicationExceptionMapper}
-     * Logic error if not found
+     * @throws WebApplicationException {@link WebApplicationExceptionMapper} Logic error if not
+     * found
      */
     @DELETE
     @Path("{postsId: \\d+}")
@@ -137,24 +136,21 @@ public class PostResource {
         return list;
     }
 
-        
-       /**
+    /**
      *
-     * Connects /posts route with /comments route which are dependent of
-     * post resource, by redirecting to the comment managing the URL segment
-     * in charge of the members
+     * Connects /posts route with /comments route which are dependent of post resource, by
+     * redirecting to the comment managing the URL segment in charge of the members
      *
      * @param postsId id from post from which the resource is being accessed
      * @param neighId parent neighborhood
      * @return groups resource from the specified post
      */
     @Path("{postsId: \\d+}/comments")
-    public Class<CommentPostResource> getCommentPostResource(@PathParam("postsId") Long postsId,@PathParam("neighborhoodId") Long neighId ) {
+    public Class<CommentPostResource> getCommentPostResource(@PathParam("postsId") Long postsId, @PathParam("neighborhoodId") Long neighId) {
         if (postLogic.getPost(postsId, neighId) == null) {
             throw new WebApplicationException("Resource /posts/" + postsId + " does not exist.", 404);
         }
         return CommentPostResource.class;
     }
-    
 
 }

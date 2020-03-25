@@ -1,10 +1,31 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+MIT License
+
+Copyright (c) 2020 Universidad de los Andes - ISIS2603
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.resources;
 
+//===================================================
+// Imports
+//===================================================
 import co.edu.uniandes.csw.neighborhood.dtos.NeighborhoodDTO;
 import co.edu.uniandes.csw.neighborhood.dtos.NeighborhoodDetailDTO;
 import co.edu.uniandes.csw.neighborhood.ejb.NeighborhoodLogic;
@@ -28,17 +49,43 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
 
+/**
+ * class that represents the "neighborhoods" resource.
+ *
+ * @author aortiz49
+ */
 @Path("neighborhoods")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
 public class NeighborhoodResource {
+//===================================================
+// Attributes
+//===================================================
 
+    /**
+     * Logger to display messages to the console.
+     */
     private static final Logger LOGGER = Logger.getLogger(NeighborhoodResource.class.getName());
 
+    /**
+     * Injects neighborhood logic dependencies.
+     */
     @Inject
     private NeighborhoodLogic logic;
 
+//===================================================
+// REST API
+//===================================================
+    /**
+     * Creates a new neighborhood with the information received in the body of the petition and returns
+     * a new identical object with and auto-generated id by the database. 
+     * 
+     * @param pNeighborhood {@link NeighborhoodDTO} the business to be saved
+     *
+     * @return
+     * @throws BusinessLogicException
+     */
     @POST
     public NeighborhoodDTO createNeighborhood(NeighborhoodDTO pNeighborhood) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creating neighborhood from resource: input: {0}", pNeighborhood);
@@ -66,11 +113,10 @@ public class NeighborhoodResource {
     /**
      * Looks for the neighborhood with id received in the URL y returns it.
      *
-     * @param neighborhoodsId Id from wanted neighborhood. Must be a sequence of
-     * digits.
+     * @param neighborhoodsId Id from wanted neighborhood. Must be a sequence of digits.
      * @return JSON {@link NeighborhoodDetailDTO} - Wanted resident DTO
-     * @throws WebApplicationException {@link WebApplicationExceptionMapper} -
-     * Logic error if not found
+     * @throws WebApplicationException {@link WebApplicationExceptionMapper} - Logic error if not
+     * found
      */
     @GET
     @Path("{neighborhoodsId: \\d+}")
@@ -134,8 +180,7 @@ public class NeighborhoodResource {
         }
         return ResidentProfileResource.class;
     }
-    
-    
+
     @Path("{neighborhoodId: \\d+}/groups")
     public Class<GroupResource> getGroupResource(@PathParam("neighborhoodId") Long neighId) {
         if (logic.getNeighborhood(neighId) == null) {
@@ -143,39 +188,32 @@ public class NeighborhoodResource {
         }
         return GroupResource.class;
     }
-    
-       
 
-   @Path("{neighborhoodId: \\d+}/events")
+    @Path("{neighborhoodId: \\d+}/events")
     public Class<EventResource> getEventResource(@PathParam("neighborhoodId") Long neighId) {
         if (logic.getNeighborhood(neighId) == null) {
             throw new WebApplicationException("Resource /neighborhoods/" + neighId + " does not exist.", 404);
         }
         return EventResource.class;
     }
-    
-    
-   @Path("{neighborhoodId: \\d+}/services")
+
+    @Path("{neighborhoodId: \\d+}/services")
     public Class<ServiceResource> getServiceResource(@PathParam("neighborhoodId") Long neighId) {
         if (logic.getNeighborhood(neighId) == null) {
             throw new WebApplicationException("Resource /neighborhoods/" + neighId + " does not exist.", 404);
         }
         return ServiceResource.class;
     }
-    
-    
 
-   @Path("{neighborhoodId: \\d+}/favors")
+    @Path("{neighborhoodId: \\d+}/favors")
     public Class<FavorResource> getFavorResource(@PathParam("neighborhoodId") Long neighId) {
         if (logic.getNeighborhood(neighId) == null) {
             throw new WebApplicationException("Resource /neighborhoods/" + neighId + " does not exist.", 404);
         }
         return FavorResource.class;
     }
-    
-    
 
-   @Path("{neighborhoodId: \\d+}/posts")
+    @Path("{neighborhoodId: \\d+}/posts")
     public Class<PostResource> getPostResource(@PathParam("neighborhoodId") Long neighId) {
         if (logic.getNeighborhood(neighId) == null) {
             throw new WebApplicationException("Resource /neighborhoods/" + neighId + " does not exist.", 404);
@@ -183,16 +221,14 @@ public class NeighborhoodResource {
         return PostResource.class;
     }
 
-    
-
-   @Path("{neighborhoodId: \\d+}/comments")
+    @Path("{neighborhoodId: \\d+}/comments")
     public Class<CommentResource> getCommentResource(@PathParam("neighborhoodId") Long neighId) {
         if (logic.getNeighborhood(neighId) == null) {
             throw new WebApplicationException("Resource /neighborhoods/" + neighId + " does not exist.", 404);
         }
         return CommentResource.class;
     }
-    
+
     /**
      * Converts an entity list to a DTO list for residents.
      *

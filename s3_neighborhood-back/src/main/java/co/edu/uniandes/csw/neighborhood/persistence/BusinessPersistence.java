@@ -183,7 +183,7 @@ public class BusinessPersistence {
     public void delete(Long pBusinessId, Long pNeighborhoodId) {
         LOGGER.log(Level.INFO, "Deleting business with id = {0}", pBusinessId);
         BusinessEntity business = find(pBusinessId, pNeighborhoodId);
-
+        
         em.remove(business);
         LOGGER.log(Level.INFO, "Exiting the deletion of business with id = {0}", pBusinessId);
     }
