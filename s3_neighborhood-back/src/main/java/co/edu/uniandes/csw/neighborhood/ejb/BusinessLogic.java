@@ -81,10 +81,12 @@ public class BusinessLogic {
      * Creates and persists a new business
      *
      * @param pBusinessEntity the entity of type Business of the new business to be persisted.
+     * @param pNeighborhoodId the id of the neighborhood containing the businesses
+     *
      * @return the business entity after it is persisted
      * @throws BusinessLogicException if the new business violates the business rules
      */
-    public BusinessEntity createBusiness(BusinessEntity pBusinessEntity) throws BusinessLogicException {
+    public BusinessEntity createBusiness(BusinessEntity pBusinessEntity, Long pNeighborhoodId) throws BusinessLogicException {
 
         // starts the logger for CREATE
         LOGGER.log(Level.INFO, "Begin creating a business");
@@ -92,9 +94,12 @@ public class BusinessLogic {
         // verify business rules for creating a new business
         verifyBusinessCreationRules(pBusinessEntity);
 
+        // set the business's neighborhood 
+        pBusinessEntity.setNeighborhood(neighborhoodPersistence.find(pNeighborhoodId));
+        
         // create the business
         BusinessEntity createdEntity = businessPersistence.create(pBusinessEntity);
-
+       
         // ends the logger for CREATE
         LOGGER.log(Level.INFO, "End creating a businss");
         return createdEntity;

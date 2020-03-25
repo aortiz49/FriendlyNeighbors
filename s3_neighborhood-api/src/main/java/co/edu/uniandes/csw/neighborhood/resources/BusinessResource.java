@@ -77,13 +77,14 @@ public class BusinessResource {
      * a new identical object with and auto-generated id by the database.
      *
      * @param pBusiness {@link BusinessDTO} the business to be saved
+     * @param pNeighborhoodId the id of the neighborhood containing the businesses
      *
      * @return JSON {@link EditorialDTO} the saved business with auto-generated id
      * @throws BusinessLogicException {@link BusinessLogicExceptionMapper} if there is an error when
      * creating the business
      */
     @POST
-    public BusinessDTO createBusiness(BusinessDTO pBusiness) throws BusinessLogicException {
+    public BusinessDTO createBusiness(BusinessDTO pBusiness, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
 
         LOGGER.log(Level.INFO, "BusinessResource createBusiness: input: {0}", pBusiness);
 
@@ -94,10 +95,10 @@ public class BusinessResource {
         BusinessEntity newBusinessEntity = businessLogic.createBusiness(businessEntity);
 
         // Invokes the BusinessDTO constructor to create a new BusinessDTO object. 
-        BusinessDTO nuevoEditorialDTO = new BusinessDTO(newBusinessEntity);
+        BusinessDTO newBusinessDTO = new BusinessDTO(newBusinessEntity);
 
-        LOGGER.log(Level.INFO, "EditorialResource createEditorial: output: {0}", nuevoEditorialDTO);
-        return nuevoEditorialDTO;
+        LOGGER.log(Level.INFO, "BusinessResource createBusiness: output: {0}", newBusinessDTO);
+        return newBusinessDTO;
     }
 
     /**
@@ -105,7 +106,7 @@ public class BusinessResource {
      * Creates a new business with the information received in the body of the petition and returns
      * a new identical object with auto-generated id by the data base.
      *
-     * @param pNeighborhoodId {@link BusinessDTO} the business to be saved
+     * @param pNeighborhoodId the id of the neighborhood containing the businesses
      *
      * @return JSONArray {@link BusinessDTO} - All the businesses in a neighborhood if found.
      * Otherwise, an empty list.

@@ -1,0 +1,527 @@
+{
+	"info": {
+		"_postman_id": "eded8b8c-533d-4573-9e80-6f3f8dd6ae7d",
+		"name": "NeighborhoodTest.postman",
+		"description": "# Introduction\nThis API provides REST services for the Neighborhood.\n\n# Overview\nThe supported features are:\n1. Create a new neighborhood\n2. Retreive a newighborhood\n2. Update a neighborhood\n3. Delete a neighborhood\n\n\n# Authentication\nNo authentication is needed.\n\n# Error Codes\n412 - Business logic error\n\n404 - Not found\n\n# Rate limit\nNo rate limit.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create neighborhood_1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "57114b87-c2b7-47ac-81ae-e73786236e88",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"new_id_n1\",data.id);",
+							"tests[\"Successful neighborhood creation.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": 1,\n\t\"name\": \"Neighborhood1\",\n\t\"locality\" :\"Engativa\",\n\t\"numberOfResidents\":45\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods"
+					]
+				},
+				"description": "Creates a neighborhood."
+			},
+			"response": []
+		},
+		{
+			"name": "Create neighborhood_2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "57114b87-c2b7-47ac-81ae-e73786236e88",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"new_id_n2\",data.id)",
+							"tests[\"Sucessfull neighborhood creation.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": 1,\n\t\"name\": \"Neighborhood_2\",\n\t\"locality\" :\"Engativa\",\n\t\"numberOfResidents\":45\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						""
+					]
+				},
+				"description": "Creates a second neighborhood"
+			},
+			"response": []
+		},
+		{
+			"name": "Create neighborhood with a null name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "57114b87-c2b7-47ac-81ae-e73786236e88",
+						"exec": [
+							"tests[\"Neighborhood with null name wasn't created.\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\":1,\n\t\"locality\" :\"Engativa\",\n\t\"numberOfResidents\":45\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create neighborhood with repeated name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "57114b87-c2b7-47ac-81ae-e73786236e88",
+						"exec": [
+							"tests[\"Neighborhood with repeated name not created.\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\":1,\n\t\"name\": \"Neighborhood1\",\n\t\"locality\" :\"Engativa\",\n\t\"numberOfResidents\":45\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all neighborhoods",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ef04962a-797b-4184-a7fd-9250b7c9df69",
+						"exec": [
+							"tests[\"All neighborhoods obtained.\"] = responseCode.code == 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get neighborhood_1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "57389752-7277-4194-887c-27871fd1f59d",
+						"exec": [
+							"tests[\"Neighborhood was sucessfully obtained.\"] = responseCode.code == 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_n1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_n1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a neighborhood that doesn't exist.",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "57389752-7277-4194-887c-27871fd1f59d",
+						"exec": [
+							"tests[\"No neighborhood was obtained.\"] = responseCode.code == 404;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/1/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update neighborhood_1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5f34cfb3-813d-4f13-98ba-2c2610e9b69b",
+						"exec": [
+							"tests[\"Neighborhood was successfully updated.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": {{new_id_n1}},\n\t\"name\": \"New Neighborhood\",\n\t\"locality\" :\"Suba\",\n\t\"numberOfResidents\":485\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_n1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_n1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete neighborhood_2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f591139d-5b6d-4b5d-9647-366487b3b3b7",
+						"exec": [
+							"tests[\"Successfully deleted neighborhood\"] = responseCode.code == 204;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_n2}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_n2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get remaining neighborhoods ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ef04962a-797b-4184-a7fd-9250b7c9df69",
+						"exec": [
+							"tests[\"Remaining neighborhoods were obtained.\"] = responseCode.code == 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods"
+					]
+				},
+				"description": "After deleting neighborhood_2, get remaining neighborhoods."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete non-existent neighborhood",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f591139d-5b6d-4b5d-9647-366487b3b3b7",
+						"exec": [
+							"tests[\"Nonexistent neighborhood was not deleted.\"] = responseCode.code == 404;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/1000/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"1000",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete neighborhood_1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f591139d-5b6d-4b5d-9647-366487b3b3b7",
+						"exec": [
+							"tests[\"Successfully deleted neighborhood_1\"] = responseCode.code == 204;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_n1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_n1}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
