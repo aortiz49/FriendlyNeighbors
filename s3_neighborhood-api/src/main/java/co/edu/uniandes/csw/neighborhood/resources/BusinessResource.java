@@ -209,33 +209,6 @@ public class BusinessResource {
     }
 
     /**
-     * Deletes the business with the associated id received by the URL.
-     *
-     * @param pNeighborhoodId the neighborhood containing the business
-     *
-     * @throws WebApplicationException {@link WebApplicationExceptionMapper} Logic error if not
-     * found
-     */
-    @DELETE
-    public void deleteAllBusinesses(@PathParam("neighborhoodsId") Long pNeighborhoodId)
-            throws WebApplicationException {
-
-        LOGGER.log(Level.INFO, "businessResource deleteBusinesses");
-
-        List<BusinessDTO> businesses = listEntity2DTO(businessLogic.getBusinesses(pNeighborhoodId));
-
-        if(businesses.size()==0){
-            throw new WebApplicationException("There are no businesses to delete", 404);
-        }
-        
-        for (int i = 0; i < businesses.size(); i++) {
-            businessLogic.deleteBusiness(businesses.get(i).getId(), pNeighborhoodId);
-        }
-
-        LOGGER.info("businessResource deleteBusiness: output: void");
-    }
-
-    /**
      * Converts an entity list to a DTO list for businesses.
      *
      * @param pEntityList business entity list to be converted.

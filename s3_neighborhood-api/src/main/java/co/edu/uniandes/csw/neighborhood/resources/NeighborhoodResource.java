@@ -157,22 +157,6 @@ public class NeighborhoodResource {
         LOGGER.info("neighborhoodResource deleteNeighborhood: output: void");
     }
 
-    @DELETE
-    @Path("{neighborhoodsId: \\d+}")
-    public void deleteAllNeighborhoods() throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "neighborhoodResource deleteNeighborhoods");
-        if (logic.getNeighborhoods().size() == 0) {
-            throw new WebApplicationException("There are no neighborhoods", 404);
-        }
-
-        for (int i = 0; i < logic.getNeighborhoods().size(); i++) {
-            Long currId = logic.getNeighborhoods().get(i).getId();
-            logic.deleteNeighborhood(currId);
-            LOGGER.log(Level.INFO, "neighborhoodResource deleteNeighborhood: input: {0}", currId);
-        }
-
-    }
-
     @Path("{neighborhoodsId: \\d+}/businesses")
     public Class<BusinessResource> getBusinessResource(@PathParam("businessesId") Long neighborhoodsId) {
         if (logic.getNeighborhood(neighborhoodsId) == null) {
