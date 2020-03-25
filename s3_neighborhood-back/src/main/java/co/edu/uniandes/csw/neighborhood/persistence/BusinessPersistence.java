@@ -118,8 +118,11 @@ public class BusinessPersistence {
                 new Object[]{pBusinessId, pNeighborhoodId});
 
         BusinessEntity foundbusiness = em.find(BusinessEntity.class, pBusinessId);
-        if (!foundbusiness.getNeighborhood().getId().equals(pNeighborhoodId)) {
-            throw new RuntimeException("Business " + pBusinessId + " does not belong to neighborhood " + pNeighborhoodId);
+
+        if (foundbusiness != null) {
+            if (foundbusiness.getNeighborhood() == null || foundbusiness.getNeighborhood().getId() != pNeighborhoodId) {
+                throw new RuntimeException("Business " + pBusinessId + " does not belong to neighborhood " + pNeighborhoodId);
+            }
         }
 
         return foundbusiness;
@@ -183,7 +186,7 @@ public class BusinessPersistence {
     public void delete(Long pBusinessId, Long pNeighborhoodId) {
         LOGGER.log(Level.INFO, "Deleting business with id = {0}", pBusinessId);
         BusinessEntity business = find(pBusinessId, pNeighborhoodId);
-        
+
         em.remove(business);
         LOGGER.log(Level.INFO, "Exiting the deletion of business with id = {0}", pBusinessId);
     }

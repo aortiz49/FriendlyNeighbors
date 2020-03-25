@@ -204,7 +204,7 @@ public class BusinessLogicTest {
         newEntity.setOwner(data.get(0).getOwner());
 
         // persist the created business, should not be null
-        BusinessEntity result = businessLogic.createBusiness(newEntity);
+        BusinessEntity result = businessLogic.createBusiness(newEntity,neighborhood.getId());
         Assert.assertNotNull(result);
 
         // locate the persisted business
@@ -228,7 +228,7 @@ public class BusinessLogicTest {
         BusinessEntity newEntity = factory.manufacturePojo(BusinessEntity.class);
 
         // persist the created business, should not be null
-        BusinessEntity result = businessLogic.createBusiness(newEntity);
+        BusinessEntity result = businessLogic.createBusiness(newEntity,neighborhood.getId());
     }
 
     /**
@@ -246,7 +246,7 @@ public class BusinessLogicTest {
         newEntity.setNeighborhood(neigh);
 
         // persist the created business, should not finish
-        BusinessEntity result = businessLogic.createBusiness(newEntity);
+        BusinessEntity result = businessLogic.createBusiness(newEntity,neighborhood.getId());
     }
 
     /**
@@ -262,7 +262,7 @@ public class BusinessLogicTest {
         newEntity.setName(data.get(0).getName());
 
         // persist the created business, should not finish
-        BusinessEntity result = businessLogic.createBusiness(newEntity);
+        BusinessEntity result = businessLogic.createBusiness(newEntity,neighborhood.getId());
     }
 
     /**

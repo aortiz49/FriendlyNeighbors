@@ -48,7 +48,7 @@ import javax.ws.rs.core.MediaType;
  *
  * @author aortiz93
  */
-@Path("businesses")
+
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @RequestScoped
@@ -84,18 +84,11 @@ public class BusinessResource {
      * creating the business
      */
     @POST
-    public BusinessDTO createBusiness(BusinessDTO pBusiness, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
+    public BusinessDTO createBusiness(BusinessDTO pBusiness, @PathParam("neighborhoodId") Long pNeighborhoodId) throws BusinessLogicException {
 
         LOGGER.log(Level.INFO, "BusinessResource createBusiness: input: {0}", pBusiness);
 
-        // Converts the BusinessDTO (JSON) to a Business Entuty object to be managed by the logic.
-        BusinessEntity businessEntity = pBusiness.toEntity();
-
-        // Invokes the logic to create a new business. 
-        BusinessEntity newBusinessEntity = businessLogic.createBusiness(businessEntity,neighId);
-
-        // Invokes the BusinessDTO constructor to create a new BusinessDTO object. 
-        BusinessDTO newBusinessDTO = new BusinessDTO(newBusinessEntity);
+        BusinessDTO newBusinessDTO = new BusinessDTO(businessLogic.createBusiness(pBusiness.toEntity(), pNeighborhoodId));
 
         LOGGER.log(Level.INFO, "BusinessResource createBusiness: output: {0}", newBusinessDTO);
         return newBusinessDTO;
@@ -112,7 +105,7 @@ public class BusinessResource {
      * Otherwise, an empty list.
      */
     @GET
-    public List<BusinessDTO> getBusinesses(@PathParam("neighborhoodsId") Long pNeighborhoodId) {
+    public List<BusinessDTO> getBusinesses(@PathParam("neighborhoodId") Long pNeighborhoodId) {
         LOGGER.info("Looking for all businesses from resources: input: void");
         List<BusinessDTO> businesses = listEntity2DTO(businessLogic.getBusinesses(pNeighborhoodId));
         LOGGER.log(Level.INFO, "Ended looking for all businesses from resources: output: {0}", businesses);
