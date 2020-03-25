@@ -1,0 +1,625 @@
+{
+	"info": {
+		"_postman_id": "6e5b0b6f-66ab-4d6d-be7e-6d46f1d15e42",
+		"name": "Favor-Tests.postman_collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create neighborhood for tests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fbaf5c29-380c-4178-8ffd-3a19a44f9c04",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"new_id_N\",data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"X\",\n\t\"id\": \"2\"\n\t\n}"
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create resident for tests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b5295108-ae91-4fa5-b1ec-07ff3894e81b",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"new_id_P\",data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blcde@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"residents",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a nonexistent favor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "15d71214-05fb-4b50-b8d8-291f7b0928dd",
+						"exec": [
+							"tests[\"A nonexisting favor should not be found\"] = responseCode.code === 404;",
+							"tests[\"Expected error message \"] = responseBody.has(\"Resource /favors/22 does not exist.\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/22",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"favors",
+						"22"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create favor1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b973d758-ce5e-483e-9291-fa7efc3e1130",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"new_id_a1\",data.id);",
+							"tests[\"Free of errors on Post\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"datePosted\": \"2000-10-20T00:00:00-05:00\",\r\n     \"title\": \"NN\",\r\n      \"description\": \"NN\",\r\n      \"type\": \"urgent\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_P}}/favors",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"residents",
+						"{{new_id_P}}",
+						"favors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create favor2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ef84a939-95fc-4662-8d08-de39d45943d6",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"new_id_a2\",data.id);",
+							"tests[\"Free of errors on Post\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"datePosted\": \"2000-10-20T00:00:00-08:00\",\r\n     \"title\": \"NNi\",\r\n      \"description\": \"NNi\",\r\n      \"type\": \"urgent\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_P}}/favors",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"residents",
+						"{{new_id_P}}",
+						"favors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all favors",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f2609413-18d1-4ca9-b44a-7d882feb8f8b",
+						"exec": [
+							"tests[\"Free of errors on GET all residens\"] = responseCode.code == 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"favors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a favor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "abb20bfd-8bc0-4690-b278-d53cbd5f7be2",
+						"exec": [
+							"console.log(responseBody);",
+							"var data = JSON.parse(responseBody);",
+							"tests[\"Free of errors on Get\"] = responseCode.code === 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/{{new_id_a1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"favors",
+						"{{new_id_a1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit a nonexisting favor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e4d3cb5b-db55-44d0-9ed4-13a1286581aa",
+						"exec": [
+							"tests[\"A nonexisting service should not be edited\"] = responseCode.code === 404;",
+							"tests[\"Expected error message \"] = responseBody.has(\"Resource /favors/22 does not exist.\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blcff@hotmail.com\",\r\n    \"name\": \"Andres Leonardo Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/22",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"favors",
+						"22"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete favor1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c1f22375-79f3-407c-9a3c-fccb070e4bf0",
+						"exec": [
+							"tests[\"Free of error on Delete\"] = responseCode.code === 204;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/{{new_id_a1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"favors",
+						"{{new_id_a1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit favor1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ab6cb20c-9660-4073-beac-ceea4dfb18f4",
+						"exec": [
+							"console.log(responseBody);",
+							"var data = JSON.parse(responseBody);",
+							"tests[\"Free of errors on Put\"] = responseCode.code === 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"datePosted\": \"2000-10-20T00:00:00-05:00\",\r\n     \"title\": \"OO\",\r\n      \"description\": \"oo\",\r\n      \"type\": \"U\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/{{new_id_a1}}/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"favors",
+						"{{new_id_a1}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete favor2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f0a6cfeb-aac3-44f3-897d-e9a412192b46",
+						"exec": [
+							"tests[\"Free of error on Delete\"] = responseCode.code === 204;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/{{new_id_a2}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"favors",
+						"{{new_id_a2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete resident",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_P}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"residents",
+						"{{new_id_P}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Neighborhood",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
