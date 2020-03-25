@@ -185,7 +185,7 @@ public class BusinessResource {
     @DELETE
     @Path("{businessesId: \\d+}")
     public void deleteBusiness(@PathParam("businessesId") Long pBusinessId,
-            @PathParam("neighbrohoodId") Long pNeighborhoodId) throws WebApplicationException {
+            @PathParam("neighborhoodId") Long pNeighborhoodId) throws WebApplicationException {
 
         LOGGER.log(Level.INFO, "businessResource deleteBusiness: input: {0}", pBusinessId);
 
