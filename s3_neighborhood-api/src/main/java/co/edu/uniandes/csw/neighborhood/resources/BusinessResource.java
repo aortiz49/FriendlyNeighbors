@@ -92,7 +92,7 @@ public class BusinessResource {
         BusinessEntity businessEntity = pBusiness.toEntity();
 
         // Invokes the logic to create a new business. 
-        BusinessEntity newBusinessEntity = businessLogic.createBusiness(businessEntity);
+        BusinessEntity newBusinessEntity = businessLogic.createBusiness(businessEntity,neighId);
 
         // Invokes the BusinessDTO constructor to create a new BusinessDTO object. 
         BusinessDTO newBusinessDTO = new BusinessDTO(newBusinessEntity);
