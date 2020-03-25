@@ -1,0 +1,561 @@
+{
+	"info": {
+		"_postman_id": "6728b78e-e7d2-4aaa-bf6f-3e2945474065",
+		"name": "Post-Tests.postman_collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create neighborhood for tests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1717465f-11db-4571-b5f2-052ac72198ae",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"new_id_N\",data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"XX2\",\n\t\"id\": \"3\"\n\t\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create resident for tests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6bba0594-2ffd-4abc-bfcb-21db916ad2e9",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"new_id_P\",data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blcd1@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"residents",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a nonexisting post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6cc2839f-a537-4642-94a6-865b01698d2c",
+						"exec": [
+							"tests[\"A nonexisting service should not be found\"] = responseCode.code === 404;",
+							"tests[\"Expected error message \"] = responseBody.has(\"Resource /posts/22 does not exist.\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/posts/22",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"posts",
+						"22"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create post1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "35c2520a-0d42-4d85-b911-e3772b10beac",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"new_id_a1\",data.id);",
+							"tests[\"Free of errors on Post\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"publishDate\": \"2000-10-20T00:00:00-05:00\",\r\n     \"title\": \"NN\",\r\n      \"description\": \"NN\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_P}}/posts",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"residents",
+						"{{new_id_P}}",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create post2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "35c2520a-0d42-4d85-b911-e3772b10beac",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"new_id_a2\",data.id);",
+							"tests[\"Free of errors on Post\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"publishDate\": \"2000-10-20T00:00:00-08:00\",\r\n     \"title\": \"NN2\",\r\n      \"description\": \"NN2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_P}}/posts",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"residents",
+						"{{new_id_P}}",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all posts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "64eae085-2607-40c9-8cbb-fce5046df53d",
+						"exec": [
+							"tests[\"Free of errors on GET all residens\"] = responseCode.code == 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/posts",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0262f5d7-db73-49b3-8281-864823d04233",
+						"exec": [
+							"console.log(responseBody);",
+							"var data = JSON.parse(responseBody);",
+							"tests[\"Free of errors on Get\"] = responseCode.code === 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/posts/{{new_id_a1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"posts",
+						"{{new_id_a1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit a post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5097010b-e21b-4884-b642-fa111467c4af",
+						"exec": [
+							"console.log(responseBody);",
+							"var data = JSON.parse(responseBody);",
+							"tests[\"Free of errors on Put\"] = responseCode.code === 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"publishDate\": \"2000-10-20T00:00:00-07:00\",\r\n     \"title\": \"NNqqq\",\r\n      \"description\": \"NNqq\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/posts/{{new_id_a1}}/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"posts",
+						"{{new_id_a1}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit nonexisting post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "44fd46b9-73b9-485c-ad76-ac05804f4f96",
+						"exec": [
+							"tests[\"A nonexisting service should not be edited\"] = responseCode.code === 404;",
+							"tests[\"Expected error message \"] = responseBody.has(\"Resource /posts/22 does not exist.\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blcff@hotmail.com\",\r\n    \"name\": \"Andres Leonardo Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/posts/22",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"posts",
+						"22"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete post1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5d16fe7b-04ed-433d-a27e-42c5003f88ef",
+						"exec": [
+							"tests[\"Free of error on Delete\"] = responseCode.code === 204;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/posts/{{new_id_a1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"posts",
+						"{{new_id_a1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete post2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5d16fe7b-04ed-433d-a27e-42c5003f88ef",
+						"exec": [
+							"tests[\"Free of error on Delete\"] = responseCode.code === 204;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/posts/{{new_id_a2}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"posts",
+						"{{new_id_a2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete resident",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_P}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"residents",
+						"{{new_id_P}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete neighborhood",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
