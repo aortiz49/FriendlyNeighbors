@@ -105,7 +105,7 @@ public class BusinessResource {
      * Otherwise, an empty list.
      */
     @GET
-    public List<BusinessDTO> getBusinesses(@PathParam("neighborhoodId") Long pNeighborhoodId) {
+    public List<BusinessDTO> getAllBusinesses(@PathParam("neighborhoodId") Long pNeighborhoodId) {
         LOGGER.info("Looking for all businesses from resources: input: void");
         List<BusinessDTO> businesses = listEntity2DTO(businessLogic.getBusinesses(pNeighborhoodId));
         LOGGER.log(Level.INFO, "Ended looking for all businesses from resources: output: {0}", businesses);

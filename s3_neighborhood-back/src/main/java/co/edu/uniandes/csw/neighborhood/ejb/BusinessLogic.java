@@ -93,8 +93,9 @@ public class BusinessLogic {
 
         // starts the logger for CREATE
         LOGGER.log(Level.INFO, "Begin creating a business");
-
         
+        System.out.println("############ DEBUG "+ pBusinessEntity.getOwner().getName());
+
         // 1. No two businesses can have the same name
         if (businessPersistence.findByName(pBusinessEntity.getName()) != null) {
             throw new BusinessLogicException("The neighborhood already has a business with that name!");
@@ -105,6 +106,9 @@ public class BusinessLogic {
 
         // set the business's neighborhood 
         pBusinessEntity.setNeighborhood(neighborhoodPersistence.find(pNeighborhoodId));
+        
+        // set the business's owner
+        pBusinessEntity.setOwner(residentProfilePersistence.find(pBusinessEntity.getOwner().getId(), pNeighborhoodId));
 
         // create the business
         BusinessEntity createdEntity = businessPersistence.create(pBusinessEntity);
@@ -249,16 +253,16 @@ public class BusinessLogic {
         }
 
         String openingTime = pBusinessEntity.getOpeningTime();
-        String closingTime = pBusinessEntity.getOpeningTime();
+        String closingTime = pBusinessEntity.getClosingTime();
 
         // 6. Opening time must not be null
-        if (pBusinessEntity.getOpeningTime() == null) {
+        if (openingTime == null) {
             throw new BusinessLogicException("The business opening time cannot be null!");
         }
 
         // 7. Closing time must not be null
-        if (pBusinessEntity.getClosingTime() == null) {
-            throw new BusinessLogicException("The business opening time cannot be null!");
+        if (closingTime == null) {
+            throw new BusinessLogicException("The business closing time cannot be null!");
         }
 
         // date format for the opening and closing times

@@ -97,7 +97,7 @@ public class BusinessPersistence {
         // Create a typed business entity query to find all businesses 
         // in the database. 
         TypedQuery query = em.createQuery(
-                "Select e From BusinessEntity e where e.owner.neighborhood.id = :pNeighborhoodId",
+                "Select e From BusinessEntity e where e.neighborhood.id = :pNeighborhoodId",
                 BusinessEntity.class);
 
         query = query.setParameter("pNeighborhoodId", pNeighborhoodId);
