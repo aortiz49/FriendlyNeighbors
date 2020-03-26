@@ -94,6 +94,7 @@ public class BusinessLogic {
         // starts the logger for CREATE
         LOGGER.log(Level.INFO, "Begin creating a business");
         
+
         // 1. No two businesses can have the same name
         if (businessPersistence.findByName(pBusinessEntity.getName()) != null) {
             throw new BusinessLogicException("The neighborhood already has a business with that name!");
