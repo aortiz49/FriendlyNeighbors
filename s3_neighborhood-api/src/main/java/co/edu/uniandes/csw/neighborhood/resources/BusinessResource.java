@@ -35,7 +35,6 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -48,7 +47,6 @@ import javax.ws.rs.core.MediaType;
  *
  * @author aortiz93
  */
-
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @RequestScoped
@@ -74,29 +72,6 @@ public class BusinessResource {
     /**
      *
      * Creates a new business with the information received in the body of the petition and returns
-     * a new identical object with and auto-generated id by the database.
-     *
-     * @param pBusiness {@link BusinessDTO} the business to be saved
-     * @param pNeighborhoodId the id of the neighborhood containing the businesses
-     *
-     * @return JSON {@link EditorialDTO} the saved business with auto-generated id
-     * @throws BusinessLogicException {@link BusinessLogicExceptionMapper} if there is an error when
-     * creating the business
-     */
-    @POST
-    public BusinessDTO createBusiness(BusinessDTO pBusiness, @PathParam("neighborhoodId") Long pNeighborhoodId) throws BusinessLogicException {
-
-        LOGGER.log(Level.INFO, "BusinessResource createBusiness: input: {0}", pBusiness);
-
-        BusinessDTO newBusinessDTO = new BusinessDTO(businessLogic.createBusiness(pBusiness.toEntity(), pNeighborhoodId));
-
-        LOGGER.log(Level.INFO, "BusinessResource createBusiness: output: {0}", newBusinessDTO);
-        return newBusinessDTO;
-    }
-
-    /**
-     *
-     * Creates a new business with the information received in the body of the petition and returns
      * a new identical object with auto-generated id by the data base.
      *
      * @param pNeighborhoodId the id of the neighborhood containing the businesses
@@ -115,23 +90,29 @@ public class BusinessResource {
     /**
      * Looks for the business with id received in the URL and returns it.
      *
-     * @param pBusinessId the desired business id
      * @param pNeighborhoodId the neighborhood containing the business
+     * @param pBusinessId the desired business id
+     *
      * @return JSON {@link PostDetailDTO} - Wanted post DTO
      * @throws WebApplicationException {@link WebApplicationExceptionMapper} - Logic error if not
      * found
      */
     @GET
     @Path("{businessesId: \\d+}")
-    public BusinessDTO getBusiness(@PathParam("businessesId") Long pBusinessId,
-            @PathParam("neighborhoodId") Long pNeighborhoodId) {
+    public BusinessDTO getBusiness(@PathParam("neighborhoodId") Long pNeighborhoodId,
+            @PathParam("businessesId") Long pBusinessId) {
+
         LOGGER.log(Level.INFO, "Looking for  business from resource: input: {0}", pBusinessId);
-        BusinessEntity businessEntity = businessLogic.getBusiness(pBusinessId, pNeighborhoodId);
+
+        BusinessEntity businessEntity = businessLogic.getBusiness(pNeighborhoodId, pBusinessId);
+
         if (businessEntity == null) {
             throw new WebApplicationException("The Resource /neighborhoods/"
                     + pBusinessId + " does not exist.", 404);
         }
+
         BusinessDTO detailDTO = new BusinessDTO(businessEntity);
+
         LOGGER.log(Level.INFO, "Ended looking for business from resource: output: {0}", detailDTO);
         return detailDTO;
     }
@@ -139,8 +120,8 @@ public class BusinessResource {
     /**
      * Updates a business with id with the information contained in the request body.
      *
-     * @param pBusinessId the business id of the resource to be modified.
      * @param pNeighborhoodId the neighborhood containing the business
+     * @param pBusinessId the business id of the resource to be modified.
      * @param pBusiness the business to update with
      *
      * @return the updated business
@@ -151,8 +132,8 @@ public class BusinessResource {
     @PUT
     @Path("{businessesId: \\d+}")
     public BusinessDTO updateBusiness(
-            @PathParam("businessesId") Long pBusinessId,
             @PathParam("neighborhoodId") Long pNeighborhoodId,
+            @PathParam("businessesId") Long pBusinessId,
             BusinessDTO pBusiness) throws BusinessLogicException, WebApplicationException {
 
         LOGGER.log(Level.INFO, "Updating neighborhood from resource: input: businessesId: {0} , "
@@ -160,13 +141,13 @@ public class BusinessResource {
 
         pBusiness.setId(pBusinessId);
 
-        if (businessLogic.getBusiness(pBusinessId, pNeighborhoodId) == null) {
+        if (businessLogic.getBusiness(pNeighborhoodId, pBusinessId) == null) {
             throw new WebApplicationException("Resource /neighborhoods/" + pBusinessId
                     + " does not exist.", 404);
         }
 
-        BusinessDTO detailDTO = new BusinessDTO(businessLogic.updateBusiness(pBusiness.toEntity(),
-                pNeighborhoodId));
+        BusinessDTO detailDTO = new BusinessDTO(businessLogic.updateBusiness(pNeighborhoodId,
+                pBusiness.toEntity()));
 
         LOGGER.log(Level.INFO, "Ended updating businessesId from resource: output: {0}", detailDTO);
 
@@ -176,24 +157,24 @@ public class BusinessResource {
     /**
      * Deletes the business with the associated id received by the URL.
      *
-     * @param pBusinessId id of the business to be deleted
      * @param pNeighborhoodId the neighborhood containing the business
+     * @param pBusinessId id of the business to be deleted
      *
      * @throws WebApplicationException {@link WebApplicationExceptionMapper} Logic error if not
      * found
      */
     @DELETE
     @Path("{businessesId: \\d+}")
-    public void deleteBusiness(@PathParam("businessesId") Long pBusinessId,
-            @PathParam("neighborhoodId") Long pNeighborhoodId) throws WebApplicationException {
+    public void deleteBusiness(@PathParam("neighborhoodId") Long pNeighborhoodId,
+            @PathParam("businessesId") Long pBusinessId) throws WebApplicationException {
 
         LOGGER.log(Level.INFO, "businessResource deleteBusiness: input: {0}", pBusinessId);
 
-        if (businessLogic.getBusiness(pBusinessId, pNeighborhoodId) == null) {
+        if (businessLogic.getBusiness(pNeighborhoodId, pBusinessId) == null) {
             throw new WebApplicationException("The resource /neighbors/" + pBusinessId + " does not exist.", 404);
         }
 
-        businessLogic.deleteBusiness(pBusinessId, pNeighborhoodId);
+        businessLogic.deleteBusiness(pNeighborhoodId, pBusinessId);
 
         LOGGER.info("businessResource deleteBusiness: output: void");
     }

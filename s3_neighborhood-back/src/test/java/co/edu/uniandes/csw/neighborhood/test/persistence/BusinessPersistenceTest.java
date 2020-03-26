@@ -220,7 +220,7 @@ public class BusinessPersistenceTest {
 
         // using the find method from the business persistence, returns the 
         // business entity matching the id
-        BusinessEntity newEntity = businessPersistence.find(entity.getId(),neighborhood.getId());
+        BusinessEntity newEntity = businessPersistence.find(neighborhood.getId(),entity.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getAddress(), newEntity.getAddress());
         Assert.assertEquals(entity.getOpeningTime(), newEntity.getOpeningTime());
@@ -248,7 +248,7 @@ public class BusinessPersistenceTest {
 
         // invokes the method being tested to see if the entity updated with 
         // the values from new entity
-        businessPersistence.update(newEntity,neighborhood.getId());
+        businessPersistence.update(neighborhood.getId(),newEntity);
 
         // resp is the updated entity from the table
         BusinessEntity resp = em.find(BusinessEntity.class, entity.getId());
@@ -270,7 +270,7 @@ public class BusinessPersistenceTest {
         BusinessEntity entity = data.get(0);
 
         // invokes the method to be tested from the persistence class
-        businessPersistence.delete(entity.getId(),neighborhood.getId());
+        businessPersistence.delete(neighborhood.getId(),entity.getId());
 
         // tries to obtain the deleted entry
         BusinessEntity deleted = em.find(BusinessEntity.class,

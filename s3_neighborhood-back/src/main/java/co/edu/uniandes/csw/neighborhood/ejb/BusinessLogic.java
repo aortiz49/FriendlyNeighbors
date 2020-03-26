@@ -83,31 +83,31 @@ public class BusinessLogic {
     /**
      * Creates and persists a new business
      *
-     * @param pBusinessEntity the entity of type Business of the new business to be persisted.
      * @param pNeighborhoodId the id of the neighborhood containing the business
+     * @param pBusinessOwner the id of the business owner
+     * @param pBusinessEntity the entity of type Business of the new business to be persisted
      *
      * @return the business entity after it is persisted
      * @throws BusinessLogicException if the new business violates the business rules
      */
-    public BusinessEntity createBusiness(BusinessEntity pBusinessEntity, Long pNeighborhoodId) throws BusinessLogicException {
+    public BusinessEntity createBusiness(Long pNeighborhoodId, Long pOwnerId, BusinessEntity pBusinessEntity) throws BusinessLogicException {
 
         // starts the logger for CREATE
         LOGGER.log(Level.INFO, "Begin creating a business");
-        
 
         // 1. No two businesses can have the same name
         if (businessPersistence.findByName(pBusinessEntity.getName()) != null) {
             throw new BusinessLogicException("The neighborhood already has a business with that name!");
         }
-        
+
         // verify business rules for creating a new business
-        verifyBusinessCreationRules(pBusinessEntity);
+        verifyBusinessRules(pBusinessEntity);
 
         // set the business's neighborhood 
         pBusinessEntity.setNeighborhood(neighborhoodPersistence.find(pNeighborhoodId));
-        
+
         // set the business's owner
-        pBusinessEntity.setOwner(residentProfilePersistence.find(pBusinessEntity.getOwner().getId(), pNeighborhoodId));
+        pBusinessEntity.setOwner(residentProfilePersistence.find(pOwnerId, pNeighborhoodId));
 
         // create the business
         BusinessEntity createdEntity = businessPersistence.create(pBusinessEntity);
@@ -134,14 +134,15 @@ public class BusinessLogic {
     /**
      * Finds a business by ID.
      *
-     * @param pBusinessId the id corresponding to the business
      * @param pNeighborhoodId the id from parent neighborhood.
+     * @param pBusinessId the id corresponding to the business
+     *
      *
      * @return the found business, null if not found
      */
-    public BusinessEntity getBusiness(Long pBusinessId, Long pNeighborhoodId) {
+    public BusinessEntity getBusiness(Long pNeighborhoodId, Long pBusinessId) {
         LOGGER.log(Level.INFO, "Begin search for business with Id = {0}", pBusinessId);
-        BusinessEntity entity = businessPersistence.find(pBusinessId, pNeighborhoodId);
+        BusinessEntity entity = businessPersistence.find(pNeighborhoodId, pBusinessId);
 
         if (entity == null) {
             LOGGER.log(Level.SEVERE, "The business with Id = {0} doesn't exist", pBusinessId);
@@ -170,17 +171,17 @@ public class BusinessLogic {
     /**
      * Update a business with given Id.
      *
-     * @param pBusinessEntity the new business
      * @param pNeighborhoodId the id from parent neighborhood.
+     * @param pBusinessEntity the new business
      *
      * @return the business entity after the update
      * @throws BusinessLogicException if the new business violates the business rules
      */
-    public BusinessEntity updateBusiness(BusinessEntity pBusinessEntity, Long pNeighborhoodId) throws BusinessLogicException {
+    public BusinessEntity updateBusiness(Long pNeighborhoodId, BusinessEntity pBusinessEntity) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Begin the update process for business with id = {0}", pBusinessEntity.getId());
 
         // find original business
-        BusinessEntity original = businessPersistence.find(pBusinessEntity.getId(), pNeighborhoodId);
+        BusinessEntity original = businessPersistence.find(pNeighborhoodId, pBusinessEntity.getId());
 
         // No two businesses can have the same name
         if (!original.getName().equals(pBusinessEntity.getName())) {
@@ -189,15 +190,15 @@ public class BusinessLogic {
                 throw new BusinessLogicException("The neighborhood already has a business with that name!");
             }
         }
-        
-        // verify that the new business meets the rules
-        verifyBusinessCreationRules(pBusinessEntity);
 
-        // set the business's neighborhood 
-        pBusinessEntity.setNeighborhood(neighborhoodPersistence.find(pNeighborhoodId));
-        
+        // verifies that the new business meets the rules
+        verifyBusinessRules(pBusinessEntity);
+
+        // sets the business's owner 
+        pBusinessEntity.setOwner(original.getOwner());
+
         // update business
-        BusinessEntity newEntity = businessPersistence.update(pBusinessEntity, pNeighborhoodId);
+        BusinessEntity newEntity = businessPersistence.update(pNeighborhoodId, pBusinessEntity);
 
         LOGGER.log(Level.INFO, "End the update process for business with id = {0}", pBusinessEntity.getName());
         return newEntity;
@@ -207,13 +208,13 @@ public class BusinessLogic {
     /**
      * Deletes a business by ID.
      *
-     * @param pBusinessId the ID of the business to be deleted
      * @param pNeighborhoodId the id from parent neighborhood.
+     * @param pBusinessId the ID of the business to be deleted
      *
      */
-    public void deleteBusiness(Long pBusinessId, Long pNeighborhoodId) {
+    public void deleteBusiness(Long pNeighborhoodId, Long pBusinessId) {
         LOGGER.log(Level.INFO, "Begin the delete process for business with id = {0}", pBusinessId);
-        businessPersistence.delete(pBusinessId, pNeighborhoodId);
+        businessPersistence.delete(pNeighborhoodId, pBusinessId);
         LOGGER.log(Level.INFO, "End the delete process for business with id = {0}", pBusinessId);
     }
 
@@ -225,7 +226,7 @@ public class BusinessLogic {
      * @return true if the business is valid. False otherwise
      * @throws BusinessLogicException if the business doesn't satisfy the business rules
      */
-    private boolean verifyBusinessCreationRules(BusinessEntity pBusinessEntity) throws BusinessLogicException {
+    private boolean verifyBusinessRules(BusinessEntity pBusinessEntity) throws BusinessLogicException {
         boolean valid = true;
 
         // 2. The address of the business cannot be null
@@ -243,26 +244,18 @@ public class BusinessLogic {
             throw new BusinessLogicException("The business must have an owner!");
         }
 
-        ResidentProfileEntity businessOwner = pBusinessEntity.getOwner();
+        // 5. Opening time must not be null
+        if (pBusinessEntity.getOpeningTime() == null) {
+            throw new BusinessLogicException("The business opening time cannot be null!");
+        }
 
-        // 5. The business owner must exist
-        if (residentProfilePersistence.find(businessOwner.getId(),
-                pBusinessEntity.getNeighborhood().getId()) == null) {
-            throw new BusinessLogicException("The business owner must exist!");
+        // 6. Closing time must not be null
+        if (pBusinessEntity.getClosingTime() == null) {
+            throw new BusinessLogicException("The business closing time cannot be null!");
         }
 
         String openingTime = pBusinessEntity.getOpeningTime();
         String closingTime = pBusinessEntity.getClosingTime();
-
-        // 6. Opening time must not be null
-        if (openingTime == null) {
-            throw new BusinessLogicException("The business opening time cannot be null!");
-        }
-
-        // 7. Closing time must not be null
-        if (closingTime == null) {
-            throw new BusinessLogicException("The business closing time cannot be null!");
-        }
 
         // date format for the opening and closing times
         DateFormat timeFormat = new SimpleDateFormat("hh:mm aa");
@@ -271,7 +264,7 @@ public class BusinessLogic {
         Date open = null;
         Date close = null;
 
-        // 8.Opening and closing times must be legal hh:mm aa format
+        // 7.Opening and closing times must be legal hh:mm aa format
         try {
             open = timeFormat.parse(openingTime);
             close = timeFormat.parse(closingTime);
@@ -279,7 +272,7 @@ public class BusinessLogic {
             throw new BusinessLogicException("The business times have an illegal format!");
         }
 
-        // 9. Opening time must come before the closing time
+        // 8. Opening time must come before the closing time
         if (open.compareTo(close) > 0) {
             throw new BusinessLogicException("The business opening time must come before the closing time!");
         }

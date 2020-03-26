@@ -75,9 +75,8 @@ public class PostResidentProfileLogicTest {
     private List<PostEntity> postsData = new ArrayList();
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
-     * contains classes, DB descriptor and beans.xml file for dependencies
-     * injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
+     * descriptor and beans.xml file for dependencies injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -147,8 +146,7 @@ public class PostResidentProfileLogicTest {
     }
 
     /**
-     * Test for getting  collection of post entities associated with 
-     * resident
+     * Test for getting collection of post entities associated with resident
      */
     @Test
     public void getPostsTest() {
@@ -158,7 +156,7 @@ public class PostResidentProfileLogicTest {
     }
 
     /**
-     * Test for getting  post entity associated with  resident
+     * Test for getting post entity associated with resident
      *
      * @throws BusinessLogicException
      */
@@ -174,7 +172,7 @@ public class PostResidentProfileLogicTest {
     }
 
     /**
-     * Test for getting  post from non-author user
+     * Test for getting post from non-author user
      *
      * @throws BusinessLogicException
      */
@@ -186,7 +184,7 @@ public class PostResidentProfileLogicTest {
     }
 
     /**
-     * Test for replacing posts associated with  resident
+     * Test for replacing posts associated with resident
      *
      * @throws BusinessLogicException
      */
@@ -209,7 +207,7 @@ public class PostResidentProfileLogicTest {
     }
 
     /**
-     * Test for removing  post from resident
+     * Test for removing post from resident
      *
      */
     @Test

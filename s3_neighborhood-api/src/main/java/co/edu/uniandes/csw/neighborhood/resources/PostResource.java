@@ -91,7 +91,7 @@ public class PostResource {
      */
     @PUT
     @Path("{postsId: \\d+}")
-    public PostDetailDTO updateAuthor(@PathParam("postsId") Long postsId, @PathParam("neighborhoodId") Long neighId, PostDetailDTO post) throws BusinessLogicException {
+    public PostDetailDTO updatePost(@PathParam("postsId") Long postsId, @PathParam("neighborhoodId") Long neighId, PostDetailDTO post) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Updating post from resource: input: authorsId: {0} , author: {1}", new Object[]{postsId, post});
         post.setId(postsId);
         if (postLogic.getPost(postsId, neighId) == null) {

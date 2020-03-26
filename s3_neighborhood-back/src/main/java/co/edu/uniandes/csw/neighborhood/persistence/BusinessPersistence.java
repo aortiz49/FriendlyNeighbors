@@ -27,7 +27,6 @@ package co.edu.uniandes.csw.neighborhood.persistence;
 //===================================================
 
 import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
-import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -113,7 +112,7 @@ public class BusinessPersistence {
      *
      * @return the found business
      */
-    public BusinessEntity find(Long pBusinessId, Long pNeighborhoodId) {
+    public BusinessEntity find(Long pNeighborhoodId, Long pBusinessId) {
         LOGGER.log(Level.INFO, "Querying for business with id {0} belonging to neighborhood  {1}",
                 new Object[]{pBusinessId, pNeighborhoodId});
 
@@ -166,11 +165,11 @@ public class BusinessPersistence {
      *
      * @return the business with the updated changes
      */
-    public BusinessEntity update(BusinessEntity pBusinessEntity, Long pNeighborhoodId) {
+    public BusinessEntity update(Long pNeighborhoodId, BusinessEntity pBusinessEntity) {
         LOGGER.log(Level.INFO, "Updating business with id = {0}",
                 pBusinessEntity.getId());
 
-        find(pBusinessEntity.getId(), pNeighborhoodId);
+        find(pNeighborhoodId,pBusinessEntity.getId());
         return em.merge(pBusinessEntity);
     }
 
@@ -183,9 +182,9 @@ public class BusinessPersistence {
      * @param pBusinessId the id of the business to be deleted
      * @param pNeighborhoodId the id from parent neighborhood.
      */
-    public void delete(Long pBusinessId, Long pNeighborhoodId) {
+    public void delete(Long pNeighborhoodId, Long  pBusinessId) {
         LOGGER.log(Level.INFO, "Deleting business with id = {0}", pBusinessId);
-        BusinessEntity business = find(pBusinessId, pNeighborhoodId);
+        BusinessEntity business = find(pNeighborhoodId, pBusinessId);
 
         em.remove(business);
         LOGGER.log(Level.INFO, "Exiting the deletion of business with id = {0}", pBusinessId);

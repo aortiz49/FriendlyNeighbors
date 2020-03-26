@@ -202,15 +202,17 @@ public class BusinessLogicTest {
 
         // sets the owner
         newEntity.setOwner(data.get(0).getOwner());
-        
+
         // sets the opening time
         newEntity.setOpeningTime("07:35 AM");
-        
+
         // sets the closing time
         newEntity.setClosingTime("09:15 PM");
 
         // persist the created business, should not be null
-        BusinessEntity result = businessLogic.createBusiness(newEntity,neighborhood.getId());
+        BusinessEntity result = businessLogic.createBusiness(
+                neighborhood.getId(), data.get(0).getOwner().getId(), newEntity);
+
         Assert.assertNotNull(result);
 
         // locate the persisted business
@@ -234,7 +236,8 @@ public class BusinessLogicTest {
         BusinessEntity newEntity = factory.manufacturePojo(BusinessEntity.class);
 
         // persist the created business, should not be null
-        BusinessEntity result = businessLogic.createBusiness(newEntity,neighborhood.getId());
+        businessLogic.createBusiness(neighborhood.getId(),
+                data.get(0).getOwner().getId(), newEntity);
     }
 
     /**
@@ -252,7 +255,8 @@ public class BusinessLogicTest {
         newEntity.setNeighborhood(neigh);
 
         // persist the created business, should not finish
-        BusinessEntity result = businessLogic.createBusiness(newEntity,neighborhood.getId());
+        businessLogic.createBusiness(neighborhood.getId(),
+                data.get(0).getOwner().getId(), newEntity);
     }
 
     /**
@@ -268,7 +272,8 @@ public class BusinessLogicTest {
         newEntity.setName(data.get(0).getName());
 
         // persist the created business, should not finish
-        BusinessEntity result = businessLogic.createBusiness(newEntity,neighborhood.getId());
+        businessLogic.createBusiness(
+                neighborhood.getId(), data.get(0).getOwner().getId(), newEntity);
     }
 
     /**
@@ -300,7 +305,7 @@ public class BusinessLogicTest {
     @Test
     public void getBusinessTest() {
         BusinessEntity entity = data.get(0);
-        BusinessEntity resultEntity = businessLogic.getBusiness(entity.getId(), neighborhood.getId());
+        BusinessEntity resultEntity = businessLogic.getBusiness(neighborhood.getId(),entity.getId());
         Assert.assertNotNull(resultEntity);
         Assert.assertEquals(entity.getId(), resultEntity.getId());
         Assert.assertEquals(entity.getName(), resultEntity.getName());
@@ -339,16 +344,15 @@ public class BusinessLogicTest {
 
         // set owner
         newEntity.setOwner(entity.getOwner());
-        
-         // sets the opening time
+
+        // sets the opening time
         newEntity.setOpeningTime("07:35 AM");
-        
+
         // sets the closing time
         newEntity.setClosingTime("09:15 PM");
-        
-        
+
         // update the business with the new information
-        businessLogic.updateBusiness(newEntity, neighborhood.getId());
+        businessLogic.updateBusiness(neighborhood.getId(), newEntity);
 
         // find the business in the database
         BusinessEntity resp = em.find(BusinessEntity.class, entity.getId());
