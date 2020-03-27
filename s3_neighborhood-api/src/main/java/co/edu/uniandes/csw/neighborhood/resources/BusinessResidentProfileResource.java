@@ -80,7 +80,7 @@ public class BusinessResidentProfileResource {
 
         BusinessEntity businessEntity = businessLogic.createBusiness(pNeighborhoodId, pOwnerId, pBusiness.toEntity());
 
-        BusinessDTO newBusinessDTO = new BusinessDTO(businessEntity);
+        BusinessDTO newBusinessDTO = new BusinessDTO(businessLogic.getBusiness(pNeighborhoodId,businessEntity.getId()));
 
         LOGGER.log(Level.INFO, "BusinessResource createBusiness: output: {0}", newBusinessDTO);
         return newBusinessDTO;
