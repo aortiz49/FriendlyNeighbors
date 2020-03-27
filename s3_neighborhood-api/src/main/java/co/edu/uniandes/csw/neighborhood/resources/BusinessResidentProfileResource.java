@@ -31,8 +31,11 @@ import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.WebApplicationException;
 
 /**
  * Class that represents the "residents/{residentId}/businesses" resource .
@@ -84,6 +87,31 @@ public class BusinessResidentProfileResource {
 
         LOGGER.log(Level.INFO, "BusinessResource createBusiness: output: {0}", newBusinessDTO);
         return newBusinessDTO;
+    }
+    
+        /**
+     * Looks for a post with specified ID by URL which is associated with 
+     * resident and returns it
+     *
+     * @param postsId postId from wanted post
+     * @param residentsId postId from resident whose post is wanted
+     * @param neighId parent neighborhood
+     * @return {@link PostDetailDTO} - post found inside resident
+     * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException if rules are not met
+     * @throws WebApplicationException {@link WebApplicationExceptionMapper}
+     * Logic error if post not found
+     */
+    @GET
+    @Path("{businessesId: \\d+}")
+    public BusinessDTO getPost(@PathParam("residentsId") Long residentsId, @PathParam("businessesId") Long businessId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Looking for business: input: residentsId {0} , postsId {1}", new Object[]{residentsId, businessId});
+        if (businessLogic.getBusiness(neighId,businessId) == null) {
+            throw new WebApplicationException("Resource /posts/" + businessId + " does not exist.", 404);
+        }
+        
+        BusinessDTO detailDTO = new BusinessDTO(businessResidentLogic.getBusiness(neighId,residentsId, businessId));
+        LOGGER.log(Level.INFO, "Ended looking for post: output: {0}", detailDTO);
+        return detailDTO;
     }
 
 

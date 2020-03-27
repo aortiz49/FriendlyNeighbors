@@ -54,62 +54,62 @@ public class BusinessResidentProfileLogic {
     private static final Logger LOGGER = Logger.getLogger(BusinessResidentProfileLogic.class.getName());
 
     /**
-     * Dependency injection for residentProfile persistence.
-     */
-    @Inject
-    private ResidentProfilePersistence residentProfilePersistence;
-
-    /**
      * Dependency injection for business persistence.
      */
     @Inject
     private BusinessPersistence businessPersistence;
 
+    /**
+     * Dependency injection for residentProfile persistence.
+     */
+    @Inject
+    private ResidentProfilePersistence residentProfilePersistence;
+
 //===================================================
 // Methods
 //===================================================
-//    
-//    /**
-//     * Gets a collection of business entities associated with  residentProfile
-//     *
-//     * @param pResidentProfileId the residentProfile id
-//     * @return collection of business entities associated with  residentProfile
-//     */
-//    public List<BusinessEntity> getBusinesses(Long pResidentProfileId) {
-//        LOGGER.log(Level.INFO, "Gets all businesses belonging to residentProfile with id = {0}", pResidentProfileId);
-//
-//        // returns the list of all businesses
-//        return residentProfilePersistence.find(pResidentProfileId).getBusinesses();
-//    }
+    /**
+     * Gets a collection of business entities associated with residentProfile
+     * 
+     * @param pNeighborhoodId the neighborhood id
+     * @param pResidentProfileId the residentProfile id
+     * @return collection of business entities associated with residentProfile
+     */
+    public List<BusinessEntity> getBusinesses(Long pNeighborhoodId, Long pResidentProfileId) {
+        LOGGER.log(Level.INFO, "Gets all businesses belonging to residentProfile with id = {0}", pResidentProfileId);
+
+        // returns the list of all businesses
+        return residentProfilePersistence.find(pResidentProfileId,pNeighborhoodId).getBusinesses();
+    }
 
     /**
-     * Gets a service entity associated with  resident
-     * 
+     * Gets a service entity associated with resident
+     *
      * @param pNeighborhoodId the id of neighborhood the business is in
      * @param pOwnerId the id of the business owner
      * @param pBusinessId the id of associated business
-     * 
+     *
      * @return the desired business entity
      * @throws BusinessLogicException if the business doesn't exist
      */
-    public BusinessEntity getBusiness(Long pNeighborhoodId, 
+    public BusinessEntity getBusiness(Long pNeighborhoodId,
             Long pResidentId, Long pBusinessId) throws BusinessLogicException {
 
         // logs start
         LOGGER.log(Level.INFO, "Finding business with id {0} associated to "
-                + "resident with id {1}, from neighbothood {2}", 
+                + "resident with id {1}, from neighbothood {2}",
                 new Object[]{pBusinessId, pResidentId, pNeighborhoodId});
 
         // gets all the businesses in a residentProfile
         List<BusinessEntity> businesses = residentProfilePersistence.find(
-                pResidentId,pNeighborhoodId).getBusinesses();
+                pResidentId, pNeighborhoodId).getBusinesses();
 
         // the busines that was found
-        int index = businesses.indexOf(businessPersistence.find(pNeighborhoodId,pBusinessId));
+        int index = businesses.indexOf(businessPersistence.find(pNeighborhoodId, pBusinessId));
 
         // logs end
         LOGGER.log(Level.INFO, "Finished searching for business with id {0} associated to "
-                + "resident with id {1}, from neighbothood {2}", 
+                + "resident with id {1}, from neighbothood {2}",
                 new Object[]{pBusinessId, pResidentId, pNeighborhoodId});
 
         // if the index doesn't exist

@@ -89,21 +89,21 @@ public class PostResidentProfileResource {
         return dto;
     }
 
-    /**
-     * Looks for all the posts associated to a resident and returns it
-     *
-     * @param residentsId postId from resident whose posts are wanted
-     * @param neighId parent neighborhood
-     * @return JSONArray {@link PostDetailDTO} - posts found in resident. An
-     * empty list if none is found
-     */
-    @GET
-    public List<PostDetailDTO> getPosts(@PathParam("residentsId") Long residentsId, @PathParam("neighborhoodId") Long neighId) {
-        LOGGER.log(Level.INFO, "Looking for posts from resources: input: {0}", residentsId);
-        List<PostDetailDTO> list = postsListEntity2DTO(residentPostLogic.getPosts(residentsId, neighId));
-        LOGGER.log(Level.INFO, "Ended looking for posts from resources: output: {0}", list);
-        return list;
-    }
+//    /**
+//     * Looks for all the posts associated to a resident and returns it
+//     *
+//     * @param residentsId postId from resident whose posts are wanted
+//     * @param neighId parent neighborhood
+//     * @return JSONArray {@link PostDetailDTO} - posts found in resident. An
+//     * empty list if none is found
+//     */
+//    @GET
+//    public List<PostDetailDTO> getPosts(@PathParam("residentsId") Long residentsId, @PathParam("neighborhoodId") Long neighId) {
+//        LOGGER.log(Level.INFO, "Looking for posts from resources: input: {0}", residentsId);
+//        List<PostDetailDTO> list = postsListEntity2DTO(residentPostLogic.getPosts(residentsId, neighId));
+//        LOGGER.log(Level.INFO, "Ended looking for posts from resources: output: {0}", list);
+//        return list;
+//    }
 
     /**
      * Looks for a post with specified ID by URL which is associated with 
@@ -129,50 +129,50 @@ public class PostResidentProfileResource {
         return detailDTO;
     }
 
-    /**
-     *
-     * Updates a list from posts inside a resident which is received in body
-     *
-     * @param residentsId postId from resident whose list of posts is to be updated
-     * @param posts JSONArray {@link PostDetailDTO} - modified posts list
-     * @param neighId parent neighborhood
-     * @return JSONArray {@link PostDetailDTO} - updated list
-     * @throws WebApplicationException {@link WebApplicationExceptionMapper}
-     * Error if not found
-     */
-    @PUT
-    public List<PostDetailDTO> replacePosts(@PathParam("residentsId") Long residentsId, List<PostDetailDTO> posts, @PathParam("neighborhoodId") Long neighId) {
-        LOGGER.log(Level.INFO, "Replacing resident posts from resource: input: residentsId {0} , posts {1}", new Object[]{residentsId, posts});
-        for (PostDetailDTO post : posts) {
-            if (postLogic.getPost(post.getId(), neighId) == null) {
-                throw new WebApplicationException("Resource /posts/" + posts + " does not exist.", 404);
-            }
-        }
-        List<PostDetailDTO> lista = postsListEntity2DTO(residentPostLogic.replacePosts(residentsId, postsListDTO2Entity(posts), neighId));
-        LOGGER.log(Level.INFO, "Ended replacing resident posts from resource: output:{0}", lista);
-        return lista;
-    }
+//    /**
+//     *
+//     * Updates a list from posts inside a resident which is received in body
+//     *
+//     * @param residentsId postId from resident whose list of posts is to be updated
+//     * @param posts JSONArray {@link PostDetailDTO} - modified posts list
+//     * @param neighId parent neighborhood
+//     * @return JSONArray {@link PostDetailDTO} - updated list
+//     * @throws WebApplicationException {@link WebApplicationExceptionMapper}
+//     * Error if not found
+//     */
+//    @PUT
+//    public List<PostDetailDTO> replacePosts(@PathParam("residentsId") Long residentsId, List<PostDetailDTO> posts, @PathParam("neighborhoodId") Long neighId) {
+//        LOGGER.log(Level.INFO, "Replacing resident posts from resource: input: residentsId {0} , posts {1}", new Object[]{residentsId, posts});
+//        for (PostDetailDTO post : posts) {
+//            if (postLogic.getPost(post.getId(), neighId) == null) {
+//                throw new WebApplicationException("Resource /posts/" + posts + " does not exist.", 404);
+//            }
+//        }
+//        List<PostDetailDTO> lista = postsListEntity2DTO(residentPostLogic.replacePosts(residentsId, postsListDTO2Entity(posts), neighId));
+//        LOGGER.log(Level.INFO, "Ended replacing resident posts from resource: output:{0}", lista);
+//        return lista;
+//    }
 
-    /**
-     * Removes a post from resident
-     *
-     * @param residentsId postId from resident whose post is to be removed
-     * @param postsId postId from post to be removed
-     * @param neighId parent neighborhood
-     * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException if rules are not met
-     * @throws WebApplicationException {@link WebApplicationExceptionMapper} 
-     * Error if not found
-     */
-    @DELETE
-    @Path("{postsId: \\d+}")
-    public void removePost(@PathParam("residentsId") Long residentsId, @PathParam("postsId") Long postsId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Removing post from resident: input: residentsId {0} , postsId {1}", new Object[]{residentsId, postsId});
-        if (postLogic.getPost(postsId, neighId) == null) {
-            throw new WebApplicationException("Resource /posts/" + postsId + " does not exist.", 404);
-        }
-        residentPostLogic.removePost(residentsId, postsId, neighId);
-        LOGGER.info("Ended removing post from resident: output: void");
-    }
+//    /**
+//     * Removes a post from resident
+//     *
+//     * @param residentsId postId from resident whose post is to be removed
+//     * @param postsId postId from post to be removed
+//     * @param neighId parent neighborhood
+//     * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException if rules are not met
+//     * @throws WebApplicationException {@link WebApplicationExceptionMapper} 
+//     * Error if not found
+//     */
+//    @DELETE
+//    @Path("{postsId: \\d+}")
+//    public void removePost(@PathParam("residentsId") Long residentsId, @PathParam("postsId") Long postsId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
+//        LOGGER.log(Level.INFO, "Removing post from resident: input: residentsId {0} , postsId {1}", new Object[]{residentsId, postsId});
+//        if (postLogic.getPost(postsId, neighId) == null) {
+//            throw new WebApplicationException("Resource /posts/" + postsId + " does not exist.", 404);
+//        }
+//        residentPostLogic.removePost(residentsId, postsId, neighId);
+//        LOGGER.info("Ended removing post from resident: output: void");
+//    }
 
     /**
      * Converts an entity list with posts to a DTO list.
