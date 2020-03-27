@@ -89,9 +89,8 @@ public class BusinessResidentProfileResource {
         return newBusinessDTO;
     }
     
-        /**
-     * Looks for a post with specified ID by URL which is associated with 
-     * resident and returns it
+     /**
+     * Returns the business specified by the ID in the URI. 
      *
      * @param postsId postId from wanted post
      * @param residentsId postId from resident whose post is wanted
@@ -103,7 +102,10 @@ public class BusinessResidentProfileResource {
      */
     @GET
     @Path("{businessesId: \\d+}")
-    public BusinessDTO getPost(@PathParam("residentsId") Long residentsId, @PathParam("businessesId") Long businessId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
+    public BusinessDTO getPost(@PathParam("residentsId") Long residentsId, 
+            @PathParam("businessesId") Long businessId, 
+            @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
+        
         LOGGER.log(Level.INFO, "Looking for business: input: residentsId {0} , postsId {1}", new Object[]{residentsId, businessId});
         if (businessLogic.getBusiness(neighId,businessId) == null) {
             throw new WebApplicationException("Resource /posts/" + businessId + " does not exist.", 404);

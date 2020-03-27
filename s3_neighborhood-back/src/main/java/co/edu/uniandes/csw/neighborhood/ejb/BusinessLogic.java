@@ -30,7 +30,6 @@ import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.BusinessPersistence;
 import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
 import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
-import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 import java.text.DateFormat;
 import java.text.ParseException;
