@@ -239,11 +239,6 @@ public class BusinessLogic {
             throw new BusinessLogicException("The business name cannot be null!");
         }
 
-        // 4. The business must have an owner
-        if (pBusinessEntity.getOwner() == null) {
-            throw new BusinessLogicException("The business must have an owner!");
-        }
-
         // 5. Opening time must not be null
         if (pBusinessEntity.getOpeningTime() == null) {
             throw new BusinessLogicException("The business opening time cannot be null!");

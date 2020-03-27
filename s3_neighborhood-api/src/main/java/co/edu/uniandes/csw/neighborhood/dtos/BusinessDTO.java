@@ -156,6 +156,10 @@ public class BusinessDTO implements Serializable {
             business.setNeighborhood(getNeighborhood().toEntity());
         }
 
+         if (owner != null) {
+            business.setOwner(getOwner().toEntity());
+        }
+
         return business;
     }
 //===================================================
@@ -187,6 +191,16 @@ public class BusinessDTO implements Serializable {
     public void setNeighborhood(NeighborhoodDTO pNeighborhood) {
         neighborhood = pNeighborhood;
     }
+
+        public ResidentProfileDTO getOwner() {
+        return owner;
+    }
+
+    public void setOwner(ResidentProfileDTO owner) {
+     this.owner = owner; 
+ }
+
+
 
     /**
      * Returns the name of the business.
