@@ -29,7 +29,7 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
     private List<EventDTO> eventsToAttend;
 
     /**
-     * Favors  a resident is signed up to complete.
+     * Favors a resident is signed up to complete.
      */
     private List<FavorDTO> favorsToHelp;
 
@@ -63,13 +63,15 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
      */
     private List<EventDTO> events;
 
-
-
     /**
      * Represents groups this resident is part of
      */
     private List<GroupDTO> groups;
 
+    /**
+     * Represents businesses owned by this resident
+     */
+    private List<BusinessDTO> businesses;
     /**
      * Represents comments posted by this resident
      */
@@ -79,10 +81,8 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
         super();
     }
 
-    
     /**
-     * Creates a detailed resident DTO from resident entity, including its
-     * relations.
+     * Creates a detailed resident DTO from resident entity, including its relations.
      *
      * @param residentEntity from which new group DTO will be created
      *
@@ -101,7 +101,6 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
             events = new ArrayList<>();
             groups = new ArrayList<>();
             comments = new ArrayList<>();
-           
 
             for (EventEntity entityEvent : residentEntity.getEventsToAttend()) {
                 eventsToAttend.add(new EventDTO(entityEvent));
@@ -138,6 +137,10 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
                 groups.add(new GroupDTO(entityGroup));
             }
 
+            for (BusinessEntity businessEntity : residentEntity.getBusinesses()) {
+                businesses.add(new BusinessDTO(businessEntity));
+            }
+
         }
     }
 
@@ -150,7 +153,7 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
     public ResidentProfileEntity toEntity() {
         ResidentProfileEntity residentEntity = super.toEntity();
 
-        if (eventsToAttend  != null) {
+        if (eventsToAttend != null) {
             List<EventEntity> events = new ArrayList<>();
             for (EventDTO dtoEvent : eventsToAttend) {
                 events.add(dtoEvent.toEntity());
@@ -158,31 +161,31 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
             residentEntity.setEventsToAttend(events);
         }
 
-        if (favorsToHelp  != null) {
+        if (favorsToHelp != null) {
             List<FavorEntity> favors = new ArrayList<>();
             for (FavorDTO dtoFavor : favorsToHelp) {
                 favors.add(dtoFavor.toEntity());
             }
             residentEntity.setFavorsToHelp(favors);
         }
-        
-        if (postsToView  != null) {
+
+        if (postsToView != null) {
             List<PostEntity> posts = new ArrayList<>();
             for (PostDTO dtoPost : postsToView) {
                 posts.add(dtoPost.toEntity());
             }
             residentEntity.setPostsToView(posts);
-        } 
-        
-        if (favorsRequested  != null) {
+        }
+
+        if (favorsRequested != null) {
             List<FavorEntity> favors = new ArrayList<>();
             for (FavorDTO dtoFavor : favorsRequested) {
                 favors.add(dtoFavor.toEntity());
             }
             residentEntity.setFavorsRequested(favors);
         }
-        
-        if (services  != null) {
+
+        if (services != null) {
             List<ServiceEntity> servicesE = new ArrayList<>();
             for (ServiceDTO dtoService : services) {
                 servicesE.add(dtoService.toEntity());
@@ -190,39 +193,42 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
             residentEntity.setServices(servicesE);
         }
 
-        if (notifications  != null) {
+        if (notifications != null) {
             List<NotificationEntity> notificationsE = new ArrayList<>();
             for (NotificationDTO dtoNotification : notifications) {
                 notificationsE.add(dtoNotification.toEntity());
             }
             residentEntity.setNotifications(notificationsE);
-        }  
-        
-        if (posts  != null) {
+        }
+
+        if (posts != null) {
             List<PostEntity> postsE = new ArrayList<>();
             for (PostDTO dtoPost : posts) {
                 postsE.add(dtoPost.toEntity());
             }
             residentEntity.setPostsToView(postsE);
-        } 
+        }
 
-     
-        if (groups  != null) {
+        if (groups != null) {
             List<GroupEntity> groupsE = new ArrayList<>();
             for (GroupDTO dtoGroup : groups) {
                 groupsE.add(dtoGroup.toEntity());
             }
             residentEntity.setGroups(groupsE);
         }
-        
 
-               
+        if (businesses != null) {
+            List<BusinessEntity> businessEntities = new ArrayList<>();
+            for (BusinessDTO businessDTO : businesses) {
+                businessEntities.add(businessDTO.toEntity());
+            }
+            residentEntity.setBusinesses(businessEntities);
+        }
+
         return residentEntity;
     }
 
- 
-   
-        @Override
+    @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
@@ -367,5 +373,12 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
         this.comments = comments;
     }
 
+    public List<BusinessDTO> getBusinesses() {
+        return businesses;
+    }
+
+    public void setBusinesses(List<BusinessDTO> businesses) {
+        this.businesses = businesses;
+    }
 
 }

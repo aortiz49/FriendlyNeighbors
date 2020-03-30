@@ -113,14 +113,14 @@ public class NeighborhoodResource {
     /**
      * Looks for the neighborhood with id received in the URL y returns it.
      *
-     * @param neighborhoodsId Id from wanted neighborhood. Must be a sequence of digits.
+     * @param neighborhoodId Id from wanted neighborhood. Must be a sequence of digits.
      * @return JSON {@link NeighborhoodDetailDTO} - Wanted resident DTO
      * @throws WebApplicationException {@link WebApplicationExceptionMapper} - Logic error if not
      * found
      */
     @GET
-    @Path("{neighborhoodsId: \\d+}")
-    public NeighborhoodDetailDTO getNeighborhood(@PathParam("neighborhoodsId") Long neighborhoodsId) {
+    @Path("{neighborhoodId: \\d+}")
+    public NeighborhoodDetailDTO getNeighborhood(@PathParam("neighborhoodId") Long neighborhoodsId) {
         LOGGER.log(Level.INFO, "Looking for  resident from resource: input: {0}", neighborhoodsId);
         NeighborhoodEntity neighborhoodEntity = logic.getNeighborhood(neighborhoodsId);
         if (neighborhoodEntity == null) {
@@ -132,43 +132,43 @@ public class NeighborhoodResource {
     }
 
     @PUT
-    @Path("{neighborhoodsId: \\d+}")
-    public NeighborhoodDetailDTO updateNeighborhood(@PathParam("neighborhoodsId") Long neighborhoodsId,
+    @Path("{neighborhoodId: \\d+}")
+    public NeighborhoodDetailDTO updateNeighborhood(@PathParam("neighborhoodId") Long neighborhoodId,
             NeighborhoodDetailDTO neighborhood) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Updating neighborhood from resource: input: neighborhoodsId: {0} , neighborhood: {1}", new Object[]{neighborhoodsId, neighborhood});
-        neighborhood.setId(neighborhoodsId);
-        if (logic.getNeighborhood(neighborhoodsId) == null) {
-            throw new WebApplicationException("Resource /neighborhoods/" + neighborhoodsId + " does not exist.", 404);
+        LOGGER.log(Level.INFO, "Updating neighborhood from resource: input: neighborhoodId: {0} , neighborhood: {1}", new Object[]{neighborhoodId, neighborhood});
+        neighborhood.setId(neighborhoodId);
+        if (logic.getNeighborhood(neighborhoodId) == null) {
+            throw new WebApplicationException("Resource /neighborhoods/" + neighborhoodId + " does not exist.", 404);
         }
-        NeighborhoodDetailDTO detailDTO = new NeighborhoodDetailDTO(logic.updateNeighborhood(neighborhoodsId, neighborhood.toEntity()));
+        NeighborhoodDetailDTO detailDTO = new NeighborhoodDetailDTO(logic.updateNeighborhood(neighborhoodId, neighborhood.toEntity()));
         LOGGER.log(Level.INFO, "Ended updating resident from resource: output: {0}", detailDTO);
 
         return detailDTO;
     }
 
     @DELETE
-    @Path("{neighborhoodsId: \\d+}")
-    public void deleteNeighborhood(@PathParam("neighborhoodsId") Long neighborhoodsId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "neighborhoodResource deleteNeighborhood: input: {0}", neighborhoodsId);
-        if (logic.getNeighborhood(neighborhoodsId) == null) {
-            throw new WebApplicationException("The resource /neighborhoods/" + neighborhoodsId + " does not exist.", 404);
+    @Path("{neighborhoodId: \\d+}")
+    public void deleteNeighborhood(@PathParam("neighborhoodId") Long neighborhoodId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "neighborhoodId deleteNeighborhood: input: {0}", neighborhoodId);
+        if (logic.getNeighborhood(neighborhoodId) == null) {
+            throw new WebApplicationException("The resource /neighborhoods/" + neighborhoodId + " does not exist.", 404);
         }
-        logic.deleteNeighborhood(neighborhoodsId);
+        logic.deleteNeighborhood(neighborhoodId);
         LOGGER.info("neighborhoodResource deleteNeighborhood: output: void");
     }
 
-    @Path("{neighborhoodsId: \\d+}/businesses")
-    public Class<BusinessResource> getBusinessResource(@PathParam("businessesId") Long neighborhoodsId) {
-        if (logic.getNeighborhood(neighborhoodsId) == null) {
-            throw new WebApplicationException("The resource /neighborhoods/" + neighborhoodsId + " no existe.", 404);
+    @Path("{neighborhoodId: \\d+}/businesses")
+    public Class<BusinessResource> getBusinessResource(@PathParam("neighborhoodId") Long neighborhoodId) {
+        if (logic.getNeighborhood(neighborhoodId) == null) {
+            throw new WebApplicationException("The resource /neighborhoods/" + neighborhoodId + " does not exist.", 404);
         }
         return BusinessResource.class;
     }
 
-    @Path("{neighborhoodsId: \\d+}/locations")
-    public Class<LocationResource> getLocationResource(@PathParam("locationsId") Long neighborhoodsId) {
+    @Path("{neighborhoodId: \\d+}/locations")
+    public Class<LocationResource> getLocationResource(@PathParam("neighborhoodId") Long neighborhoodsId) {
         if (logic.getNeighborhood(neighborhoodsId) == null) {
-            throw new WebApplicationException("The resource /neighborhoods/" + neighborhoodsId + " no existe.", 404);
+            throw new WebApplicationException("The resource /neighborhoods/" + neighborhoodsId + " does not exist.", 404);
         }
         return LocationResource.class;
     }

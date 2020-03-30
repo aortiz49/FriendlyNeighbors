@@ -48,7 +48,6 @@ public class PostResidentProfileLogic {
     @Inject
     private ResidentProfilePersistence residentPersistence;
 
-
     /**
      * /**
      * Gets a collection of posts entities associated with  resident

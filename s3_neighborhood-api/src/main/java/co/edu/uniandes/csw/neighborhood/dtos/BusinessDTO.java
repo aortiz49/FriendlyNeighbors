@@ -47,6 +47,11 @@ public class BusinessDTO implements Serializable {
      */
     private NeighborhoodDTO neighborhood;
 
+    /**
+     * The business's owner.
+     */
+    private ResidentProfileDTO owner;
+
 //===================================================
 // Attributes
 //===================================================
@@ -54,7 +59,7 @@ public class BusinessDTO implements Serializable {
      * The business's id.
      */
     private Long id;
-    
+
     /**
      * The name of the business
      */
@@ -115,7 +120,14 @@ public class BusinessDTO implements Serializable {
             this.rating = pBusiness.getRating();
             this.latitude = pBusiness.getLatitude();
             this.longitude = pBusiness.getLongitude();
-            this.neighborhood = new NeighborhoodDTO(pBusiness.getNeighborhood());
+
+            if (pBusiness.getNeighborhood() != null) {
+                this.neighborhood = new NeighborhoodDTO(pBusiness.getNeighborhood());
+            }
+
+            if (pBusiness.getOwner() != null) {
+                this.owner = new ResidentProfileDTO(pBusiness.getOwner());
+            }
 
         }
     }
@@ -142,6 +154,10 @@ public class BusinessDTO implements Serializable {
 
         if (neighborhood != null) {
             business.setNeighborhood(getNeighborhood().toEntity());
+        }
+
+        if (owner != null) {
+            business.setOwner(getOwner().toEntity());
         }
 
         return business;
@@ -174,6 +190,24 @@ public class BusinessDTO implements Serializable {
      */
     public void setNeighborhood(NeighborhoodDTO pNeighborhood) {
         neighborhood = pNeighborhood;
+    }
+
+    /**
+     * Returns the business's owner. 
+     * 
+     * @return the owner
+     */
+    public ResidentProfileDTO getOwner() {
+        return owner;
+    }
+
+    /**
+     * Sets the business's owner.
+     * 
+     * @param owner the new owner
+     */
+    public void setOwner(ResidentProfileDTO pOwner) {
+        owner = pOwner;
     }
 
     /**
