@@ -137,7 +137,7 @@ public class BusinessResource {
             BusinessDTO pBusiness) throws BusinessLogicException, WebApplicationException {
 
         LOGGER.log(Level.INFO, "Updating neighborhood from resource: input: businessesId: {0} , "
-                + "neighborhood: {1}", new Object[]{pBusinessId, pBusiness});
+                + "neighborhood: {1}", new Object[]{pBusinessId, pBusiness.getId()});
 
         pBusiness.setId(pBusinessId);
 

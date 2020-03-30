@@ -27,9 +27,11 @@ package co.edu.uniandes.csw.neighborhood.ejb;
 //===================================================
 
 import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.BusinessPersistence;
+import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
 import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -65,12 +67,18 @@ public class BusinessResidentProfileLogic {
     @Inject
     private ResidentProfilePersistence residentProfilePersistence;
 
+    /**
+     * Dependency injection for neighborhood persistence.
+     */
+    @Inject
+    private NeighborhoodPersistence neighborhoodPersistence;
+
 //===================================================
 // Methods
 //===================================================
     /**
      * Gets a collection of business entities associated with residentProfile
-     * 
+     *
      * @param pNeighborhoodId the neighborhood id
      * @param pResidentProfileId the residentProfile id
      * @return collection of business entities associated with residentProfile
@@ -79,7 +87,7 @@ public class BusinessResidentProfileLogic {
         LOGGER.log(Level.INFO, "Gets all businesses belonging to residentProfile with id = {0}", pResidentProfileId);
 
         // returns the list of all businesses
-        return residentProfilePersistence.find(pResidentProfileId,pNeighborhoodId).getBusinesses();
+        return residentProfilePersistence.find(pResidentProfileId, pNeighborhoodId).getBusinesses();
     }
 
     /**
@@ -99,7 +107,6 @@ public class BusinessResidentProfileLogic {
         LOGGER.log(Level.INFO, "Finding business with id {0} associated to "
                 + "resident with id {1}, from neighbothood {2}",
                 new Object[]{pBusinessId, pResidentId, pNeighborhoodId});
-
         // gets all the businesses in a residentProfile
         List<BusinessEntity> businesses = residentProfilePersistence.find(
                 pResidentId, pNeighborhoodId).getBusinesses();
@@ -119,66 +126,71 @@ public class BusinessResidentProfileLogic {
 
         return businesses.get(index);
     }
+    
+    //////
+    
+    // TODO: Update
+    /////
 
-//    /**
-//     * Replaces businesses associated with  residentProfile
-//     *
-//     * @param pResidentProfileId the residentProfile id
-//     * @param pNewBusinessesList Collection of service to associate with resident
-//     * @return A new collection associated to resident
-//     */
-//    public List<BusinessEntity> replaceBusinesses(Long pResidentProfileId, List<BusinessEntity> pNewBusinessesList) {
-//
-//        //logs start 
-//        LOGGER.log(Level.INFO, "Start replacing businesses related to residentProfile with id = {0}", pResidentProfileId);
-//
-//        // finds the residentProfile
-//        ResidentProfileEntity residentProfile = residentProfilePersistence.find(pResidentProfileId);
-//
-//        // finds all the businesses
-//        List<BusinessEntity> currentBusinessesList = businessPersistence.findAll();
-//
-//        // for all businesses in the database, check if a business in the new list already exists. 
-//        // if this business exists, change the residentProfile it is associated with
-//        for (int i = 0; i < currentBusinessesList.size(); i++) {
-//            BusinessEntity current = currentBusinessesList.get(i);
-//            if (pNewBusinessesList.contains(current)) {
-//                current.setOwner(residentProfile);
-//            } // if the current business in the list has the desired residentProfile as its residentProfile,
-//            // set this residentProfile to null since it is not in the list of businesses we want the 
-//            // residentProfile to have
-//            else if (current.getOwner().equals(residentProfile)) {
-//                current.setOwner(null);
-//            }
-//        }
-//
-//        // logs end
-//        LOGGER.log(Level.INFO, "End replacing businesses related to residentProfile with id = {0}", pResidentProfileId);
-//
-//        return pNewBusinessesList;
-//    }
-//
-//    /**
-//     * Removes a business from residentProfile.
-//     *
-//     * @param pResidentProfileId Id from resident
-//     * @param pBusinessId Id from service
-//     */
-//    public void removeBusiness(Long pResidentProfileId, Long pBusinessId) {
-//       LOGGER.log(Level.INFO, "Start removing business from residentProfile with id = {0}", pBusinessId);
-//
-//        // desired residentProfile
-//        ResidentProfileEntity residentProfile = residentProfilePersistence.find(pResidentProfileId);
-//
-//        // business to delete
-//        BusinessEntity business = businessPersistence.find(pBusinessId);
-//
-//        // business to remove from residentProfile   
-//        residentProfile.getBusinesses().remove(business);
-//        
-//        // group to remove from event
-//        business.setOwner(null);
-//
-//        LOGGER.log(Level.INFO, "Finished removing  event from group con id = {0}", pBusinessId);
-//    }
+    /**
+     * Replaces businesses associated with resident
+     *
+     * @param pNeighborhoodId the id of neighborhood the business is in
+     * @param pOwnerId the id of the business owner
+     * @param pBusinessList the list of associated businesses
+     *
+     * @return A new busines collection associated to a resident
+     */
+    public List<BusinessEntity> replaceBusinesses(Long pNeighborhoodId, Long pOwnerId, List<BusinessEntity> pBusinessList) {
+        LOGGER.log(Level.INFO, "Replacing businesses owned by resident with id {0} from "
+                + "neighborhood {1}", new Object[]{pOwnerId, pNeighborhoodId});
+
+        // the business owner
+        ResidentProfileEntity owner = residentProfilePersistence.find(pOwnerId, pNeighborhoodId);
+
+        // the neighborhood the business is in
+        NeighborhoodEntity neighborhood = neighborhoodPersistence.find(pNeighborhoodId);
+
+        // list of all business in the neighborhood
+        List<BusinessEntity> businessList = businessPersistence.findAll(pNeighborhoodId);
+
+        // for every business in the neighborhood..
+        for (BusinessEntity business : businessList) {
+
+            // if the neighborhood contains the business in the new list, set its new owner 
+            if (pBusinessList.contains(business)) {
+                business.setOwner(owner);
+                business.setNeighborhood(neighborhood);
+            } // if the neighborhood doesn't contain the business, set it's owner to null
+            else if (business.getOwner() != null && business.getOwner().equals(owner)) {
+                business.setOwner(null);
+            }
+        }
+
+        LOGGER.log(Level.INFO, "Replaced businesses related to resident id {0} from "
+                + "neighborhood {1}", new Object[]{pOwnerId, pNeighborhoodId});
+
+        return pBusinessList;
+    }
+
+    /**
+     * Removes a business from resident.
+     *
+     * @param pNeighborhoodId the id of neighborhood the business is in
+     * @param pOwnerId the id of the business owner
+     * @param pBusinessId the id of the associated businesses
+     */
+    public void removeBusiness(Long pNeighborhoodId, Long pOwnerId, Long pBusinessId) 
+            throws BusinessLogicException {
+        
+        LOGGER.log(Level.INFO, "Deleting business with id {0} associated to resident with id {1}, "
+                + "from neighborhood {2}", new Object[]{pBusinessId, pOwnerId, pNeighborhoodId});
+
+        Long toDelete = getBusiness(pNeighborhoodId, pOwnerId, pBusinessId).getId();
+
+        businessPersistence.delete(pNeighborhoodId, toDelete);
+
+        LOGGER.log(Level.INFO, "Deleted post with id {0} associated to resident with id {1}, "
+                + "from neighborhood {2}", new Object[]{pBusinessId, pOwnerId, pNeighborhoodId});
+    }
 }

@@ -236,8 +236,7 @@ public class BusinessLogicTest {
         BusinessEntity newEntity = factory.manufacturePojo(BusinessEntity.class);
 
         // persist the created business, should not be null
-        businessLogic.createBusiness(neighborhood.getId(),
-                data.get(0).getOwner().getId(), newEntity);
+        businessLogic.createBusiness(99999L,999L, newEntity);
     }
 
     /**
@@ -338,18 +337,12 @@ public class BusinessLogicTest {
 
         // set the id of the random business to the id of the first one from the data set
         newEntity.setId(entity.getId());
-
-        // set neighborhood
-        newEntity.setNeighborhood(entity.getNeighborhood());
-
-        // set owner
-        newEntity.setOwner(entity.getOwner());
-
+      
         // sets the opening time
-        newEntity.setOpeningTime("07:35 AM");
+        newEntity.setOpeningTime("00:00 AM");
 
         // sets the closing time
-        newEntity.setClosingTime("09:15 PM");
+        newEntity.setClosingTime("23:59 PM");
 
         // update the business with the new information
         businessLogic.updateBusiness(neighborhood.getId(), newEntity);

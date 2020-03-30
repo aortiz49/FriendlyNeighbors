@@ -28,11 +28,15 @@ import co.edu.uniandes.csw.neighborhood.ejb.BusinessResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
 
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
@@ -83,39 +87,159 @@ public class BusinessResidentProfileResource {
 
         BusinessEntity businessEntity = businessLogic.createBusiness(pNeighborhoodId, pOwnerId, pBusiness.toEntity());
 
-        BusinessDTO newBusinessDTO = new BusinessDTO(businessLogic.getBusiness(pNeighborhoodId,businessEntity.getId()));
+        BusinessDTO newBusinessDTO = new BusinessDTO(businessLogic.getBusiness(pNeighborhoodId, businessEntity.getId()));
 
         LOGGER.log(Level.INFO, "BusinessResource createBusiness: output: {0}", newBusinessDTO);
         return newBusinessDTO;
     }
-    
-     /**
-     * Returns the business specified by the ID in the URI. 
+
+    /**
+     * Returns all the businesses owned by a resident.
      *
-     * @param postsId postId from wanted post
-     * @param residentsId postId from resident whose post is wanted
-     * @param neighId parent neighborhood
+     * @param pNeighborhoodId the id of the neighborhood containing the businesses
+     * @param pOwnerId the id of the business owner
+     *
+     * @return JSONArray {@link BusinessDTO} - businesses owned by the resident. An empty list if
+     * none are found.
+     */
+    @GET
+    public List<BusinessDTO> getBusinesses(@PathParam("neighborhoodId") Long pNeighborhoodId,
+            @PathParam("residentsId") Long pOwnerId) {
+
+        LOGGER.log(Level.INFO, "Looking for businesses from resources: input: {0}", pOwnerId);
+
+        List<BusinessDTO> list = businessEntity2DTO(businessResidentLogic.getBusinesses(
+                pNeighborhoodId, pOwnerId));
+
+        LOGGER.log(Level.INFO, "Ended looking for businesses from resources: output: {0}", list);
+        return list;
+    }
+
+    /**
+     * Returns the business specified by the ID in the URI.
+     *
+     * @param pNeighborhoodId the id of neighborhood the business is in
+     * @param pOwnerId the id of the business owner
+     * @param pBusinessId the id of associated business
+     *
      * @return {@link PostDetailDTO} - post found inside resident
-     * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException if rules are not met
-     * @throws WebApplicationException {@link WebApplicationExceptionMapper}
-     * Logic error if post not found
+     * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException if rules are not
+     * met
+     * @throws WebApplicationException {@link WebApplicationExceptionMapper} Logic error if post not
+     * found
      */
     @GET
     @Path("{businessesId: \\d+}")
-    public BusinessDTO getPost(@PathParam("residentsId") Long residentsId, 
-            @PathParam("businessesId") Long businessId, 
-            @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
-        
+    public BusinessDTO getbusiness(@PathParam("neighborhoodId") Long neighId,
+            @PathParam("residentsId") Long residentsId,
+            @PathParam("businessesId") Long businessId) throws BusinessLogicException {
+
         LOGGER.log(Level.INFO, "Looking for business: input: residentsId {0} , postsId {1}", new Object[]{residentsId, businessId});
-        if (businessLogic.getBusiness(neighId,businessId) == null) {
-            throw new WebApplicationException("Resource /posts/" + businessId + " does not exist.", 404);
+
+        if (businessLogic.getBusiness(neighId, businessId) == null) {
+            throw new WebApplicationException("Resource /businessess/" + businessId + " does not exist.", 404);
         }
-        
-        BusinessDTO detailDTO = new BusinessDTO(businessResidentLogic.getBusiness(neighId,residentsId, businessId));
-        LOGGER.log(Level.INFO, "Ended looking for post: output: {0}", detailDTO);
+
+        BusinessDTO detailDTO = new BusinessDTO(businessResidentLogic.getBusiness(neighId, residentsId, businessId));
+
+        LOGGER.log(Level.INFO, "Ended looking for business: output: {0}", detailDTO);
+
         return detailDTO;
     }
 
+    /**
+     *
+     * Updates a resident's owned business with business from a list given by the path.
+     *
+     * @param pNeighborhoodId the id of neighborhood the business is in
+     * @param pOwnerId the id of the business owner
+     * @param businessDTOList the list of business DTOs
+     *
+     * @return JSONArray {@link PostDetailDTO} - updated list
+     * @throws WebApplicationException {@link WebApplicationExceptionMapper} Error if not found
+     */
+    @PUT
+    public List<BusinessDTO> replaceBusinesses(@PathParam("neighborhoodId") Long pNeighborhoodId,
+            @PathParam("residentsId") Long pOwnerId,
+            List<BusinessDTO> businessDTOList) throws WebApplicationException {
 
+        LOGGER.log(Level.INFO, "Replacing resident businesses from resource: input: residentsId {0} , posts {1}", new Object[]{pOwnerId, businessDTOList});
+
+        for (BusinessDTO business : businessDTOList) {
+            if (businessLogic.getBusiness(pNeighborhoodId, business.getId()) == null) {
+                throw new WebApplicationException("Resource /businesses/" + businessDTOList + " does not exist.", 404);
+            }
+        }
+
+        List<BusinessDTO> lista = businessEntity2DTO(businessResidentLogic.replaceBusinesses(
+                pNeighborhoodId, pOwnerId, businessDTO2Entity(businessDTOList)));
+
+        LOGGER.log(Level.INFO, "Ended replacing resident posts from resource: output:{0}", lista);
+        return lista;
+    }
+
+    ////
+   
+    // TODO: update
+    ///
+    /**
+     * Removes a business from an owner.
+     *
+     * @param pNeighborhoodId the id of neighborhood the business is in
+     * @param pOwnerId the id of the business owner
+     * @param pBusinessId the id of associated business
+     *
+     * @throws WebApplicationException {@link WebApplicationExceptionMapper} if if not found
+     */
+    @DELETE
+    @Path("{businessesId: \\d+}")
+    public void removebusiness(@PathParam("neighborhoodId") Long pNeighborhoodId,
+            @PathParam("residentsId") Long pOwnerId,
+            @PathParam("businessesId") Long pBusinessId) throws BusinessLogicException {
+
+        LOGGER.log(Level.INFO, "Removing business from owner: input: residentsId {0} , "
+                + "postsId {1}", new Object[]{pOwnerId, pBusinessId});
+
+        if (businessLogic.getBusiness(pNeighborhoodId, pBusinessId) == null) {
+            throw new WebApplicationException("Resource /businesses/" + pBusinessId + " does not exist.", 404);
+        }
+
+        businessResidentLogic.removeBusiness(pNeighborhoodId, pOwnerId, pBusinessId);
+        LOGGER.info("Ended removing post from resident: output: void");
+    }
+
+    /**
+     * Converts a list of business entities to a list of business DTOs.
+     *
+     * @param pBusinessEntityList list of business entities
+     *
+     * @return list of business DTOs
+     */
+    private List<BusinessDTO> businessEntity2DTO(List<BusinessEntity> pBusinessEntityList) {
+
+        List<BusinessDTO> list = new ArrayList<>();
+
+        for (BusinessEntity business : pBusinessEntityList) {
+            list.add(new BusinessDTO(business));
+        }
+        return list;
+    }
+
+    /**
+     * Converts a list of business DTOs to a list of business entities.
+     *
+     * @param businessDTOList the list of business DTOs
+     *
+     * @return the list of business entities
+     */
+    private List<BusinessEntity> businessDTO2Entity(List<BusinessDTO> businessDTOList) {
+
+        List<BusinessEntity> list = new ArrayList<>();
+
+        for (BusinessDTO business : businessDTOList) {
+            list.add(business.toEntity());
+        }
+        return list;
+    }
 
 }

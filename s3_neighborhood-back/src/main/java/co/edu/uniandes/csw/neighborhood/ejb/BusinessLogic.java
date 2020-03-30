@@ -30,6 +30,8 @@ import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.BusinessPersistence;
 import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
 import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -98,16 +100,16 @@ public class BusinessLogic {
         if (businessPersistence.findByName(pBusinessEntity.getName()) != null) {
             throw new BusinessLogicException("The neighborhood already has a business with that name!");
         }
-
-        // verify business rules for creating a new business
-        verifyBusinessRules(pBusinessEntity);
-
+        
         // set the business's neighborhood 
         pBusinessEntity.setNeighborhood(neighborhoodPersistence.find(pNeighborhoodId));
 
         // set the business's owner
         pBusinessEntity.setOwner(residentProfilePersistence.find(pOwnerId, pNeighborhoodId));
 
+        // verify business rules for creating a new business
+        verifyBusinessRules(pBusinessEntity, pNeighborhoodId);
+      
         // create the business
         BusinessEntity createdEntity = businessPersistence.create(pBusinessEntity);
 
@@ -191,10 +193,13 @@ public class BusinessLogic {
         }
 
         // verifies that the new business meets the rules
-        verifyBusinessRules(pBusinessEntity);
+        verifyBusinessRules(pBusinessEntity, pNeighborhoodId);
 
         // sets the business's owner 
         pBusinessEntity.setOwner(original.getOwner());
+        
+        // sets the business's neighborhood
+        pBusinessEntity.setNeighborhood(original.getNeighborhood());
 
         // update business
         BusinessEntity newEntity = businessPersistence.update(pNeighborhoodId, pBusinessEntity);
@@ -213,20 +218,38 @@ public class BusinessLogic {
      */
     public void deleteBusiness(Long pNeighborhoodId, Long pBusinessId) {
         LOGGER.log(Level.INFO, "Begin the delete process for business with id = {0}", pBusinessId);
-        businessPersistence.delete(pNeighborhoodId, pBusinessId);
+
+        if (businessPersistence.find(pNeighborhoodId, pBusinessId).getOwner() != null) {
+            businessPersistence.delete(pNeighborhoodId, pBusinessId);
+        }
         LOGGER.log(Level.INFO, "End the delete process for business with id = {0}", pBusinessId);
     }
 
     /**
      * Verifies that the the business is valid.
      *
+     * @param pNeighborhoodId neighborhood containing the business
      * @param pBusinessEntity business to verify
      *
      * @return true if the business is valid. False otherwise
      * @throws BusinessLogicException if the business doesn't satisfy the business rules
      */
-    private boolean verifyBusinessRules(BusinessEntity pBusinessEntity) throws BusinessLogicException {
+    private boolean verifyBusinessRules(BusinessEntity pBusinessEntity, Long pNeighborhoodId) throws BusinessLogicException {
         boolean valid = true;
+
+        NeighborhoodEntity neighborhood = neighborhoodPersistence.find(pNeighborhoodId);
+
+        // 1. The neighborhood cannot be null
+        if (neighborhood == null) {
+            throw new BusinessLogicException("The business must have an owner!");
+        }
+
+        ResidentProfileEntity owner = pBusinessEntity.getOwner();
+
+        // 2. The owner cannot be null
+        if (owner == null) {
+            throw new BusinessLogicException("The business must have an owner!");
+        }
 
         // 2. The address of the business cannot be null
         if (pBusinessEntity.getAddress() == null) {

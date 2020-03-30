@@ -72,6 +72,8 @@ public class ResidentProfileResource {
     public List<ResidentProfileDetailDTO> getResidents(@PathParam("neighborhoodId") Long neighId) {
         LOGGER.info("Looking for all residents from resources: input: void");
         List<ResidentProfileDetailDTO> residents = listEntity2DTO(residentLogic.getResidents(neighId));
+        
+        
         LOGGER.log(Level.INFO, "Ended looking for all residents from resources: output: {0}", residents);
         return residents;
     }

@@ -89,21 +89,21 @@ public class PostResidentProfileResource {
         return dto;
     }
 
-//    /**
-//     * Looks for all the posts associated to a resident and returns it
-//     *
-//     * @param residentsId postId from resident whose posts are wanted
-//     * @param neighId parent neighborhood
-//     * @return JSONArray {@link PostDetailDTO} - posts found in resident. An
-//     * empty list if none is found
-//     */
-//    @GET
-//    public List<PostDetailDTO> getPosts(@PathParam("residentsId") Long residentsId, @PathParam("neighborhoodId") Long neighId) {
-//        LOGGER.log(Level.INFO, "Looking for posts from resources: input: {0}", residentsId);
-//        List<PostDetailDTO> list = postsListEntity2DTO(residentPostLogic.getPosts(residentsId, neighId));
-//        LOGGER.log(Level.INFO, "Ended looking for posts from resources: output: {0}", list);
-//        return list;
-//    }
+    /**
+     * Looks for all the posts associated to a resident and returns it
+     *
+     * @param residentsId postId from resident whose posts are wanted
+     * @param neighId parent neighborhood
+     * @return JSONArray {@link PostDetailDTO} - posts found in resident. An
+     * empty list if none is found
+     */
+    @GET
+    public List<PostDetailDTO> getPosts(@PathParam("residentsId") Long residentsId, @PathParam("neighborhoodId") Long neighId) {
+        LOGGER.log(Level.INFO, "Looking for posts from resources: input: {0}", residentsId);
+        List<PostDetailDTO> list = postsListEntity2DTO(residentPostLogic.getPosts(residentsId, neighId));
+        LOGGER.log(Level.INFO, "Ended looking for posts from resources: output: {0}", list);
+        return list;
+    }
 
     /**
      * Looks for a post with specified ID by URL which is associated with 
