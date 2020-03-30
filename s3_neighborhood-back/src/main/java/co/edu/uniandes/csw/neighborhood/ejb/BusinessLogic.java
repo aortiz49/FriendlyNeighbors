@@ -100,16 +100,29 @@ public class BusinessLogic {
         if (businessPersistence.findByName(pBusinessEntity.getName()) != null) {
             throw new BusinessLogicException("The neighborhood already has a business with that name!");
         }
-        
+
+        NeighborhoodEntity neigh = neighborhoodPersistence.find(pNeighborhoodId);
+
+        if (neigh == null) {
+            throw new BusinessLogicException("The neighborhood doesn't exist!");
+
+        }
         // set the business's neighborhood 
-        pBusinessEntity.setNeighborhood(neighborhoodPersistence.find(pNeighborhoodId));
+        pBusinessEntity.setNeighborhood(neigh);
+        
+        ResidentProfileEntity res = residentProfilePersistence.find(pOwnerId, pNeighborhoodId);
+
+        if (res == null) {
+            throw new BusinessLogicException("The owner doesn't exist!");
+
+        }
 
         // set the business's owner
-        pBusinessEntity.setOwner(residentProfilePersistence.find(pOwnerId, pNeighborhoodId));
+        pBusinessEntity.setOwner(res);
 
         // verify business rules for creating a new business
         verifyBusinessRules(pBusinessEntity, pNeighborhoodId);
-      
+
         // create the business
         BusinessEntity createdEntity = businessPersistence.create(pBusinessEntity);
 
@@ -197,7 +210,7 @@ public class BusinessLogic {
 
         // sets the business's owner 
         pBusinessEntity.setOwner(original.getOwner());
-        
+
         // sets the business's neighborhood
         pBusinessEntity.setNeighborhood(original.getNeighborhood());
 

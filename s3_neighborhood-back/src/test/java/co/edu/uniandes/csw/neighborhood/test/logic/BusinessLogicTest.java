@@ -227,19 +227,6 @@ public class BusinessLogicTest {
     }
 
     /**
-     * Tests the creation of a Business with no neighborhood.
-     */
-    @Test(expected = BusinessLogicException.class)
-    public void createBusinessNoNeighborhoodTest() throws BusinessLogicException {
-
-        // creates a random business
-        BusinessEntity newEntity = factory.manufacturePojo(BusinessEntity.class);
-
-        // persist the created business, should not be null
-        businessLogic.createBusiness(99999L,999L, newEntity);
-    }
-
-    /**
      * Tests the creation of a Business with non-existent neighborhood.
      */
     @Test(expected = BusinessLogicException.class)
@@ -252,9 +239,9 @@ public class BusinessLogicTest {
         NeighborhoodEntity neigh = data.get(0).getNeighborhood();
         neigh.setId(11123L);
         newEntity.setNeighborhood(neigh);
-
+        
         // persist the created business, should not finish
-        businessLogic.createBusiness(neighborhood.getId(),
+        businessLogic.createBusiness(9999L,
                 data.get(0).getOwner().getId(), newEntity);
     }
 
@@ -343,6 +330,9 @@ public class BusinessLogicTest {
 
         // sets the closing time
         newEntity.setClosingTime("23:59 PM");
+        
+        // sets the owner
+        newEntity.setOwner(owner);
 
         // update the business with the new information
         businessLogic.updateBusiness(neighborhood.getId(), newEntity);
