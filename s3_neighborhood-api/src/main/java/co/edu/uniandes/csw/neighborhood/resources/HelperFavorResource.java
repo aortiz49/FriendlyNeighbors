@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2017 Universidad de los Andes - ISIS2603
+Copyright (c) 2020 Universidad de los Andes - ISIS2603
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

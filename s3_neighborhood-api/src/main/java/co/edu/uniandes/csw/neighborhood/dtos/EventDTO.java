@@ -1,4 +1,30 @@
+/*
+MIT License
+
+Copyright (c) 2020 Universidad de los Andes - ISIS2603
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+ */
 package co.edu.uniandes.csw.neighborhood.dtos;
+//===================================================
+// Imports
+//===================================================
 
 import co.edu.uniandes.csw.neighborhood.adapters.DateAdapter;
 import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
@@ -12,41 +38,59 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import uk.co.jemos.podam.common.PodamExclude;
 
 /**
- * @k.romero
+ * Data transfer object for Events. This DTO contains the JSON representation of an Event that gets
+ * transferred between the client and server.
+ *
+ * @author aortiz49
  */
 public class EventDTO implements Serializable {
+//===================================================
+// Dependencies
+//===================================================
 
+    /**
+     * The event's location.
+     */
+    private LocationDTO location;
     
     /**
-     * Represents id for this event
+     * The event's host.
+     */
+    private ResidentProfileDTO host;
+
+//===================================================
+// Attributes
+//===================================================
+    
+    /**
+     * The event's id.
      */
     private long id;
-    
-    
+
     /**
      * The title of the event.
      */
     private String title;
 
     /**
-     * Represents the date was created
+     * The date the event was posted.
      */
     @XmlJavaTypeAdapter(DateAdapter.class)
     private Date datePosted;
 
     /**
-     * Represents the date group was created
+     * The date the event will take place.
      */
     @XmlJavaTypeAdapter(DateAdapter.class)
     private Date dateOfEvent;
 
     /**
-     * The start time of the event.
+     * The time at which the event starts.
      */
     private String startTime;
 
     /**
-     * The end time of the event.
+     * The time at which the event ends.
      */
     private String endTime;
 
@@ -56,151 +100,13 @@ public class EventDTO implements Serializable {
     private String description;
 
     /**
-     * The availability of the event. How long the event will take place.
+     * The 
      */
     private String availability;
-    /**
-     * The host of the event.
-     */
-    private ResidentProfileDTO host;
-    /**
-     * The location of the event.
-     */
 
-    private LocationDTO location;
 //===================================================
 // Getters & Setters
 //===================================================
 
-    public String getTitle() {
-        return title;
-    }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public Date getDatePosted() {
-        return datePosted;
-    }
-
-    public void setDatePosted(Date datePosted) {
-        this.datePosted = datePosted;
-    }
-
-    public Date getDateOfEvent() {
-        return dateOfEvent;
-    }
-
-    public void setDateOfEvent(Date dateOfEvent) {
-        this.dateOfEvent = dateOfEvent;
-    }
-
-    public ResidentProfileDTO getHost() {
-        return host;
-    }
-
-    public void setHost(ResidentProfileDTO host) {
-        this.host = host;
-    }
-
-    public LocationDTO getLocation() {
-        return location;
-    }
-
-    public void setLocation(LocationDTO location) {
-        this.location = location;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getAvailability() {
-        return availability;
-    }
-
-    public void setAvailability(String availability) {
-        this.availability = availability;
-    }
-
-    public EventDTO() {
-        super();
-    }
-
-    public EventDTO(EventEntity entityEvent) {
-        this.availability = entityEvent.getAvailability();
-        this.description = entityEvent.getDescription();
-        this.endTime = entityEvent.getEndTime();
-        this.startTime = entityEvent.getStartTime();
-        this.title = entityEvent.getTitle();
-        if (entityEvent.getLocation() != null) {
-            this.location = new LocationDTO(entityEvent.getLocation());
-        }
-        if (entityEvent.getHost() != null) {
-            this.host = new ResidentProfileDTO(entityEvent.getHost());
-        }
-    }
-
-    /**
-     * Converts a event DTO to a event entity.
-     *
-     * @return new event entity
-     *
-     */
-    public EventEntity toEntity() {
-        EventEntity eventEntity = new EventEntity();
-
-        eventEntity.setAvailability(getAvailability());
-        eventEntity.setDescription(getDescription());
-        eventEntity.setEndTime(getEndTime());
-        eventEntity.setStartTime(getStartTime());
-        eventEntity.setTitle(getTitle());
-
-        if (getLocation() != null) {
-            eventEntity.setLocation(getLocation().toEntity());
-        }
-
-        if (getHost() != null) {
-            eventEntity.setHost(getHost().toEntity());
-        }
-        return eventEntity;
-    }
-
-    /**
-     * @return the id
-     */
-    public long getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    
-    
 }

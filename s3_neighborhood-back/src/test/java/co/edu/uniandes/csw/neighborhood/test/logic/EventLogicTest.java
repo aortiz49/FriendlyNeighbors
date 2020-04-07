@@ -279,7 +279,6 @@ public class EventLogicTest {
         Assert.assertNotNull(resultEntity);
         Assert.assertEquals(entity.getId(), resultEntity.getId());
         Assert.assertEquals(entity.getDescription(), resultEntity.getDescription());
-        Assert.assertEquals(entity.getAvailability(), resultEntity.getAvailability());
         Assert.assertEquals(entity.getStartTime(), resultEntity.getStartTime());
         Assert.assertEquals(entity.getEndTime(), resultEntity.getEndTime());
     }
