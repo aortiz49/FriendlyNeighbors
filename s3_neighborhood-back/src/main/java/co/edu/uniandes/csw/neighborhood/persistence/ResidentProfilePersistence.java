@@ -20,7 +20,7 @@ public class ResidentProfilePersistence {
 
     private static final Logger LOGGER = Logger.getLogger(ResidentProfilePersistence.class.getName());
 
-    @PersistenceContext(unitName = "neighborhoodPU")
+    @PersistenceContext(unitName = "NeighborhoodPU")
     protected EntityManager em;
 
     /**

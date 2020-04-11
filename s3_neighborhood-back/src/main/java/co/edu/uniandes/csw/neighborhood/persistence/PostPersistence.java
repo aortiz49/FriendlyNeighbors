@@ -20,7 +20,7 @@ public class PostPersistence {
 
     private static final Logger LOGGER = Logger.getLogger(PostPersistence.class.getName());
 
-    @PersistenceContext(unitName = "neighborhoodPU")
+    @PersistenceContext(unitName = "NeighborhoodPU")
     protected EntityManager em;
 
     /**

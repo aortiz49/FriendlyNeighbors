@@ -20,7 +20,7 @@ public class FavorPersistence {
 
     private static final Logger LOGGER = Logger.getLogger(FavorPersistence.class.getName());
 
-    @PersistenceContext(unitName = "neighborhoodPU")
+    @PersistenceContext(unitName = "NeighborhoodPU")
     protected EntityManager em;
 
     /**

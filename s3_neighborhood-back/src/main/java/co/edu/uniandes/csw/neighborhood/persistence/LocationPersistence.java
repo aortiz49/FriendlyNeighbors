@@ -22,7 +22,7 @@ public class LocationPersistence {
     
     private static final Logger LOGGER = Logger.getLogger(LocationPersistence.class.getName());
 
-    @PersistenceContext(unitName = "neighborhoodPU")
+    @PersistenceContext(unitName = "NeighborhoodPU")
     protected EntityManager em;
     
     /**

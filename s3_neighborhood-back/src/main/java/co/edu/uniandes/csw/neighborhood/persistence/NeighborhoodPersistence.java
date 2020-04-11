@@ -56,7 +56,7 @@ public class NeighborhoodPersistence {
     /**
      * The entity manager that will access the Neighborhood table.
      */
-    @PersistenceContext(unitName = "neighborhoodPU")
+    @PersistenceContext(unitName = "NeighborhoodPU")
     protected EntityManager em;
 
     //===================================================

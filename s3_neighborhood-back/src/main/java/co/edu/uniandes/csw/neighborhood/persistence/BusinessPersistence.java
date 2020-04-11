@@ -56,7 +56,7 @@ public class BusinessPersistence {
     /**
      * The entity manager that will access the business table.
      */
-    @PersistenceContext(unitName = "neighborhoodPU")
+    @PersistenceContext(unitName = "NeighborhoodPU")
     protected EntityManager em;
 
     //===================================================

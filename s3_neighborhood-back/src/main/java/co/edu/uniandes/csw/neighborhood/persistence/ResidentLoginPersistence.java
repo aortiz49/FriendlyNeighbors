@@ -23,7 +23,7 @@ public class ResidentLoginPersistence {
     
     private static final Logger LOGGER = Logger.getLogger(ResidentLoginPersistence.class.getName());
 
-    @PersistenceContext(unitName = "neighborhoodPU" )
+    @PersistenceContext(unitName = "NeighborhoodPU" )
     protected EntityManager em;
     
      /**
