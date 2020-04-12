@@ -24,15 +24,15 @@ import java.util.List;
 
 /**
  *
- * @author albayona
+ * @author aortiz49
  */
 @RunWith(Arquillian.class)
-public class EventAttendeeLogicTest {
+public class AttendeeEventsLogicTest {
 
     private PodamFactory factory = new PodamFactoryImpl();
 
     @Inject
-    private EventAttendeeLogic eventResidentProfileLogic;
+    private EventAttendeesLogic eventResidentProfileLogic;
 
     @Inject
     private ResidentProfileLogic residentLogic;
@@ -52,16 +52,15 @@ public class EventAttendeeLogicTest {
     private List<ResidentProfileEntity> data = new ArrayList<>();
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
-     * contains classes, DB descriptor and beans.xml file for dependencies
-     * injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
+     * descriptor and beans.xml file for dependencies injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
                 .addPackage(EventEntity.class.getPackage())
                 .addPackage(ResidentProfileEntity.class.getPackage())
-                .addPackage(EventAttendeeLogic.class.getPackage())
+                .addPackage(EventAttendeesLogic.class.getPackage())
                 .addPackage(EventPersistence.class.getPackage())
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
@@ -122,10 +121,9 @@ public class EventAttendeeLogicTest {
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
 
             entity.setEventsToAttend(new ArrayList<>());
-            entity.getEventsToAttend().add(event);
+            entity.getAttendedEvents().add(event);
             entity.setNeighborhood(neighborhood);
-            
-            
+
             em.persist(entity);
             data.add(entity);
             event.getAttendees().add(entity);
@@ -146,13 +144,13 @@ public class EventAttendeeLogicTest {
 
         residentLogic.createResident(newResidentProfile, neighborhood.getId());
 
-        ResidentProfileEntity residentEntity = eventResidentProfileLogic.associateAttendeeToEvent(event.getId(), newResidentProfile.getId(), neighborhood.getId());
+        ResidentProfileEntity residentEntity = eventResidentProfileLogic.addAttendee(neighborhood.getId(), event.getId(), newResidentProfile.getId());
         Assert.assertNotNull(residentEntity);
 
         Assert.assertEquals(residentEntity.getId(), newResidentProfile.getId());
         Assert.assertEquals(residentEntity.getAddress(), newResidentProfile.getAddress());
 
-        ResidentProfileEntity lastResident = eventResidentProfileLogic.getAttendee(event.getId(), newResidentProfile.getId(), neighborhood.getId());
+        ResidentProfileEntity lastResident = eventResidentProfileLogic.getAttendee(neighborhood.getId(), event.getId(), newResidentProfile.getId());
 
         Assert.assertEquals(lastResident.getId(), newResidentProfile.getId());
 
@@ -163,7 +161,7 @@ public class EventAttendeeLogicTest {
      */
     @Test
     public void getResidentProfilesTest() {
-        List<ResidentProfileEntity> residentEntities = eventResidentProfileLogic.getAttendees(event.getId(), neighborhood.getId());
+        List<ResidentProfileEntity> residentEntities = eventResidentProfileLogic.getAttendees(neighborhood.getId(), event.getId());
 
         Assert.assertEquals(data.size(), residentEntities.size());
 
@@ -180,7 +178,7 @@ public class EventAttendeeLogicTest {
     @Test
     public void getResidentTest() throws BusinessLogicException {
         ResidentProfileEntity residentEntity = data.get(0);
-        ResidentProfileEntity resident = eventResidentProfileLogic.getAttendee(event.getId(), residentEntity.getId(), neighborhood.getId());
+        ResidentProfileEntity resident = eventResidentProfileLogic.getAttendee(neighborhood.getId(), event.getId(), residentEntity.getId());
         Assert.assertNotNull(resident);
 
         Assert.assertEquals(residentEntity.getId(), resident.getId());
@@ -199,13 +197,13 @@ public class EventAttendeeLogicTest {
         for (int i = 0; i < 3; i++) {
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
             entity.setEventsToAttend(new ArrayList<>());
-            entity.getEventsToAttend().add(event);
+            entity.getAttendedEvents().add(event);
 
             residentLogic.createResident(entity, neighborhood.getId());
 
             newCollection.add(entity);
         }
-        eventResidentProfileLogic.replaceAttendees(event.getId(), newCollection, neighborhood.getId());
+        eventResidentProfileLogic.replaceAttendees(neighborhood.getId(), event.getId(), newCollection);
         List<ResidentProfileEntity> residentEntities = eventResidentProfileLogic.getAttendees(event.getId(), neighborhood.getId());
         for (ResidentProfileEntity aNuevaLista : newCollection) {
             Assert.assertTrue(residentEntities.contains(aNuevaLista));
@@ -219,7 +217,7 @@ public class EventAttendeeLogicTest {
     @Test
     public void removeResidentTest() {
         for (ResidentProfileEntity resident : data) {
-            eventResidentProfileLogic.removeAttendee(event.getId(), resident.getId(), neighborhood.getId());
+            eventResidentProfileLogic.removeAttendee(neighborhood.getId(),event.getId(), resident.getId());
         }
         Assert.assertTrue(eventResidentProfileLogic.getAttendees(event.getId(), neighborhood.getId()).isEmpty());
     }

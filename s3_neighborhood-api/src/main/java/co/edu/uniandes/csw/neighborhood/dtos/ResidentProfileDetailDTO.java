@@ -102,7 +102,7 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
             groups = new ArrayList<>();
             comments = new ArrayList<>();
 
-            for (EventEntity entityEvent : residentEntity.getEventsToAttend()) {
+            for (EventEntity entityEvent : residentEntity.getAttendedEvents()) {
                 eventsToAttend.add(new EventDTO(entityEvent));
             }
 

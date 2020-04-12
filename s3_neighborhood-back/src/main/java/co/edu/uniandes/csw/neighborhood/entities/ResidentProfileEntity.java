@@ -279,7 +279,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     /**
      * @return the eventsToAttend
      */
-    public List<EventEntity> getEventsToAttend() {
+    public List<EventEntity> getAttendedEvents() {
         return eventsToAttend;
     }
 

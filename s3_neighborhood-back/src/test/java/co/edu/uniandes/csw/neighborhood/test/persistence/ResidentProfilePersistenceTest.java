@@ -144,7 +144,7 @@ public class ResidentProfilePersistenceTest {
         Assert.assertEquals(newEntity.getComments(), entity.getComments());
         Assert.assertEquals(newEntity.getEmail(), entity.getEmail());
         Assert.assertEquals(newEntity.getEvents(), entity.getEvents());
-        Assert.assertEquals(newEntity.getEventsToAttend(), entity.getEventsToAttend());
+        Assert.assertEquals(newEntity.getAttendedEvents(), entity.getAttendedEvents());
         Assert.assertEquals(newEntity.getNickname(), entity.getNickname());
         Assert.assertEquals(newEntity.getPhoneNumber(), entity.getPhoneNumber());
 
