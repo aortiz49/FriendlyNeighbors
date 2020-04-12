@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2017 Universidad de los Andes - ISIS2603
+Copyright (c) 2020 Universidad de los Andes - ISIS2603
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.ejb;
+//===================================================
+// Imports
+//===================================================
 
 import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
@@ -35,89 +38,145 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 /**
- * @author albayona
+ * Class that implements the connection for the relations between ResidentProfile and Event.
+ *
+ * @author aortiz49
  */
 @Stateless
 public class EventResidentProfileLogic {
+//===================================================
+// Attributes
+//===================================================
 
+    /**
+     * Creates a logger for console output.
+     */
     private static final Logger LOGGER = Logger.getLogger(EventResidentProfileLogic.class.getName());
 
+    /**
+     * Injects dependencies for event persistence.
+     */
     @Inject
     private EventPersistence eventPersistence;
 
-    @Inject
-    private ResidentProfilePersistence residentPersistence;
-
-
     /**
-     * /**
-     * Gets a collection of events entities associated with  resident
-     *
-     * @param neighId ID from parent neighborhood
-     * @param residentId ID from resident entity
-     * @return collection of event entities associated with  resident
+     * Injects dependencies for resident profile persistence.
      */
-    public List<EventEntity> getEvents(Long residentId, Long neighId) {
-        LOGGER.log(Level.INFO, "Gets all events belonging to resident with id {0} from neighborhood {1}", new Object[]{residentId, neighId});
-        return residentPersistence.find(residentId, neighId).getEvents();
+    @Inject
+    private ResidentProfilePersistence residentProfilePersistence;
+
+//===================================================
+// CRUD Methods
+//==================================================
+    /**
+     * Returns all events hosted by a resident.
+     *
+     * @param pNeighborhoodId the neighborhood's id
+     * @param pHostId ID from resident entity
+     *
+     * @return collection of event entities associated with resident
+     */
+    public List<EventEntity> getHostedEvents(Long pNeighborhoodId, Long pHostId) {
+        LOGGER.log(Level.INFO, "Gets all events belonging to resident with id {0} "
+                + "from neighborhood {1}", new Object[]{pHostId, pNeighborhoodId});
+        
+        return residentProfilePersistence.find(pHostId, pNeighborhoodId).getEvents();
     }
 
     /**
-     * Gets a event entity associated with  resident
+     * Returns an event hosted by a resident.
      *
-     * @param residentId Id from resident
-     * @param neighId ID from parent neighborhood
-     * @param eventId Id from associated entity
-     * @return associated entity
+     * @param pNeighborhoodId the neighborhood's id
+     * @param pHostId the event host's
+     * @param pEventId the hosted event's id
+     *
+     * @return the event entity
      * @throws BusinessLogicException If event is not associated
      */
-    public EventEntity getEvent(Long residentId, Long eventId, Long neighId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Finding event with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{eventId, residentId, neighId});
-        List<EventEntity> events = residentPersistence.find(residentId, neighId).getEvents();
-        EventEntity EventEntity = eventPersistence.find(eventId, neighId);
-        int index = events.indexOf(EventEntity);
-        LOGGER.log(Level.INFO, "Found event with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{eventId, residentId, neighId});
-        if (index >= 0) {
-            return events.get(index);
+    public EventEntity getHostedEvent(Long pNeighborhoodId, Long pHostId, Long pEventId) throws BusinessLogicException {
+
+        LOGGER.log(Level.INFO, "Finding event with id {0} associated to resident with id {1}, "
+                + "from neighbothood {2}", new Object[]{pEventId, pHostId, pNeighborhoodId});
+
+        // gets all the events hosted by a resident
+        List<EventEntity> events = residentProfilePersistence.
+                find(pHostId, pNeighborhoodId).getEvents();
+
+        // the event that was found
+        int index = events.indexOf(eventPersistence.find(pNeighborhoodId, pEventId));
+
+        LOGGER.log(Level.INFO, "Finished finding event with id {0} associated to "
+                + "resident with id {1}, from neighbothood {2}",
+                new Object[]{pEventId, pHostId, pNeighborhoodId});
+
+        // if the index doesn't exist
+        if (index == -1) {
+            throw new BusinessLogicException("Business is not associated with the residentProfile");
         }
-        throw new BusinessLogicException("Event is not associated with resident");
+
+        return events.get(index);
     }
 
     /**
-     * Replaces events associated with  resident
+     * Replaces events hosted by a resident
      *
-     * @param neighId ID from parent neighborhood
-     * @param residentId Id from resident
-     * @param events Collection of event to associate with resident
-     * @return A new collection associated to resident
+     * @param pNeighborhoodId the id of neighborhood where the event took place
+     * @param pHostId the id of the event host
+     * @param pEventList the list of hosted events
+     *
+     * @return A new business collection associated to a resident
      */
-    public List<EventEntity> replaceEvents(Long residentId, List<EventEntity> events, Long neighId) {
-        LOGGER.log(Level.INFO, "Trying to replace events related to resident with id {0} from neighborhood {1}", new Object[]{residentId, neighId});
-        ResidentProfileEntity resident = residentPersistence.find(residentId, neighId);
-        List<EventEntity> eventList = eventPersistence.findAll(neighId);
+    public List<EventEntity> replaceHostedEvents(Long pNeighborhoodId, Long pHostId,
+            List<EventEntity> pEventList) {
+
+        LOGGER.log(Level.INFO, "Replacing events hosted by resident with id {0} from "
+                + "neighborhood {1}", new Object[]{pHostId, pNeighborhoodId});
+
+        // the event host
+        ResidentProfileEntity host = residentProfilePersistence.find(pHostId, pNeighborhoodId);
+
+        // list of all events in the neighborhood
+        List<EventEntity> eventList = eventPersistence.findAll(pNeighborhoodId);
+
+        // for every event in the neighborhood..
         for (EventEntity event : eventList) {
-            if (events.contains(event)) {
-                event.setHost(resident);
-            } else if (event.getHost() != null && event.getHost().equals(resident)) {
+
+            // if the the new list contains an event in the neighborhood, set the new host
+            if (pEventList.contains(event)) {
+                event.setHost(host);
+            } // if the new list doesn't contain an event in the neighborhood, 
+            // and the host is the desired host, set the host of that event to null
+            else if (event.getHost() != null && event.getHost().equals(host)) {
                 event.setHost(null);
             }
         }
-        LOGGER.log(Level.INFO, "Replaced events related to resident with id {0} from neighborhood {1}", new Object[]{residentId, neighId});
-        return events;
+
+        LOGGER.log(Level.INFO, "Replaced all events related to resident id {0} from "
+                + "neighborhood {1}", new Object[]{pHostId, pNeighborhoodId});
+
+        return pEventList;
     }
 
     /**
-     * Removes a event from resident. Event is no longer in DB
+     * Removes an event hosted by a resident.
      *
-     * @param residentID Id from resident
-     * @param neighId ID from parent neighborhood
-     * @param eventId Id from event
+     * @param pNeighborhoodId the id of neighborhood the event is in
+     * @param pHostId the id of the event host
+     * @param pEventId the id of the hosted event
+     *
+     * @throws BusinessLogicException if the event to be deleted doesn't exist
      */
-    public void removeEvent(Long residentID, Long eventId, Long neighId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Deleting event with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{eventId, residentID, neighId});
+    public void removeHostedEvent(Long pNeighborhoodId, Long pHostId, Long pEventId)
+            throws BusinessLogicException {
 
-        eventPersistence.delete(getEvent(residentID, eventId, neighId).getId(), neighId);
+        LOGGER.log(Level.INFO, "Deleting event with id {0} hosted by resident with id {1}, "
+                + "from neighborhood {2}", new Object[]{pEventId, pHostId, pNeighborhoodId});
 
-        LOGGER.log(Level.INFO, "Deleted event with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{eventId, residentID, neighId});
+        Long toDelete = getHostedEvent(pNeighborhoodId, pHostId, pEventId).getId();
+
+        eventPersistence.delete(pNeighborhoodId, toDelete);
+
+        LOGGER.log(Level.INFO, "Deleted event with id {0} hosted by resident with id {1}, "
+                + "from neighborhood {2}", new Object[]{pEventId, pHostId, pNeighborhoodId});
     }
 }

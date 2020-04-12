@@ -107,11 +107,12 @@ public class FavorResidentProfileLogic {
     }
 
     /**
-     * Removes a favor from resident. Favor is no longer in DB
+     * Removes a favor from resident.Favor is no longer in DB
      *
      * @param residentID Id from resident
      * @param neighId ID from parent neighborhood
      * @param favorId Id from favor
+     * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException
      */
     public void removeFavor(Long residentID, Long favorId, Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Deleting favor with id {0} associated to resident with id {1}, from neighbothood {2}", new Object[]{favorId, residentID, neighId});

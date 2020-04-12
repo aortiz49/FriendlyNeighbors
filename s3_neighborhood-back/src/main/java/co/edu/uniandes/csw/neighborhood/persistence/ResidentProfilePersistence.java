@@ -68,7 +68,7 @@ public class ResidentProfilePersistence {
         ResidentProfileEntity e = em.find(ResidentProfileEntity.class, residentId);
 
         if (e != null) {
-            if (e.getNeighborhood() == null || e.getNeighborhood().getId() != neighborhood_id) {
+            if (e.getNeighborhood() == null || !e.getNeighborhood().getId().equals(neighborhood_id)) {
                 throw new RuntimeException("Resident " + residentId + " does not belong to neighborhood " + neighborhood_id);
             }
         }

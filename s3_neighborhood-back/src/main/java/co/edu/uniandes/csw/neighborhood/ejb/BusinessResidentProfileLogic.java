@@ -101,15 +101,15 @@ public class BusinessResidentProfileLogic {
      * @throws BusinessLogicException if the business doesn't exist
      */
     public BusinessEntity getBusiness(Long pNeighborhoodId,
-            Long pResidentId, Long pBusinessId) throws BusinessLogicException {
+            Long pOwnerId, Long pBusinessId) throws BusinessLogicException {
 
         // logs start
         LOGGER.log(Level.INFO, "Finding business with id {0} associated to "
                 + "resident with id {1}, from neighbothood {2}",
-                new Object[]{pBusinessId, pResidentId, pNeighborhoodId});
+                new Object[]{pBusinessId, pOwnerId, pNeighborhoodId});
         // gets all the businesses in a residentProfile
         List<BusinessEntity> businesses = residentProfilePersistence.find(
-                pResidentId, pNeighborhoodId).getBusinesses();
+                pOwnerId, pNeighborhoodId).getBusinesses();
 
         // the busines that was found
         int index = businesses.indexOf(businessPersistence.find(pNeighborhoodId, pBusinessId));
@@ -117,7 +117,7 @@ public class BusinessResidentProfileLogic {
         // logs end
         LOGGER.log(Level.INFO, "Finished searching for business with id {0} associated to "
                 + "resident with id {1}, from neighbothood {2}",
-                new Object[]{pBusinessId, pResidentId, pNeighborhoodId});
+                new Object[]{pBusinessId, pOwnerId, pNeighborhoodId});
 
         // if the index doesn't exist
         if (index == -1) {
@@ -126,12 +126,10 @@ public class BusinessResidentProfileLogic {
 
         return businesses.get(index);
     }
-    
-    //////
-    
+
+    //////   
     // TODO: Update
     /////
-
     /**
      * Replaces businesses associated with resident
      *
@@ -139,9 +137,10 @@ public class BusinessResidentProfileLogic {
      * @param pOwnerId the id of the business owner
      * @param pBusinessList the list of associated businesses
      *
-     * @return A new busines collection associated to a resident
+     * @return A new business collection associated to a resident
      */
-    public List<BusinessEntity> replaceBusinesses(Long pNeighborhoodId, Long pOwnerId, List<BusinessEntity> pBusinessList) {
+    public List<BusinessEntity> replaceBusinesses(Long pNeighborhoodId, Long pOwnerId,
+            List<BusinessEntity> pBusinessList) {
         LOGGER.log(Level.INFO, "Replacing businesses owned by resident with id {0} from "
                 + "neighborhood {1}", new Object[]{pOwnerId, pNeighborhoodId});
 
@@ -179,10 +178,11 @@ public class BusinessResidentProfileLogic {
      * @param pNeighborhoodId the id of neighborhood the business is in
      * @param pOwnerId the id of the business owner
      * @param pBusinessId the id of the associated businesses
+     * @throws BusinessLogicException if the business to delete doesn't exist
      */
-    public void removeBusiness(Long pNeighborhoodId, Long pOwnerId, Long pBusinessId) 
+    public void removeBusiness(Long pNeighborhoodId, Long pOwnerId, Long pBusinessId)
             throws BusinessLogicException {
-        
+
         LOGGER.log(Level.INFO, "Deleting business with id {0} associated to resident with id {1}, "
                 + "from neighborhood {2}", new Object[]{pBusinessId, pOwnerId, pNeighborhoodId});
 

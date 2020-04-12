@@ -155,9 +155,9 @@ public class BusinessResidentProfileLogicTest {
         // creates 3 random residentProfiles
         for (int i = 0; i < 3; i++) {
             ResidentProfileEntity res = factory.manufacturePojo(ResidentProfileEntity.class);
-            
+
             res.setNeighborhood(neighborhood);
-            
+
             em.persist(res);
             testPeeps.add(res);
         }
@@ -165,7 +165,7 @@ public class BusinessResidentProfileLogicTest {
         // creates 3 random businesses
         for (int i = 0; i < 3; i++) {
             BusinessEntity buss = factory.manufacturePojo(BusinessEntity.class);
-            
+
             buss.setNeighborhood(neighborhood);
             em.persist(buss);
             testJoints.add(buss);
@@ -180,19 +180,20 @@ public class BusinessResidentProfileLogicTest {
 // Tests
 //===================================================
 
-//    /**
-//     * Tests the consultation of all business entities associated with  residentProfile.
-//     */
-//    @Test
-//    public void getBusinessesTest() {
-//        List<BusinessEntity> list = businessResidentProfileLogic.getBusinesses(testPeeps.get(0).getId());
-//
-//        // checks that there are two businesses associated to the residentProfile
-//        Assert.assertEquals(2, list.size());
-//
-//        // checks that the name of the associated residentProfile matches
-//        Assert.assertEquals(list.get(0).getOwner().getName(), testPeeps.get(0).getName());
-//    }
+    /**
+     * Tests the consultation of all business entities associated with residentProfile.
+     */
+    @Test
+    public void getBusinessesTest() {
+        List<BusinessEntity> list = businessResidentProfileLogic.
+                getBusinesses(neighborhood.getId(), testPeeps.get(0).getId());
+
+        // checks that there are two businesses associated to the residentProfile
+        Assert.assertEquals(2, list.size());
+        // checks that the name of the associated residentProfile matches
+        Assert.assertEquals(list.get(0).getOwner().getName(), testPeeps.get(0).getName());
+    }
+
     /**
      * Tests the consultation of a business entity associated with residentProfile.
      *
@@ -209,29 +210,31 @@ public class BusinessResidentProfileLogicTest {
 
         // get the business from the residentProfile
         BusinessEntity response = businessResidentProfileLogic.getBusiness(
-                neighborhood.getId(),residentProfile.getId(), business.getId());
+                neighborhood.getId(), residentProfile.getId(), business.getId());
 
         Assert.assertEquals(business.getId(), response.getId());
 
     }
 
-//    /**
-//     * Tests the removal of a business from the residentProfile. 
-//     */
-//    @Test
-//    public void removeBusinessTest() {
-//        // gets the first residentProfile from the list. 
-//        // (Uses em.find because the persisted residentProfile contains the added businesses)
-//        ResidentProfileEntity residentProfile = em.find(ResidentProfileEntity.class,testPeeps.get(0).getId());
-//        
-//        // get the first associated business
-//        BusinessEntity business = testJoints.get(0);
-//        
-//        // gets the list of businesses in the residentProfile
-//        List<BusinessEntity> list = em.find(ResidentProfileEntity.class, residentProfile.getId()).getBusinesses();
-//        
-//        businessResidentProfileLogic.removeBusiness(residentProfile.getId(), business.getId());
-//        Assert.assertEquals(1, list.size());
-//
-//    }
+    /**
+     * Tests the removal of a business from the residentProfile.
+     *
+     * @throws BusinessLogicException if cannot delete the business
+     */
+    @Test
+    public void removeBusinessTest() throws BusinessLogicException {
+        // gets the first residentProfile from the list. 
+        // (Uses em.find because the persisted residentProfile contains the added businesses)
+        ResidentProfileEntity residentProfile = em.find(ResidentProfileEntity.class, testPeeps.get(0).getId());
+
+        // get the first associated business
+        BusinessEntity business = testJoints.get(0);
+
+        // gets the list of businesses in the residentProfile
+        List<BusinessEntity> list = em.find(ResidentProfileEntity.class, residentProfile.getId()).getBusinesses();
+
+        businessResidentProfileLogic.removeBusiness(neighborhood.getId(), residentProfile.getId(), business.getId());
+        Assert.assertEquals(1, list.size());
+
+    }
 }
