@@ -85,7 +85,7 @@ public class BusinessLogic {
      * Creates and persists a new business
      *
      * @param pNeighborhoodId the id of the neighborhood containing the business
-     * @param pBusinessOwner the id of the business owner
+     * @param pOwnerId the id of the business owner
      * @param pBusinessEntity the entity of type Business of the new business to be persisted
      *
      * @return the business entity after it is persisted
@@ -232,7 +232,7 @@ public class BusinessLogic {
     public void deleteBusiness(Long pNeighborhoodId, Long pBusinessId) {
         LOGGER.log(Level.INFO, "Begin the delete process for business with id = {0}", pBusinessId);
 
-        if (businessPersistence.find(pNeighborhoodId, pBusinessId).getOwner() != null) {
+        if (businessPersistence.find(pNeighborhoodId, pBusinessId)!= null) {
             businessPersistence.delete(pNeighborhoodId, pBusinessId);
         }
         LOGGER.log(Level.INFO, "End the delete process for business with id = {0}", pBusinessId);

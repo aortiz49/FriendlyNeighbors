@@ -37,7 +37,7 @@ import javax.persistence.TypedQuery;
 
 /**
  * Class that manages the persistence for the Business. It connects via the Entity Manager in
- * javax.persistance with SQL database.
+ * the persistence with SQL database.
  *
  * @author aortiz49
  */
@@ -59,9 +59,9 @@ public class BusinessPersistence {
     @PersistenceContext(unitName = "NeighborhoodPU")
     protected EntityManager em;
 
-    //===================================================
-    // CRUD Methods
-    //===================================================
+//===================================================
+// CRUD Methods
+//===================================================
     /**
      * Persists a business in the database.
      *
@@ -119,8 +119,10 @@ public class BusinessPersistence {
         BusinessEntity foundbusiness = em.find(BusinessEntity.class, pBusinessId);
 
         if (foundbusiness != null) {
-            if (foundbusiness.getNeighborhood() == null || foundbusiness.getNeighborhood().getId() != pNeighborhoodId) {
-                throw new RuntimeException("Business " + pBusinessId + " does not belong to neighborhood " + pNeighborhoodId);
+            if (foundbusiness.getNeighborhood() == null || 
+                    !foundbusiness.getNeighborhood().getId().equals(pNeighborhoodId)) {
+                throw new RuntimeException("Business " + pBusinessId + " does not belong to "
+                        + "neighborhood " + pNeighborhoodId);
             }
         }
 
@@ -130,13 +132,16 @@ public class BusinessPersistence {
     /**
      * Finds a business by name.
      *
-     * @param pName the name of the business to
+     * @param pName the name of the business to find
+     * 
      * @return null if the business doesn't exist. If the business exists, return the first one
      */
     public BusinessEntity findByName(String pName) {
         LOGGER.log(Level.INFO, "Consulting business by name ", pName);
 
-        // creates a query to search for books with the name given by the parameter. ":pName" is a placeholder that must be replaced
+        // creates a query to search for books with the name given by the parameter. 
+        // ":pName" is a placeholder that must be replaced
+        
         TypedQuery query = em.createQuery("Select e From BusinessEntity e where e.name = :pName", BusinessEntity.class);
 
         // the "pName" placeholder is replaced with the name of the parameter

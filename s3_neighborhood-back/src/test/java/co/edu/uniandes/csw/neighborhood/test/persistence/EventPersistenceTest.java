@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2019 Universidad de los Andes - ISIS2603
+Copyright (c) 2020 Universidad de los Andes - ISIS2603
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.test.persistence;
+//===================================================
+// Imports
+//===================================================
 
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
+import co.edu.uniandes.csw.neighborhood.entities.LocationEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.persistence.EventPersistence;
 import java.util.ArrayList;
@@ -47,30 +51,52 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 /**
  * Persistence test for Event
  *
- * @author albayona
+ * @author aortiz49
  */
 @RunWith(Arquillian.class)
 public class EventPersistenceTest {
+//===================================================
+// Attributes
+//===================================================
 
+    /**
+     * Injected persistence dependence for the tests.
+     */
     @Inject
     private EventPersistence eventPersistence;
 
+    /**
+     * Entity manager for the tests.
+     */
     @PersistenceContext
     private EntityManager em;
 
+    /**
+     * Injected user transaction for the tests.
+     */
     @Inject
     UserTransaction utx;
 
+    /**
+     * The neighborhood where the event takes place.
+     */
     NeighborhoodEntity neighborhood;
 
-    ResidentProfileEntity resident;
+    /**
+     * The event host.
+     */
+    ResidentProfileEntity host;
+
+    /**
+     * The event location.
+     */
+    LocationEntity location;
 
     private List<EventEntity> data = new ArrayList<>();
 
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
-     * contains classes, DB descriptor and beans.xml file for dependencies
-     * injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
+     * descriptor and beans.xml file for dependencies injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -114,20 +140,33 @@ public class EventPersistenceTest {
      */
     private void insertData() {
 
+        // creates a factory to generate java objects
         PodamFactory factory = new PodamFactoryImpl();
 
+        // creates a random neighborhood
         neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+
+        // persists the neighborhood
         em.persist(neighborhood);
 
-        resident = factory.manufacturePojo(ResidentProfileEntity.class);
-        
-        resident.setNeighborhood(neighborhood);
-        em.persist(resident);
-        
+        // creates a random host
+        host = factory.manufacturePojo(ResidentProfileEntity.class);
+        host.setNeighborhood(neighborhood);
+
+        // perist the host
+        em.persist(host);
+
+        // creates a random location
+        location = factory.manufacturePojo(LocationEntity.class);
+        location.setNeighborhood(neighborhood);
+
+        // persist the location
+        em.persist(location);
 
         for (int i = 0; i < 3; i++) {
             EventEntity entity = factory.manufacturePojo(EventEntity.class);
-            entity.setHost(resident);
+            entity.setHost(host);
+            entity.setLocation(location);
 
             em.persist(entity);
             data.add(entity);
@@ -140,7 +179,11 @@ public class EventPersistenceTest {
     @Test
     public void createEventTest() {
         PodamFactory factory = new PodamFactoryImpl();
+
+        // creates a random event
         EventEntity newEntity = factory.manufacturePojo(EventEntity.class);
+
+        // persists the event
         EventEntity result = eventPersistence.create(newEntity);
 
         Assert.assertNotNull(result);
@@ -178,9 +221,13 @@ public class EventPersistenceTest {
     @Test
     public void getResidentTest() {
         EventEntity entity = data.get(0);
-        EventEntity newEntity = eventPersistence.find(entity.getId(), neighborhood.getId());
+        EventEntity newEntity = eventPersistence.find(neighborhood.getId(), entity.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getDatePosted(), newEntity.getDatePosted());
+        Assert.assertEquals(entity.getDateOfEvent(), newEntity.getDateOfEvent());
+        Assert.assertEquals(entity.getStartTime(), newEntity.getStartTime());
+        Assert.assertEquals(entity.getEndTime(), newEntity.getEndTime());
+        Assert.assertEquals(entity.getDescription(), newEntity.getDescription());
         Assert.assertEquals(entity.getTitle(), newEntity.getTitle());
     }
 
@@ -190,7 +237,7 @@ public class EventPersistenceTest {
     @Test(expected = RuntimeException.class)
     public void getResidentTestNotBelonging() {
         EventEntity entity = data.get(0);
-        eventPersistence.find(entity.getId(), new Long(10000));
+        eventPersistence.find(new Long(10000), entity.getId());
     }
 
     /**
@@ -203,11 +250,11 @@ public class EventPersistenceTest {
         EventEntity newEntity = factory.manufacturePojo(EventEntity.class);
 
         newEntity.setId(entity.getId());
-        newEntity.setHost(resident);
+        newEntity.setHost(host);
 
-        eventPersistence.update(newEntity, neighborhood.getId());
+        eventPersistence.update(neighborhood.getId(), newEntity);
 
-        EventEntity resp = eventPersistence.find(entity.getId(), neighborhood.getId());
+        EventEntity resp = eventPersistence.find(neighborhood.getId(), entity.getId());
 
         Assert.assertEquals(newEntity.getTitle(), resp.getTitle());
     }
@@ -218,10 +265,11 @@ public class EventPersistenceTest {
     @Test
     public void deleteResidentTest() {
         EventEntity entity = data.get(0);
-        eventPersistence.delete(entity.getId(), neighborhood.getId());
+        eventPersistence.delete(neighborhood.getId(),entity.getId());
         EventEntity deleted = em.find(EventEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
+
     /**
      * Test to consult event by name.
      */

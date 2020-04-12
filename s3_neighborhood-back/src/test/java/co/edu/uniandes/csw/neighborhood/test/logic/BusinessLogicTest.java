@@ -32,9 +32,7 @@ import co.edu.uniandes.csw.neighborhood.entities.BusinessEntity;
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
-import co.edu.uniandes.csw.neighborhood.persistence.BusinessPersistence;
 import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
-import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -72,7 +70,7 @@ public class BusinessLogicTest {
     /**
      * Creates BusinessEntity POJOs.
      */
-    private PodamFactory factory = new PodamFactoryImpl();
+    private final PodamFactory factory = new PodamFactoryImpl();
 
     /**
      * Injects BusinessLogic objects.
@@ -95,7 +93,7 @@ public class BusinessLogicTest {
     /**
      * An array containing the set of data used for the tests.
      */
-    private List<BusinessEntity> data = new ArrayList<>();
+    private final List<BusinessEntity> data = new ArrayList<>();
 
     /**
      * The neighborhood used for the tests.
