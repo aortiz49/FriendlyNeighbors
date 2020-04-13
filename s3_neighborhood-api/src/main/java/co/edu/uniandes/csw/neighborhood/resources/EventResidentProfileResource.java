@@ -103,7 +103,7 @@ public class EventResidentProfileResource {
 
         EventEntity eventEntity = eventLogic.createEvent(
                 pNeighborhoodId, pHostId, event.getLocation().getId(),
-                event);
+                pHostedEvent.toEntity());
 
         EventDetailDTO eventDetailDTO = new EventDetailDTO(
                 eventLogic.getEvent(pNeighborhoodId, eventEntity.getId()));

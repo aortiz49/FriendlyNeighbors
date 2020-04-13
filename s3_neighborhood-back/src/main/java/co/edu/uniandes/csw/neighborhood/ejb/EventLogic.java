@@ -153,7 +153,7 @@ public class EventLogic {
 
         LOGGER.log(Level.INFO, "Begin search for event with Id = {0}", pEventId);
 
-        EventEntity entity = eventPersistence.find(pEventId, pNeighborhoodId);
+        EventEntity entity = eventPersistence.find(pNeighborhoodId,pEventId);
 
         if (entity == null) {
             LOGGER.log(Level.SEVERE, "The event with Id = {0} doesn't exist", pEventId);

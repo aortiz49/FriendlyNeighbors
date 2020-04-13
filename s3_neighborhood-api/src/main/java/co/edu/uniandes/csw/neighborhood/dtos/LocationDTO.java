@@ -11,11 +11,16 @@ import co.edu.uniandes.csw.neighborhood.entities.LocationEntity;
  *
  * @author v.cardonac1
  */
-public class LocationDTO { 
-    
+public class LocationDTO {
+
 //===================================================
 // Attributes
-//===================================================  
+//=================================================== 
+    /**
+     * Represents id for this group
+     */
+    private Long id;
+
     /**
      * Represents the time this location is open from
      */
@@ -50,23 +55,17 @@ public class LocationDTO {
      * Indicates the longitude of this location
      */
     private Double longitude;
-    
-    /**
-     * Represents id for this group
-     */
-    private long id;
-    
+
     /**
      * The neighborhood to which the group belongs to.
      */
     private NeighborhoodDTO neighborhood;
-    
-    
-    public LocationDTO(){
+
+    public LocationDTO() {
     }
-    
-    public LocationDTO(LocationEntity entityLocation){
-        
+
+    public LocationDTO(LocationEntity entityLocation) {
+
         this.address = entityLocation.getAddress();
         this.id = entityLocation.getId();
         this.closeTime = entityLocation.getCloseTime();
@@ -75,12 +74,12 @@ public class LocationDTO {
         this.name = entityLocation.getName();
         this.neighborhood = new NeighborhoodDTO(entityLocation.getNeighborhood());
         this.openTime = entityLocation.getOpenTime();
-        
+
     }
-    
-    public LocationEntity toEntity(){
+
+    public LocationEntity toEntity() {
         LocationEntity locationEntity = new LocationEntity();
-        
+
         locationEntity.setId(getId());
         locationEntity.setAddress(getAddress());
         locationEntity.setCloseTime(getCloseTime());
@@ -88,14 +87,14 @@ public class LocationDTO {
         locationEntity.setLongitude(getLongitude());
         locationEntity.setName(getName());
         locationEntity.setOpenTime(getOpenTime());
-        
-        if(neighborhood != null) locationEntity.setNeighborhood(getNeighborhood().toEntity());
-        
+
+        if (neighborhood != null) {
+            locationEntity.setNeighborhood(getNeighborhood().toEntity());
+        }
+
         return locationEntity;
     }
-    
-    
-    
+
     /**
      * @return the openTime
      */
@@ -197,14 +196,14 @@ public class LocationDTO {
     /**
      * @return the id
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
