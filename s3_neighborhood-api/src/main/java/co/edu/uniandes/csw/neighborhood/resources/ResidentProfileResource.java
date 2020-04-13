@@ -243,12 +243,12 @@ public class ResidentProfileResource {
 
     /**
      *
-     * Connects /owners path with /businesses path which depends on the resident resource, by
+     * Connects /residents path with /businesses path which depends on the resident resource, by
      * redirecting to the service managing the URL segment in charge of the businesses
      *
      * @param residentsId id from resident from which the resource is being accessed
      * @param neighId parent neighborhood
-     * @return groups resource from the specified resident
+     * @return business resource from the specified resident
      */
     @Path("{residentsId: \\d+}/businesses")
     public Class<BusinessResidentProfileResource> getBusinessResidentProfileResource(@PathParam("residentsId") Long residentsId, @PathParam("neighborhoodId") Long neighId) {
@@ -256,6 +256,23 @@ public class ResidentProfileResource {
             throw new WebApplicationException("Resource /residents/" + residentsId + " does not exist.", 404);
         }
         return BusinessResidentProfileResource.class;
+    }
+
+    /**
+     *
+     * Connects /residents path with /events path which depends on the resident resource, by
+     * redirecting to the service managing the URL segment in charge of the event.
+     *
+     * @param residentsId id from resident from which the resource is being accessed
+     * @param neighId parent neighborhood
+     * @return event resource from the specified resident
+     */
+    @Path("{residentsId: \\d+}/events")
+    public Class<EventResidentProfileResource> getEventResidentProfileResource(@PathParam("residentsId") Long residentsId, @PathParam("neighborhoodId") Long neighId) {
+        if (residentLogic.getResident(residentsId, neighId) == null) {
+            throw new WebApplicationException("Resource /residents/" + residentsId + " does not exist.", 404);
+        }
+        return EventResidentProfileResource.class;
     }
 
 }
