@@ -258,6 +258,4 @@ public class ResidentProfileResource {
         return BusinessResidentProfileResource.class;
     }
 
-
-
 }

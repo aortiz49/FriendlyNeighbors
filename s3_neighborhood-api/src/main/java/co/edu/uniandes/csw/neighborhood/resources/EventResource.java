@@ -43,7 +43,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
 /**
- * class that represents the "events" resource.
+ * Class that represents the "events" resource.
  *
  * @author aortiz49
  */
@@ -60,6 +60,9 @@ public class EventResource {
      */
     private static final Logger LOGGER = Logger.getLogger(FavorResource.class.getName());
 
+    /**
+     * Injects event logic dependencies.
+     */
     @Inject
     private EventLogic eventLogic;
 
@@ -219,6 +222,5 @@ public class EventResource {
 
         return list;
     }
-    
-    
+
 }
