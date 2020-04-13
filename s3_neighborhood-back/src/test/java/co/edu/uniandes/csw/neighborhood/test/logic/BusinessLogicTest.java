@@ -153,7 +153,6 @@ public class BusinessLogicTest {
      */
     private void clearData() {
         em.createQuery("delete from BusinessEntity").executeUpdate();
-        em.createQuery("delete from NeighborhoodEntity").executeUpdate();
 
     }
 

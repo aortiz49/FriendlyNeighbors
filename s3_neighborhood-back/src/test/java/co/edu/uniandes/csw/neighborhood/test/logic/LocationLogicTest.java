@@ -120,7 +120,6 @@ public class LocationLogicTest {
      */
     private void clearData() {
         em.createQuery("delete from LocationEntity").executeUpdate();
-        em.createQuery("delete from NeighborhoodEntity").executeUpdate();
 
     }
 
