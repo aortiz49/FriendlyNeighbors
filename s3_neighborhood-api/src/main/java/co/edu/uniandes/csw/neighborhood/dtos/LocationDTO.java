@@ -37,12 +37,12 @@ public class LocationDTO {
     private String closeTime;
 
     /**
-     * Indicates if this this location is avalaible
+     * Indicates if this this location is available
      */
     private Boolean available;
 
     /**
-     * Indicates the latitute of this location
+     * Indicates the latitude of this location
      */
     private Double latitude;
 
@@ -69,7 +69,6 @@ public class LocationDTO {
         
         this.address = entityLocation.getAddress();
         this.id = entityLocation.getId();
-        this.available = entityLocation.getAvailable();
         this.closeTime = entityLocation.getCloseTime();
         this.latitude = entityLocation.getLatitude();
         this.longitude = entityLocation.getLongitude();
@@ -84,7 +83,6 @@ public class LocationDTO {
         
         locationEntity.setId(getId());
         locationEntity.setAddress(getAddress());
-        locationEntity.setAvailable(getAvailable());
         locationEntity.setCloseTime(getCloseTime());
         locationEntity.setLatitude(getLatitude());
         locationEntity.setLongitude(getLongitude());

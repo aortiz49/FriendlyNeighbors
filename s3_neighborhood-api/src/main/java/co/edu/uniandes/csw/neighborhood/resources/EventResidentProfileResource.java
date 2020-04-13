@@ -99,15 +99,17 @@ public class EventResidentProfileResource {
         LOGGER.log(Level.INFO, "Creating event under a host from resource: input: "
                 + "residentsId {0} , eventId {1}", new Object[]{pHostId, pHostedEvent.getId()});
 
+        EventEntity event = pHostedEvent.toEntity();
+
         EventEntity eventEntity = eventLogic.createEvent(
-                pNeighborhoodId, pHostId, pHostedEvent.getLocation().getId(),
-                pHostedEvent.toEntity());
+                pNeighborhoodId, pHostId, event.getLocation().getId(),
+                event);
 
         EventDetailDTO eventDetailDTO = new EventDetailDTO(
                 eventLogic.getEvent(pNeighborhoodId, eventEntity.getId()));
 
         LOGGER.log(Level.INFO, "Finished creating event under a resident from resource: input: "
-                + "residentsId {0} , eventId {1}", new Object[]{pHostId, pHostedEvent.getId()});
+                + "residentsId {0} , eventId {1}", new Object[]{pHostId, pHostedEvent.getTitle()});
 
         return eventDetailDTO;
     }

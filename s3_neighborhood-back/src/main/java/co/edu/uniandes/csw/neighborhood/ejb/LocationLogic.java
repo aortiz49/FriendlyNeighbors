@@ -253,7 +253,7 @@ public class LocationLogic {
         Date open = null;
         Date close = null;
 
-        // 6.Open and closing times must be legal hh:mm aa format
+        // 6. Open and closing times must be legal hh:mm aa format
         try {
             open = timeFormat.parse(openingTime);
             close = timeFormat.parse(closingTime);

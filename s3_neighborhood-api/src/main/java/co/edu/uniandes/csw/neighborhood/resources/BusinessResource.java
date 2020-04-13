@@ -45,7 +45,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * Class that represents the "businesses" resource.
  *
- * @author aortiz93
+ * @author aortiz49
  */
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -142,7 +142,7 @@ public class BusinessResource {
         pBusiness.setId(pBusinessId);
 
         if (businessLogic.getBusiness(pNeighborhoodId, pBusinessId) == null) {
-            throw new WebApplicationException("Resource /neighborhoods/" + pBusinessId
+            throw new WebApplicationException("Resource /businesses/" + pBusinessId
                     + " does not exist.", 404);
         }
 
@@ -171,7 +171,7 @@ public class BusinessResource {
         LOGGER.log(Level.INFO, "businessResource deleteBusiness: input: {0}", pBusinessId);
 
         if (businessLogic.getBusiness(pNeighborhoodId, pBusinessId) == null) {
-            throw new WebApplicationException("The resource /neighbors/" + pBusinessId + " does not exist.", 404);
+            throw new WebApplicationException("The resource /businesses/" + pBusinessId + " does not exist.", 404);
         }
 
         businessLogic.deleteBusiness(pNeighborhoodId, pBusinessId);
