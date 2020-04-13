@@ -1,10 +1,30 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+MIT License
+
+Copyright (c) 2017 Universidad de los Andes - ISIS2603
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.test.persistence;
+
 import co.edu.uniandes.csw.neighborhood.entities.LocationEntity;
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.persistence.LocationPersistence;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +48,11 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
  *
  * @author v.cardonac1
  */
- @RunWith(Arquillian.class)
+@RunWith(Arquillian.class)
 public class LocationPersistenceTest {
 
     @Inject
     private LocationPersistence locationPersistence;
-    
 
     @PersistenceContext
     private EntityManager em;
@@ -43,10 +62,11 @@ public class LocationPersistenceTest {
 
     private List<LocationEntity> data = new ArrayList<>();
 
+    private NeighborhoodEntity neighborhood;
+
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara.
-     * jar contains classes, DB descriptor and
-     * beans.xml file for dependencies injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
+     * descriptor and beans.xml file for dependencies injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -58,7 +78,7 @@ public class LocationPersistenceTest {
     }
 
     /**
-     * Initial test configuration. 
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -79,7 +99,7 @@ public class LocationPersistenceTest {
     }
 
     /**
-     * Clears tables involved in tests 
+     * Clears tables involved in tests
      */
     private void clearData() {
         em.createQuery("delete from LocationEntity").executeUpdate();
@@ -90,11 +110,20 @@ public class LocationPersistenceTest {
      */
     private void insertData() {
         PodamFactory factory = new PodamFactoryImpl();
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        neighborhood.setName("West Park Village");
+        em.persist(neighborhood);
+
         for (int i = 0; i < 3; i++) {
             LocationEntity entity = factory.manufacturePojo(LocationEntity.class);
+            entity.setNeighborhood(neighborhood);
 
             em.persist(entity);
             data.add(entity);
+
+            // add the locations to the neighborhood
+            neighborhood.getPlaces().add(data.get(i));
+
         }
     }
 
@@ -113,13 +142,13 @@ public class LocationPersistenceTest {
 
         Assert.assertEquals(newEntity.getAddress(), entity.getAddress());
     }
-    
+
     /**
      * Test for retrieving all Locations from DB.
      */
-        @Test
+    @Test
     public void findAllTest() {
-        List<LocationEntity> list = locationPersistence.findAll();
+        List<LocationEntity> list = locationPersistence.findAll(neighborhood.getId());
         Assert.assertEquals(data.size(), list.size());
         for (LocationEntity ent : list) {
             boolean found = false;
@@ -131,20 +160,20 @@ public class LocationPersistenceTest {
             Assert.assertTrue(found);
         }
     }
-    
+
     /**
      * Test for a query about a Location.
      */
     @Test
     public void getLocationTest() {
         LocationEntity entity = data.get(0);
-        LocationEntity newEntity = locationPersistence.find(entity.getId());
+        LocationEntity newEntity = locationPersistence.find(neighborhood.getId(), entity.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getName(), newEntity.getName());
         Assert.assertEquals(entity.getAddress(), newEntity.getAddress());
     }
 
-     /**
+    /**
      * Test for updating a Location.
      */
     @Test
@@ -155,23 +184,22 @@ public class LocationPersistenceTest {
 
         newEntity.setId(entity.getId());
 
-        locationPersistence.update(newEntity);
+        locationPersistence.update(neighborhood.getId(), newEntity);
 
         LocationEntity resp = em.find(LocationEntity.class, entity.getId());
 
         Assert.assertEquals(newEntity.getName(), resp.getName());
     }
-    
-     /**
+
+    /**
      * Test for deleting a Location.
      */
     @Test
     public void deleteLocationTest() {
         LocationEntity entity = data.get(0);
-        locationPersistence.delete(entity.getId());
+        locationPersistence.delete(neighborhood.getId(), entity.getId());
         LocationEntity deleted = em.find(LocationEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
-     
-    
+
 }

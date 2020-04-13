@@ -55,8 +55,7 @@ public class BusinessEntity extends BaseEntity implements Serializable {
     @PodamExclude
     @ManyToOne
     private ResidentProfileEntity owner;
-
-
+    
 //===================================================
 // Attributes
 //===================================================

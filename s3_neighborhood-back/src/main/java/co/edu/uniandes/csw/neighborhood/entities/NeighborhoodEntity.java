@@ -44,16 +44,10 @@ import uk.co.jemos.podam.common.PodamExclude;
  */
 @Entity
 public class NeighborhoodEntity extends BaseEntity implements Serializable {
-    
-    //===================================================
-    // Attributes
-    //===================================================
-
 
 //===================================================
 // Relations
 //===================================================
-
     /**
      * The businesses in the neighborhood.
      */

@@ -108,7 +108,7 @@ public class EventLogic {
         pEventEntity.setHost(host);
 
         // check the event location
-        LocationEntity location = locationPersistence.find(pLocationId);
+        LocationEntity location = locationPersistence.find(pNeighborhoodId,pLocationId);
 
         if (location == null) {
             throw new BusinessLogicException("There is no location!");

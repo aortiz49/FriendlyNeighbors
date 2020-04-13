@@ -153,6 +153,8 @@ public class BusinessLogicTest {
      */
     private void clearData() {
         em.createQuery("delete from BusinessEntity").executeUpdate();
+        em.createQuery("delete from NeighborhoodEntity").executeUpdate();
+
     }
 
     /**
@@ -237,7 +239,7 @@ public class BusinessLogicTest {
         NeighborhoodEntity neigh = data.get(0).getNeighborhood();
         neigh.setId(11123L);
         newEntity.setNeighborhood(neigh);
-        
+
         // persist the created business, should not finish
         businessLogic.createBusiness(9999L,
                 data.get(0).getOwner().getId(), newEntity);
@@ -289,7 +291,7 @@ public class BusinessLogicTest {
     @Test
     public void getBusinessTest() {
         BusinessEntity entity = data.get(0);
-        BusinessEntity resultEntity = businessLogic.getBusiness(neighborhood.getId(),entity.getId());
+        BusinessEntity resultEntity = businessLogic.getBusiness(neighborhood.getId(), entity.getId());
         Assert.assertNotNull(resultEntity);
         Assert.assertEquals(entity.getId(), resultEntity.getId());
         Assert.assertEquals(entity.getName(), resultEntity.getName());
@@ -322,13 +324,13 @@ public class BusinessLogicTest {
 
         // set the id of the random business to the id of the first one from the data set
         newEntity.setId(entity.getId());
-      
+
         // sets the opening time
         newEntity.setOpeningTime("00:00 AM");
 
         // sets the closing time
         newEntity.setClosingTime("23:59 PM");
-        
+
         // sets the owner
         newEntity.setOwner(owner);
 

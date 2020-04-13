@@ -43,11 +43,6 @@ public class LocationEntity extends BaseEntity implements Serializable {
 // Attributes
 //===================================================  
     /**
-     * Represents the time this location is open from
-     */
-    private String openTime;
-
-    /**
      * Represents the name of this location
      */
     private String name;
@@ -56,6 +51,10 @@ public class LocationEntity extends BaseEntity implements Serializable {
      * Represents the address of this location
      */
     private String address;
+    /**
+     * Represents the time this location is open from
+     */
+    private String openTime;
 
     /**
      * Represents the time this location closed from
@@ -63,12 +62,7 @@ public class LocationEntity extends BaseEntity implements Serializable {
     private String closeTime;
 
     /**
-     * Indicates if this this location is avalaible
-     */
-    private Boolean available;
-
-    /**
-     * Indicates the latitute of this location
+     * Indicates the latitude of this location
      */
     private Double latitude;
 
@@ -133,15 +127,6 @@ public class LocationEntity extends BaseEntity implements Serializable {
      */
     public String getCloseTime() {
         return closeTime;
-    }
-
-    /**
-     * Gets true if this this location is avalaible
-     *
-     * @return true if this this location is avalaible
-     */
-    public Boolean getAvailable() {
-        return available;
     }
 
     /**
@@ -217,15 +202,6 @@ public class LocationEntity extends BaseEntity implements Serializable {
     }
 
     /**
-     * Set true if this this location is avalaible
-     *
-     * @param available if this this location is available
-     */
-    public void setAvailable(Boolean available) {
-        this.available = available;
-    }
-
-    /**
      * Sets the latitude of this location
      *
      * @param latitude the latitude of this location
@@ -261,4 +237,5 @@ public class LocationEntity extends BaseEntity implements Serializable {
         this.events = events;
     }
 
+    //TODO: implement location availablility for events
 }

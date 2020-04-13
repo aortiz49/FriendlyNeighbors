@@ -244,11 +244,9 @@ public class BusinessLogic {
      * @param pNeighborhoodId neighborhood containing the business
      * @param pBusinessEntity business to verify
      *
-     * @return true if the business is valid. False otherwise
      * @throws BusinessLogicException if the business doesn't satisfy the business rules
      */
-    private boolean verifyBusinessRules(BusinessEntity pBusinessEntity, Long pNeighborhoodId) throws BusinessLogicException {
-        boolean valid = true;
+    private void verifyBusinessRules(BusinessEntity pBusinessEntity, Long pNeighborhoodId) throws BusinessLogicException {
 
         NeighborhoodEntity neighborhood = neighborhoodPersistence.find(pNeighborhoodId);
 
@@ -307,6 +305,5 @@ public class BusinessLogic {
             throw new BusinessLogicException("The business opening time must come before the closing time!");
         }
 
-        return valid;
     }
 }
