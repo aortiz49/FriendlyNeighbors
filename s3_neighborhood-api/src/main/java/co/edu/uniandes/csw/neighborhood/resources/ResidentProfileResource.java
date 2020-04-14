@@ -189,6 +189,23 @@ public class ResidentProfileResource {
         }
         return HelperFavorResource.class;
     }
+    
+    /**
+     *
+     * Connects /residents route with /attendedEvents route which are dependent of resident resource,
+     * by redirecting to the service managing the URL segment in charge of the members
+     *
+     * @param residentsId id from resident from which the resource is being accessed
+     * @param neighId parent neighborhood
+     * @return events resource from the specified resident
+     */
+    @Path("{attendeeId: \\d+}/attendedEvents")
+    public Class<AttendeeEventsResource> getAttendeeEventsResource(@PathParam("attendeeId") Long residentsId, @PathParam("neighborhoodId") Long neighId) {
+        if (residentLogic.getResident(residentsId, neighId) == null) {
+            throw new WebApplicationException("Resource /residents/" + residentsId + " does not exist.", 404);
+        }
+        return AttendeeEventsResource.class;
+    }
 
     /**
      *

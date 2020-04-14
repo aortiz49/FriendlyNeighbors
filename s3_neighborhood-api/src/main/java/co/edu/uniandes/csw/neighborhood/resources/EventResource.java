@@ -201,6 +201,29 @@ public class EventResource {
 
     }
 
+    /**
+     * Connects the /events path to the /attendees path which.
+     *
+     * @param pNeighborhoodId the neighborhood's id
+     * @param pEventId the event's id
+     *
+     * @return the eventAttendees resource
+     * @throws WebApplicationException {@link WebApplicationExceptionMapper} if a resource is not
+     * found.
+     */
+    @Path("{eventId: \\d+}/attendees")
+    public Class<EventAttendeesResource> getEventAttendeesResource(
+            @PathParam("neighborhoodId") Long pNeighborhoodId,
+            @PathParam("eventId") Long pEventId) throws WebApplicationException {
+
+        if (eventLogic.getEvent(pNeighborhoodId, pEventId) == null) {
+            throw new WebApplicationException("Resource /events/" + pEventId
+                    + " does not exist.", 404);
+        }
+        
+        return EventAttendeesResource.class;
+    }
+
 //===================================================
 // Methods
 //===================================================

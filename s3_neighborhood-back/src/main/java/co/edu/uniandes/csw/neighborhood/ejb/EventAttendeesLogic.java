@@ -40,9 +40,8 @@ public class EventAttendeesLogic {
      * @param eventId id from event entity
      * @param attendeeId id from attendee
      * @return associated attendee
-     * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException
      */
-    public ResidentProfileEntity addAttendee(Long neighId, Long eventId, Long attendeeId) throws BusinessLogicException {
+    public ResidentProfileEntity associateAttendeeToEvent(Long neighId, Long eventId, Long attendeeId) {
         LOGGER.log(Level.INFO, "Initiating association between attendee with id {0} and  event with id {1}, from neighbothood {2}", new Object[]{attendeeId, eventId, neighId});
         EventEntity eventEntity = eventPersistence.find(neighId,eventId);
         ResidentProfileEntity attendeeEntity = attendeePersistence.find(attendeeId, neighId);

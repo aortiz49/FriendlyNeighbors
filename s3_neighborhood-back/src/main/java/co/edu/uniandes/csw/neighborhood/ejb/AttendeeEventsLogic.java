@@ -74,10 +74,8 @@ public class AttendeeEventsLogic {
      * @param pEventId the event's id
      *
      * @return the added event
-     * @throws BusinessLogicException if the event doesn't exist
      */
-    public EventEntity addAttendedEvent(Long pNeighborhoodId, Long pAttendeeId, Long pEventId)
-            throws BusinessLogicException {
+    public EventEntity associateEventToAttendee(Long pNeighborhoodId, Long pAttendeeId, Long pEventId) {
 
         LOGGER.log(Level.INFO, "Begin adding event with id {0} to attendee with id {1}, "
                 + "from neighborhood {2}", new Object[]{pEventId, pAttendeeId, pNeighborhoodId});
