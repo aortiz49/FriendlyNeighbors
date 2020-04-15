@@ -272,7 +272,7 @@ public class EventLogicTest {
     @Test
     public void getEventTest() {
         EventEntity entity = data.get(0);
-        EventEntity resultEntity = eventLogic.getEvent(entity.getId(), neighborhood.getId());
+        EventEntity resultEntity = eventLogic.getEvent(neighborhood.getId(),entity.getId());
         Assert.assertNotNull(resultEntity);
         Assert.assertEquals(entity.getId(), resultEntity.getId());
         Assert.assertEquals(entity.getDescription(), resultEntity.getDescription());
