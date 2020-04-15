@@ -152,7 +152,7 @@ public class ResidentLoginPersistenceTest {
     @Test
     public void getLoginTest() {
         ResidentLoginEntity entity = data.get(0);
-        ResidentLoginEntity newEntity = loginPersistence.find(entity.getId(), neighborhood.getId());
+        ResidentLoginEntity newEntity = loginPersistence.find(neighborhood.getId(),entity.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getUserName(), newEntity.getUserName());
         Assert.assertEquals(entity.getPassword(), newEntity.getPassword());
@@ -170,7 +170,7 @@ public class ResidentLoginPersistenceTest {
 
         newEntity.setId(entity.getId());
 
-        loginPersistence.update(newEntity,neighborhood.getId());
+        loginPersistence.update(neighborhood.getId(),newEntity);
 
         ResidentLoginEntity resp = em.find(ResidentLoginEntity.class, entity.getId());
 
@@ -183,7 +183,7 @@ public class ResidentLoginPersistenceTest {
     @Test
     public void deleteAuthorTest() {
         ResidentLoginEntity entity = data.get(0);
-        loginPersistence.delete(entity.getId(),neighborhood.getId());
+        loginPersistence.delete(neighborhood.getId(),entity.getId());
         ResidentLoginEntity deleted = em.find(ResidentLoginEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }

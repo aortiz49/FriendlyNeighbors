@@ -35,13 +35,14 @@ import javax.inject.Inject;
 import co.edu.uniandes.csw.neighborhood.persistence.*;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentLoginEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 
 /**
- * Class the implements the connection with the businessPersistence for the
- * Business entity.
+ * Class the implements the connection with the businessPersistence for the Business entity.
  *
  * @author albayona
+ * @version 2.0 (Added resident login so that it's mandatory to have before createing a resident)
  */
 @Stateless
 public class ResidentProfileLogic {
@@ -50,9 +51,12 @@ public class ResidentProfileLogic {
 
     @Inject
     private ResidentProfilePersistence persistence;
+
     @Inject
     private NeighborhoodPersistence neighborhoodPersistence;
 
+    @Inject
+    private ResidentLoginPersistence loginPersistence;
 
     /**
      * Creates a resident in persistence
@@ -62,7 +66,7 @@ public class ResidentProfileLogic {
      * @return Persisted entity representing resident
      * @throws BusinessLogicException If a business rule si not met
      */
-    public ResidentProfileEntity createResident(ResidentProfileEntity residentEntity, Long neighId) throws BusinessLogicException {
+    public ResidentProfileEntity createResident(ResidentProfileEntity residentEntity, Long neighId, Long pLoginId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creation process for resident has started");
 
         //1a. E-mail cannot be null 
@@ -75,14 +79,21 @@ public class ResidentProfileLogic {
         }
         verifyBusinessRules(residentEntity);
 
-      
         NeighborhoodEntity persistedNeighborhood = neighborhoodPersistence.find(neighId);
 
-        if(persistedNeighborhood == null)
+        if (persistedNeighborhood == null) {
             throw new BusinessLogicException("The neighborhood must exist");
-        
+        }
+
+        ResidentLoginEntity persistedLogin = loginPersistence.find(neighId, pLoginId);
+
+        if (persistedLogin == null) {
+            throw new BusinessLogicException("The residnet must have a login!");
+        }
+
         residentEntity.setNeighborhood(persistedNeighborhood);
-        
+        residentEntity.setLogin(persistedLogin);
+
         persistence.create(residentEntity);
 
         LOGGER.log(Level.INFO, "Creation process for resident eneded");
@@ -194,7 +205,7 @@ public class ResidentProfileLogic {
         NeighborhoodEntity neighborhood = neighborhoodPersistence.find(neighID);
 
         residentEntity.setNeighborhood(neighborhood);
-        
+
         ResidentProfileEntity modified = persistence.update(residentEntity, neighID);
         LOGGER.log(Level.INFO, "Ended update process for resident with id {0}", residentEntity.getId());
         return modified;

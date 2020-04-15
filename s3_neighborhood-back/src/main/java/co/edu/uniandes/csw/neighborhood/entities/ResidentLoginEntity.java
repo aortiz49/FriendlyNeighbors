@@ -28,6 +28,7 @@ package co.edu.uniandes.csw.neighborhood.entities;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import uk.co.jemos.podam.common.PodamExclude;
 
@@ -84,12 +85,19 @@ public class ResidentLoginEntity extends BaseEntity implements Serializable {
     @OneToOne
     private ResidentProfileEntity resident;
 
+    /**
+     * Indicates the neighborhood this location belongs to
+     */
+    @PodamExclude
+    @ManyToOne
+    private NeighborhoodEntity neighborhood;
+
     private String userName;
 
     private String password;
-    
+
     private String governmentId;
-    
+
     private Boolean isActive;
 
     public ResidentProfileEntity getResident() {
@@ -111,8 +119,13 @@ public class ResidentLoginEntity extends BaseEntity implements Serializable {
     public Boolean isActive() {
         return isActive;
     }
-    
-    
-    
+
+    public NeighborhoodEntity getNeighborhood() {
+        return neighborhood;
+    }
+
+    public void setNeighborhood(NeighborhoodEntity neighborhood) {
+        this.neighborhood = neighborhood;
+    }
 
 }

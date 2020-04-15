@@ -51,10 +51,11 @@ public class FavorHelperLogicTest {
     private FavorEntity favor = new FavorEntity();
     private List<ResidentProfileEntity> data = new ArrayList<>();
 
+    private ResidentLoginEntity login;
+
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
-     * contains classes, DB descriptor and beans.xml file for dependencies
-     * injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
+     * descriptor and beans.xml file for dependencies injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -93,6 +94,7 @@ public class FavorHelperLogicTest {
     private void clearData() {
         em.createQuery("delete from FavorEntity").executeUpdate();
         em.createQuery("delete from ResidentProfileEntity").executeUpdate();
+
     }
 
     /**
@@ -105,13 +107,17 @@ public class FavorHelperLogicTest {
         favor = factory.manufacturePojo(FavorEntity.class);
         favor.setId(1L);
         favor.setCandidates(new ArrayList<>());
-        
-        
-         ResidentProfileEntity author = factory.manufacturePojo(ResidentProfileEntity.class);
-         author.setNeighborhood(neighborhood);
-         em.persist(author);
 
-         
+        login = factory.manufacturePojo(ResidentLoginEntity.class);
+        login.setNeighborhood(neighborhood);
+        em.persist(login);
+
+        ResidentProfileEntity author = factory.manufacturePojo(ResidentProfileEntity.class);
+        author.setNeighborhood(neighborhood);
+        author.setLogin(login);
+
+        em.persist(author);
+
         favor.setAuthor(author);
 
         em.persist(favor);
@@ -122,8 +128,8 @@ public class FavorHelperLogicTest {
             entity.setFavorsToHelp(new ArrayList<>());
             entity.getFavorsToHelp().add(favor);
             entity.setNeighborhood(neighborhood);
-            
-            
+            entity.setLogin(login);
+
             em.persist(entity);
             data.add(entity);
             favor.getCandidates().add(entity);
@@ -141,8 +147,9 @@ public class FavorHelperLogicTest {
         ResidentProfileEntity newResidentProfile = factory.manufacturePojo(ResidentProfileEntity.class);
 
         newResidentProfile.setNeighborhood(neighborhood);
+        newResidentProfile.setLogin(login);
 
-        residentLogic.createResident(newResidentProfile, neighborhood.getId());
+        residentLogic.createResident(newResidentProfile, neighborhood.getId(), login.getId());
 
         ResidentProfileEntity residentEntity = favorResidentProfileLogic.associateHelperToFavor(favor.getId(), newResidentProfile.getId(), neighborhood.getId());
         Assert.assertNotNull(residentEntity);
@@ -157,8 +164,7 @@ public class FavorHelperLogicTest {
     }
 
     /**
-     * Test for getting  collection of resident entities associated with
-     * favor
+     * Test for getting collection of resident entities associated with favor
      */
     @Test
     public void getResidentProfilesTest() {
@@ -172,7 +178,7 @@ public class FavorHelperLogicTest {
     }
 
     /**
-     * Test for getting  resident entity associated with favor
+     * Test for getting resident entity associated with favor
      *
      * @throws BusinessLogicException
      */
@@ -200,9 +206,9 @@ public class FavorHelperLogicTest {
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
             entity.setFavorsToHelp(new ArrayList<>());
             entity.getFavorsToHelp().add(favor);
+            entity.setLogin(login);
 
-         
-            residentLogic.createResident(entity, neighborhood.getId());
+            residentLogic.createResident(entity, neighborhood.getId(), login.getId());
 
             newCollection.add(entity);
         }
@@ -214,7 +220,7 @@ public class FavorHelperLogicTest {
     }
 
     /**
-     * Test for removing  resident from  favor
+     * Test for removing resident from favor
      *
      */
     @Test

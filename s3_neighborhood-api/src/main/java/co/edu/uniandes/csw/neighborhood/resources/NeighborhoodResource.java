@@ -237,6 +237,14 @@ public class NeighborhoodResource {
         return NotificationResource.class;
     }
 
+    @Path("{neighborhoodId: \\d+}/logins")
+    public Class<ResidentLoginResource> getResidentLoginResource(@PathParam("neighborhoodId") Long neighId) {
+        if (logic.getNeighborhood(neighId) == null) {
+            throw new WebApplicationException("Resource /neighborhoods/" + neighId + " does not exist.", 404);
+        }
+        return ResidentLoginResource.class;
+    }
+
     /**
      * Converts an entity list to a DTO list for residents.
      *

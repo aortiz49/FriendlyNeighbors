@@ -64,7 +64,7 @@ public class ResidentProfileDTO implements Serializable {
      * Represents the neighborhood of this resident
      */
     private NeighborhoodDTO neighborhood;
-
+   
     /**
      * Represents the proof of residence for this resident
      */

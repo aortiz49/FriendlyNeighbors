@@ -22,6 +22,7 @@ package co.edu.uniandes.csw.neighborhood.persistence;
 // Imports
 //===================================================
 
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentLoginEntity;
 import java.util.List;
 import java.util.logging.Level;
@@ -32,8 +33,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
- * This class handles persistence for ResidentLoginEntity. The connection is set by Entity Manager from
- * javax.persistence to the SQL DB.
+ * This class handles persistence for ResidentLoginEntity. The connection is set by Entity Manager
+ * from javax.persistence to the SQL DB.
  *
  * @author aortiz49
  */
@@ -42,7 +43,7 @@ public class ResidentLoginPersistence {
 //===================================================
 // Attributes
 //===================================================
-    
+
     private static final Logger LOGGER = Logger.getLogger(ResidentLoginPersistence.class.getName());
 
     @PersistenceContext(unitName = "NeighborhoodPU")
@@ -50,6 +51,7 @@ public class ResidentLoginPersistence {
 //===================================================
 // CRUD methods
 //===================================================
+
     /**
      * Creates a residentLogin within DB
      *
@@ -88,28 +90,32 @@ public class ResidentLoginPersistence {
      * @param pNeighborhoodId: id from parent neighborhood.
      * @return a residentLogin.
      */
-    public ResidentLoginEntity find(Long pResidentLoginId, Long pNeighborhoodId) {
+    public ResidentLoginEntity find(Long pNeighborhoodId, Long pResidentLoginId) {
         LOGGER.log(Level.INFO, "Querying for residentLogin with id '{'0'}'{0} belonging to {1}", new Object[]{pResidentLoginId, pNeighborhoodId});
 
-        ResidentLoginEntity e = em.find(ResidentLoginEntity.class, pResidentLoginId);
-
-        if (e != null) {
-            if (e.getResident() == null || e.getResident().getNeighborhood() == null || !e.getResident().getNeighborhood().getId().equals(pNeighborhoodId)) {
-                throw new RuntimeException("Service " + pResidentLoginId + " does not belong to neighborhood " + pNeighborhoodId);
+        ResidentLoginEntity login = em.find(ResidentLoginEntity.class, pResidentLoginId);
+        
+        if (login != null) {
+            if (login.getNeighborhood() == null
+                    || !login.getNeighborhood().getId().equals(pNeighborhoodId)) {
+                throw new RuntimeException("Login " + pResidentLoginId + " does not belong to "
+                        + "neighborhood " + pNeighborhoodId);
             }
         }
 
-        return e;
+
+        return login;
     }
 
     /**
-     * Updates a residentLogin with the modified residentLogin given by argument belonging to a neighborhood.
+     * Updates a residentLogin with the modified residentLogin given by argument belonging to a
+     * neighborhood.
      *
      * @param residentLoginEntity: the modified residentLogin.
      * @param pNeighborhoodId: id from parent neighborhood.
      * @return the updated residentLogin
      */
-    public ResidentLoginEntity update(ResidentLoginEntity residentLoginEntity, Long pNeighborhoodId) {
+    public ResidentLoginEntity update(Long pNeighborhoodId, ResidentLoginEntity residentLoginEntity) {
         LOGGER.log(Level.INFO, "Updating residentLogin with id={0}", residentLoginEntity.getId());
 
         find(residentLoginEntity.getId(), pNeighborhoodId);
@@ -123,10 +129,10 @@ public class ResidentLoginPersistence {
      * @param pNeighborhoodId: id from parent neighborhood.
      * @param pResidentLoginId: id from residentLogin to be deleted.
      */
-    public void delete(Long pResidentLoginId, Long pNeighborhoodId) {
+    public void delete(Long pNeighborhoodId, Long pResidentLoginId) {
 
         LOGGER.log(Level.INFO, "Deleting residentLogin wit id={0}", pResidentLoginId);
-        ResidentLoginEntity e = find(pResidentLoginId, pNeighborhoodId);
+        ResidentLoginEntity e = find(pNeighborhoodId, pResidentLoginId);
 
         em.remove(e);
     }

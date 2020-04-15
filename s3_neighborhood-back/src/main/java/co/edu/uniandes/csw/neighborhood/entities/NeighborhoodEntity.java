@@ -80,6 +80,14 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
             cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GroupEntity> groups = new ArrayList<>();
 
+    /**
+     * The logins in the neighborhood.
+     */
+    @PodamExclude
+    @OneToMany(mappedBy = "neighborhood", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ResidentLoginEntity> logins = new ArrayList<>();
+
 //===================================================
 // Attributes
 //===================================================  
@@ -173,6 +181,14 @@ public class NeighborhoodEntity extends BaseEntity implements Serializable {
         groups = pGroups;
     }
 
+    public List<ResidentLoginEntity> getLogins() {
+        return logins;
+    }
+
+    public void setLogins(List<ResidentLoginEntity> logins) {
+        this.logins = logins;
+    }
+    
     /**
      * Returns the name of the neighborhood.
      *

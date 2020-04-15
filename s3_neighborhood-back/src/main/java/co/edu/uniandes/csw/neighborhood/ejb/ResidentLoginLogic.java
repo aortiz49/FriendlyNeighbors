@@ -112,7 +112,7 @@ public class ResidentLoginLogic {
 
     public ResidentLoginEntity getResidentLogin(Long pNeighborhoodId, Long id) {
         LOGGER.log(Level.INFO, "Starting querying process for resident login with id {0}", id);
-        ResidentLoginEntity login = persistence.find(id,pNeighborhoodId);
+        ResidentLoginEntity login = persistence.find(pNeighborhoodId,id);
         LOGGER.log(Level.INFO, "Ended querying process for resident login with id {0}", id);
         return login;
     }
@@ -166,7 +166,7 @@ public class ResidentLoginLogic {
             throw new BusinessLogicException("A governmentId has to be specified");
         }
 
-        ResidentLoginEntity modified = persistence.update(pResidentLoginEntity,pNeighborhoodId);
+        ResidentLoginEntity modified = persistence.update(pNeighborhoodId,pResidentLoginEntity);
         LOGGER.log(Level.INFO, "Ended update process for resident login with id {0}", pResidentLoginEntity.getId());
         return modified;
 

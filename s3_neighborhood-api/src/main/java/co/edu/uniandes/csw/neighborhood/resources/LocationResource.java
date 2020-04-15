@@ -83,7 +83,7 @@ public class LocationResource {
      * creating the location
      */
     @POST
-    public LocationDTO createBusiness(@PathParam("neighborhoodId") Long pNeighborhoodId,
+    public LocationDTO createLocation(@PathParam("neighborhoodId") Long pNeighborhoodId,
             LocationDTO pLocation) throws BusinessLogicException {
 
         LOGGER.log(Level.INFO, "Creating Location : input: {0}", pLocation.getName());
