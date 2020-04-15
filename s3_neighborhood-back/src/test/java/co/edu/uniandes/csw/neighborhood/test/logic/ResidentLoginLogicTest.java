@@ -6,7 +6,9 @@
 package co.edu.uniandes.csw.neighborhood.test.logic;
 
 import co.edu.uniandes.csw.neighborhood.ejb.ResidentLoginLogic;
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentLoginEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
 import java.util.ArrayList;
@@ -57,6 +59,10 @@ public class ResidentLoginLogicTest {
      */
     private List<ResidentLoginEntity> data = new ArrayList<>();
 
+    private NeighborhoodEntity neighborhood;
+
+    private ResidentProfileEntity resident;
+
     ///
     @Deployment
     public static JavaArchive createDeployment() {
@@ -99,7 +105,6 @@ public class ResidentLoginLogicTest {
      */
     private void clearData() {
         em.createQuery("delete from ResidentLoginEntity").executeUpdate();
-        em.createQuery("delete from NeighborhoodEntity").executeUpdate();
     }
 
     /**
@@ -109,10 +114,17 @@ public class ResidentLoginLogicTest {
         // creates a factory to generate objects with random data
         PodamFactory factory = new PodamFactoryImpl();
 
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        em.persist(neighborhood);
+
+        resident = factory.manufacturePojo(ResidentProfileEntity.class);
+        resident.setNeighborhood(neighborhood);
+        em.persist(resident);
+
         for (int i = 0; i < 3; i++) {
 
-            ResidentLoginEntity entity
-                    = factory.manufacturePojo(ResidentLoginEntity.class);
+            ResidentLoginEntity entity = factory.manufacturePojo(ResidentLoginEntity.class);
+            entity.setResident(resident);
 
             // add the data to the table
             em.persist(entity);
@@ -134,7 +146,7 @@ public class ResidentLoginLogicTest {
         ResidentLoginEntity result = null;
         try {
             newResidentLogin.setPassword("Password4$");
-            result = residentLoginLogic.createResidentLogin(newResidentLogin);
+            result = residentLoginLogic.createResidentLogin(neighborhood.getId(),resident.getId(),newResidentLogin);
 
         } catch (BusinessLogicException ex) {
             Logger.getLogger(ResidentLoginLogicTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -161,7 +173,7 @@ public class ResidentLoginLogicTest {
 
     @Test
     public void getResidentLoginsTest() {
-        List<ResidentLoginEntity> list = residentLoginLogic.getResidentLogins();
+        List<ResidentLoginEntity> list = residentLoginLogic.getResidentLogins(neighborhood.getId());
         Assert.assertEquals(data.size(), list.size());
         for (ResidentLoginEntity entity : list) {
             boolean found = false;
@@ -177,7 +189,7 @@ public class ResidentLoginLogicTest {
     @Test
     public void getResidentLoginTest() {
         ResidentLoginEntity entity = data.get(0);
-        ResidentLoginEntity resultEntity = residentLoginLogic.getResidentLogin(entity.getId());
+        ResidentLoginEntity resultEntity = residentLoginLogic.getResidentLogin(neighborhood.getId(),entity.getId());
         Assert.assertNotNull(resultEntity);
         Assert.assertEquals(entity.getId(), resultEntity.getId());
         Assert.assertEquals(entity.getUserName(), resultEntity.getUserName());
@@ -191,7 +203,7 @@ public class ResidentLoginLogicTest {
         pojoEntity.setId(entity.getId());
         pojoEntity.setPassword("Password5$");
 
-        residentLoginLogic.updateResidentLogin(pojoEntity);
+        residentLoginLogic.updateResidentLogin(neighborhood.getId(),pojoEntity);
         ResidentLoginEntity resp = em.find(ResidentLoginEntity.class, entity.getId());
         Assert.assertEquals(pojoEntity.getId(), resp.getId());
         Assert.assertEquals(pojoEntity.getUserName(), resp.getUserName());
@@ -201,7 +213,7 @@ public class ResidentLoginLogicTest {
     @Test
     public void deleteResidentLoginTest() throws BusinessLogicException {
         ResidentLoginEntity entity = data.get(1);
-        residentLoginLogic.deleteResidentLogin(entity.getId());
+        residentLoginLogic.deleteResidentLogin(neighborhood.getId(),entity.getId());
         ResidentLoginEntity deleted = em.find(ResidentLoginEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
