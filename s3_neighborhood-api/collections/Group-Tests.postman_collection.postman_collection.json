@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "752bf1bb-7e57-4711-a37e-a21cb89f64fa",
+		"_postman_id": "66e0cdf0-5472-42e4-996a-3717718f11c1",
 		"name": "Group-Tests.postman_collection",
 		"description": "# Introduction\nWhat does your API do?\n\n# Overview\nThings that the developers should know about\n\n# Authentication\nWhat is the preferred way of using the API?\n\n# Error Codes\nWhat errors and status codes can a user expect?\n\n# Rate limit\nIs there a limit to the number of requests an user can send?",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"

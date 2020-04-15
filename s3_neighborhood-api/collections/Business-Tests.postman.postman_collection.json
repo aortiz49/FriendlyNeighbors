@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "fc76d495-c85f-4d56-9310-c3cd8e29c6db",
+		"_postman_id": "905feacc-f071-4bad-b980-c91045c30aec",
 		"name": "Business-Tests.postman",
 		"description": "REST API for businesses.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -64,6 +64,100 @@
 			"response": []
 		},
 		{
+			"name": "Create login 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "06c9413d-afdb-4a58-bea6-08758e2c0b85",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"login1\",data.id);",
+							"tests[\"Successfully created a login.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userName\": \"aortiz49\",\n\t\"password\": \"Password##1\",\n\t\"governmentId\": \"281287337\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{bt_neighborhood1}}/logins",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{bt_neighborhood1}}",
+						"logins"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create login 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "06c9413d-afdb-4a58-bea6-08758e2c0b85",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"login2\",data.id);",
+							"tests[\"Successfully created a login.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userName\": \"aortiz491\",\n\t\"password\": \"Password##1\",\n\t\"governmentId\": \"281287331\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{bt_neighborhood1}}/logins",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{bt_neighborhood1}}",
+						"logins"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Create business owner 1",
 			"event": [
 				{
@@ -85,7 +179,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"8701 Ocean Drive\",\r\n    \"email\": \"my_email99@gmail.com\",\r\n    \"name\": \"Andy Ortiz\",\r\n    \"nickname\": \"renegade\",\r\n    \"phoneNumber\": \"8138410566\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n}",
+					"raw": "{\n    \"login\": {\n        \"id\": {{login1}}\n    },\n    \"address\": \"8701 Ocean Drive\",\n    \"email\": \"my_email99@gmail.com\",\n    \"name\": \"Andy Ortiz\",\n    \"nickname\": \"renegade\",\n    \"phoneNumber\": \"8138410566\",\n    \"preferences\": \"None\",\n    \"proofOfResidence\": \"link\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -134,7 +228,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"1776 Freedom Drive\",\r\n    \"email\": \"his_email99@gmail.com\",\r\n    \"name\": \"Abe Lincoln\",\r\n    \"nickname\": \"honestAbe15\",\r\n    \"phoneNumber\": \"3056786654\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n}",
+					"raw": "{\r\n\t    \"login\": {\r\n        \"id\": {{login2}}\r\n    },\r\n    \"address\": \"1776 Freedom Drive\",\r\n    \"email\": \"his_email99@gmail.com\",\r\n    \"name\": \"Abe Lincoln\",\r\n    \"nickname\": \"honestAbe15\",\r\n    \"phoneNumber\": \"3056786654\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -169,10 +263,7 @@
 					"script": {
 						"id": "5738407f-6145-48d7-97c6-0fd27820a24b",
 						"exec": [
-							"var data = JSON.parse(responseBody);",
-							"postman.setGlobalVariable(\"loc_n1\",data.id);",
-							"tests[\"Business with no name not created.\"] = responseCode.code === 412;",
-							"console.log(data.id);"
+							"tests[\"Business without owner not created.\"] = responseCode.code === 404;"
 						],
 						"type": "text/javascript"
 					}
@@ -1588,6 +1679,78 @@
 						"{{bt_neighborhood1}}",
 						"businesses",
 						"{{bt_b3}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete login 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c634007f-0e0c-4cc4-953f-e8634f154276",
+						"exec": [
+							"tests[\"Successfully deleted login 1\"] = responseCode.code == 204;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{bt_neighborhood1}}/logins/{{login2}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{bt_neighborhood1}}",
+						"logins",
+						"{{login2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete login 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c634007f-0e0c-4cc4-953f-e8634f154276",
+						"exec": [
+							"tests[\"Successfully deleted login 1\"] = responseCode.code == 204;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{bt_neighborhood1}}/logins/{{login1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{bt_neighborhood1}}",
+						"logins",
+						"{{login1}}"
 					]
 				}
 			},

@@ -5,11 +5,11 @@
  */
 package co.edu.uniandes.csw.neighborhood.ejb;
 
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentLoginEntity;
-import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
+import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
 import co.edu.uniandes.csw.neighborhood.persistence.ResidentLoginPersistence;
-import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,16 +28,15 @@ public class ResidentLoginLogic {
     private ResidentLoginPersistence persistence;
 
     @Inject
-    private ResidentProfilePersistence residentProfilePersistence;
+    private NeighborhoodPersistence neighborhoodPersistence;
 
-    public ResidentLoginEntity createResidentLogin(Long pNeighborhoodId, Long pResidentProfileId, ResidentLoginEntity pResidentLoginEntity) throws BusinessLogicException {
+    public ResidentLoginEntity createResidentLogin(Long pNeighborhoodId, ResidentLoginEntity pResidentLoginEntity) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creation process for resident login has started");
 
-        ResidentProfileEntity r = residentProfilePersistence.find(pResidentProfileId, pNeighborhoodId);
+        NeighborhoodEntity neighborhood = neighborhoodPersistence.find(pNeighborhoodId);
 
-        // 1. The service must have a resident
-        if (r == null) {
-            throw new BusinessLogicException("The login must have a resident!");
+        if (neighborhood == null) {
+            throw new BusinessLogicException("A neighborhood has to be specified");
         }
 
         //must have a username
@@ -45,13 +44,13 @@ public class ResidentLoginLogic {
             throw new BusinessLogicException("A username has to be specified");
         }
 
-        for (ResidentLoginEntity resident : persistence.findAll(pNeighborhoodId)) {
+        for (ResidentLoginEntity residentL : persistence.findAll(pNeighborhoodId)) {
             // No two residents with the same userame
-            if (resident.getUserName().equals(pResidentLoginEntity.getUserName())) {
+            if (residentL.getUserName().equals(pResidentLoginEntity.getUserName())) {
                 throw new BusinessLogicException("The username already exists");
             }
             // No two residents with the same government Id
-            if (resident.getGovernmentId().equals(pResidentLoginEntity.getGovernmentId())) {
+            if (residentL.getGovernmentId().equals(pResidentLoginEntity.getGovernmentId())) {
                 throw new BusinessLogicException("There is an user with that government Id");
             }
         }
@@ -88,7 +87,7 @@ public class ResidentLoginLogic {
             throw new BusinessLogicException("A governmentId has to be specified");
         }
 
-        pResidentLoginEntity.setResident(r);
+        pResidentLoginEntity.setNeighborhood(neighborhood);
         persistence.create(pResidentLoginEntity);
         LOGGER.log(Level.INFO, "Creation process for resident login eneded");
 
@@ -98,7 +97,7 @@ public class ResidentLoginLogic {
     public void deleteResidentLogin(Long pNeighborhoodId, Long id) {
 
         LOGGER.log(Level.INFO, "Starting deleting process for resident login with id = {0}", id);
-        persistence.delete(id, pNeighborhoodId);
+        persistence.delete(pNeighborhoodId, id);
         LOGGER.log(Level.INFO, "Ended deleting process for resident login with id = {0}", id);
     }
 
@@ -112,7 +111,7 @@ public class ResidentLoginLogic {
 
     public ResidentLoginEntity getResidentLogin(Long pNeighborhoodId, Long id) {
         LOGGER.log(Level.INFO, "Starting querying process for resident login with id {0}", id);
-        ResidentLoginEntity login = persistence.find(pNeighborhoodId,id);
+        ResidentLoginEntity login = persistence.find(pNeighborhoodId, id);
         LOGGER.log(Level.INFO, "Ended querying process for resident login with id {0}", id);
         return login;
     }
@@ -166,7 +165,7 @@ public class ResidentLoginLogic {
             throw new BusinessLogicException("A governmentId has to be specified");
         }
 
-        ResidentLoginEntity modified = persistence.update(pNeighborhoodId,pResidentLoginEntity);
+        ResidentLoginEntity modified = persistence.update(pNeighborhoodId, pResidentLoginEntity);
         LOGGER.log(Level.INFO, "Ended update process for resident login with id {0}", pResidentLoginEntity.getId());
         return modified;
 

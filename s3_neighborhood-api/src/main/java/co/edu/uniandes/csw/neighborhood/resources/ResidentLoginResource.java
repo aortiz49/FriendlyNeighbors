@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -41,6 +42,34 @@ public class ResidentLoginResource {
 
     @Inject
     private ResidentLoginLogic residentLoginLogic;
+
+    /**
+     *
+     * Creates a new residentLogin with the information received in the body of the petition and returns
+     * a new identical object with and auto-generated id by the database.
+     *
+     * @param pNeighborhoodId the id of the neighborhood containing the businesses
+     * @param pResidentLogin {@link ResidentLoginDTO} the residentLogin to be created
+     *
+     * @return JSON {@link ResidentLoginDTO} the saved residentLogin with auto-generated id
+     * @throws BusinessLogicException {@link BusinessLogicExceptionMapper} if there is an error when
+     * creating the residentLogin
+     */
+    @POST
+    public ResidentLoginDTO createResidentLogin(@PathParam("neighborhoodId") Long pNeighborhoodId,
+            ResidentLoginDTO pResidentLogin) throws BusinessLogicException {
+
+        LOGGER.log(Level.INFO, "Creating ResidentLogin : input: {0}", pResidentLogin.getId());
+
+        ResidentLoginEntity residentLoginEntity = residentLoginLogic.createResidentLogin(pNeighborhoodId,
+                pResidentLogin.toEntity());
+
+        ResidentLoginDTO newResidentLoginDTO = new ResidentLoginDTO(residentLoginLogic.getResidentLogin(
+                pNeighborhoodId, residentLoginEntity.getId()));
+
+        LOGGER.log(Level.INFO, "Finished creating ResidentLogin : input: {0}", pResidentLogin.getId());
+        return newResidentLoginDTO;
+    }
 
     /**
      * Looks for the residentLogin with id received in the URL y returns it.

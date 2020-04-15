@@ -106,6 +106,7 @@ public class ResidentLoginPersistenceTest {
 
         for (int i = 0; i < 3; i++) {
             ResidentLoginEntity entity = factory.manufacturePojo(ResidentLoginEntity.class);
+            entity.setNeighborhood(neighborhood);
             entity.setResident(resident);
             em.persist(entity);
             data.add(entity);

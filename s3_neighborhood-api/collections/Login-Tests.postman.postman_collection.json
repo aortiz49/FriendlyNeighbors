@@ -1,0 +1,137 @@
+{
+	"info": {
+		"_postman_id": "afa62b29-5744-4068-9542-67c676024733",
+		"name": "Login-Tests.postman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create neighborhood",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "11460bf2-01cb-47cd-9941-9f7b4d6928b0",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"login_n1\",data.id);",
+							"tests[\"Successful neighborhood creation.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": 0,\n\t\"name\": \"Neighborhood_Login\",\n\t\"locality\" :\"Chapinero\",\n\t\"numberOfResidents\":45\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create resident",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5a342668-3f13-40ac-8992-efe45976c2c5",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"resident1\",data.id);",
+							"tests[\"Successfully created host.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"address\": \"9708 Matwood Ct.\",\r\n    \"email\": \"myTestEmail@gmail.com\",\r\n    \"name\": \"John Smith\",\r\n    \"neighborhood\": {\"id\": \"{{event_n1}}\"},\r\n    \"nickname\": \"Johnny\",\r\n    \"phoneNumber\": \"(305)867-5644\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"https://docs.google.com/spreadhseets/testProof\",\r\n    \"login\":{\r\n    \t\"id\":1\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{login_n1}}/residents/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{login_n1}}",
+						"residents",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create login ",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userName\": \"aortiz49\",\n\t\"password\": \"Password##1\",\n\t\"governmentId\": \"281287337\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{login_n1}}/logins/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{login_n1}}",
+						"logins",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

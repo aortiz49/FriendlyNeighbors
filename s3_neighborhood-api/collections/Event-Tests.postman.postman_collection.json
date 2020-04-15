@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "851da1b7-4303-460f-ae31-a961c45cafaa",
+		"_postman_id": "7869e391-990e-40c6-9a8b-ad62bd8042ef",
 		"name": "Event-Tests.postman",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -100,6 +100,150 @@
 			"response": []
 		},
 		{
+			"name": "Create login 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0184a47c-832b-41ec-aa7a-8d6f899c53bc",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"login1\",data.id);",
+							"tests[\"Successfuly created location.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userName\": \"aortiz49A\",\n\t\"password\": \"Password##1\",\n\t\"governmentId\": \"281287337A\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/logins",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"logins"
+					]
+				},
+				"description": "Creates a location in the neighborhood."
+			},
+			"response": []
+		},
+		{
+			"name": "Create login 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0184a47c-832b-41ec-aa7a-8d6f899c53bc",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"login2\",data.id);",
+							"tests[\"Successfuly created location.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userName\": \"aortiz49B\",\n\t\"password\": \"Password##1\",\n\t\"governmentId\": \"281287337B\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/logins",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"logins"
+					]
+				},
+				"description": "Creates a location in the neighborhood."
+			},
+			"response": []
+		},
+		{
+			"name": "Create login 3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0184a47c-832b-41ec-aa7a-8d6f899c53bc",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"login3\",data.id);",
+							"tests[\"Successfuly created location.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userName\": \"aortiz49C\",\n\t\"password\": \"Password##1\",\n\t\"governmentId\": \"281287337C\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/logins",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"logins"
+					]
+				},
+				"description": "Creates a location in the neighborhood."
+			},
+			"response": []
+		},
+		{
 			"name": "Create host",
 			"event": [
 				{
@@ -121,7 +265,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"9708 Matwood Ct.\",\r\n    \"email\": \"myTestEmail@gmail.com\",\r\n    \"name\": \"John Smith\",\r\n    \"neighborhood\": {\"id\": \"{{event_n1}}\"},\r\n    \"nickname\": \"Johnny\",\r\n    \"phoneNumber\": \"(305)867-5644\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"https://docs.google.com/spreadhseets/testProof\"\r\n\r\n}",
+					"raw": "{\r\n   \"login\": {\r\n   \t\"id\":{{login1}}\r\n   \t},\r\n    \"address\": \"9708 Matwood Ct.\",\r\n    \"email\": \"myTestEmai7l@gmail.com\",\r\n    \"name\": \"John Smith\",\r\n    \"neighborhood\": {\"id\": \"{{event_n1}}\"},\r\n    \"nickname\": \"Johnny\",\r\n    \"phoneNumber\": \"(305)867-5644\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"https://docs.google.com/spreadhseets/testProof\"\r\n\t\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -239,7 +383,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"location\": {\n        \"id\": \"{{location1}}\"\n    },\n    \"datePosted\": \"2020-04-10T13:30:00.000\",\n    \"dateOfEvent\": \"2020-04-15T18:00:00.000\",\n    \"title\": \"Kyle's Going Away Party!\",\n    \"startTime\": \"08:00 PM\",\n    \"endTime\": \"11:59 PM\",\n    \"description\": \"Dress up!! Theme: Grease. See you there! \"\n}",
+					"raw": "{\n\t    \"location\": {\n        \"id\": \"{{location1}}\"\n    },\n    \"datePosted\": \"2020-04-10T13:30:00.000\",\n    \"dateOfEvent\": \"2020-04-15T18:00:00.000\",\n    \"title\": \"Kyle's Going Away Party!\",\n    \"startTime\": \"08:00 PM\",\n    \"endTime\": \"11:59 PM\",\n    \"description\": \"Dress up!! Theme: Grease. See you there! \"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -350,7 +494,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"9999 Attendee St.\",\r\n    \"email\": \"attendee1@gmail.com\",\r\n    \"name\": \"Abe Lincoln\",\r\n    \"neighborhood\": {\"id\": \"{{event_n1}}\"},\r\n    \"nickname\": \"Honest Abe\",\r\n    \"phoneNumber\": \"(777)777-7777\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"https://docs.google.com/spreadhseets/testProof1\"\r\n\r\n}",
+					"raw": "{\r\n\t\"login\": {\r\n\t\t\"id\": {{login2}}\t\r\n\t},\r\n    \"address\": \"9999 Attendee St.\",\r\n    \"email\": \"attendee1@gmail.com\",\r\n    \"name\": \"Abe Lincoln\",\r\n    \"neighborhood\": {\"id\": \"{{event_n1}}\"},\r\n    \"nickname\": \"Honest Abe\",\r\n    \"phoneNumber\": \"(777)777-7777\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"https://docs.google.com/spreadhseets/testProof1\"\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -399,7 +543,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"1111 Attendee St.\",\r\n    \"email\": \"attendee2@gmail.com\",\r\n    \"name\": \"George Bush\",\r\n    \"neighborhood\": {\"id\": \"{{event_n1}}\"},\r\n    \"nickname\": \"Dubya\",\r\n    \"phoneNumber\": \"(777)777-7777\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"https://docs.google.com/spreadhseets/testProof2\"\r\n\r\n}",
+					"raw": "{\r\n\t\t\"login\": {\r\n\t\t\"id\": {{login3}}\t\r\n\t},\r\n    \"address\": \"1111 Attendee St.\",\r\n    \"email\": \"attendee2@gmail.com\",\r\n    \"name\": \"George Bush\",\r\n    \"neighborhood\": {\"id\": \"{{event_n1}}\"},\r\n    \"nickname\": \"Dubya\",\r\n    \"phoneNumber\": \"(777)777-7777\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"https://docs.google.com/spreadhseets/testProof2\"\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

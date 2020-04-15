@@ -43,9 +43,9 @@ public class ResidentLoginDTO implements Serializable {
 //===================================================
 
     /**
-     * The resident who owns the login.
+     * The neighborhood to which the group belongs to.
      */
-    private ResidentProfileDTO resident;
+    private NeighborhoodDTO neighborhood;
 
 //===================================================
 // Attributes
@@ -93,12 +93,12 @@ public class ResidentLoginDTO implements Serializable {
     public ResidentLoginDTO(ResidentLoginEntity pResidentLogin) {
         if (pResidentLogin != null) {
             this.id = pResidentLogin.getId();
-            this.userName = pResidentLogin.getPassword();
+            this.userName = pResidentLogin.getUserName();
             this.password = pResidentLogin.getPassword();
             this.governmentId = pResidentLogin.getGovernmentId();
             this.isActive = pResidentLogin.isActive();
 
-            this.resident = new ResidentProfileDTO(pResidentLogin.getResident());
+            this.neighborhood = new NeighborhoodDTO(pResidentLogin.getNeighborhood());
 
         }
     }
@@ -120,8 +120,9 @@ public class ResidentLoginDTO implements Serializable {
         login.setGovernmentId(this.getGovernmentId());
         login.setIsActive(this.isActive());
 
-        if (resident != null) {
-            login.setResident(getResident().toEntity());
+
+        if (neighborhood != null) {
+            login.setNeighborhood(getNeighborhood().toEntity());
         }
 
         return login;
@@ -132,7 +133,7 @@ public class ResidentLoginDTO implements Serializable {
 
     /**
      * Returns the login id.
-     * 
+     *
      * @return the id
      */
     public Long getId() {
@@ -141,29 +142,20 @@ public class ResidentLoginDTO implements Serializable {
 
     /**
      * Sets the new login id.
-     * 
+     *
      * @param pId the new login id
      */
     public void setId(Long pId) {
         id = pId;
     }
 
-    /**
-     * Returns the resident associated to the login.
-     *
-     * @return the resident
-     */
-    public ResidentProfileDTO getResident() {
-        return resident;
+    
+    public NeighborhoodDTO getNeighborhood() {
+        return neighborhood;
     }
 
-    /**
-     * Sets the resident associated to the login.
-     *
-     * @param pResident the new resident
-     */
-    public void setResident(ResidentProfileDTO pResident) {
-        resident = pResident;
+    public void setNeighborhood(NeighborhoodDTO neighborhood) {
+        this.neighborhood = neighborhood;
     }
 
     /**

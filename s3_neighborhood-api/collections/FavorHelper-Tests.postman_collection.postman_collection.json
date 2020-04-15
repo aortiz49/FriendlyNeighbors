@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "0b31ab37-d723-4010-b8cc-769b2df20549",
-		"name": "HelperFavor-Tests.postman_collection",
+		"_postman_id": "4f89e7f1-1352-4956-a2e5-6b614aae7495",
+		"name": "FavorHelper-Tests.postman_collection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -108,6 +108,150 @@
 			"response": []
 		},
 		{
+			"name": "Create login 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0184a47c-832b-41ec-aa7a-8d6f899c53bc",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"login1\",data.id);",
+							"tests[\"Successfuly created location.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userName\": \"aortiz49A\",\n\t\"password\": \"Password##1\",\n\t\"governmentId\": \"281287337A\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N2}}/logins",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N2}}",
+						"logins"
+					]
+				},
+				"description": "Creates a location in the neighborhood."
+			},
+			"response": []
+		},
+		{
+			"name": "Create login 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0184a47c-832b-41ec-aa7a-8d6f899c53bc",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"login2\",data.id);",
+							"tests[\"Successfuly created location.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userName\": \"aortiz49B\",\n\t\"password\": \"Password##1\",\n\t\"governmentId\": \"281287337B\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/logins",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"logins"
+					]
+				},
+				"description": "Creates a location in the neighborhood."
+			},
+			"response": []
+		},
+		{
+			"name": "Create login 3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0184a47c-832b-41ec-aa7a-8d6f899c53bc",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"login3\",data.id);",
+							"tests[\"Successfuly created location.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userName\": \"aortiz49B\",\n\t\"password\": \"Password##1\",\n\t\"governmentId\": \"281287337B\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/logins",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"logins"
+					]
+				},
+				"description": "Creates a location in the neighborhood."
+			},
+			"response": []
+		},
+		{
 			"name": "Create resident for tests",
 			"event": [
 				{
@@ -135,7 +279,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blcd@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"raw": "{\r\n\t\"login\":{\r\n\t\t\"id\":{{login1}}\r\n\t},\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blcd@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -143,7 +287,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N2}}/residents/",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -153,7 +297,7 @@
 						"s3_neighborhood-api",
 						"api",
 						"neighborhoods",
-						"{{new_id_N}}",
+						"{{new_id_N2}}",
 						"residents",
 						""
 					]
@@ -162,7 +306,7 @@
 			"response": []
 		},
 		{
-			"name": "Create favor",
+			"name": "Create helper",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -199,139 +343,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\t\r\n\t\"title\": \"Hola\",\r\n\t\"description\": \"NN\",\r\n\t\"type\": \"NN\",\r\n\t\"datePosted\": \"2000-08-20T00:00:00-05:00\"\r\n\t\r\n\t\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_R}}/favors/",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
-						"residents",
-						"{{new_id_R}}",
-						"favors",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create favor2",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "2c9e845f-40eb-4e50-8a3b-2b4c2f298330",
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "aaf6ceef-c993-4bed-b150-d635432d9806",
-						"exec": [
-							"var data = JSON.parse(responseBody);",
-							"postman.setGlobalVariable(\"new_id_g2\",data.id);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n\t\r\n\t\"title\": \"Hola\",\r\n\t\"description\": \"NN\",\r\n\t\"type\": \"NN\",\r\n\t\"datePosted\": \"2000-08-20T00:00:00-05:00\"\r\n\t\r\n\t\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_R}}/favors/",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
-						"residents",
-						"{{new_id_R}}",
-						"favors",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create helper1",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "2c9e845f-40eb-4e50-8a3b-2b4c2f298330",
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "aaf6ceef-c993-4bed-b150-d635432d9806",
-						"exec": [
-							"var data = JSON.parse(responseBody);",
-							"postman.setGlobalVariable(\"new_id_r1\",data.id);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blxcdxx@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"raw": "\r\n\r\n{\r\n\t\"login\":{\r\n\t\t\"id\":{{login2}}\r\n\t},\t\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blxcdfavor@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -376,6 +388,136 @@
 						"id": "aaf6ceef-c993-4bed-b150-d635432d9806",
 						"exec": [
 							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"new_id_g2\",data.id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"login\":{\r\n\t\t\"id\":{{login3}}\r\n\t},\t\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blrxcdfavor@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N2}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"residents",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create favor1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "2c9e845f-40eb-4e50-8a3b-2b4c2f298330",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "aaf6ceef-c993-4bed-b150-d635432d9806",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"new_id_r1\",data.id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\r\n\t\"title\": \"Hola\",\r\n\t\"description\": \"NN\",\r\n\t\"type\": \"NN\",\r\n\t\"datePosted\": \"2000-08-20T00:00:00-05:00\"\r\n\t\r\n\t\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/favors/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"residents",
+						"{{new_id_g1}}",
+						"favors",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create favor2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "2c9e845f-40eb-4e50-8a3b-2b4c2f298330",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "aaf6ceef-c993-4bed-b150-d635432d9806",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
 							"postman.setGlobalVariable(\"new_id_r2\",data.id);",
 							""
 						],
@@ -395,7 +537,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blrxcdxx@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N2}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"raw": "{\r\n\t\r\n\t\"title\": \"Hola\",\r\n\t\"description\": \"NN\",\r\n\t\"type\": \"NN\",\r\n\t\"datePosted\": \"2000-08-20T00:00:00-05:00\"\r\n\t\r\n\t\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -403,7 +545,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N2}}/residents/",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N2}}/residents/{{new_id_R}}/favors/",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -415,6 +557,8 @@
 						"neighborhoods",
 						"{{new_id_N2}}",
 						"residents",
+						"{{new_id_R}}",
+						"favors",
 						""
 					]
 				}
@@ -422,7 +566,7 @@
 			"response": []
 		},
 		{
-			"name": "Associate helper with favor",
+			"name": "Associate favor with helper",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -466,7 +610,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/{{new_id_g1}}/helpers/{{new_id_r1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/favorsToHelp/{{new_id_r1}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -477,18 +621,18 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"favors",
+						"residents",
 						"{{new_id_g1}}",
-						"helpers",
+						"favorsToHelp",
 						"{{new_id_r1}}"
 					]
 				},
-				"description": "Associates helper with favor in the app. \r\nNeighborhood, helper and favor are specified as path parameter.\r\n** Expected http code: 200 **\r\n"
+				"description": "Associates favor with helper in the app. \r\nNeighborhood, favor and helper are specified as path parameter.\r\n** Expected http code: 200 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Associate helper with favor from diferent neighborhoods",
+			"name": "Associate favor with helper from diferent neighborhoods",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -505,7 +649,7 @@
 					"script": {
 						"id": "aaf6ceef-c993-4bed-b150-d635432d9806",
 						"exec": [
-							"tests[\"Should not associate helper with favor from diferent neighborhoods\"] = responseCode.code === 401;",
+							"tests[\"Should not associate favor with helper from diferent neighborhoods\"] = responseCode.code === 401;",
 							"console.log(data.id);",
 							"tests[\"Expected message\"] = responseBody.has(\"does not belong to neighborhood\");"
 						],
@@ -533,7 +677,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/{{new_id_g1}}/helpers/{{new_id_r2}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/favorsToHelp/{{new_id_r2}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -544,18 +688,18 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"favors",
+						"residents",
 						"{{new_id_g1}}",
-						"helpers",
+						"favorsToHelp",
 						"{{new_id_r2}}"
 					]
 				},
-				"description": "Tries to associate helper and favor from different neighborhoods.\r\nThe test verifies the generation of error and message \" does not belong to neighborhood\".\r\n** Expected http code: 404 **\r\n"
+				"description": "Tries to associate favor and helper from different neighborhoods.\r\nThe test verifies the generation of error and message \" does not belong to neighborhood\".\r\n** Expected http code: 404 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Get a helper from favor",
+			"name": "Get a favor from helper",
 			"event": [
 				{
 					"listen": "test",
@@ -574,7 +718,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/{{new_id_g1}}/helpers/{{new_id_r1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/favorsToHelp/{{new_id_r1}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -585,57 +729,18 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"favors",
+						"residents",
 						"{{new_id_g1}}",
-						"helpers",
+						"favorsToHelp",
 						"{{new_id_r1}}"
 					]
 				},
-				"description": "Gets helper from favor in the app. \r\nNeighborhood, helper and favor are specified as path parameter.\r\n** Expected http code: 200 **\r\n"
+				"description": "Gets favor from helper in the app. \r\nNeighborhood, favor and helper are specified as path parameter.\r\n** Expected http code: 200 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Get helper from non associated favor",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "10a04ef5-aca6-43ae-bd0a-b1006aa19487",
-						"exec": [
-							"tests[\"Cannot obtain a helper fron a non associated favor\"] = responseCode.code === 412;"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/{{new_id_g2}}/helpers/{{new_id_r1}}",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
-						"favors",
-						"{{new_id_g2}}",
-						"helpers",
-						"{{new_id_r1}}"
-					]
-				},
-				"description": "Tries to get helper from favor when there is no association between.\r\nThe test verifies the generation of error and message \"There is no association between\".\r\n** Expected http code: 404 **\r\n"
-			},
-			"response": []
-		},
-		{
-			"name": "Get all helpers from favor",
+			"name": "Get all favors from helper",
 			"event": [
 				{
 					"listen": "test",
@@ -644,7 +749,7 @@
 						"exec": [
 							"var data= JSON.parse(responseBody);",
 							"tests[\"Free of errors on Get\"] = responseCode.code === 200;",
-							"tests[\"helpers count - favor\"] = data.length >= 1;"
+							"tests[\"favors count - helper\"] = data.length >= 1;"
 						],
 						"type": "text/javascript"
 					}
@@ -654,7 +759,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/{{new_id_g1}}/helpers",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/favorsToHelp",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -665,24 +770,110 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"favors",
+						"residents",
 						"{{new_id_g1}}",
-						"helpers"
+						"favorsToHelp"
 					]
 				},
-				"description": "Gets all helpers from favor in the app. \r\nNeighborhood and favor are specified as path parameter.\r\n** Expected http code: 200 **\r\n"
+				"description": "Gets all favors from helper in the app. \r\nNeighborhood and helper are specified as path parameter.\r\n** Expected http code: 200 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Get helper from non existing favor",
+			"name": "Get favor from non associated helper",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "10a04ef5-aca6-43ae-bd0a-b1006aa19487",
+						"exec": [
+							"tests[\"Cannot obtain a favor fron a non associated helper\"] = responseCode.code === 412;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g2}}/favorsToHelp/{{new_id_r1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"residents",
+						"{{new_id_g2}}",
+						"favorsToHelp",
+						"{{new_id_r1}}"
+					]
+				},
+				"description": "Tries to get favor from helper when there is no association between.\r\nThe test verifies the generation of error and message \"There is no association between\".\r\n** Expected http code: 404 **\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Get favor from non existing helper",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"id": "91d9959e-4825-4dd7-88e3-3e33b988c765",
 						"exec": [
-							"tests[\"Should not get helper from non existing favor\"] = responseCode.code === 404;",
+							"tests[\"Should not get favor from non existing helper\"] = responseCode.code === 404;",
+							"tests[\"Expected message\"] = responseBody.has(\"/residents/22 does not exist\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/22/favorsToHelp/{{new_id_r1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"residents",
+						"22",
+						"favorsToHelp",
+						"{{new_id_r1}}"
+					]
+				},
+				"description": "Tries to get favor from non-existing helper.\r\nThe test verifies the generation of error and message \"The resource / helpers / 22 does not exist.\".\r\n** Expected http code: 404 **\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Get non existing favor from  helper",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "91d9959e-4825-4dd7-88e3-3e33b988c765",
+						"exec": [
+							"tests[\"Should not get favor from non existing helper\"] = responseCode.code === 404;",
 							"tests[\"Expected message\"] = responseBody.has(\"/favors/22 does not exist\");"
 						],
 						"type": "text/javascript"
@@ -700,7 +891,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/22/helpers/{{new_id_r1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/favorsToHelp/22",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -711,65 +902,18 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"favors",
-						"22",
-						"helpers",
-						"{{new_id_r1}}"
-					]
-				},
-				"description": "Tries to get helper from non-existing favor.\r\nThe test verifies the generation of error and message \"The resource / favors / 22 does not exist.\".\r\n** Expected http code: 404 **\r\n"
-			},
-			"response": []
-		},
-		{
-			"name": "Get non existing helper from  favor",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "91d9959e-4825-4dd7-88e3-3e33b988c765",
-						"exec": [
-							"tests[\"Should not get helper from non existing favor\"] = responseCode.code === 404;",
-							"tests[\"Expected message\"] = responseBody.has(\"/helpers/22 does not exist\");"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/{{new_id_g1}}/helpers/22",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
-						"favors",
+						"residents",
 						"{{new_id_g1}}",
-						"helpers",
+						"favorsToHelp",
 						"22"
 					]
 				},
-				"description": "Tries to get non existing helper from favor.\r\nThe test verifies the generation of error and message \"The resource / helpers/ 22 does not exist.\".\r\n** Expected http code: 404 **\r\n"
+				"description": "Tries to get non existing favor from helper.\r\nThe test verifies the generation of error and message \"The resource / favors/ 22 does not exist.\".\r\n** Expected http code: 404 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Remove a helper from favor",
+			"name": "Remove a favor from helper",
 			"event": [
 				{
 					"listen": "test",
@@ -790,7 +934,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/{{new_id_g1}}/helpers/{{new_id_r1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/favorsToHelp/{{new_id_r1}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -801,25 +945,69 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"favors",
+						"residents",
 						"{{new_id_g1}}",
-						"helpers",
+						"favorsToHelp",
 						"{{new_id_r1}}"
 					]
 				},
-				"description": "Removes helper from favor in the app. \r\nNeighborhood, helper and favor are specified as path parameter.\r\n** Expected http code: 200 **\r\n"
+				"description": "Removes favor from helper in the app. \r\nNeighborhood, favor and helper are specified as path parameter.\r\n** Expected http code: 200 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Remove helper from non existing favor",
+			"name": "Remove favor from non existing helper",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"id": "91d9959e-4825-4dd7-88e3-3e33b988c765",
 						"exec": [
-							"tests[\"Should not delete helper to non existing favor\"] = responseCode.code === 404;",
+							"tests[\"Should not delete favor to non existing helper\"] = responseCode.code === 404;",
+							"tests[\"Expected message\"] = responseBody.has(\"/residents/22 does not exist\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/22/favorsToHelp/{{new_id_g1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"residents",
+						"22",
+						"favorsToHelp",
+						"{{new_id_g1}}"
+					]
+				},
+				"description": "Tries to reomove favor from non-existing helper.\r\nThe test verifies the generation of error and message \"The resource / helpers / 22 does not exist.\".\r\n** Expected http code: 404 **\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Remove non existing favor from  helper",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "91d9959e-4825-4dd7-88e3-3e33b988c765",
+						"exec": [
+							"tests[\"Should not get favor from non existing helper\"] = responseCode.code === 404;",
 							"tests[\"Expected message\"] = responseBody.has(\"/favors/22 does not exist\");"
 						],
 						"type": "text/javascript"
@@ -834,7 +1022,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/22/helpers/{{new_id_g1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/favorsToHelp/22",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -845,129 +1033,13 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"favors",
-						"22",
-						"helpers",
-						"{{new_id_g1}}"
-					]
-				},
-				"description": "Tries to reomove helper from non-existing favor.\r\nThe test verifies the generation of error and message \"The resource / favors / 22 does not exist.\".\r\n** Expected http code: 404 **\r\n"
-			},
-			"response": []
-		},
-		{
-			"name": "Remove non existing helper from  favor",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "91d9959e-4825-4dd7-88e3-3e33b988c765",
-						"exec": [
-							"tests[\"Should not get helper from non existing favor\"] = responseCode.code === 404;",
-							"tests[\"Expected message\"] = responseBody.has(\"/helpers/22 does not exist\");"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/{{new_id_g1}}/helpers/22",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
-						"favors",
+						"residents",
 						"{{new_id_g1}}",
-						"helpers",
+						"favorsToHelp",
 						"22"
 					]
 				},
-				"description": "Tries to remove non existing helper from favor.\r\nThe test verifies the generation of error and message \"The resource / helpers/ 22 does not exist.\".\r\n** Expected http code: 404 **\r\n"
-			},
-			"response": []
-		},
-		{
-			"name": "Delete a helper1",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "0d27dd2c-c6e5-47c5-b329-ca38c5433d23",
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_r1}}",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
-						"residents",
-						"{{new_id_r1}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete a helper2",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "0d27dd2c-c6e5-47c5-b329-ca38c5433d23",
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N2}}/residents/{{new_id_r2}}",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"{{new_id_N2}}",
-						"residents",
-						"{{new_id_r2}}"
-					]
-				}
+				"description": "Tries to remove non existing favor from helper.\r\nThe test verifies the generation of error and message \"The resource / favors/ 22 does not exist.\".\r\n** Expected http code: 404 **\r\n"
 			},
 			"response": []
 		},
@@ -989,7 +1061,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/{{new_id_g1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/{{new_id_r1}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -1001,7 +1073,7 @@
 						"neighborhoods",
 						"{{new_id_N}}",
 						"favors",
-						"{{new_id_g1}}"
+						"{{new_id_r1}}"
 					]
 				}
 			},
@@ -1025,7 +1097,43 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/{{new_id_g2}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N2}}/favors/{{new_id_r2}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N2}}",
+						"favors",
+						"{{new_id_r2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a helper1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0d27dd2c-c6e5-47c5-b329-ca38c5433d23",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -1036,7 +1144,43 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"favors",
+						"residents",
+						"{{new_id_g1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a helper2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0d27dd2c-c6e5-47c5-b329-ca38c5433d23",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g2}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"residents",
 						"{{new_id_g2}}"
 					]
 				}
@@ -1077,7 +1221,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_R}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N2}}/residents/{{new_id_R}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -1087,7 +1231,7 @@
 						"s3_neighborhood-api",
 						"api",
 						"neighborhoods",
-						"{{new_id_N}}",
+						"{{new_id_N2}}",
 						"residents",
 						"{{new_id_R}}"
 					]

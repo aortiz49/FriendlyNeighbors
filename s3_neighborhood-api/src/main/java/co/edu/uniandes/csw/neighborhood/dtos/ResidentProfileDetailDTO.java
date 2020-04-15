@@ -7,9 +7,11 @@ package co.edu.uniandes.csw.neighborhood.dtos;
 
 import co.edu.uniandes.csw.neighborhood.entities.*;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
+import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -224,6 +226,7 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
             }
             residentEntity.setBusinesses(businessEntities);
         }
+        LOGGER.log(Level.INFO, "Creating entity");
 
         return residentEntity;
     }

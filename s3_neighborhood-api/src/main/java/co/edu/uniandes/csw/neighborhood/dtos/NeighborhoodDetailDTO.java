@@ -68,6 +68,11 @@ public class NeighborhoodDetailDTO extends NeighborhoodDTO implements Serializab
      */
     private List<GroupDTO> groups;
 
+    /**
+     * The logins in the neighborhood;
+     */
+    private List<ResidentLoginDTO> logins;
+
 //===================================================
 // Constructors
 //===================================================
@@ -95,6 +100,7 @@ public class NeighborhoodDetailDTO extends NeighborhoodDTO implements Serializab
             residents = new ArrayList<>();
             places = new ArrayList<>();
             groups = new ArrayList<>();
+            logins = new ArrayList<>();
 
             // adds all businesses to the neighborhood dto
             for (BusinessEntity businessEntity : pNeighborhood.getBusinesses()) {
@@ -114,6 +120,11 @@ public class NeighborhoodDetailDTO extends NeighborhoodDTO implements Serializab
             // adds all groups to the neighborhood dto
             for (GroupEntity groupEntity : pNeighborhood.getGroups()) {
                 groups.add(new GroupDTO(groupEntity));
+            }
+
+            // adds all logins to the neighborhood dto
+            for (ResidentLoginEntity loginEntity : pNeighborhood.getLogins()) {
+                logins.add(new ResidentLoginDTO(loginEntity));
             }
 
         }
@@ -166,6 +177,15 @@ public class NeighborhoodDetailDTO extends NeighborhoodDTO implements Serializab
                 theGroups.add(groupDTO.toEntity());
             }
             neighborhood.setGroups(theGroups);
+        }
+
+        // adds all logins to the neighborhood entity
+        if (logins != null) {
+            List<ResidentLoginEntity> theLogins = new ArrayList<>();
+            for (ResidentLoginDTO loginDTO : logins) {
+                theLogins.add(loginDTO.toEntity());
+            }
+            neighborhood.setLogins(theLogins);
         }
         return neighborhood;
     }
@@ -253,6 +273,14 @@ public class NeighborhoodDetailDTO extends NeighborhoodDTO implements Serializab
      */
     public void setGroups(List<GroupDTO> pGroups) {
         groups = pGroups;
+    }
+
+    public List<ResidentLoginDTO> getLogins() {
+        return logins;
+    }
+
+    public void setLogins(List<ResidentLoginDTO> logins) {
+        this.logins = logins;
     }
 
 }

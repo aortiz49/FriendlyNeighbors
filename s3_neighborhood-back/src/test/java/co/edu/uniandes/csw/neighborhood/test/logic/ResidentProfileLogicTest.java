@@ -9,6 +9,7 @@ package co.edu.uniandes.csw.neighborhood.test.logic;
 import co.edu.uniandes.csw.neighborhood.ejb.ResidentProfileLogic;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentLoginEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
 import java.util.ArrayList;
@@ -65,6 +66,8 @@ public class ResidentProfileLogicTest {
      */
     private List<ResidentProfileEntity> data = new ArrayList<>();
 
+    private ResidentLoginEntity login;
+
     ///
     @Deployment
     public static JavaArchive createDeployment() {
@@ -107,7 +110,6 @@ public class ResidentProfileLogicTest {
      */
     private void clearData() {
         em.createQuery("delete from ResidentProfileEntity").executeUpdate();
-        em.createQuery("delete from NeighborhoodEntity").executeUpdate();
     }
 
     /**
@@ -120,9 +122,14 @@ public class ResidentProfileLogicTest {
         neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
         em.persist(neighborhood);
 
+        login = factory.manufacturePojo(ResidentLoginEntity.class);
+        login.setNeighborhood(neighborhood);
+        em.persist(login);
+
         for (int i = 0; i < 3; i++) {
 
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
+            entity.setLogin(login);
             entity.setNeighborhood(neighborhood);
 
             // add the data to the table
@@ -147,11 +154,10 @@ public class ResidentProfileLogicTest {
             // uses the factory to create a ranbdom NeighborhoodEntity object
             ResidentProfileEntity newResident = factory.manufacturePojo(ResidentProfileEntity.class);
 
-
             // invokes the method to be tested (create): it creates a table in the 
             // database. The parameter of this method is the newly created object from 
             // the podam factory which has an id associated to it. 
-            ResidentProfileEntity result = residentLogic.createResident(newResident, neighborhood.getId());
+            ResidentProfileEntity result = residentLogic.createResident(newResident, neighborhood.getId(), login.getId());
 
             // verify that the created object is not null
             Assert.assertNotNull(result);
@@ -178,8 +184,10 @@ public class ResidentProfileLogicTest {
     @Test(expected = BusinessLogicException.class)
     public void createResidentsWithSameEmail() throws BusinessLogicException {
         ResidentProfileEntity newEntity = factory.manufacturePojo(ResidentProfileEntity.class);
+        newEntity.setLogin(login);
+
         newEntity.setEmail(data.get(0).getEmail());
-        residentLogic.createResident(newEntity, neighborhood.getId());
+        residentLogic.createResident(newEntity, neighborhood.getId(), login.getId());
     }
 
     /**
@@ -201,7 +209,7 @@ public class ResidentProfileLogicTest {
     }
 
     /**
-     * Test for getting  resident
+     * Test for getting resident
      */
     @Test
     public void getResidentTest() {
@@ -221,6 +229,8 @@ public class ResidentProfileLogicTest {
             ResidentProfileEntity entity = data.get(0);
             ResidentProfileEntity pojoEntity = factory.manufacturePojo(ResidentProfileEntity.class);
             pojoEntity.setId(entity.getId());
+            pojoEntity.setLogin(login);
+
             residentLogic.updateResident(pojoEntity, neighborhood.getId());
             ResidentProfileEntity resp = em.find(ResidentProfileEntity.class, entity.getId());
             Assert.assertEquals(pojoEntity.getId(), resp.getId());
@@ -247,8 +257,9 @@ public class ResidentProfileLogicTest {
     @Test(expected = BusinessLogicException.class)
     public void createResidentsWithNoEmail() throws BusinessLogicException {
         ResidentProfileEntity newEntity = factory.manufacturePojo(ResidentProfileEntity.class);
+        newEntity.setLogin(login);
         newEntity.setEmail(null);
-        residentLogic.createResident(newEntity, neighborhood.getId());
+        residentLogic.createResident(newEntity, neighborhood.getId(), login.getId());
     }
 
     /**
@@ -257,10 +268,13 @@ public class ResidentProfileLogicTest {
     @Test(expected = BusinessLogicException.class)
     public void createResidentsWithDuplicatedEmail() throws BusinessLogicException {
         ResidentProfileEntity newEntity = factory.manufacturePojo(ResidentProfileEntity.class);
+        newEntity.setLogin(login);
+
         ResidentProfileEntity newEntity2 = factory.manufacturePojo(ResidentProfileEntity.class);
+        newEntity2.setLogin(login);
         newEntity.setEmail(newEntity2.getEmail());
-        residentLogic.createResident(newEntity, neighborhood.getId());
-        residentLogic.createResident(newEntity2, neighborhood.getId());
+        residentLogic.createResident(newEntity, neighborhood.getId(), login.getId());
+        residentLogic.createResident(newEntity2, neighborhood.getId(), login.getId());
     }
 
     /**
@@ -269,8 +283,9 @@ public class ResidentProfileLogicTest {
     @Test(expected = BusinessLogicException.class)
     public void createResidentsWithNoPhone() throws BusinessLogicException {
         ResidentProfileEntity newEntity = factory.manufacturePojo(ResidentProfileEntity.class);
+        newEntity.setLogin(login);
         newEntity.setPhoneNumber(null);
-        residentLogic.createResident(newEntity, neighborhood.getId());
+        residentLogic.createResident(newEntity, neighborhood.getId(), login.getId());
     }
 
     /**
@@ -279,8 +294,9 @@ public class ResidentProfileLogicTest {
     @Test(expected = BusinessLogicException.class)
     public void createResidentsWithNoName() throws BusinessLogicException {
         ResidentProfileEntity newEntity = factory.manufacturePojo(ResidentProfileEntity.class);
+        newEntity.setLogin(login);
         newEntity.setName(null);
-        residentLogic.createResident(newEntity, neighborhood.getId());
+        residentLogic.createResident(newEntity, neighborhood.getId(), login.getId());
     }
 
     /**
@@ -289,8 +305,10 @@ public class ResidentProfileLogicTest {
     @Test(expected = BusinessLogicException.class)
     public void createResidentsWithNoProof() throws BusinessLogicException {
         ResidentProfileEntity newEntity = factory.manufacturePojo(ResidentProfileEntity.class);
+        newEntity.setLogin(login);
+
         newEntity.setProofOfResidence(null);
-        residentLogic.createResident(newEntity, neighborhood.getId());
+        residentLogic.createResident(newEntity, neighborhood.getId(),login.getId());
     }
 
     /**
@@ -299,7 +317,9 @@ public class ResidentProfileLogicTest {
     @Test(expected = BusinessLogicException.class)
     public void createResidentsWithNoNeighborhood() throws BusinessLogicException {
         ResidentProfileEntity newEntity = factory.manufacturePojo(ResidentProfileEntity.class);
-        residentLogic.createResident(newEntity, new Long(-100));
+        newEntity.setLogin(login);
+
+        residentLogic.createResident(newEntity, new Long(-100),login.getId());
     }
 
     /**

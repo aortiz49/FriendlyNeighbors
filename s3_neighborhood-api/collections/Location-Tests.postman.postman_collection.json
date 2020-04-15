@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3a2d1184-52db-4887-b30f-de65e97bed0f",
+		"_postman_id": "345747fc-5171-4f55-9450-df1139e97801",
 		"name": "Location-Tests.postman",
 		"description": "Tests the REST API of a location.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"

@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "bbb82369-a40a-4140-b6b4-b2c7a03b74ac",
-		"name": "GroupMember-Tests.postman_collection",
+		"_postman_id": "f6116ab6-557b-460b-8646-afc2038d4c90",
+		"name": "FavorResident-Tests.postman_collection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -57,58 +57,7 @@
 			"response": []
 		},
 		{
-			"name": "Create neighborhood2 for tests",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "f4515fb8-152f-4e8a-8cdb-0196a0643f3b",
-						"exec": [
-							"var data = JSON.parse(responseBody);",
-							"postman.setGlobalVariable(\"new_id_N2\",data.id);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"name\": \"xFFHG\",\n\t\"id\": 20000000000\n\t\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create member",
+			"name": "Create resident",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -145,7 +94,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "\r\n\r\n{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blxcdgroup@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"raw": "\r\n\r\n{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blxcdfavor@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -172,7 +121,7 @@
 			"response": []
 		},
 		{
-			"name": "Create member2",
+			"name": "Create resident2",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -209,7 +158,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blrxcdgroup@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N2}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blrxcdfavor@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N2}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -236,7 +185,7 @@
 			"response": []
 		},
 		{
-			"name": "Create group1",
+			"name": "Create favor1",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -273,7 +222,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"dateCreated\": \"2000-08-20T00:00:00-05:00\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"name\": \"name1\",\r\n     \"description\": \"desc1\"\r\n\r\n\r\n}",
+					"raw": "{\r\n\t\r\n\t\"title\": \"Hola\",\r\n\t\"description\": \"NN\",\r\n\t\"type\": \"NN\",\r\n\t\"datePosted\": \"2000-08-20T00:00:00-05:00\"\r\n\t\r\n\t\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -281,7 +230,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/groups/",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/favors/",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -292,7 +241,9 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"groups",
+						"residents",
+						"{{new_id_g1}}",
+						"favors",
 						""
 					]
 				}
@@ -300,7 +251,7 @@
 			"response": []
 		},
 		{
-			"name": "Create group2",
+			"name": "Create favor2",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -337,7 +288,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "\r\n\r\n{\r\n    \"dateCreated\": \"2000-08-20T00:00:00-05:00\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"name\": \"name1\",\r\n     \"description\": \"desc1\"\r\n\r\n\r\n}",
+					"raw": "{\r\n\t\r\n\t\"title\": \"Hola\",\r\n\t\"description\": \"NN\",\r\n\t\"type\": \"NN\",\r\n\t\"datePosted\": \"2000-08-20T00:00:00-05:00\"\r\n\t\r\n\t\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -345,7 +296,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N2}}/groups/",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g2}}/favors/",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -355,8 +306,10 @@
 						"s3_neighborhood-api",
 						"api",
 						"neighborhoods",
-						"{{new_id_N2}}",
-						"groups",
+						"{{new_id_N}}",
+						"residents",
+						"{{new_id_g2}}",
+						"favors",
 						""
 					]
 				}
@@ -364,140 +317,7 @@
 			"response": []
 		},
 		{
-			"name": "Associate group with member",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "2c9e845f-40eb-4e50-8a3b-2b4c2f298330",
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "aaf6ceef-c993-4bed-b150-d635432d9806",
-						"exec": [
-							"tests[\"Free of errors on Post\"] = responseCode.code === 200;",
-							"console.log(data.id);"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/membershipGroups/{{new_id_r1}}",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
-						"residents",
-						"{{new_id_g1}}",
-						"membershipGroups",
-						"{{new_id_r1}}"
-					]
-				},
-				"description": "Associates group with member in the app. \r\nNeighborhood, group and member are specified as path parameter.\r\n** Expected http code: 200 **\r\n"
-			},
-			"response": []
-		},
-		{
-			"name": "Associate group with member from diferent neighborhoods",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "2c9e845f-40eb-4e50-8a3b-2b4c2f298330",
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "aaf6ceef-c993-4bed-b150-d635432d9806",
-						"exec": [
-							"tests[\"Should not associate group with member from diferent neighborhoods\"] = responseCode.code === 401;",
-							"console.log(data.id);",
-							"tests[\"Expected message\"] = responseBody.has(\"does not belong to neighborhood\");"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/membershipGroups/{{new_id_r2}}",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"{{new_id_N}}",
-						"residents",
-						"{{new_id_g1}}",
-						"membershipGroups",
-						"{{new_id_r2}}"
-					]
-				},
-				"description": "Tries to associate group and member from different neighborhoods.\r\nThe test verifies the generation of error and message \" does not belong to neighborhood\".\r\n** Expected http code: 404 **\r\n"
-			},
-			"response": []
-		},
-		{
-			"name": "Get a group from member",
+			"name": "Get a favor from resident",
 			"event": [
 				{
 					"listen": "test",
@@ -516,7 +336,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/membershipGroups/{{new_id_r1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/favors/{{new_id_r1}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -529,16 +349,16 @@
 						"{{new_id_N}}",
 						"residents",
 						"{{new_id_g1}}",
-						"membershipGroups",
+						"favors",
 						"{{new_id_r1}}"
 					]
 				},
-				"description": "Gets group from member in the app. \r\nNeighborhood, group and member are specified as path parameter.\r\n** Expected http code: 200 **\r\n"
+				"description": "Gets favor from resident in the app. \r\nNeighborhood, favor and resident are specified as path parameter.\r\n** Expected http code: 200 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Get all groups from member",
+			"name": "Get all favors from resident",
 			"event": [
 				{
 					"listen": "test",
@@ -547,7 +367,7 @@
 						"exec": [
 							"var data= JSON.parse(responseBody);",
 							"tests[\"Free of errors on Get\"] = responseCode.code === 200;",
-							"tests[\"groups count - member\"] = data.length >= 1;"
+							"tests[\"favors count - resident\"] = data.length >= 1;"
 						],
 						"type": "text/javascript"
 					}
@@ -557,7 +377,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/membershipGroups",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/favors",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -570,22 +390,23 @@
 						"{{new_id_N}}",
 						"residents",
 						"{{new_id_g1}}",
-						"membershipGroups"
+						"favors"
 					]
 				},
-				"description": "Gets all groups from member in the app. \r\nNeighborhood and member are specified as path parameter.\r\n** Expected http code: 200 **\r\n"
+				"description": "Gets all favors from resident in the app. \r\nNeighborhood and resident are specified as path parameter.\r\n** Expected http code: 200 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Get group from non associated member",
+			"name": "Get favor from non associated resident",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"id": "10a04ef5-aca6-43ae-bd0a-b1006aa19487",
 						"exec": [
-							"tests[\"Cannot obtain a group fron a non associated member\"] = responseCode.code === 412;"
+							"tests[\"Cannot obtain a favor fron a non associated resident\"] = responseCode.code === 412;",
+							"tests[\"Expected message\"] = responseBody.has(\"is not associated with\");"
 						],
 						"type": "text/javascript"
 					}
@@ -595,7 +416,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g2}}/membershipGroups/{{new_id_r1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g2}}/favors/{{new_id_r1}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -608,23 +429,23 @@
 						"{{new_id_N}}",
 						"residents",
 						"{{new_id_g2}}",
-						"membershipGroups",
+						"favors",
 						"{{new_id_r1}}"
 					]
 				},
-				"description": "Tries to get group from member when there is no association between.\r\nThe test verifies the generation of error and message \"There is no association between\".\r\n** Expected http code: 404 **\r\n"
+				"description": "Tries to get favor from resident when there is no association between.\r\nThe test verifies the generation of error and message \"is not associated with\".\r\n** Expected http code: 404 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Get group from non existing member",
+			"name": "Get favor from non existing resident",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"id": "91d9959e-4825-4dd7-88e3-3e33b988c765",
 						"exec": [
-							"tests[\"Should not get group from non existing member\"] = responseCode.code === 404;",
+							"tests[\"Should not get favor from non existing resident\"] = responseCode.code === 404;",
 							"tests[\"Expected message\"] = responseBody.has(\"/residents/22 does not exist\");"
 						],
 						"type": "text/javascript"
@@ -642,7 +463,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/22/membershipGroups/{{new_id_r1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/22/favors/{{new_id_r1}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -655,24 +476,24 @@
 						"{{new_id_N}}",
 						"residents",
 						"22",
-						"membershipGroups",
+						"favors",
 						"{{new_id_r1}}"
 					]
 				},
-				"description": "Tries to get group from non-existing member.\r\nThe test verifies the generation of error and message \"The resource / members / 22 does not exist.\".\r\n** Expected http code: 404 **\r\n"
+				"description": "Tries to get favor from non-existing resident.\r\nThe test verifies the generation of error and message \"The resource / residents / 22 does not exist.\".\r\n** Expected http code: 404 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Get non existing group from  member",
+			"name": "Get non existing favor from  resident",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"id": "91d9959e-4825-4dd7-88e3-3e33b988c765",
 						"exec": [
-							"tests[\"Should not get group from non existing member\"] = responseCode.code === 404;",
-							"tests[\"Expected message\"] = responseBody.has(\"/groups/22 does not exist\");"
+							"tests[\"Should not get favor from non existing resident\"] = responseCode.code === 404;",
+							"tests[\"Expected message\"] = responseBody.has(\"/favors/22 does not exist\");"
 						],
 						"type": "text/javascript"
 					}
@@ -689,7 +510,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/membershipGroups/22",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/favors/22",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -702,16 +523,16 @@
 						"{{new_id_N}}",
 						"residents",
 						"{{new_id_g1}}",
-						"membershipGroups",
+						"favors",
 						"22"
 					]
 				},
-				"description": "Tries to get non existing group from member.\r\nThe test verifies the generation of error and message \"The resource / groups/ 22 does not exist.\".\r\n** Expected http code: 404 **\r\n"
+				"description": "Tries to get non existing favor from resident.\r\nThe test verifies the generation of error and message \"The resource / favors/ 22 does not exist.\".\r\n** Expected http code: 404 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Remove a group from member",
+			"name": "Remove a favor from resident",
 			"event": [
 				{
 					"listen": "test",
@@ -732,7 +553,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/membershipGroups/{{new_id_r1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/favors/{{new_id_r1}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -745,23 +566,23 @@
 						"{{new_id_N}}",
 						"residents",
 						"{{new_id_g1}}",
-						"membershipGroups",
+						"favors",
 						"{{new_id_r1}}"
 					]
 				},
-				"description": "Removes group from member in the app. \r\nNeighborhood, group and member are specified as path parameter.\r\n** Expected http code: 200 **\r\n"
+				"description": "Removes favor from resident in the app. \r\nNeighborhood, favor and resident are specified as path parameter.\r\n** Expected http code: 200 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Remove group from non existing member",
+			"name": "Remove favor from non existing resident",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"id": "91d9959e-4825-4dd7-88e3-3e33b988c765",
 						"exec": [
-							"tests[\"Should not delete group to non existing member\"] = responseCode.code === 404;",
+							"tests[\"Should not delete favor to non existing resident\"] = responseCode.code === 404;",
 							"tests[\"Expected message\"] = responseBody.has(\"/residents/22 does not exist\");"
 						],
 						"type": "text/javascript"
@@ -776,7 +597,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/22/membershipGroups/{{new_id_g1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/22/favors/{{new_id_g1}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -789,24 +610,24 @@
 						"{{new_id_N}}",
 						"residents",
 						"22",
-						"membershipGroups",
+						"favors",
 						"{{new_id_g1}}"
 					]
 				},
-				"description": "Tries to reomove group from non-existing member.\r\nThe test verifies the generation of error and message \"The resource / members / 22 does not exist.\".\r\n** Expected http code: 404 **\r\n"
+				"description": "Tries to reomove favor from non-existing resident.\r\nThe test verifies the generation of error and message \"The resource / residents / 22 does not exist.\".\r\n** Expected http code: 404 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Remove non existing group from  member",
+			"name": "Remove non existing favor from  resident",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"id": "91d9959e-4825-4dd7-88e3-3e33b988c765",
 						"exec": [
-							"tests[\"Should not get group from non existing member\"] = responseCode.code === 404;",
-							"tests[\"Expected message\"] = responseBody.has(\"/groups/22 does not exist\");"
+							"tests[\"Should not get favor from non existing resident\"] = responseCode.code === 404;",
+							"tests[\"Expected message\"] = responseBody.has(\"/favors/22 does not exist\");"
 						],
 						"type": "text/javascript"
 					}
@@ -820,7 +641,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/membershipGroups/22",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/residents/{{new_id_g1}}/favors/22",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -833,16 +654,16 @@
 						"{{new_id_N}}",
 						"residents",
 						"{{new_id_g1}}",
-						"membershipGroups",
+						"favors",
 						"22"
 					]
 				},
-				"description": "Tries to remove non existing group from member.\r\nThe test verifies the generation of error and message \"The resource / groups/ 22 does not exist.\".\r\n** Expected http code: 404 **\r\n"
+				"description": "Tries to remove non existing favor from resident.\r\nThe test verifies the generation of error and message \"The resource / favors/ 22 does not exist.\".\r\n** Expected http code: 404 **\r\n"
 			},
 			"response": []
 		},
 		{
-			"name": "Delete a group1",
+			"name": "Delete a favor1",
 			"event": [
 				{
 					"listen": "test",
@@ -859,7 +680,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/groups/{{new_id_r1}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/favors/{{new_id_r1}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -870,7 +691,7 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}",
-						"groups",
+						"favors",
 						"{{new_id_r1}}"
 					]
 				}
@@ -878,7 +699,7 @@
 			"response": []
 		},
 		{
-			"name": "Delete a group2",
+			"name": "Delete a favor2",
 			"event": [
 				{
 					"listen": "test",
@@ -895,7 +716,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N2}}/groups/{{new_id_r2}}",
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N2}}/favors/{{new_id_r2}}",
 					"protocol": "http",
 					"host": [
 						"{{ip}}"
@@ -906,7 +727,7 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N2}}",
-						"groups",
+						"favors",
 						"{{new_id_r2}}"
 					]
 				}
@@ -914,7 +735,7 @@
 			"response": []
 		},
 		{
-			"name": "Delete a member1",
+			"name": "Delete a resident1",
 			"event": [
 				{
 					"listen": "test",
@@ -950,7 +771,7 @@
 			"response": []
 		},
 		{
-			"name": "Delete a member2",
+			"name": "Delete a resident2",
 			"event": [
 				{
 					"listen": "test",
@@ -1014,40 +835,6 @@
 						"api",
 						"neighborhoods",
 						"{{new_id_N}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete neighborhood2",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "0d27dd2c-c6e5-47c5-b329-ca38c5433d23",
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N2}}",
-					"protocol": "http",
-					"host": [
-						"{{ip}}"
-					],
-					"port": "{{puerto}}",
-					"path": [
-						"s3_neighborhood-api",
-						"api",
-						"neighborhoods",
-						"{{new_id_N2}}"
 					]
 				}
 			},

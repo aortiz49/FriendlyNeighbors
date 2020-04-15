@@ -51,10 +51,11 @@ public class PostViewerLogicTest {
     private PostEntity post = new PostEntity();
     private List<ResidentProfileEntity> data = new ArrayList<>();
 
+    private ResidentLoginEntity login;
+
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
-     * contains classes, DB descriptor and beans.xml file for dependencies
-     * injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
+     * descriptor and beans.xml file for dependencies injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -105,13 +106,17 @@ public class PostViewerLogicTest {
         post = factory.manufacturePojo(PostEntity.class);
         post.setId(1L);
         post.setViewers(new ArrayList<>());
-        
-        
-         ResidentProfileEntity author = factory.manufacturePojo(ResidentProfileEntity.class);
-         author.setNeighborhood(neighborhood);
-         em.persist(author);
 
-         
+        login = factory.manufacturePojo(ResidentLoginEntity.class);
+        login.setNeighborhood(neighborhood);
+        em.persist(login);
+
+        ResidentProfileEntity author = factory.manufacturePojo(ResidentProfileEntity.class);
+        author.setNeighborhood(neighborhood);
+        author.setLogin(login);
+
+        em.persist(author);
+
         post.setAuthor(author);
 
         em.persist(post);
@@ -121,9 +126,9 @@ public class PostViewerLogicTest {
 
             entity.setPostsToView(new ArrayList<>());
             entity.getPostsToView().add(post);
+            entity.setLogin(login);
             entity.setNeighborhood(neighborhood);
-            
-            
+
             em.persist(entity);
             data.add(entity);
             post.getViewers().add(entity);
@@ -141,8 +146,9 @@ public class PostViewerLogicTest {
         ResidentProfileEntity newResidentProfile = factory.manufacturePojo(ResidentProfileEntity.class);
 
         newResidentProfile.setNeighborhood(neighborhood);
+        newResidentProfile.setLogin(login);
 
-        residentLogic.createResident(newResidentProfile, neighborhood.getId());
+        residentLogic.createResident(newResidentProfile, neighborhood.getId(), login.getId());
 
         ResidentProfileEntity residentEntity = postResidentProfileLogic.associateViewerToPost(post.getId(), newResidentProfile.getId(), neighborhood.getId());
         Assert.assertNotNull(residentEntity);
@@ -157,8 +163,7 @@ public class PostViewerLogicTest {
     }
 
     /**
-     * Test for getting  collection of resident entities associated with
-     * post
+     * Test for getting collection of resident entities associated with post
      */
     @Test
     public void getResidentProfilesTest() {
@@ -172,7 +177,7 @@ public class PostViewerLogicTest {
     }
 
     /**
-     * Test for getting  resident entity associated with post
+     * Test for getting resident entity associated with post
      *
      * @throws BusinessLogicException
      */
@@ -199,10 +204,10 @@ public class PostViewerLogicTest {
         for (int i = 0; i < 3; i++) {
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
             entity.setPostsToView(new ArrayList<>());
+            entity.setLogin(login);
             entity.getPostsToView().add(post);
 
-         
-            residentLogic.createResident(entity, neighborhood.getId());
+            residentLogic.createResident(entity, neighborhood.getId(), login.getId());
 
             newCollection.add(entity);
         }
@@ -214,7 +219,7 @@ public class PostViewerLogicTest {
     }
 
     /**
-     * Test for removing  resident from  post
+     * Test for removing resident from post
      *
      */
     @Test

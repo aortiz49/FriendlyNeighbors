@@ -124,6 +124,7 @@ public class ResidentLoginLogicTest {
         for (int i = 0; i < 3; i++) {
 
             ResidentLoginEntity entity = factory.manufacturePojo(ResidentLoginEntity.class);
+            entity.setNeighborhood(neighborhood);
             entity.setResident(resident);
 
             // add the data to the table
@@ -146,7 +147,7 @@ public class ResidentLoginLogicTest {
         ResidentLoginEntity result = null;
         try {
             newResidentLogin.setPassword("Password4$");
-            result = residentLoginLogic.createResidentLogin(neighborhood.getId(),resident.getId(),newResidentLogin);
+            result = residentLoginLogic.createResidentLogin(neighborhood.getId(),newResidentLogin);
 
         } catch (BusinessLogicException ex) {
             Logger.getLogger(ResidentLoginLogicTest.class.getName()).log(Level.SEVERE, null, ex);

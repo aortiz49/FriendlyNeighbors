@@ -26,7 +26,9 @@ import co.edu.uniandes.csw.neighborhood.dtos.EventDTO;
 import co.edu.uniandes.csw.neighborhood.dtos.EventDetailDTO;
 import co.edu.uniandes.csw.neighborhood.ejb.EventLogic;
 import co.edu.uniandes.csw.neighborhood.ejb.EventResidentProfileLogic;
+import co.edu.uniandes.csw.neighborhood.ejb.LocationLogic;
 import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
+import co.edu.uniandes.csw.neighborhood.entities.LocationEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +71,12 @@ public class EventResidentProfileResource {
     private EventResidentProfileLogic eventResidentProfileLogic;
 
     /**
+     * Injects location logic dependencies.
+     */
+    @Inject
+    private LocationLogic locationLogic;
+
+    /**
      * Injects event logic dependencies.
      */
     @Inject
@@ -99,10 +107,20 @@ public class EventResidentProfileResource {
         LOGGER.log(Level.INFO, "Creating event under a host from resource: input: "
                 + "residentsId {0} , eventId {1}", new Object[]{pHostId, pHostedEvent.getId()});
 
+        // create event entity
         EventEntity event = pHostedEvent.toEntity();
 
+        // get location Id
+        Long locationID = event.getLocation().getId();
+
+        LocationEntity locationEntity = locationLogic.getLocation(pNeighborhoodId, locationID);
+
+        if (locationEntity == null) {
+            throw new WebApplicationException("Resource /locations/" + locationID + " does not exist.", 404);
+        }
+
         EventEntity eventEntity = eventLogic.createEvent(
-                pNeighborhoodId, pHostId, event.getLocation().getId(),
+                pNeighborhoodId, pHostId, locationID,
                 pHostedEvent.toEntity());
 
         EventDetailDTO eventDetailDTO = new EventDetailDTO(

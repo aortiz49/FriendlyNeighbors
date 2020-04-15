@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "6e5b0b6f-66ab-4d6d-be7e-6d46f1d15e42",
+		"_postman_id": "4b36059c-609c-46aa-8a17-e2e3a310de8d",
 		"name": "Favor-Tests.postman_collection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -50,6 +50,54 @@
 			"response": []
 		},
 		{
+			"name": "Create login 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0184a47c-832b-41ec-aa7a-8d6f899c53bc",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"login1\",data.id);",
+							"tests[\"Successfuly created location.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userName\": \"aortiz49A\",\n\t\"password\": \"Password##1\",\n\t\"governmentId\": \"281287337A\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{new_id_N}}/logins",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{new_id_N}}",
+						"logins"
+					]
+				},
+				"description": "Creates a location in the neighborhood."
+			},
+			"response": []
+		},
+		{
 			"name": "Create resident for tests",
 			"event": [
 				{
@@ -76,7 +124,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blcde@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
+					"raw": "{\r\n\t\"login\":{\r\n\t\t\"id\": {{login1}}\t\r\n\t},\r\n    \"address\": \"Cra 73\",\r\n    \"email\": \"blcde@hotmail.com\",\r\n    \"name\": \"Andres Bayona\",\r\n    \"neighborhood\": {\"id\": \"{{new_id_N}}\"},\r\n    \"nickname\": \"AB\",\r\n    \"phoneNumber\": \"1132323\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"link\"\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

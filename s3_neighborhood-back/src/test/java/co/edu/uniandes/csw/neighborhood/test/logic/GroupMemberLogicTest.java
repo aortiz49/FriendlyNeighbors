@@ -51,10 +51,11 @@ public class GroupMemberLogicTest {
     private GroupEntity group = new GroupEntity();
     private List<ResidentProfileEntity> data = new ArrayList<>();
 
+    private ResidentLoginEntity login;
+
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara. jar
-     * contains classes, DB descriptor and beans.xml file for dependencies
-     * injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
+     * descriptor and beans.xml file for dependencies injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -105,8 +106,12 @@ public class GroupMemberLogicTest {
         group = factory.manufacturePojo(GroupEntity.class);
         group.setId(1L);
         group.setMembers(new ArrayList<>());
-                 
+
         group.setNeighborhood(neighborhood);
+
+        login = factory.manufacturePojo(ResidentLoginEntity.class);
+        login.setNeighborhood(neighborhood);
+        em.persist(login);
 
         em.persist(group);
 
@@ -116,8 +121,7 @@ public class GroupMemberLogicTest {
             entity.setGroups(new ArrayList<>());
             entity.getGroups().add(group);
             entity.setNeighborhood(neighborhood);
-            
-            
+
             em.persist(entity);
             data.add(entity);
             group.getMembers().add(entity);
@@ -135,8 +139,9 @@ public class GroupMemberLogicTest {
         ResidentProfileEntity newResidentProfile = factory.manufacturePojo(ResidentProfileEntity.class);
 
         newResidentProfile.setNeighborhood(neighborhood);
+        newResidentProfile.setLogin(login);
 
-        residentLogic.createResident(newResidentProfile, neighborhood.getId());
+        residentLogic.createResident(newResidentProfile, neighborhood.getId(),login.getId());
 
         ResidentProfileEntity residentEntity = groupResidentProfileLogic.associateMemberToGroup(group.getId(), newResidentProfile.getId(), neighborhood.getId());
         Assert.assertNotNull(residentEntity);
@@ -151,8 +156,7 @@ public class GroupMemberLogicTest {
     }
 
     /**
-     * Test for getting  collection of resident entities associated with
-     * group
+     * Test for getting collection of resident entities associated with group
      */
     @Test
     public void getResidentProfilesTest() {
@@ -166,7 +170,7 @@ public class GroupMemberLogicTest {
     }
 
     /**
-     * Test for getting  resident entity associated with group
+     * Test for getting resident entity associated with group
      *
      * @throws BusinessLogicException
      */
@@ -194,9 +198,9 @@ public class GroupMemberLogicTest {
             ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
             entity.setGroups(new ArrayList<>());
             entity.getGroups().add(group);
+            entity.setLogin(login);
 
-         
-            residentLogic.createResident(entity, neighborhood.getId());
+            residentLogic.createResident(entity, neighborhood.getId(),login.getId());
 
             newCollection.add(entity);
         }
@@ -208,7 +212,7 @@ public class GroupMemberLogicTest {
     }
 
     /**
-     * Test for removing  resident from  group
+     * Test for removing resident from group
      *
      */
     @Test
