@@ -225,7 +225,6 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
             }
             residentEntity.setBusinesses(businessEntities);
         }
-        LOGGER.log(Level.INFO, "Creating entity");
 
         return residentEntity;
     }
