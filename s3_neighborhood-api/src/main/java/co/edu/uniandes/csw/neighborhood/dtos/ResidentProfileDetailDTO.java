@@ -7,7 +7,6 @@ package co.edu.uniandes.csw.neighborhood.dtos;
 
 import co.edu.uniandes.csw.neighborhood.entities.*;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
