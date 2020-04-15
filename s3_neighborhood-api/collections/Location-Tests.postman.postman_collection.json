@@ -1,0 +1,849 @@
+{
+	"info": {
+		"_postman_id": "3a2d1184-52db-4887-b30f-de65e97bed0f",
+		"name": "Location-Tests.postman",
+		"description": "Tests the REST API of a location.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create neighborhood",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a7d96e12-12db-4e60-a294-bbde04d53e60",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"loc_n1\",data.id);",
+							"tests[\"Successful neighborhood creation.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 1,\n    \"locality\": \"Usaquén\",\n    \"name\": \"Location_Neighborhood\",\n    \"numberOfResidents\": 999\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						""
+					]
+				},
+				"description": "Creates a neighborhood to add the location to."
+			},
+			"response": []
+		},
+		{
+			"name": "Create a location with no name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0184a47c-832b-41ec-aa7a-8d6f899c53bc",
+						"exec": [
+							"tests[\"Location with no name not created.\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"address\": \"8701 Ocean Drive\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{loc_n1}}/locations/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{loc_n1}}",
+						"locations",
+						""
+					]
+				},
+				"description": "Creates a location with no name."
+			},
+			"response": []
+		},
+		{
+			"name": "Create a location with no address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0184a47c-832b-41ec-aa7a-8d6f899c53bc",
+						"exec": [
+							"tests[\"Location with no address not created.\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Radcliffe Park\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{loc_n1}}/locations/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{loc_n1}}",
+						"locations",
+						""
+					]
+				},
+				"description": "Creates a location with no address."
+			},
+			"response": []
+		},
+		{
+			"name": "Create a location with no open time",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0184a47c-832b-41ec-aa7a-8d6f899c53bc",
+						"exec": [
+							"tests[\"Location with no open time not created.\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Radcliffe Park\",\n    \"address\": \"2319 Gretna Green Way\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{loc_n1}}/locations/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{loc_n1}}",
+						"locations",
+						""
+					]
+				},
+				"description": "Creates a location without an opening time."
+			},
+			"response": []
+		},
+		{
+			"name": "Create a location with incorrect open time format",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0184a47c-832b-41ec-aa7a-8d6f899c53bc",
+						"exec": [
+							"tests[\"Location with illegal open time not created.\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Radcliffe Park\",\n    \"address\": \"2319 Gretna Green Way\",\n    \"openTime\": \"08:67 A.M\",\n    \"closeTime\": \"09:44 PM\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{loc_n1}}/locations/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{loc_n1}}",
+						"locations",
+						""
+					]
+				},
+				"description": "Creates a location with an erroneous open time format"
+			},
+			"response": []
+		},
+		{
+			"name": "Create a location with incorrect close time format",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0184a47c-832b-41ec-aa7a-8d6f899c53bc",
+						"exec": [
+							"tests[\"Location with incorrect close time not created.\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Radcliffe Park\",\n    \"address\": \"2319 Gretna Green Way\",\n    \"openTime\": \"08:67 AM\",\n    \"closeTime\": \"09:94PM\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{loc_n1}}/locations/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{loc_n1}}",
+						"locations",
+						""
+					]
+				},
+				"description": "Creates a location with an erroneous close time format"
+			},
+			"response": []
+		},
+		{
+			"name": "Create a location with open time after close time",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0184a47c-832b-41ec-aa7a-8d6f899c53bc",
+						"exec": [
+							"tests[\"Location with illegal open time/close time not created.\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Radcliffe Park\",\n    \"address\": \"2319 Gretna Green Way\",\n    \"openTime\": \"08:67 PM\",\n    \"closeTime\": \"09:14 AM\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{loc_n1}}/locations/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{loc_n1}}",
+						"locations",
+						""
+					]
+				},
+				"description": "Creates a location with an illegal open/close time."
+			},
+			"response": []
+		},
+		{
+			"name": "Create a location with no latitude",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0184a47c-832b-41ec-aa7a-8d6f899c53bc",
+						"exec": [
+							"tests[\"Location with no latitude not created.\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Radcliffe Park\",\n    \"address\": \"2319 Gretna Green Way\",\n    \"openTime\": \"08:15 AM\",\n    \"closeTime\": \"05:00 PM\",\n    \"longitude\": -82.6270346\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{loc_n1}}/locations/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{loc_n1}}",
+						"locations",
+						""
+					]
+				},
+				"description": "Creates a location with no latitude."
+			},
+			"response": []
+		},
+		{
+			"name": "Create a location with no longitude",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0184a47c-832b-41ec-aa7a-8d6f899c53bc",
+						"exec": [
+							"tests[\"Location with no longitude not created.\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Radcliffe Park\",\n    \"address\": \"2319 Gretna Green Way\",\n    \"openTime\": \"08:15 AM\",\n    \"closeTime\": \"05:00 PM\",\n    \"latitude\": 28.0416898\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{loc_n1}}/locations/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{loc_n1}}",
+						"locations",
+						""
+					]
+				},
+				"description": "Creates a location with no longitude."
+			},
+			"response": []
+		},
+		{
+			"name": "Create location 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0184a47c-832b-41ec-aa7a-8d6f899c53bc",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"location1\",data.id);",
+							"tests[\"Successful location creation.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Radcliffe Park\",\n    \"address\": \"2319 Gretna Green Way\",\n    \"openTime\": \"08:15 AM\",\n    \"closeTime\": \"05:00 PM\",\n    \"latitude\": 28.0416898,\n    \"longitude\": -82.6270346\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{loc_n1}}/locations/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{loc_n1}}",
+						"locations",
+						""
+					]
+				},
+				"description": "Creates a location in the neighborhood."
+			},
+			"response": []
+		},
+		{
+			"name": "Create a location with existing name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0184a47c-832b-41ec-aa7a-8d6f899c53bc",
+						"exec": [
+							"tests[\"Location with repeated name not created.\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Radcliffe Park\",\n    \"address\": \"2319 Gretna Green Way\",\n    \"openTime\": \"08:15 AM\",\n    \"closeTime\": \"05:00 PM\",\n    \"latitude\": 28.0416898,\n    \"longitude\": -82.6270346\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{loc_n1}}/locations/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{loc_n1}}",
+						"locations",
+						""
+					]
+				},
+				"description": "Creates a location with the the name of a location that already exists in the neighborhood."
+			},
+			"response": []
+		},
+		{
+			"name": "Create location 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0184a47c-832b-41ec-aa7a-8d6f899c53bc",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"location2\",data.id);",
+							"tests[\"Successful location creation.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Wesfield Mall\",\n    \"address\": \"0710 Waters Ave.\",\n    \"openTime\": \"08:00 AM\",\n    \"closeTime\": \"11:45 PM\",\n    \"latitude\": 29.0416898,\n    \"longitude\": -81.887737\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{loc_n1}}/locations/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{loc_n1}}",
+						"locations",
+						""
+					]
+				},
+				"description": "Creates another location in the neighborhood."
+			},
+			"response": []
+		},
+		{
+			"name": "Get all locations in the neighborhood",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "972211b7-ca88-403e-bcde-f51a6ade372f",
+						"exec": [
+							"tests[\"All locations in the neighborhood were successfully obtained.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{loc_n1}}/locations/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{loc_n1}}",
+						"locations",
+						""
+					]
+				},
+				"description": "Returns all the locations in the neighborhood."
+			},
+			"response": []
+		},
+		{
+			"name": "Get location 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "972211b7-ca88-403e-bcde-f51a6ade372f",
+						"exec": [
+							"tests[\"Location 1 was successfully obtained.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{loc_n1}}/locations/{{location2}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{loc_n1}}",
+						"locations",
+						"{{location2}}"
+					]
+				},
+				"description": "Returns the second location created in the neighborhood."
+			},
+			"response": []
+		},
+		{
+			"name": "Update location 1 with a new name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4a213c45-5ecd-45c9-9239-054671f2f2aa",
+						"exec": [
+							"tests[\"Name and open time of location 1 successfully updated\"] = responseCode.code === 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"OrangeGrove Park\",\n    \"address\": \"2319 Gretna Green Way\",\n    \"openTime\": \"09:15 AM\",\n    \"closeTime\": \"05:00 PM\",\n    \"latitude\": 28.0416898,\n    \"longitude\": -82.6270346\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{loc_n1}}/locations/{{location1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{loc_n1}}",
+						"locations",
+						"{{location1}}"
+					]
+				},
+				"description": "Updates the name and opening time of the first location created."
+			},
+			"response": []
+		},
+		{
+			"name": "Get updated location 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "972211b7-ca88-403e-bcde-f51a6ade372f",
+						"exec": [
+							"tests[\"Updated location 1 successfully obtained.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{loc_n1}}/locations/{{location1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{loc_n1}}",
+						"locations",
+						"{{location1}}"
+					]
+				},
+				"description": "Returns the first location created in the neighborhood after the update."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete location 1 ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4ddfa150-f0c6-45a6-96dc-d1300b6872b3",
+						"exec": [
+							"tests[\"Location 1 was successfully deleted\"] = responseCode.code === 204;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{loc_n1}}/locations/{{location1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{loc_n1}}",
+						"locations",
+						"{{location1}}"
+					]
+				},
+				"description": "Removes the first location from the neighborhood."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete location 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4ddfa150-f0c6-45a6-96dc-d1300b6872b3",
+						"exec": [
+							"tests[\"Location 2 was successfully deleted\"] = responseCode.code === 204;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{loc_n1}}/locations/{{location2}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{loc_n1}}",
+						"locations",
+						"{{location2}}"
+					]
+				},
+				"description": "Removes the second location from the neighborhood."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete neighborhood",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4ddfa150-f0c6-45a6-96dc-d1300b6872b3",
+						"exec": [
+							"tests[\"The neighborhood was successfully deleted\"] = responseCode.code === 204;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{loc_n1}}/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{loc_n1}}",
+						""
+					]
+				},
+				"description": "Removes the neighborhood from the collection."
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

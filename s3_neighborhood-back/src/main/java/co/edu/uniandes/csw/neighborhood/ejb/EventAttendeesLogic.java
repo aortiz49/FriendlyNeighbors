@@ -43,7 +43,7 @@ public class EventAttendeesLogic {
      */
     public ResidentProfileEntity associateAttendeeToEvent(Long neighId, Long eventId, Long attendeeId) {
         LOGGER.log(Level.INFO, "Initiating association between attendee with id {0} and  event with id {1}, from neighbothood {2}", new Object[]{attendeeId, eventId, neighId});
-        EventEntity eventEntity = eventPersistence.find(neighId,eventId);
+        EventEntity eventEntity = eventPersistence.find(neighId, eventId);
         ResidentProfileEntity attendeeEntity = attendeePersistence.find(attendeeId, neighId);
 
         eventEntity.getAttendees().add(attendeeEntity);
@@ -75,12 +75,17 @@ public class EventAttendeesLogic {
      */
     public ResidentProfileEntity getAttendee(Long neighId, Long eventId, Long attendeeId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Initiating query about attendee with id {0} from event with id {1}, from neighbothood {2}", new Object[]{attendeeId, eventId, neighId});
-        List<ResidentProfileEntity> attendees = eventPersistence.find(eventId, neighId).getAttendees();
+
+        List<ResidentProfileEntity> attendees = eventPersistence.find(neighId, eventId).getAttendees();
         ResidentProfileEntity attendeeResidentProfiles = attendeePersistence.find(attendeeId, neighId);
+
         int index = attendees.indexOf(attendeeResidentProfiles);
+
         LOGGER.log(Level.INFO, "Finish query about attendee with id {0} from event with id {1}, from neighbothood {2}", new Object[]{attendeeId, eventId, neighId});
+
         if (index >= 0) {
             return attendees.get(index);
+
         }
         throw new BusinessLogicException("There is no association between attendee and event");
     }
@@ -95,7 +100,7 @@ public class EventAttendeesLogic {
      */
     public List<ResidentProfileEntity> replaceAttendees(Long neighId, Long eventId, List<ResidentProfileEntity> attendees) {
         LOGGER.log(Level.INFO, "Trying to replace attendees related to event with id {0} from neighborhood {1}", new Object[]{eventId, neighId});
-        EventEntity eventEntity = eventPersistence.find(eventId, neighId);
+        EventEntity eventEntity = eventPersistence.find(neighId, eventId);
         List<ResidentProfileEntity> attendeeList = attendeePersistence.findAll(neighId);
         for (ResidentProfileEntity attendee : attendeeList) {
             if (attendees.contains(attendee)) {
@@ -121,7 +126,7 @@ public class EventAttendeesLogic {
     public void removeAttendee(Long neighId, Long eventId, Long attendeeId) {
         LOGGER.log(Level.INFO, "Deleting association between attendee with id {0} and  event with id {1}, from neighbothood {2}", new Object[]{attendeeId, eventId, neighId});
         ResidentProfileEntity attendeeEntity = attendeePersistence.find(attendeeId, neighId);
-        EventEntity eventEntity = eventPersistence.find(neighId,eventId );
+        EventEntity eventEntity = eventPersistence.find(neighId, eventId);
         eventEntity.getAttendees().remove(attendeeEntity);
         LOGGER.log(Level.INFO, "Association deleted between attendee with id {0} and  event with id {1}, from neighbothood {2}", new Object[]{attendeeId, eventId, neighId});
     }

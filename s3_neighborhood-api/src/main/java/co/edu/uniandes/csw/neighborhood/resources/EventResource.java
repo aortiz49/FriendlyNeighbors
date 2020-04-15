@@ -182,7 +182,7 @@ public class EventResource {
     @DELETE
     @Path("{eventId: \\d+}")
     public void deleteEvent(@PathParam("neighborhoodId") Long pNeighborhoodId,
-            @PathParam("pEventId") Long pEventId) throws WebApplicationException {
+            @PathParam("eventId") Long pEventId) throws WebApplicationException {
 
         LOGGER.log(Level.INFO, "Deleting event : input: {0}", pEventId);
 

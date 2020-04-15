@@ -26,7 +26,7 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
     /**
      * Events a resident is signed up for.
      */
-    private List<EventDTO> eventsToAttend;
+    private List<EventDTO> attendedEvents;
 
     /**
      * Favors a resident is signed up to complete.
@@ -91,7 +91,7 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
         super(residentEntity);
         if (residentEntity != null) {
 
-            eventsToAttend = new ArrayList<>();
+            attendedEvents = new ArrayList<>();
             favorsToHelp = new ArrayList<>();
             postsToView = new ArrayList<>();
             favorsRequested = new ArrayList<>();
@@ -103,7 +103,7 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
             comments = new ArrayList<>();
 
             for (EventEntity entityEvent : residentEntity.getAttendedEvents()) {
-                eventsToAttend.add(new EventDTO(entityEvent));
+                attendedEvents.add(new EventDTO(entityEvent));
             }
 
             for (FavorEntity entityFavor : residentEntity.getFavorsToHelp()) {
@@ -153,12 +153,12 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
     public ResidentProfileEntity toEntity() {
         ResidentProfileEntity residentEntity = super.toEntity();
 
-        if (eventsToAttend != null) {
+        if (attendedEvents != null) {
             List<EventEntity> events = new ArrayList<>();
-            for (EventDTO dtoEvent : eventsToAttend) {
+            for (EventDTO dtoEvent : attendedEvents) {
                 events.add(dtoEvent.toEntity());
             }
-            residentEntity.setEventsToAttend(events);
+            residentEntity.setattendedEvents(events);
         }
 
         if (favorsToHelp != null) {
@@ -234,17 +234,17 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
     }
 
     /**
-     * @return the eventsToAttend
+     * @return the attendedEvents
      */
-    public List<EventDTO> getEventsToAttend() {
-        return eventsToAttend;
+    public List<EventDTO> getattendedEvents() {
+        return attendedEvents;
     }
 
     /**
-     * @param eventsToAttend the eventsToAttend to set
+     * @param attendedEvents the attendedEvents to set
      */
-    public void setEventsToAttend(List<EventDTO> eventsToAttend) {
-        this.eventsToAttend = eventsToAttend;
+    public void setattendedEvents(List<EventDTO> attendedEvents) {
+        this.attendedEvents = attendedEvents;
     }
 
     /**

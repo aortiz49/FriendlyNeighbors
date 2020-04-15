@@ -1,0 +1,1295 @@
+{
+	"info": {
+		"_postman_id": "851da1b7-4303-460f-ae31-a961c45cafaa",
+		"name": "Event-Tests.postman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create a neighborhood",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6665a8d0-6bd9-4c40-aa23-575ac65b9829",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"event_n1\",data.id);",
+							"tests[\"Successfully created neighborhood.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": 1,\n\t\"name\": \"Neighborhood_Events\",\n\t\"locality\" :\"Engativa\",\n\t\"numberOfResidents\":45\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create location 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0184a47c-832b-41ec-aa7a-8d6f899c53bc",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"location1\",data.id);",
+							"tests[\"Successfuly created location.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Radcliffe Park\",\n    \"address\": \"2319 Gretna Green Way\",\n    \"openTime\": \"08:15 AM\",\n    \"closeTime\": \"05:00 PM\",\n    \"latitude\": 28.0416898,\n    \"longitude\": -82.6270346\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/locations/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"locations",
+						""
+					]
+				},
+				"description": "Creates a location in the neighborhood."
+			},
+			"response": []
+		},
+		{
+			"name": "Create host",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "af2b43cd-9a0a-4153-a6a2-1e9cbecd6cb9",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"event_host\",data.id);",
+							"tests[\"Successfully created host.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"address\": \"9708 Matwood Ct.\",\r\n    \"email\": \"myTestEmail@gmail.com\",\r\n    \"name\": \"John Smith\",\r\n    \"neighborhood\": {\"id\": \"{{event_n1}}\"},\r\n    \"nickname\": \"Johnny\",\r\n    \"phoneNumber\": \"(305)867-5644\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"https://docs.google.com/spreadhseets/testProof\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/residents/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"residents",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create an event under host",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3ae71fb3-f3c4-4c61-9e72-42676adabacb",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "8b4bdfb1-ed17-4c30-8cc5-8604e0576203",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"event1\",data.id);",
+							"tests[\"Successfully created event.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"location\": {\n        \"id\": \"{{location1}}\"\n    },\n    \"datePosted\": \"2020-04-10T13:30:00.000\",\n    \"dateOfEvent\": \"2020-04-15T18:00:00.000\",\n    \"title\": \"Karen's Birthday Party!\",\n    \"startTime\": \"08:00 AM\",\n    \"endTime\": \"02:30 PM\",\n    \"description\": \"We're gonna meet at the park to celebrate Karen's 22nd b-day!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/residents/{{event_host}}/events/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"residents",
+						"{{event_host}}",
+						"events",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a second event under host",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3ae71fb3-f3c4-4c61-9e72-42676adabacb",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "8b4bdfb1-ed17-4c30-8cc5-8604e0576203",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"event2\",data.id);",
+							"tests[\"Successfully created event.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"location\": {\n        \"id\": \"{{location1}}\"\n    },\n    \"datePosted\": \"2020-04-10T13:30:00.000\",\n    \"dateOfEvent\": \"2020-04-15T18:00:00.000\",\n    \"title\": \"Kyle's Going Away Party!\",\n    \"startTime\": \"08:00 PM\",\n    \"endTime\": \"11:59 PM\",\n    \"description\": \"Dress up!! Theme: Grease. See you there! \"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/residents/{{event_host}}/events/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"residents",
+						"{{event_host}}",
+						"events",
+						""
+					]
+				},
+				"description": "Creates a second event under the same host"
+			},
+			"response": []
+		},
+		{
+			"name": "Create a third event under host",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3ae71fb3-f3c4-4c61-9e72-42676adabacb",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "8b4bdfb1-ed17-4c30-8cc5-8604e0576203",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"event3\",data.id);",
+							"tests[\"Successfully created event.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"location\": {\n        \"id\": \"{{location1}}\"\n    },\n    \"datePosted\": \"2020-04-10T13:30:00.000\",\n    \"dateOfEvent\": \"2020-04-15T18:00:00.000\",\n    \"title\": \"Dinner party!!\",\n    \"startTime\": \"08:00 PM\",\n    \"endTime\": \"11:59 PM\",\n    \"description\": \"bring food to eat! :)\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/residents/{{event_host}}/events/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"residents",
+						"{{event_host}}",
+						"events",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create attendee 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "af2b43cd-9a0a-4153-a6a2-1e9cbecd6cb9",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"attendee1\",data.id);",
+							"tests[\"Successfully created attendee.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"address\": \"9999 Attendee St.\",\r\n    \"email\": \"attendee1@gmail.com\",\r\n    \"name\": \"Abe Lincoln\",\r\n    \"neighborhood\": {\"id\": \"{{event_n1}}\"},\r\n    \"nickname\": \"Honest Abe\",\r\n    \"phoneNumber\": \"(777)777-7777\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"https://docs.google.com/spreadhseets/testProof1\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/residents/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"residents",
+						""
+					]
+				},
+				"description": "Creates an attendee"
+			},
+			"response": []
+		},
+		{
+			"name": "Create attendee 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "af2b43cd-9a0a-4153-a6a2-1e9cbecd6cb9",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"attendee2\",data.id);",
+							"tests[\"Successfully created attendee.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"address\": \"1111 Attendee St.\",\r\n    \"email\": \"attendee2@gmail.com\",\r\n    \"name\": \"George Bush\",\r\n    \"neighborhood\": {\"id\": \"{{event_n1}}\"},\r\n    \"nickname\": \"Dubya\",\r\n    \"phoneNumber\": \"(777)777-7777\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"https://docs.google.com/spreadhseets/testProof2\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/residents/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"residents",
+						""
+					]
+				},
+				"description": "Creates an attendee"
+			},
+			"response": []
+		},
+		{
+			"name": "Associate attendee 1 to event 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d20ee56a-6d4c-4ae7-83f5-1d9fb2d9668b",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"tests[\"Successfully associated attendee 1 to event 1.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/events/{{event1}}/attendees/{{attendee1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"events",
+						"{{event1}}",
+						"attendees",
+						"{{attendee1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Associate attendee 1 to event 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fb64ed0a-eb2b-42f1-b07f-aba54411c40b",
+						"exec": [
+							"tests[\"Successfully associated attendee 1 to event 2.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/events/{{event2}}/attendees/{{attendee1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"events",
+						"{{event2}}",
+						"attendees",
+						"{{attendee1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Associate attendee 2 to event 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b462ff1e-3e24-4a69-9fd0-cda79a2c27a1",
+						"exec": [
+							"tests[\"Successfully associated attendee 2 to event 1.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/events/{{event1}}/attendees/{{attendee2}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"events",
+						"{{event1}}",
+						"attendees",
+						"{{attendee2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Associate attendee 2 to event 3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "483b6caf-5c91-4852-9822-70d9c58ac5ca",
+						"exec": [
+							"tests[\"Successfully associated attendee 2 to event 3.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/events/{{event3}}/attendees/{{attendee2}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"events",
+						"{{event3}}",
+						"attendees",
+						"{{attendee2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all events in the neighborhood",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "81495b88-c4d1-42a1-b701-e008823dc357",
+						"exec": [
+							"tests[\"Successfully obtained all events in the neighborhood.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/events",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Gets all events attended by attendee 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "81495b88-c4d1-42a1-b701-e008823dc357",
+						"exec": [
+							"tests[\"Successfully obtained all events attended by attendee 1.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/residents/{{attendee1}}/attendedEvents/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"residents",
+						"{{attendee1}}",
+						"attendedEvents",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Gets all events attended by attendee 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "81495b88-c4d1-42a1-b701-e008823dc357",
+						"exec": [
+							"tests[\"Successfully obtained all events attended by attendee 2.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/residents/{{attendee2}}/attendedEvents",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"residents",
+						"{{attendee2}}",
+						"attendedEvents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get event 3 attended by attendee 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "81495b88-c4d1-42a1-b701-e008823dc357",
+						"exec": [
+							"tests[\"Successfully obtained event 3 attended by attendee 2.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/residents/{{attendee2}}/attendedEvents/{{event3}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"residents",
+						"{{attendee2}}",
+						"attendedEvents",
+						"{{event3}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Associate event 1 to attendee 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "81495b88-c4d1-42a1-b701-e008823dc357",
+						"exec": [
+							"tests[\"Successfully associated event 1 to attendee 1.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/residents/{{attendee1}}/attendedEvents/{{event1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"residents",
+						"{{attendee1}}",
+						"attendedEvents",
+						"{{event1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Associate event 1 to attendee 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "81495b88-c4d1-42a1-b701-e008823dc357",
+						"exec": [
+							"tests[\"Successfully associated attendee 2 to event 1.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/residents/{{attendee1}}/attendedEvents/{{event2}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"residents",
+						"{{attendee1}}",
+						"attendedEvents",
+						"{{event2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all attendees from  from event 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "81495b88-c4d1-42a1-b701-e008823dc357",
+						"exec": [
+							"tests[\"Successfully obtained all attendees from event 1.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/events/{{event1}}/attendees/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"events",
+						"{{event1}}",
+						"attendees",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get attendee 1 from event 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "81495b88-c4d1-42a1-b701-e008823dc357",
+						"exec": [
+							"tests[\"Successfully obtained attendee 1 from  event 1.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/events/{{event1}}/attendees/{{attendee1}}/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"events",
+						"{{event1}}",
+						"attendees",
+						"{{attendee1}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Replace attended events of attendee 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "61184099-e5e6-4b2a-973c-faa5c59805fd",
+						"exec": [
+							"tests[\"Successfully updated the attendees from event 1.\"] = responseCode.code === 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n\t{\n\t\t\"id\":{{event3}}\n\t}\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/residents/{{attendee1}}/attendedEvents/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"residents",
+						"{{attendee1}}",
+						"attendedEvents",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete attendee 1 from event 1 ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9e028573-ab85-45a9-9a6f-c743ff30dafe",
+						"exec": [
+							"tests[\"Successfully deleted attendee 1 from event 1.\"] = responseCode.code === 204;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/events/{{event1}}/attendees/{{attendee1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"events",
+						"{{event1}}",
+						"attendees",
+						"{{attendee1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Replace attendees from event 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "61184099-e5e6-4b2a-973c-faa5c59805fd",
+						"exec": [
+							"tests[\"Successfully updated the events attended by attendee 1.\"] = responseCode.code === 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n\t{\n\t\t\"id\":{{attendee1}}\n\t},\n\t{\n\t\t\"id\":{{attendee2}}\n\t}\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/events/{{event1}}/attendees/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"events",
+						"{{event1}}",
+						"attendees",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete event 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9e028573-ab85-45a9-9a6f-c743ff30dafe",
+						"exec": [
+							"tests[\"Successfully deleted event 1.\"] = responseCode.code === 204;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/events/{{event1}}/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"events",
+						"{{event1}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete event 2 attended by attendee 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9e028573-ab85-45a9-9a6f-c743ff30dafe",
+						"exec": [
+							"tests[\"Successfully deleted event 2 attended by attendee 1.\"] = responseCode.code === 204;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/residents/{{attendee1}}/attendedEvents/{{event2}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"residents",
+						"{{attendee1}}",
+						"attendedEvents",
+						"{{event2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete location",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9e028573-ab85-45a9-9a6f-c743ff30dafe",
+						"exec": [
+							"tests[\"Successfully deleted location (which deletes all the events at that location).\"] = responseCode.code === 204;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/locations/{{location1}}/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"locations",
+						"{{location1}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete attendee 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9e028573-ab85-45a9-9a6f-c743ff30dafe",
+						"exec": [
+							"tests[\"Successfully deleted attendee 2.\"] = responseCode.code === 204;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/residents/{{attendee2}}/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"residents",
+						"{{attendee2}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete attendee 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9e028573-ab85-45a9-9a6f-c743ff30dafe",
+						"exec": [
+							"tests[\"Successfully deleted attendee 1.\"] = responseCode.code === 204;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/residents/{{attendee1}}/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"residents",
+						"{{attendee1}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete host",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9e028573-ab85-45a9-9a6f-c743ff30dafe",
+						"exec": [
+							"tests[\"Successfully deleted the event host.\"] = responseCode.code === 204;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/residents/{{event_host}}/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						"residents",
+						"{{event_host}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete neighborhood",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9e028573-ab85-45a9-9a6f-c743ff30dafe",
+						"exec": [
+							"tests[\"Successfully deleted the neighborhood.\"] = responseCode.code === 204;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{event_n1}}/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{event_n1}}",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

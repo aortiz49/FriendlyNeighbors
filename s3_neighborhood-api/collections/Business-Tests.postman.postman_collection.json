@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "85f528d2-78b4-4af8-abb2-68c4a45d587b",
+		"_postman_id": "fc76d495-c85f-4d56-9310-c3cd8e29c6db",
 		"name": "Business-Tests.postman",
 		"description": "REST API for businesses.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -169,7 +169,10 @@
 					"script": {
 						"id": "5738407f-6145-48d7-97c6-0fd27820a24b",
 						"exec": [
-							"tests[\"Business without neighborhood not created.\"] = responseCode.code === 404;"
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"loc_n1\",data.id);",
+							"tests[\"Business with no name not created.\"] = responseCode.code === 412;",
+							"console.log(data.id);"
 						],
 						"type": "text/javascript"
 					}

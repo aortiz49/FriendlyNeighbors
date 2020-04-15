@@ -71,7 +71,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
      */
     @PodamExclude
     @ManyToMany(mappedBy = "attendees")
-    private List<EventEntity> eventsToAttend = new ArrayList<>();
+    private List<EventEntity> attendedEvents = new ArrayList<>();
 
     /**
      * Favors a resident is signed up to complete.
@@ -277,17 +277,17 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
     }
 
     /**
-     * @return the eventsToAttend
+     * @return the attendedEvents
      */
     public List<EventEntity> getAttendedEvents() {
-        return eventsToAttend;
+        return attendedEvents;
     }
 
     /**
-     * @param eventsToAttend the eventsToAttend to set
+     * @param attendedEvents the attendedEvents to set
      */
-    public void setEventsToAttend(List<EventEntity> eventsToAttend) {
-        this.eventsToAttend = eventsToAttend;
+    public void setattendedEvents(List<EventEntity> attendedEvents) {
+        this.attendedEvents = attendedEvents;
     }
 
     /**

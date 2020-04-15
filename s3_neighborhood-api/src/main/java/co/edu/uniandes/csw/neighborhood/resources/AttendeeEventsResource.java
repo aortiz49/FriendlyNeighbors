@@ -240,7 +240,7 @@ public class AttendeeEventsResource {
         LOGGER.log(Level.INFO, "Begin removing event from attendee:"
                 + "attendeeID {0} , eventId {1}", new Object[]{pAttendeeId, pEventId});
 
-        if (eventLogic.getEvent(pNeighborhoodId, pAttendeeId) == null) {
+        if (eventLogic.getEvent(pNeighborhoodId, pEventId) == null) {
             throw new WebApplicationException("Resource /events/" + pEventId
                     + " does not exist.", 404);
         }

@@ -117,13 +117,18 @@ public class AttendeeEventsLogic {
      */
     public EventEntity getAttendedEvent(Long neighId, Long attendeeId, Long eventId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Initiating query about event with id {0} from attendee with {1}, from neighbothood {2}", new Object[]{eventId, attendeeId, neighId});
+       
         List<EventEntity> events = attendeePersistence.find(attendeeId, neighId).getAttendedEvents();
         EventEntity eventEvents = eventPersistence.find(neighId, eventId);
+        
         int index = events.indexOf(eventEvents);
+        
         LOGGER.log(Level.INFO, "Finish query about event with id {0} from attendee with {1}, from neighbothood {2}", new Object[]{eventId, attendeeId, neighId});
+        
         if (index >= 0) {
             return events.get(index);
         }
+        
         throw new BusinessLogicException("There is no association between attendee and event");
     }
 
@@ -148,7 +153,7 @@ public class AttendeeEventsLogic {
                 event.getAttendees().remove(attendeeEntity);
             }
         }
-        attendeeEntity.setEventsToAttend(events);
+        attendeeEntity.setattendedEvents(events);
         LOGGER.log(Level.INFO, "Ended trying to replace events related to attendee with id {0} from neighborhood {1}", new Object[]{attendeeId, neighId});
         return attendeeEntity.getAttendedEvents();
     }

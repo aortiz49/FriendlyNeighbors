@@ -131,7 +131,7 @@ public class EventAttendeesResource {
 
         // obtains the list of attendees
         List<ResidentProfileDetailDTO> attendeeList = attendeeEntityList2DTOList(
-                eventAttendeesLogic.getAttendees(pEventId, pEventId));
+                eventAttendeesLogic.getAttendees(pNeighborhoodId, pEventId));
 
         LOGGER.log(Level.INFO, "End searching for attendees at event {0}", pEventId);
 

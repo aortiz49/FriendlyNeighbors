@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "eded8b8c-533d-4573-9e80-6f3f8dd6ae7d",
+		"_postman_id": "5119aa68-f1a5-4756-b75f-e7faaf33a07e",
 		"name": "NeighborhoodTest.postman",
 		"description": "# Introduction\nThis API provides REST services for the Neighborhood.\n\n# Overview\nThe supported features are:\n1. Create a new neighborhood\n2. Retreive a newighborhood\n2. Update a neighborhood\n3. Delete a neighborhood\n\n\n# Authentication\nNo authentication is needed.\n\n# Error Codes\n412 - Business logic error\n\n404 - Not found\n\n# Rate limit\nNo rate limit.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -38,7 +38,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"id\": 1,\n\t\"name\": \"Neighborhood1\",\n\t\"locality\" :\"Engativa\",\n\t\"numberOfResidents\":45\n}",
+					"raw": "{\n\t\"id\": 1,\n\t\"name\": \"Neighborhood_1\",\n\t\"locality\" :\"Engativa\",\n\t\"numberOfResidents\":45\n}",
 					"options": {
 						"raw": {
 							"language": "json"
