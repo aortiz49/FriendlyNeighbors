@@ -20,8 +20,10 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  */
 public class NotificationDTO implements Serializable{
     
-    
-    private long id;
+    /**
+     * The notification's id.
+     */
+    private Long id;
 
     /**
      * Represents the date group was created
@@ -84,14 +86,14 @@ public class NotificationDTO implements Serializable{
     /**
      * @return the id
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

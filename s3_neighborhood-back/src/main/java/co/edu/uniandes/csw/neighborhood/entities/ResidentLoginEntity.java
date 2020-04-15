@@ -70,7 +70,7 @@ public class ResidentLoginEntity extends BaseEntity implements Serializable {
     /**
      * @param isActive the isActive to set
      */
-    public void setIsActive(boolean isActive) {
+    public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
 //===================================================
@@ -86,12 +86,11 @@ public class ResidentLoginEntity extends BaseEntity implements Serializable {
 
     private String userName;
 
-    @PodamExclude
     private String password;
     
     private String governmentId;
     
-    private boolean isActive;
+    private Boolean isActive;
 
     public ResidentProfileEntity getResident() {
         return resident;
@@ -109,7 +108,7 @@ public class ResidentLoginEntity extends BaseEntity implements Serializable {
         return governmentId;
     }
 
-    public boolean isActive() {
+    public Boolean isActive() {
         return isActive;
     }
     

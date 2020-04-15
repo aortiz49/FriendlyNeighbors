@@ -51,6 +51,11 @@ public class ResidentLoginDTO implements Serializable {
 // Attributes
 //===================================================
     /**
+     * The resident's login id;
+     */
+    private Long id;
+
+    /**
      * The resident's user name.
      */
     private String userName;
@@ -87,6 +92,7 @@ public class ResidentLoginDTO implements Serializable {
      */
     public ResidentLoginDTO(ResidentLoginEntity pResidentLogin) {
         if (pResidentLogin != null) {
+            this.id = pResidentLogin.getId();
             this.userName = pResidentLogin.getPassword();
             this.password = pResidentLogin.getPassword();
             this.governmentId = pResidentLogin.getGovernmentId();
@@ -108,6 +114,7 @@ public class ResidentLoginDTO implements Serializable {
      */
     public ResidentLoginEntity toEntity() {
         ResidentLoginEntity login = new ResidentLoginEntity();
+        login.setId(this.getId());
         login.setUserName(this.getUserName());
         login.setPassword(this.getPassword());
         login.setGovernmentId(this.getGovernmentId());
@@ -122,6 +129,24 @@ public class ResidentLoginDTO implements Serializable {
 //===================================================
 // Getters & Setters
 //===================================================
+
+    /**
+     * Returns the login id.
+     * 
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * Sets the new login id.
+     * 
+     * @param pId the new login id
+     */
+    public void setId(Long pId) {
+        id = pId;
+    }
 
     /**
      * Returns the resident associated to the login.

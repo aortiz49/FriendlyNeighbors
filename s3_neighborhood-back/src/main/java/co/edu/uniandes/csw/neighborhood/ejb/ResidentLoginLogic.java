@@ -6,8 +6,10 @@
 package co.edu.uniandes.csw.neighborhood.ejb;
 
 import co.edu.uniandes.csw.neighborhood.entities.ResidentLoginEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.ResidentLoginPersistence;
+import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,36 +27,48 @@ public class ResidentLoginLogic {
     @Inject
     private ResidentLoginPersistence persistence;
 
-    public ResidentLoginEntity createResidentLogin(ResidentLoginEntity residentLoginEntity) throws BusinessLogicException {
+    @Inject
+    private ResidentProfilePersistence residentProfilePersistence;
+
+    public ResidentLoginEntity createResidentLogin(Long pNeighborhoodId, Long pResidentProfileId, ResidentLoginEntity pResidentLoginEntity) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creation process for resident login has started");
 
+        ResidentProfileEntity r = residentProfilePersistence.find(pResidentProfileId, pNeighborhoodId);
+
+        // 1. The service must have a resident
+        if (r == null) {
+            throw new BusinessLogicException("The login must have a resident!");
+        }
+
         //must have a username
-        if (residentLoginEntity.getUserName() == null) {
+        if (pResidentLoginEntity.getUserName() == null) {
             throw new BusinessLogicException("A username has to be specified");
         }
-        for (ResidentLoginEntity resident : persistence.findAll()) {
+
+        for (ResidentLoginEntity resident : persistence.findAll(pNeighborhoodId)) {
             // No two residents with the same userame
-            if (resident.getUserName().equals(residentLoginEntity.getUserName())) {
+            if (resident.getUserName().equals(pResidentLoginEntity.getUserName())) {
                 throw new BusinessLogicException("The username already exists");
             }
             // No two residents with the same government Id
-            if (resident.getGovernmentId().equals(residentLoginEntity.getGovernmentId())) {
+            if (resident.getGovernmentId().equals(pResidentLoginEntity.getGovernmentId())) {
                 throw new BusinessLogicException("There is an user with that government Id");
             }
         }
+
         //must have a password
-        if (residentLoginEntity.getPassword() == null) {
+        if (pResidentLoginEntity.getPassword() == null) {
             throw new BusinessLogicException("A password has to be specified");
         }
         // Password must be at least 6 characters long
-        if (residentLoginEntity.getPassword().length() < 6) {
+        if (pResidentLoginEntity.getPassword().length() < 6) {
             throw new BusinessLogicException("Password must be at least 6 characters long");
         }
         // Password must be at most 12 characters long
-        if (residentLoginEntity.getPassword().length() > 12) {
+        if (pResidentLoginEntity.getPassword().length() > 12) {
             throw new BusinessLogicException("Password must be at most 12 characters long");
         }
-        String passValue = String.valueOf(residentLoginEntity.getPassword());
+        String passValue = String.valueOf(pResidentLoginEntity.getPassword());
 
         // At least one capital letter
         if (!passValue.matches(".*[A-Z].*")) {
@@ -70,68 +84,69 @@ public class ResidentLoginLogic {
         }
 
         //must have a governmentId
-        if (residentLoginEntity.getGovernmentId() == null) {
+        if (pResidentLoginEntity.getGovernmentId() == null) {
             throw new BusinessLogicException("A governmentId has to be specified");
         }
 
-        persistence.create(residentLoginEntity);
+        pResidentLoginEntity.setResident(r);
+        persistence.create(pResidentLoginEntity);
         LOGGER.log(Level.INFO, "Creation process for resident login eneded");
 
-        return residentLoginEntity;
+        return pResidentLoginEntity;
     }
 
-    public void deleteResidentLogin(Long id) {
+    public void deleteResidentLogin(Long pNeighborhoodId, Long id) {
 
         LOGGER.log(Level.INFO, "Starting deleting process for resident login with id = {0}", id);
-        persistence.delete(id);
+        persistence.delete(id, pNeighborhoodId);
         LOGGER.log(Level.INFO, "Ended deleting process for resident login with id = {0}", id);
     }
 
-    public List<ResidentLoginEntity> getResidentLogins() {
+    public List<ResidentLoginEntity> getResidentLogins(Long pNeighborhoodId) {
 
         LOGGER.log(Level.INFO, "Starting querying process for all resident logins");
-        List<ResidentLoginEntity> logins = persistence.findAll();
+        List<ResidentLoginEntity> logins = persistence.findAll(pNeighborhoodId);
         LOGGER.log(Level.INFO, "Ended querying process for all resident logins");
         return logins;
     }
 
-    public ResidentLoginEntity getResidentLogin(Long id) {
+    public ResidentLoginEntity getResidentLogin(Long pNeighborhoodId, Long id) {
         LOGGER.log(Level.INFO, "Starting querying process for resident login with id {0}", id);
-        ResidentLoginEntity login = persistence.find(id);
+        ResidentLoginEntity login = persistence.find(id,pNeighborhoodId);
         LOGGER.log(Level.INFO, "Ended querying process for resident login with id {0}", id);
         return login;
     }
 
-    public ResidentLoginEntity updateResidentLogin(ResidentLoginEntity residentLoginEntity) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Starting update process for resident login with id {0}", residentLoginEntity.getId());
+    public ResidentLoginEntity updateResidentLogin(Long pNeighborhoodId, ResidentLoginEntity pResidentLoginEntity) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Starting update process for resident login with id {0}", pResidentLoginEntity.getId());
 
         //must have a username
-        if (residentLoginEntity.getUserName() == null) {
+        if (pResidentLoginEntity.getUserName() == null) {
             throw new BusinessLogicException("A username has to be specified");
         }
-        for (ResidentLoginEntity resident : persistence.findAll()) {
+        for (ResidentLoginEntity resident : persistence.findAll(pNeighborhoodId)) {
             // No two residents with the same userame
-            if (resident.getUserName().equals(residentLoginEntity.getUserName())) {
+            if (resident.getUserName().equals(pResidentLoginEntity.getUserName())) {
                 throw new BusinessLogicException("The username already exists");
             }
             // No two residents with the same government Id
-            if (resident.getGovernmentId().equals(residentLoginEntity.getGovernmentId())) {
+            if (resident.getGovernmentId().equals(pResidentLoginEntity.getGovernmentId())) {
                 throw new BusinessLogicException("There is an user with that government Id");
             }
         }
         //must have a password
-        if (residentLoginEntity.getPassword() == null) {
+        if (pResidentLoginEntity.getPassword() == null) {
             throw new BusinessLogicException("A password has to be specified");
         }
         // Password must be at least 6 characters long
-        if (residentLoginEntity.getPassword().length() < 6) {
+        if (pResidentLoginEntity.getPassword().length() < 6) {
             throw new BusinessLogicException("Password must be at least 6 characters long");
         }
         // Password must be at most 12 characters long
-        if (residentLoginEntity.getPassword().length() > 12) {
+        if (pResidentLoginEntity.getPassword().length() > 12) {
             throw new BusinessLogicException("Password must be at most 12 characters long");
         }
-        String passValue = String.valueOf(residentLoginEntity.getPassword());
+        String passValue = String.valueOf(pResidentLoginEntity.getPassword());
 
         // At least one capital letter
         if (!passValue.matches(".*[A-Z].*")) {
@@ -147,12 +162,12 @@ public class ResidentLoginLogic {
         }
 
         //must have a governmentId
-        if (residentLoginEntity.getGovernmentId() == null) {
+        if (pResidentLoginEntity.getGovernmentId() == null) {
             throw new BusinessLogicException("A governmentId has to be specified");
         }
 
-        ResidentLoginEntity modified = persistence.update(residentLoginEntity);
-        LOGGER.log(Level.INFO, "Ended update process for resident login with id {0}", residentLoginEntity.getId());
+        ResidentLoginEntity modified = persistence.update(pResidentLoginEntity,pNeighborhoodId);
+        LOGGER.log(Level.INFO, "Ended update process for resident login with id {0}", pResidentLoginEntity.getId());
         return modified;
 
     }

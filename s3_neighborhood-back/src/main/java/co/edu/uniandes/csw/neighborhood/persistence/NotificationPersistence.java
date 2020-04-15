@@ -63,7 +63,7 @@ public class NotificationPersistence {
         LOGGER.log(Level.INFO, "Consulting notification with the id = {0}", notificationId);
         NotificationEntity e = em.find(NotificationEntity.class, notificationId);
         if (e != null) {
-            if (e.getAuthor() == null || e.getAuthor().getNeighborhood() == null || e.getAuthor().getNeighborhood().getId() != neighborhood_id) {
+            if (e.getAuthor() == null || e.getAuthor().getNeighborhood() == null || !e.getAuthor().getNeighborhood().getId().equals(neighborhood_id)) {
                 throw new RuntimeException("Notification " + notificationId + " does not belong to neighborhood " + neighborhood_id);
             }
         }

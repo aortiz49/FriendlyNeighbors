@@ -113,7 +113,7 @@ public class NeighborhoodResource {
     /**
      * Looks for the neighborhood with id received in the URL y returns it.
      *
-     * @param neighborhoodId Id from wanted neighborhood. Must be a sequence of digits.
+     * @param neighborhoodsId Id from wanted neighborhood. Must be a sequence of digits.
      * @return JSON {@link NeighborhoodDetailDTO} - Wanted resident DTO
      * @throws WebApplicationException {@link WebApplicationExceptionMapper} - Logic error if not
      * found
@@ -227,6 +227,14 @@ public class NeighborhoodResource {
             throw new WebApplicationException("Resource /neighborhoods/" + neighId + " does not exist.", 404);
         }
         return CommentResource.class;
+    }
+
+    @Path("{neighborhoodId: \\d+}/notifications")
+    public Class<NotificationResource> getNotificationResource(@PathParam("neighborhoodId") Long neighId) {
+        if (logic.getNeighborhood(neighId) == null) {
+            throw new WebApplicationException("Resource /neighborhoods/" + neighId + " does not exist.", 404);
+        }
+        return NotificationResource.class;
     }
 
     /**

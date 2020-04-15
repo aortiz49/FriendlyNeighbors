@@ -92,7 +92,7 @@ public class NotificationResource {
      */
     @PUT
     @Path("{notificationsId: \\d+}")
-    public NotificationDTO updateAuthor(@PathParam("notificationsId") Long notificationsId, @PathParam("neighborhoodId") Long neighId, NotificationDTO notification) throws BusinessLogicException {
+    public NotificationDTO updateNotification(@PathParam("notificationsId") Long notificationsId, @PathParam("neighborhoodId") Long neighId, NotificationDTO notification) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Updating notification from resource: input: authorsId: {0} , author: {1}", new Object[]{notificationsId, notification});
         notification.setId(notificationsId);
         if (notificationLogic.getNotification(notificationsId, neighId) == null) {

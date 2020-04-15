@@ -5,7 +5,9 @@
  */
 package co.edu.uniandes.csw.neighborhood.test.persistence;
 
+import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentLoginEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.persistence.ResidentLoginPersistence;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
+
 /**
  * Persistence test for ResidentLoginPersistenceTest
  *
@@ -30,6 +33,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
  */
 @RunWith(Arquillian.class)
 public class ResidentLoginPersistenceTest {
+
     @Inject
     private ResidentLoginPersistence loginPersistence;
 
@@ -40,11 +44,14 @@ public class ResidentLoginPersistenceTest {
     UserTransaction utx;
 
     private List<ResidentLoginEntity> data = new ArrayList<>();
-    
+
+    private NeighborhoodEntity neighborhood;
+
+    private ResidentProfileEntity resident;
+
     /**
-     * @return Returns jar which Arquillian will deploy embedded in Payara.
-     * jar contains classes, DB descriptor and
-     * beans.xml file for dependencies injector resolution.
+     * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
+     * descriptor and beans.xml file for dependencies injector resolution.
      */
     @Deployment
     public static JavaArchive createDeployment() {
@@ -56,7 +63,7 @@ public class ResidentLoginPersistenceTest {
     }
 
     /**
-     * Initial test configuration. 
+     * Initial test configuration.
      */
     @Before
     public void configTest() {
@@ -74,29 +81,37 @@ public class ResidentLoginPersistenceTest {
                 e1.printStackTrace();
             }
         }
-    
+
     }
-    
+
     /**
-     * Clears tables involved in tests 
+     * Clears tables involved in tests
      */
     private void clearData() {
         em.createQuery("delete from ResidentLoginEntity").executeUpdate();
     }
-    
+
     /**
      * Inserts initial data for correct test operation
      */
     private void insertData() {
         PodamFactory factory = new PodamFactoryImpl();
+
+        neighborhood = factory.manufacturePojo(NeighborhoodEntity.class);
+        em.persist(neighborhood);
+
+        resident = factory.manufacturePojo(ResidentProfileEntity.class);
+        resident.setNeighborhood(neighborhood);
+        em.persist(resident);
+
         for (int i = 0; i < 3; i++) {
             ResidentLoginEntity entity = factory.manufacturePojo(ResidentLoginEntity.class);
-
+            entity.setResident(resident);
             em.persist(entity);
             data.add(entity);
         }
     }
-    
+
     /**
      * Test for creating a Login.
      */
@@ -112,13 +127,13 @@ public class ResidentLoginPersistenceTest {
 
         Assert.assertEquals(newEntity.getUserName(), entity.getUserName());
     }
-    
+
     /**
      * Test for retrieving all logins from DB.
      */
-        @Test
+    @Test
     public void findAllTest() {
-        List<ResidentLoginEntity> list = loginPersistence.findAll();
+        List<ResidentLoginEntity> list = loginPersistence.findAll(neighborhood.getId());
         Assert.assertEquals(data.size(), list.size());
         for (ResidentLoginEntity ent : list) {
             boolean found = false;
@@ -130,20 +145,20 @@ public class ResidentLoginPersistenceTest {
             Assert.assertTrue(found);
         }
     }
-    
+
     /**
      * Test for a query about a login.
      */
     @Test
     public void getLoginTest() {
         ResidentLoginEntity entity = data.get(0);
-        ResidentLoginEntity newEntity = loginPersistence.find(entity.getId());
+        ResidentLoginEntity newEntity = loginPersistence.find(entity.getId(), neighborhood.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getUserName(), newEntity.getUserName());
         Assert.assertEquals(entity.getPassword(), newEntity.getPassword());
 
     }
-    
+
     /**
      * Test for updating a login.
      */
@@ -155,20 +170,20 @@ public class ResidentLoginPersistenceTest {
 
         newEntity.setId(entity.getId());
 
-        loginPersistence.update(newEntity);
+        loginPersistence.update(newEntity,neighborhood.getId());
 
         ResidentLoginEntity resp = em.find(ResidentLoginEntity.class, entity.getId());
 
         Assert.assertEquals(newEntity.getUserName(), resp.getUserName());
     }
-    
+
     /**
      * Test for deleting a login.
      */
     @Test
     public void deleteAuthorTest() {
         ResidentLoginEntity entity = data.get(0);
-        loginPersistence.delete(entity.getId());
+        loginPersistence.delete(entity.getId(),neighborhood.getId());
         ResidentLoginEntity deleted = em.find(ResidentLoginEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }

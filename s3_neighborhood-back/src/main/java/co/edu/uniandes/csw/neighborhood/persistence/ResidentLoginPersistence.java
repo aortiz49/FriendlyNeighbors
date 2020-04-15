@@ -1,9 +1,26 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+MIT License
+Copyright (c) 2020 Universidad de los Andes - ISIS2603
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.persistence;
+//===================================================
+// Imports
+//===================================================
 
 import co.edu.uniandes.csw.neighborhood.entities.ResidentLoginEntity;
 import java.util.List;
@@ -15,77 +32,103 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
+ * This class handles persistence for ResidentLoginEntity. The connection is set by Entity Manager from
+ * javax.persistence to the SQL DB.
  *
  * @author aortiz49
  */
 @Stateless
 public class ResidentLoginPersistence {
+//===================================================
+// Attributes
+//===================================================
     
     private static final Logger LOGGER = Logger.getLogger(ResidentLoginPersistence.class.getName());
 
-    @PersistenceContext(unitName = "NeighborhoodPU" )
+    @PersistenceContext(unitName = "NeighborhoodPU")
     protected EntityManager em;
-    
-     /**
-     * Creates a login within DB
+//===================================================
+// CRUD methods
+//===================================================
+    /**
+     * Creates a residentLogin within DB
      *
-     * @param le login object to be created in DB
+     * @param residentLoginEntity residentLogin object to be created in DB
      * @return returns the created entity with id given by DB.
      */
-    public ResidentLoginEntity create(ResidentLoginEntity le){
-        
-        LOGGER.log(Level.INFO, "Creating a new Login");
+    public ResidentLoginEntity create(ResidentLoginEntity residentLoginEntity) {
+        LOGGER.log(Level.INFO, "Creating a new residentLogin ");
 
-        em.persist(le);
-        LOGGER.log(Level.INFO, "Login created");
-        return le;
+        em.persist(residentLoginEntity);
+        LOGGER.log(Level.INFO, "Service created");
+        return residentLoginEntity;
     }
-    
+
     /**
-     * Returns all logins from DB.
+     * Returns all residentLogins from DB belonging to a neighborhood.
      *
-     * @return a list with ll logins found in DB.
+     * @param pNeighborhoodId: id from parent neighborhood.
+     * @return a list with ll residentLogins found in DB belonging to a neighborhood.
      */
-    public List<ResidentLoginEntity> findAll() {
-        LOGGER.log(Level.INFO, "Querying for all logins");
-        
-        TypedQuery query = em.createQuery("select u from ResidentLoginEntity u", ResidentLoginEntity.class);
-       
+    public List<ResidentLoginEntity> findAll(Long pNeighborhoodId) {
+
+        LOGGER.log(Level.INFO, "Querying for all residentLogins from neighborhood ", pNeighborhoodId);
+
+        TypedQuery query = em.createQuery("Select e From ResidentLoginEntity e where e.resident.neighborhood.id = :pNeighborhoodId", ResidentLoginEntity.class);
+
+        query = query.setParameter("pNeighborhoodId", pNeighborhoodId);
+
         return query.getResultList();
     }
-    /**
-     * Looks for a login with the id given by argument
-     *
-     * @param loginId: id from login to be found.
-     * @return a login.
-     */
-     public ResidentLoginEntity find(Long loginId) {
-        LOGGER.log(Level.INFO, "Querying for login with id={0}", loginId);
-       
-        
-        return em.find(ResidentLoginEntity.class, loginId);
-    }
-     
-    /**
-     * Updates a login with the modified login given by argument.
-     *
-     * @param le: the modified login. Por
-     * @return the updated login
-     */
-    public ResidentLoginEntity update(ResidentLoginEntity le) {
-        LOGGER.log(Level.INFO, "Updating login with id={0}", le.getId());
-        return em.merge(le);
-    }
-    
-    /**
-     * Deletes from DB a login with the id given by argument
-     *
-     * @param loginId: id from login to be deleted.
-     */
-    public void delete(Long loginId) {
 
-        LOGGER.log(Level.INFO, "Deleting login with id={0}", loginId);
-        ResidentLoginEntity loginEntity = em.find(ResidentLoginEntity.class, loginId);
-        em.remove(loginEntity);
+    /**
+     * Looks for a residentLogin with the id and neighborhood id given by argument
+     *
+     * @param pResidentLoginId: id from residentLogin to be found.
+     * @param pNeighborhoodId: id from parent neighborhood.
+     * @return a residentLogin.
+     */
+    public ResidentLoginEntity find(Long pResidentLoginId, Long pNeighborhoodId) {
+        LOGGER.log(Level.INFO, "Querying for residentLogin with id '{'0'}'{0} belonging to {1}", new Object[]{pResidentLoginId, pNeighborhoodId});
+
+        ResidentLoginEntity e = em.find(ResidentLoginEntity.class, pResidentLoginId);
+
+        if (e != null) {
+            if (e.getResident() == null || e.getResident().getNeighborhood() == null || !e.getResident().getNeighborhood().getId().equals(pNeighborhoodId)) {
+                throw new RuntimeException("Service " + pResidentLoginId + " does not belong to neighborhood " + pNeighborhoodId);
+            }
+        }
+
+        return e;
     }
+
+    /**
+     * Updates a residentLogin with the modified residentLogin given by argument belonging to a neighborhood.
+     *
+     * @param residentLoginEntity: the modified residentLogin.
+     * @param pNeighborhoodId: id from parent neighborhood.
+     * @return the updated residentLogin
+     */
+    public ResidentLoginEntity update(ResidentLoginEntity residentLoginEntity, Long pNeighborhoodId) {
+        LOGGER.log(Level.INFO, "Updating residentLogin with id={0}", residentLoginEntity.getId());
+
+        find(residentLoginEntity.getId(), pNeighborhoodId);
+
+        return em.merge(residentLoginEntity);
+    }
+
+    /**
+     * Deletes from DB a residentLogin with the id given by argument belonging to a neighborhood.
+     *
+     * @param pNeighborhoodId: id from parent neighborhood.
+     * @param pResidentLoginId: id from residentLogin to be deleted.
+     */
+    public void delete(Long pResidentLoginId, Long pNeighborhoodId) {
+
+        LOGGER.log(Level.INFO, "Deleting residentLogin wit id={0}", pResidentLoginId);
+        ResidentLoginEntity e = find(pResidentLoginId, pNeighborhoodId);
+
+        em.remove(e);
+    }
+
 }

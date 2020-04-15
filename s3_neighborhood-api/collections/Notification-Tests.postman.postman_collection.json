@@ -1,0 +1,1203 @@
+{
+	"info": {
+		"_postman_id": "09016dd4-a7fc-4004-8c25-b8fc25ca6a1f",
+		"name": "Notification-Tests.postman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create neighborhood",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dcfd6096-5702-4b1d-bda0-95aeda9fb6f6",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"notification_n1\",data.id);",
+							"tests[\"Successfully created neighborhood.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": 1,\n\t\"name\": \"Neighborhood_Notifications\",\n\t\"locality\" :\"Chicó\",\n\t\"numberOfResidents\":45\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create resident 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "08ec5769-555a-485d-9a11-67723085e787",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"resident1\",data.id);",
+							"tests[\"Successfully created resident.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"address\": \"9708 Matwood Ct.\",\r\n    \"email\": \"myTestEmail@gmail.com\",\r\n    \"name\": \"John Smith\",\r\n    \"neighborhood\": {\"id\": \"{{event_n1}}\"},\r\n    \"nickname\": \"Johnny\",\r\n    \"phoneNumber\": \"(305)867-5644\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"https://docs.google.com/spreadhseets/testProof\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/residents/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"residents",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create resident 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "08ec5769-555a-485d-9a11-67723085e787",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"resident2\",data.id);",
+							"tests[\"Successfully created resident.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"address\": \"9708 Matwood Ct.\",\r\n    \"email\": \"myTestEmail2@gmail.com\",\r\n    \"name\": \"John Appleseed\",\r\n    \"neighborhood\": {\"id\": \"{{event_n1}}\"},\r\n    \"nickname\": \"Johnny\",\r\n    \"phoneNumber\": \"(305)869-5644\",\r\n    \"preferences\": \"None\",\r\n    \"proofOfResidence\": \"https://docs.google.com/spreadhseets/testProof\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/residents/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"residents",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create notification with no publish date",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cfcf3546-3891-45d2-9714-d0e853b082cb",
+						"exec": [
+							"tests[\"Notification without a publish date was not created.\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"priority\": \"HIGH\",\n\t\"header\": \"New message!\",\n\t\"description\": \"Message from Kyle\",\n\t\"seen\": \"False\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/residents/{{resident1}}/notifications/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"residents",
+						"{{resident1}}",
+						"notifications",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create notification with no header",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cfcf3546-3891-45d2-9714-d0e853b082cb",
+						"exec": [
+							"tests[\"Notification without a header was not created.\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"publishDate\": \"2020-04-10T13:30:00.000\",\n\t\"priority\": \"HIGH\",\n\t\"description\": \"Message from Kyle\",\n\t\"seen\": \"False\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/residents/{{resident1}}/notifications/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"residents",
+						"{{resident1}}",
+						"notifications",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create notification with no description",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cfcf3546-3891-45d2-9714-d0e853b082cb",
+						"exec": [
+							"tests[\"Notification without a description was not created.\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"publishDate\": \"2020-04-10T13:30:00.000\",\n\t\"priority\": \"HIGH\",\n\t\"header\": \"New message!\",\n\t\"seen\": \"False\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/residents/{{resident1}}/notifications/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"residents",
+						"{{resident1}}",
+						"notifications",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create notification with no priority",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cfcf3546-3891-45d2-9714-d0e853b082cb",
+						"exec": [
+							"tests[\"Notification without a priority was not created.\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"publishDate\": \"2020-04-10T13:30:00.000\",\n\t\"header\": \"New message!\",\n\t\"seen\": \"False\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/residents/{{resident1}}/notifications/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"residents",
+						"{{resident1}}",
+						"notifications",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create notification 1 under resident 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cfcf3546-3891-45d2-9714-d0e853b082cb",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"notification1\",data.id);",
+							"tests[\"Successfully created notification.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"publishDate\": \"2020-04-10T13:30:00.000\",\n\t\"priority\": \"HIGH\",\n\t\"header\": \"New message!\",\n\t\"description\": \"Message from Kyle\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/residents/{{resident1}}/notifications/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"residents",
+						"{{resident1}}",
+						"notifications",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create notification 2 under resident 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cfcf3546-3891-45d2-9714-d0e853b082cb",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"notification2\",data.id);",
+							"tests[\"Successfully created notification.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"publishDate\": \"2020-04-10T13:30:00.000\",\n\t\"priority\": \"MEDIUM\",\n\t\"header\": \"New comment reply!\",\n\t\"description\": \"Comment on pic1\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/residents/{{resident1}}/notifications/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"residents",
+						"{{resident1}}",
+						"notifications",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create notification 3 under resident 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cfcf3546-3891-45d2-9714-d0e853b082cb",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"notification3\",data.id);",
+							"tests[\"Successfully created notification.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"publishDate\": \"2020-04-10T13:30:00.000\",\n\t\"priority\": \"LOW\",\n\t\"header\": \"New photo comment!\",\n\t\"description\": \"Comment from Jason\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/residents/{{resident1}}/notifications/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"residents",
+						"{{resident1}}",
+						"notifications",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create notification 4 under resident 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cfcf3546-3891-45d2-9714-d0e853b082cb",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"notification4\",data.id);",
+							"tests[\"Successfully created notification.\"] = responseCode.code === 200;",
+							"console.log(data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"publishDate\": \"2020-04-10T13:30:00.000\",\n\t\"priority\": \"MEDIUM\",\n\t\"header\": \"New Notification!!\",\n\t\"description\": \"Insert description here\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/residents/{{resident2}}/notifications/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"residents",
+						"{{resident2}}",
+						"notifications",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all notifications from resident 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "07deaf9f-d7e7-4d2e-9372-847f4748c035",
+						"exec": [
+							"tests[\"Successfully obtained all notifications from resident.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/residents/{{resident1}}/notifications",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"residents",
+						"{{resident1}}",
+						"notifications"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all notifications from resident 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "07deaf9f-d7e7-4d2e-9372-847f4748c035",
+						"exec": [
+							"tests[\"Successfully obtained all notifications from resident.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/residents/{{resident2}}/notifications",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"residents",
+						"{{resident2}}",
+						"notifications"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all notifications from neighborhood",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "07deaf9f-d7e7-4d2e-9372-847f4748c035",
+						"exec": [
+							"tests[\"Successfully obtained all notifications from resident.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/notifications/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"notifications",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get notification 1 from resident",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b7bae885-0afe-4428-97db-1a21f0950503",
+						"exec": [
+							"tests[\"Successfully obtained notification 1 from resident.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/residents/{{resident1}}/notifications/{{notification1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"residents",
+						"{{resident1}}",
+						"notifications",
+						"{{notification1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get notification 1 from resident via neighborhood",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "523503ba-eac2-45fa-beb5-da0abc652f33",
+						"exec": [
+							"tests[\"Successfully obtained notification1 from resident via neighborhood.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/notifications/{{notification1}}/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"notifications",
+						"{{notification1}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update notification 1 with content from notification 3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6571ab99-6dc8-4693-a353-b403217adcc3",
+						"exec": [
+							"tests[\"Successfully updated notification.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"publishDate\": \"2020-04-10T13:30:00.000\",\n\t\"priority\": \"LOW\",\n\t\"header\": \"New photo comment!\",\n\t\"description\": \"Comment from Jason\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/notifications/{{notification1}}/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"notifications",
+						"{{notification1}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update notification 1 with no publish date",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "44a4772f-0aba-472e-8f4b-81ce697ea4d4",
+						"exec": [
+							"tests[\"Notification without a publish date was not updated.\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"priority\": \"LOW\",\n\t\"header\": \"New photo comment!\",\n\t\"description\": \"Comment from Jason\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/notifications/{{notification1}}/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"notifications",
+						"{{notification1}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update notification 1 with no header",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8904f7de-4f77-4fbb-a1b1-3fc44e1ef960",
+						"exec": [
+							"tests[\"Notification without a header was not updated.\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"publishDate\": \"2020-04-10T13:30:00.000\",\n\t\"priority\": \"LOW\",\n\t\"description\": \"Comment from Jason\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/notifications/{{notification1}}/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"notifications",
+						"{{notification1}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update notification 1 with no description",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8904f7de-4f77-4fbb-a1b1-3fc44e1ef960",
+						"exec": [
+							"tests[\"Notification without a description was not updated.\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"publishDate\": \"2020-04-10T13:30:00.000\",\n\t\"priority\": \"LOW\",\n\t\"header\": \"New photo comment!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/notifications/{{notification1}}/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"notifications",
+						"{{notification1}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update notification 1 with no priority",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8904f7de-4f77-4fbb-a1b1-3fc44e1ef960",
+						"exec": [
+							"tests[\"Notification without a description was not updated.\"] = responseCode.code === 412;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"publishDate\": \"2020-04-10T13:30:00.000\",\n\t\"header\": \"New photo comment!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/notifications/{{notification1}}/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"notifications",
+						"{{notification1}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update residents notifications",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8904f7de-4f77-4fbb-a1b1-3fc44e1ef960",
+						"exec": [
+							"tests[\"Notification without a description was not updated.\"] = responseCode.code === 200;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"id\": \"{{notification3}}\"\n    },\n    {\n        \"id\": \"{{notification4}}\"\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/residents/{{resident1}}/notifications/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"residents",
+						"{{resident1}}",
+						"notifications",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete notification 3 via resident",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bfba3504-39c2-4068-a14d-eca2f782188f",
+						"exec": [
+							"tests[\"Successfully deleted notification.\"] = responseCode.code === 204;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/residents/{{resident1}}/notifications/{{notification3}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"residents",
+						"{{resident1}}",
+						"notifications",
+						"{{notification3}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete notification 4 via neighborhood",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bfba3504-39c2-4068-a14d-eca2f782188f",
+						"exec": [
+							"tests[\"Successfully deleted notification.\"] = responseCode.code === 204;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/notifications/{{notification4}}/",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"notifications",
+						"{{notification4}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete resident 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bfba3504-39c2-4068-a14d-eca2f782188f",
+						"exec": [
+							"tests[\"Successfully deleted neighborhood.\"] = responseCode.code === 204;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/residents/{{resident1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"residents",
+						"{{resident1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete resident 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bfba3504-39c2-4068-a14d-eca2f782188f",
+						"exec": [
+							"tests[\"Successfully deleted neighborhood.\"] = responseCode.code === 204;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}/residents/{{resident2}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}",
+						"residents",
+						"{{resident2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete neighborhood",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bfba3504-39c2-4068-a14d-eca2f782188f",
+						"exec": [
+							"tests[\"Successfully deleted neighborhood.\"] = responseCode.code === 204;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{puerto}}/s3_neighborhood-api/api/neighborhoods/{{notification_n1}}",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{puerto}}",
+					"path": [
+						"s3_neighborhood-api",
+						"api",
+						"neighborhoods",
+						"{{notification_n1}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

@@ -10,8 +10,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
- * This class handles persistence for ServiceEntity. The connection is set by
- * Entity Manager from javax.persistence to the SQL DB.
+ * This class handles persistence for ServiceEntity. The connection is set by Entity Manager from
+ * javax.persistence to the SQL DB.
  *
  * @author aortiz49
  */
@@ -62,12 +62,12 @@ public class ServicePersistence {
      * @return a service.
      */
     public ServiceEntity find(Long serviceId, Long neighborhood_id) {
-        LOGGER.log(Level.INFO, "Querying for service with id {0}" + serviceId + " belonging to " + neighborhood_id);
+        LOGGER.log(Level.INFO, "Querying for service with id '{'0'}'{0} belonging to {1}", new Object[]{serviceId, neighborhood_id});
 
         ServiceEntity e = em.find(ServiceEntity.class, serviceId);
 
         if (e != null) {
-            if (e.getAuthor() == null || e.getAuthor().getNeighborhood() == null || e.getAuthor().getNeighborhood().getId() != neighborhood_id) {
+            if (e.getAuthor() == null || e.getAuthor().getNeighborhood() == null || !e.getAuthor().getNeighborhood().getId().equals(neighborhood_id)) {
                 throw new RuntimeException("Service " + serviceId + " does not belong to neighborhood " + neighborhood_id);
             }
         }
@@ -76,8 +76,7 @@ public class ServicePersistence {
     }
 
     /**
-     * Updates a service with the modified service given by argument belonging
-     * to a neighborhood.
+     * Updates a service with the modified service given by argument belonging to a neighborhood.
      *
      * @param serviceEntity: the modified service.
      * @param neighborhood_id: id from parent neighborhood.
@@ -92,8 +91,7 @@ public class ServicePersistence {
     }
 
     /**
-     * Deletes from DB a service with the id given by argument belonging to a
-     * neighborhood.
+     * Deletes from DB a service with the id given by argument belonging to a neighborhood.
      *
      * @param neighborhood_id: id from parent neighborhood.
      * @param serviceId: id from service to be deleted.

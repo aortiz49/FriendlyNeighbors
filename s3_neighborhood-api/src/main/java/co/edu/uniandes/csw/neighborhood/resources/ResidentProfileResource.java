@@ -189,11 +189,11 @@ public class ResidentProfileResource {
         }
         return HelperFavorResource.class;
     }
-    
+
     /**
      *
-     * Connects /residents route with /attendedEvents route which are dependent of resident resource,
-     * by redirecting to the service managing the URL segment in charge of the members
+     * Connects /residents route with /attendedEvents route which are dependent of resident
+     * resource, by redirecting to the service managing the URL segment in charge of the members
      *
      * @param residentsId id from resident from which the resource is being accessed
      * @param neighId parent neighborhood
@@ -259,7 +259,6 @@ public class ResidentProfileResource {
     }
 
     /**
-     *
      * Connects /residents path with /businesses path which depends on the resident resource, by
      * redirecting to the service managing the URL segment in charge of the businesses
      *
@@ -276,7 +275,6 @@ public class ResidentProfileResource {
     }
 
     /**
-     *
      * Connects /residents path with /events path which depends on the resident resource, by
      * redirecting to the service managing the URL segment in charge of the event.
      *
@@ -290,6 +288,22 @@ public class ResidentProfileResource {
             throw new WebApplicationException("Resource /residents/" + residentsId + " does not exist.", 404);
         }
         return EventResidentProfileResource.class;
+    }
+
+    /**
+     * Connects /residents path with /notifications path which depends on the resident resource, by
+     * redirecting to the service managing the URL segment in charge of the event.
+     *
+     * @param residentsId id from resident from which the resource is being accessed
+     * @param neighId parent neighborhood
+     * @return event resource from the specified resident
+     */
+    @Path("{residentsId: \\d+}/notifications")
+    public Class<NotificationResidentProfileResource> getNotificationResidentProfileResource(@PathParam("residentsId") Long residentsId, @PathParam("neighborhoodId") Long neighId) {
+        if (residentLogic.getResident(residentsId, neighId) == null) {
+            throw new WebApplicationException("Resource /residents/" + residentsId + " does not exist.", 404);
+        }
+        return NotificationResidentProfileResource.class;
     }
 
 }

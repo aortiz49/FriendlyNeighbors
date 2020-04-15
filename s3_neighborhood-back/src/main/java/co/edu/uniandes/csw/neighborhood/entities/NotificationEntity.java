@@ -58,7 +58,7 @@ public class NotificationEntity extends BaseEntity implements Serializable {
     /**
      * Indicates if this notification has been seen by at least one user
      */
-    private boolean seen;
+    private Boolean seen;
 
     /**
      * Indicates the  priority of this  notification
@@ -114,7 +114,7 @@ public class NotificationEntity extends BaseEntity implements Serializable {
      *
      * @return value of isSeen
      */
-    public boolean isSeen() {
+    public Boolean isSeen() {
         return seen;
     }
 
@@ -159,7 +159,7 @@ public class NotificationEntity extends BaseEntity implements Serializable {
      *
      * @param seen value of isSeen
      */
-    public void setSeen(boolean seen) {
+    public void setSeen(Boolean seen) {
         this.seen = seen;
     }
 
