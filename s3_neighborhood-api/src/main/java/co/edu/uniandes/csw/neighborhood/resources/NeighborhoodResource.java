@@ -131,6 +131,19 @@ public class NeighborhoodResource {
         return detailDTO;
     }
 
+    @GET
+    @Path("_{neighborhoodName: \\w+}")
+    public NeighborhoodDetailDTO getNeighborhoodByName(@PathParam("neighborhoodName") String neighborhoodName) {
+        LOGGER.log(Level.INFO, "Looking for  resident from resource: input: {0}", neighborhoodName);
+        NeighborhoodEntity neighborhoodEntity = logic.getNeighborhoodByName(neighborhoodName);
+        if (neighborhoodEntity == null) {
+            throw new WebApplicationException("The Resource /neighborhoods/" + neighborhoodName + " does not exist.", 404);
+        }
+        NeighborhoodDetailDTO detailDTO = new NeighborhoodDetailDTO(neighborhoodEntity);
+        LOGGER.log(Level.INFO, "Ended looking for resident from resource: output: {0}", detailDTO);
+        return detailDTO;
+    }
+
     @PUT
     @Path("{neighborhoodId: \\d+}")
     public NeighborhoodDetailDTO updateNeighborhood(@PathParam("neighborhoodId") Long neighborhoodId,
