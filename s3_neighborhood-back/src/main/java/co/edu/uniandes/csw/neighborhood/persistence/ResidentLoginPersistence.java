@@ -94,7 +94,7 @@ public class ResidentLoginPersistence {
         LOGGER.log(Level.INFO, "Querying for residentLogin with id '{'0'}'{0} belonging to {1}", new Object[]{pResidentLoginId, pNeighborhoodId});
 
         ResidentLoginEntity login = em.find(ResidentLoginEntity.class, pResidentLoginId);
-        
+
         if (login != null) {
             if (login.getNeighborhood() == null
                     || !login.getNeighborhood().getId().equals(pNeighborhoodId)) {
@@ -103,8 +103,64 @@ public class ResidentLoginPersistence {
             }
         }
 
-
         return login;
+    }
+
+    /**
+     * Finds a login by name.
+     *
+     * @param pUsername the name of the login to search for
+     * @return null if the login doesn't exist. If the login exists, return the first one.
+     */
+    public ResidentLoginEntity findByUsername(String pUsername) {
+        LOGGER.log(Level.INFO, "Consulting login by name ", pUsername);
+
+        // creates a query to search for logins with the username given by the parameter. ":pUserName" is a placeholder that must be replaced
+        TypedQuery query = em.createQuery("Select e From ResidentLoginEntity e where e.userName = :pUsername", ResidentLoginEntity.class);
+
+        // the "pName" placeholder is replaced with the name of the parameter
+        query = query.setParameter("pUsername", pUsername);
+
+        // invokes the query and returns a list of results
+        List<ResidentLoginEntity> sameName = query.getResultList();
+        ResidentLoginEntity result;
+
+        if (sameName == null || sameName.isEmpty()) {
+            result = null;
+        } else {
+            result = sameName.get(0);
+        }
+        LOGGER.log(Level.INFO, "Exiting consultation of login by name ", pUsername);
+        return result;
+    }
+
+    /**
+     * Finds a login by govId.
+     *
+     * @param pGovId the govId of the login to search for
+     * @return null if the login doesn't exist. If the login exists, return the first one.
+     */
+    public ResidentLoginEntity findBygovId(String pGovId) {
+        LOGGER.log(Level.INFO, "Consulting login by govId ", pGovId);
+
+        // creates a query to search for logins with the username given by the parameter. ":pUserName" is a placeholder that must be replaced
+        TypedQuery query = em.createQuery("Select e From ResidentLoginEntity e where e.governmentId = :pGovId", ResidentLoginEntity.class);
+
+        // the "pName" placeholder is replaced with the name of the parameter
+        query = query.setParameter("pGovId", pGovId);
+        
+        // invokes the query and returns a list of results 
+        // 
+        List<ResidentLoginEntity> sameName = query.getResultList();
+        ResidentLoginEntity result;
+
+        if (sameName == null || sameName.isEmpty()) {
+            result = null;
+        } else {
+            result = sameName.get(0);
+        }
+        LOGGER.log(Level.INFO, "Exiting consultation of login by govId ", pGovId);
+        return result;
     }
 
     /**

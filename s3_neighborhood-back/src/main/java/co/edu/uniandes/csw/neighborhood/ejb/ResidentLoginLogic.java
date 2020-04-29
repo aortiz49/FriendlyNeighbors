@@ -43,9 +43,14 @@ public class ResidentLoginLogic {
         if (pResidentLoginEntity.getUserName() == null) {
             throw new BusinessLogicException("A username has to be specified");
         }
-   
-        for(NeighborhoodEntity neigh : neighborhoodPersistence.findAll()){
-                for (ResidentLoginEntity residentL : persistence.findAll(neigh.getId())){
+
+        // The login cannot already exist with the same username
+        if (persistence.findByUsername(pResidentLoginEntity.getUserName()) != null) {
+            throw new BusinessLogicException("A resident with this username already exists!");
+        }
+
+        for (NeighborhoodEntity neigh : neighborhoodPersistence.findAll()) {
+            for (ResidentLoginEntity residentL : persistence.findAll(neigh.getId())) {
                 // No two residents with the same userame
                 if (residentL.getUserName().equals(pResidentLoginEntity.getUserName())) {
                     throw new BusinessLogicException("The username already exists");
@@ -79,7 +84,7 @@ public class ResidentLoginLogic {
         if (!passValue.matches(".*[0-9].*")) {
             throw new BusinessLogicException("Password must contain at least one number.");
         }
-        // At least one special character
+        //   At least one special character
         if (!passValue.matches(".*[@#$%^&+=].*")) {
             throw new BusinessLogicException("Password must contain at least one special character.");
         }
@@ -87,6 +92,11 @@ public class ResidentLoginLogic {
         //must have a governmentId
         if (pResidentLoginEntity.getGovernmentId() == null) {
             throw new BusinessLogicException("A governmentId has to be specified");
+        }
+
+        // The login cannot already exist with the same govId
+        if (persistence.findBygovId(pResidentLoginEntity.getGovernmentId()) != null) {
+            throw new BusinessLogicException("A resident with this government already exists!");
         }
 
         pResidentLoginEntity.setNeighborhood(neighborhood);
@@ -125,8 +135,8 @@ public class ResidentLoginLogic {
         if (pResidentLoginEntity.getUserName() == null) {
             throw new BusinessLogicException("A username has to be specified");
         }
-        for(NeighborhoodEntity neigh : neighborhoodPersistence.findAll()){
-                for (ResidentLoginEntity residentL : persistence.findAll(neigh.getId())){
+        for (NeighborhoodEntity neigh : neighborhoodPersistence.findAll()) {
+            for (ResidentLoginEntity residentL : persistence.findAll(neigh.getId())) {
                 // No two residents with the same userame
                 if (residentL.getUserName().equals(pResidentLoginEntity.getUserName())) {
                     throw new BusinessLogicException("The username already exists");
