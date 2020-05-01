@@ -52,6 +52,8 @@ public class PostViewerLogicTest {
     private List<ResidentProfileEntity> data = new ArrayList<>();
 
     private ResidentLoginEntity login;
+        @Inject
+    private ResidentLoginLogic loginLogic;
 
     /**
      * @return Returns jar which Arquillian will deploy embedded in Payara. jar contains classes, DB
@@ -144,11 +146,16 @@ public class PostViewerLogicTest {
     @Test
     public void addResidentTest() throws BusinessLogicException {
         ResidentProfileEntity newResidentProfile = factory.manufacturePojo(ResidentProfileEntity.class);
+        ResidentLoginEntity theLogin = factory.manufacturePojo(ResidentLoginEntity.class);
+        theLogin.setPassword("Gsnnah6!=");
 
+        theLogin = loginLogic.createResidentLogin(neighborhood.getId(), theLogin);
+        
+        newResidentProfile.setLogin(theLogin);
+        
         newResidentProfile.setNeighborhood(neighborhood);
-        newResidentProfile.setLogin(login);
 
-        residentLogic.createResident(newResidentProfile, neighborhood.getId(), login.getId());
+        residentLogic.createResident(newResidentProfile, neighborhood.getId());
 
         ResidentProfileEntity residentEntity = postResidentProfileLogic.associateViewerToPost(post.getId(), newResidentProfile.getId(), neighborhood.getId());
         Assert.assertNotNull(residentEntity);
@@ -192,31 +199,7 @@ public class PostViewerLogicTest {
 
     }
 
-    /**
-     * Test for replacing residents associated with post
-     *
-     * @throws BusinessLogicException
-     */
-    @Test
 
-    public void replaceResidentProfilesTest() throws BusinessLogicException {
-        List<ResidentProfileEntity> newCollection = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
-            entity.setPostsToView(new ArrayList<>());
-            entity.setLogin(login);
-            entity.getPostsToView().add(post);
-
-            residentLogic.createResident(entity, neighborhood.getId(), login.getId());
-
-            newCollection.add(entity);
-        }
-        postResidentProfileLogic.replaceViewers(post.getId(), newCollection, neighborhood.getId());
-        List<ResidentProfileEntity> residentEntities = postResidentProfileLogic.getViewers(post.getId(), neighborhood.getId());
-        for (ResidentProfileEntity aNuevaLista : newCollection) {
-            Assert.assertTrue(residentEntities.contains(aNuevaLista));
-        }
-    }
 
     /**
      * Test for removing resident from post

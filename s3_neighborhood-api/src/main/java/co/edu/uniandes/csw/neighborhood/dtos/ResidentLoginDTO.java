@@ -74,6 +74,7 @@ public class ResidentLoginDTO implements Serializable {
      * Indicates if a resident is active or not.
      */
     private boolean isActive;
+    
 
 //===================================================
 // Constructors
@@ -99,6 +100,7 @@ public class ResidentLoginDTO implements Serializable {
             this.isActive = pResidentLogin.isActive();
 
             this.neighborhood = new NeighborhoodDTO(pResidentLogin.getNeighborhood());
+            
 
         }
     }
@@ -124,6 +126,9 @@ public class ResidentLoginDTO implements Serializable {
         if (neighborhood != null) {
             login.setNeighborhood(getNeighborhood().toEntity());
         }
+        
+  
+
 
         return login;
     }
@@ -229,6 +234,7 @@ public class ResidentLoginDTO implements Serializable {
     public void setIsActive(boolean pIsActive) {
         isActive = pIsActive;
     }
+
 
     /**
      * Returns the string representation of the Business object.

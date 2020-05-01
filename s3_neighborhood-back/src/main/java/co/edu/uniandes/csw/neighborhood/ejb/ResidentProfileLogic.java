@@ -66,17 +66,9 @@ public class ResidentProfileLogic {
      * @return Persisted entity representing resident
      * @throws BusinessLogicException If a business rule si not met
      */
-    public ResidentProfileEntity createResident(ResidentProfileEntity residentEntity, Long neighId, Long pLoginId) throws BusinessLogicException {
+    public ResidentProfileEntity createResident(ResidentProfileEntity residentEntity, Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Creation process for resident has started");
 
-        //1a. E-mail cannot be null 
-        if (residentEntity.getEmail() == null) {
-            throw new BusinessLogicException("An e-mail has to be specified");
-        }
-        //1b. E-mail cannot be duplicated 
-        if (persistence.findByEmail(residentEntity.getEmail()) != null) {
-            throw new BusinessLogicException("E-mail provided already in use: " + residentEntity.getEmail() + "\"");
-        }
         verifyBusinessRules(residentEntity);
 
         NeighborhoodEntity persistedNeighborhood = neighborhoodPersistence.find(neighId);
@@ -85,13 +77,19 @@ public class ResidentProfileLogic {
             throw new BusinessLogicException("The neighborhood must exist");
         }
 
-        ResidentLoginEntity persistedLogin = loginPersistence.find(neighId, pLoginId);
-
+        ResidentLoginEntity persistedLogin = loginPersistence.find(neighId, residentEntity.getLogin().getId());
+        
         if (persistedLogin == null) {
-            throw new BusinessLogicException("The residnet must have a login!");
+            throw new BusinessLogicException("The resident must have a login!");
+        }
+        
+        if(persistedLogin.getResident()!=null){
+            throw new BusinessLogicException("The login already has a resident");
         }
 
+
         residentEntity.setNeighborhood(persistedNeighborhood);
+        persistedLogin.setResident(residentEntity);
         residentEntity.setLogin(persistedLogin);
 
         persistence.create(residentEntity);
@@ -102,6 +100,16 @@ public class ResidentProfileLogic {
     }
 
     private void verifyBusinessRules(ResidentProfileEntity residentEntity) throws BusinessLogicException {
+       
+        //1a. E-mail cannot be null 
+        if (residentEntity.getEmail() == null) {
+            throw new BusinessLogicException("An e-mail has to be specified");
+        }
+        //1b. E-mail cannot be duplicated 
+        if (persistence.findByEmail(residentEntity.getEmail())  != null) {
+            throw new BusinessLogicException("E-mail provided already in use: " + residentEntity.getEmail() + "\"");
+        }
+        
         // 2. Proof of residence must not be null.
         if (residentEntity.getProofOfResidence() == null) {
             throw new BusinessLogicException("A proof of residence has to be specified");

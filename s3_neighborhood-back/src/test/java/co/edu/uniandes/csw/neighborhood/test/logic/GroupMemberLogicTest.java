@@ -127,7 +127,8 @@ public class GroupMemberLogicTest {
             group.getMembers().add(entity);
         }
     }
-
+    @Inject
+    private ResidentLoginLogic loginLogic;
     /**
      * Test to associate resident with group
      *
@@ -136,12 +137,17 @@ public class GroupMemberLogicTest {
      */
     @Test
     public void addResidentTest() throws BusinessLogicException {
-        ResidentProfileEntity newResidentProfile = factory.manufacturePojo(ResidentProfileEntity.class);
+         ResidentProfileEntity newResidentProfile = factory.manufacturePojo(ResidentProfileEntity.class);
+        ResidentLoginEntity theLogin = factory.manufacturePojo(ResidentLoginEntity.class);
+        theLogin.setPassword("Gsnnah6!=");
 
+        theLogin = loginLogic.createResidentLogin(neighborhood.getId(), theLogin);
+        
+        newResidentProfile.setLogin(theLogin);
+        
         newResidentProfile.setNeighborhood(neighborhood);
-        newResidentProfile.setLogin(login);
 
-        residentLogic.createResident(newResidentProfile, neighborhood.getId(),login.getId());
+        residentLogic.createResident(newResidentProfile, neighborhood.getId());
 
         ResidentProfileEntity residentEntity = groupResidentProfileLogic.associateMemberToGroup(group.getId(), newResidentProfile.getId(), neighborhood.getId());
         Assert.assertNotNull(residentEntity);
@@ -185,31 +191,7 @@ public class GroupMemberLogicTest {
 
     }
 
-    /**
-     * Test for replacing residents associated with group
-     *
-     * @throws BusinessLogicException
-     */
-    @Test
 
-    public void replaceResidentProfilesTest() throws BusinessLogicException {
-        List<ResidentProfileEntity> newCollection = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            ResidentProfileEntity entity = factory.manufacturePojo(ResidentProfileEntity.class);
-            entity.setGroups(new ArrayList<>());
-            entity.getGroups().add(group);
-            entity.setLogin(login);
-
-            residentLogic.createResident(entity, neighborhood.getId(),login.getId());
-
-            newCollection.add(entity);
-        }
-        groupResidentProfileLogic.replaceMembers(group.getId(), newCollection, neighborhood.getId());
-        List<ResidentProfileEntity> residentEntities = groupResidentProfileLogic.getMembers(group.getId(), neighborhood.getId());
-        for (ResidentProfileEntity aNuevaLista : newCollection) {
-            Assert.assertTrue(residentEntities.contains(aNuevaLista));
-        }
-    }
 
     /**
      * Test for removing resident from group

@@ -6,6 +6,7 @@
 package co.edu.uniandes.csw.neighborhood.resources;
 
 import co.edu.uniandes.csw.neighborhood.dtos.ResidentLoginDTO;
+import co.edu.uniandes.csw.neighborhood.dtos.ResidentLoginDetailDTO;
 import co.edu.uniandes.csw.neighborhood.ejb.ResidentLoginLogic;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentLoginEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
@@ -33,6 +34,7 @@ import javax.ws.rs.WebApplicationException;
  * @author v.cardonac1
  * @version 2.0
  */
+
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
@@ -45,8 +47,8 @@ public class ResidentLoginResource {
 
     /**
      *
-     * Creates a new residentLogin with the information received in the body of the petition and returns
-     * a new identical object with and auto-generated id by the database.
+     * Creates a new residentLogin with the information received in the body of the petition and
+     * returns a new identical object with and auto-generated id by the database.
      *
      * @param pNeighborhoodId the id of the neighborhood containing the businesses
      * @param pResidentLogin {@link ResidentLoginDTO} the residentLogin to be created
@@ -82,14 +84,27 @@ public class ResidentLoginResource {
      */
     @GET
     @Path("{residentLoginsId: \\d+}")
-    public ResidentLoginDTO getResidentLogin(@PathParam("residentLoginsId") Long residentLoginsId, @PathParam("neighborhoodId") Long neighId) {
+    public ResidentLoginDetailDTO getResidentLogin(@PathParam("residentLoginsId") Long residentLoginsId, @PathParam("neighborhoodId") Long neighId) {
         LOGGER.log(Level.INFO, "Looking for  residentLogin from resource: input: {0}", residentLoginsId);
         ResidentLoginEntity residentLoginEntity = residentLoginLogic.getResidentLogin(neighId, residentLoginsId);
         if (residentLoginEntity == null) {
             throw new WebApplicationException("Resource /residentLogins/" + residentLoginsId + " does not exist.", 404);
         }
-        ResidentLoginDTO detailDTO = new ResidentLoginDTO(residentLoginEntity);
+        ResidentLoginDetailDTO detailDTO = new ResidentLoginDetailDTO(residentLoginEntity);
         LOGGER.log(Level.INFO, "Ended looking for residentLogin from resource: output: {0}", detailDTO);
+        return detailDTO;
+    }
+
+    @GET
+    @Path("_{residentLoginName: \\w+}")
+    public ResidentLoginDTO getResidentLoginByName(@PathParam("residentLoginName") String residentLoginName) {
+        LOGGER.log(Level.INFO, "Looking for  resident from resource: input: {0}", residentLoginName);
+        ResidentLoginEntity residentLoginEntity = residentLoginLogic.getResidentLoginByName(residentLoginName);
+        if (residentLoginEntity == null) {
+            throw new WebApplicationException("The Resource /residentLogins/_" + residentLoginName + " does not exist.", 404);
+        }
+        ResidentLoginDTO detailDTO = new ResidentLoginDTO(residentLoginEntity);
+        LOGGER.log(Level.INFO, "Ended looking for resident from resource: output: {0}", detailDTO);
         return detailDTO;
     }
 

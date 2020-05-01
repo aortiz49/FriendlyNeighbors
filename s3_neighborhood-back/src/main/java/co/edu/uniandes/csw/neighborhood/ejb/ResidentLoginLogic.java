@@ -105,6 +105,8 @@ public class ResidentLoginLogic {
 
         return pResidentLoginEntity;
     }
+    
+    
 
     public void deleteResidentLogin(Long pNeighborhoodId, Long id) {
 
@@ -121,13 +123,40 @@ public class ResidentLoginLogic {
         return logins;
     }
 
-    public ResidentLoginEntity getResidentLogin(Long pNeighborhoodId, Long id) {
-        LOGGER.log(Level.INFO, "Starting querying process for resident login with id {0}", id);
-        ResidentLoginEntity login = persistence.find(pNeighborhoodId, id);
-        LOGGER.log(Level.INFO, "Ended querying process for resident login with id {0}", id);
-        return login;
+    /**
+     * Finds a login by ID.
+     *
+     * @param pNeighborhoodId
+     * @param pId
+     * @return the found login, null if not found
+     */
+    public ResidentLoginEntity getResidentLogin(Long pNeighborhoodId, Long pId) {
+        LOGGER.log(Level.INFO, "Begin search for login with Id = {0}", pId);
+        ResidentLoginEntity loginEntity = persistence.find(pNeighborhoodId,pId);
+        if (loginEntity == null) {
+            LOGGER.log(Level.SEVERE, "The login with Id = {0} doesn't exist", pId);
+        }
+        LOGGER.log(Level.INFO, "End search for login with Id = {0}", pId);
+        return loginEntity;
     }
 
+    /**
+     * Finds a login by name.
+     *
+     * @param pName
+     * @return the found login, null if not found
+     */
+    public ResidentLoginEntity getResidentLoginByName(String pName) {
+        LOGGER.log(Level.INFO, "Begin search for login with name = {0}", pName);
+        ResidentLoginEntity loginEntity = persistence.findByUsername(pName);
+        if (loginEntity == null) {
+            LOGGER.log(Level.SEVERE, "The login with name = {0} doesn't exist", pName);
+        }
+        LOGGER.log(Level.INFO, "End search for login with name = {0}", pName);
+        return loginEntity;
+    }
+
+    
     public ResidentLoginEntity updateResidentLogin(Long pNeighborhoodId, ResidentLoginEntity pResidentLoginEntity) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Starting update process for resident login with id {0}", pResidentLoginEntity.getId());
 

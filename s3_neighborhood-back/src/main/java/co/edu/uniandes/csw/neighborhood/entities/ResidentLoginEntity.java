@@ -28,6 +28,7 @@ package co.edu.uniandes.csw.neighborhood.entities;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import uk.co.jemos.podam.common.PodamExclude;
@@ -82,7 +83,7 @@ public class ResidentLoginEntity extends BaseEntity implements Serializable {
      * The resident profile login.
      */
     @PodamExclude
-    @OneToOne
+    @OneToOne(mappedBy = "login", fetch = FetchType.LAZY)
     private ResidentProfileEntity resident;
 
     /**

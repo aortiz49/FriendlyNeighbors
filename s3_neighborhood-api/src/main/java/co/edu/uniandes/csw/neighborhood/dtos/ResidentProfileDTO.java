@@ -92,6 +92,9 @@ public class ResidentProfileDTO implements Serializable {
             
             if(residentEntity.getLogin() != null)       
                  this.login = new ResidentLoginDTO(residentEntity.getLogin());
+            else{
+                residentEntity.setLogin(null);
+            }
             
             if(residentEntity.getNeighborhood()!= null)  
                 this.neighborhood = new NeighborhoodDTO(residentEntity.getNeighborhood());
@@ -117,10 +120,10 @@ public class ResidentProfileDTO implements Serializable {
         residentEntity.setProofOfResidence(getProofOfResidence());
 
         if (login != null) {
-            residentEntity.setLogin(getLogin().toEntity());
+            residentEntity.setLogin(login.toEntity());
         }
         if (neighborhood != null) {
-            residentEntity.setNeighborhood(getNeighborhood().toEntity());
+            residentEntity.setNeighborhood(neighborhood.toEntity());
         }
 
         return residentEntity;

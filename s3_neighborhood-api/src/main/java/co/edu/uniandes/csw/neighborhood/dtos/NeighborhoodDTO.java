@@ -107,8 +107,7 @@ public class NeighborhoodDTO implements Serializable {
             this.name = pNeighborhood.getName();
             this.locality = pNeighborhood.getLocality();
             this.numberOfResidents = pNeighborhood.getNumberOfResidents();
-            this.id = pNeighborhood.getId();
-            
+            this.id = pNeighborhood.getId();            
         }
     }
 //===================================================

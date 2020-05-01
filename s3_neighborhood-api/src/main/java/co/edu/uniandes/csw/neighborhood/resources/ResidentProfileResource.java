@@ -70,7 +70,7 @@ public class ResidentProfileResource {
         
         ResidentProfileEntity residentEntity = resident.toEntity();
         
-        ResidentProfileDetailDTO residentDTO = new ResidentProfileDetailDTO(residentLogic.createResident(residentEntity, neighId, residentEntity.getLogin().getId()));
+        ResidentProfileDetailDTO residentDTO = new ResidentProfileDetailDTO(residentLogic.createResident(residentEntity, neighId));
 
         LOGGER.log(Level.INFO, "Created resident");
         return residentDTO;

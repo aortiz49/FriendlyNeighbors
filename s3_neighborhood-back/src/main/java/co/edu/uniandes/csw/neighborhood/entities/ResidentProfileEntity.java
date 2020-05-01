@@ -144,7 +144,7 @@ public class ResidentProfileEntity extends BaseEntity implements Serializable {
      * Represents events posted by this resident
      */
     @PodamExclude
-    @OneToOne(mappedBy = "resident", fetch = FetchType.LAZY)
+    @OneToOne
     private ResidentLoginEntity login;
 
     /**
