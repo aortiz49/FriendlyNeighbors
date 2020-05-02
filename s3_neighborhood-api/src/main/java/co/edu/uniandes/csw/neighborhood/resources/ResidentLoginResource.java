@@ -97,13 +97,13 @@ public class ResidentLoginResource {
 
     @GET
     @Path("_{residentLoginName: \\w+}")
-    public ResidentLoginDTO getResidentLoginByName(@PathParam("residentLoginName") String residentLoginName) {
+    public ResidentLoginDetailDTO getResidentLoginByName(@PathParam("residentLoginName") String residentLoginName) {
         LOGGER.log(Level.INFO, "Looking for  resident from resource: input: {0}", residentLoginName);
         ResidentLoginEntity residentLoginEntity = residentLoginLogic.getResidentLoginByName(residentLoginName);
         if (residentLoginEntity == null) {
             throw new WebApplicationException("The Resource /residentLogins/_" + residentLoginName + " does not exist.", 404);
         }
-        ResidentLoginDTO detailDTO = new ResidentLoginDTO(residentLoginEntity);
+        ResidentLoginDetailDTO detailDTO = new ResidentLoginDetailDTO(residentLoginEntity);
         LOGGER.log(Level.INFO, "Ended looking for resident from resource: output: {0}", detailDTO);
         return detailDTO;
     }
