@@ -153,7 +153,7 @@ public class AttendeeEventsLogic {
                 event.getAttendees().remove(attendeeEntity);
             }
         }
-        attendeeEntity.setattendedEvents(events);
+        attendeeEntity.setAttendedEvents(events);
         LOGGER.log(Level.INFO, "Ended trying to replace events related to attendee with id {0} from neighborhood {1}", new Object[]{attendeeId, neighId});
         return attendeeEntity.getAttendedEvents();
     }

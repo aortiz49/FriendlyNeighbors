@@ -5,8 +5,11 @@
  */
 package co.edu.uniandes.csw.neighborhood.dtos;
 
+import co.edu.uniandes.csw.neighborhood.adapters.DateAdapter;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import java.io.Serializable;
+import java.util.Date;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -64,11 +67,23 @@ public class ResidentProfileDTO implements Serializable {
      * Represents the neighborhood of this resident
      */
     private NeighborhoodDTO neighborhood;
-   
+
     /**
      * Represents the proof of residence for this resident
      */
     private String proofOfResidence;
+
+    private String profilePicture;
+
+    private String muralPicture;
+
+    private String livingSince;
+
+    @XmlJavaTypeAdapter(DateAdapter.class)
+    private Date birthDate;
+
+    @XmlJavaTypeAdapter(DateAdapter.class)
+    private Date joinDate;
 
     public ResidentProfileDTO() {
     }
@@ -90,14 +105,21 @@ public class ResidentProfileDTO implements Serializable {
             this.proofOfResidence = residentEntity.getProofOfResidence();
             this.preferences = residentEntity.getPreferences();
             
-            if(residentEntity.getLogin() != null)       
-                 this.login = new ResidentLoginDTO(residentEntity.getLogin());
-            else{
+               this.profilePicture = residentEntity.getProfilePicture();
+            this.muralPicture = residentEntity.getMuralPicture();
+            this.livingSince = residentEntity.getLivingSince();
+            this.birthDate = residentEntity.getBirthDate();
+            this.joinDate = residentEntity.getJoinDate();
+
+            if (residentEntity.getLogin() != null) {
+                this.login = new ResidentLoginDTO(residentEntity.getLogin());
+            } else {
                 residentEntity.setLogin(null);
             }
-            
-            if(residentEntity.getNeighborhood()!= null)  
+
+            if (residentEntity.getNeighborhood() != null) {
                 this.neighborhood = new NeighborhoodDTO(residentEntity.getNeighborhood());
+            }
 
         }
     }
@@ -119,11 +141,17 @@ public class ResidentProfileDTO implements Serializable {
         residentEntity.setPreferences(getPreferences());
         residentEntity.setProofOfResidence(getProofOfResidence());
 
-        if (login != null) {
-            residentEntity.setLogin(login.toEntity());
+        residentEntity.setProfilePicture(getProfilePicture());
+        residentEntity.setMuralPicture(getMuralPicture());
+        residentEntity.setLivingSince(getLivingSince());
+        residentEntity.setBirthDate(getBirthDate());
+        residentEntity.setJoinDate(getJoinDate());
+
+        if (getLogin() != null) {
+            residentEntity.setLogin(getLogin().toEntity());
         }
-        if (neighborhood != null) {
-            residentEntity.setNeighborhood(neighborhood.toEntity());
+        if (getNeighborhood() != null) {
+            residentEntity.setNeighborhood(getNeighborhood().toEntity());
         }
 
         return residentEntity;
@@ -278,5 +306,76 @@ public class ResidentProfileDTO implements Serializable {
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
+
+    /**
+     * @return the profilePicture
+     */
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    /**
+     * @param profilePicture the profilePicture to set
+     */
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    /**
+     * @return the muralPicture
+     */
+    public String getMuralPicture() {
+        return muralPicture;
+    }
+
+    /**
+     * @param muralPicture the muralPicture to set
+     */
+    public void setMuralPicture(String muralPicture) {
+        this.muralPicture = muralPicture;
+    }
+
+    /**
+     * @return the livingSince
+     */
+    public String getLivingSince() {
+        return livingSince;
+    }
+
+    /**
+     * @param livingSince the livingSince to set
+     */
+    public void setLivingSince(String livingSince) {
+        this.livingSince = livingSince;
+    }
+
+    /**
+     * @return the birthDate
+     */
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    /**
+     * @param birthDate the birthDate to set
+     */
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    /**
+     * @return the joinDate
+     */
+    public Date getJoinDate() {
+        return joinDate;
+    }
+
+    /**
+     * @param joinDate the joinDate to set
+     */
+       public void setJoinDate(Date joinDate) {
+        this.joinDate = joinDate;
+    }
+
 
 }

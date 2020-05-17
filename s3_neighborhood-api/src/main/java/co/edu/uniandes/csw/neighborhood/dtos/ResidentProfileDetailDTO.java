@@ -78,12 +78,15 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
      */
     private List<CommentDTO> comments;
 
+    private List<String> album;
+
     public ResidentProfileDetailDTO() {
         super();
     }
 
     /**
-     * Creates a detailed resident DTO from resident entity, including its relations.
+     * Creates a detailed resident DTO from resident entity, including its
+     * relations.
      *
      * @param residentEntity from which new group DTO will be created
      *
@@ -102,6 +105,7 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
             events = new ArrayList<>();
             groups = new ArrayList<>();
             comments = new ArrayList<>();
+            album = new ArrayList<>();
 
             for (EventEntity entityEvent : residentEntity.getAttendedEvents()) {
                 attendedEvents.add(new EventDTO(entityEvent));
@@ -142,6 +146,8 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
                 businesses.add(new BusinessDTO(businessEntity));
             }
 
+            album = residentEntity.getAlbum();
+
         }
     }
 
@@ -154,77 +160,79 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
     public ResidentProfileEntity toEntity() {
         ResidentProfileEntity residentEntity = super.toEntity();
 
-        if (attendedEvents != null) {
+        if (getAttendedEvents() != null) {
             List<EventEntity> events = new ArrayList<>();
-            for (EventDTO dtoEvent : attendedEvents) {
+            for (EventDTO dtoEvent : getAttendedEvents()) {
                 events.add(dtoEvent.toEntity());
             }
-            residentEntity.setattendedEvents(events);
+            residentEntity.setAttendedEvents(events);
         }
 
-        if (favorsToHelp != null) {
+        if (getFavorsToHelp() != null) {
             List<FavorEntity> favors = new ArrayList<>();
-            for (FavorDTO dtoFavor : favorsToHelp) {
+            for (FavorDTO dtoFavor : getFavorsToHelp()) {
                 favors.add(dtoFavor.toEntity());
             }
             residentEntity.setFavorsToHelp(favors);
         }
 
-        if (postsToView != null) {
+        if (getPostsToView() != null) {
             List<PostEntity> posts = new ArrayList<>();
-            for (PostDTO dtoPost : postsToView) {
+            for (PostDTO dtoPost : getPostsToView()) {
                 posts.add(dtoPost.toEntity());
             }
             residentEntity.setPostsToView(posts);
         }
 
-        if (favorsRequested != null) {
+        if (getFavorsRequested() != null) {
             List<FavorEntity> favors = new ArrayList<>();
-            for (FavorDTO dtoFavor : favorsRequested) {
+            for (FavorDTO dtoFavor : getFavorsRequested()) {
                 favors.add(dtoFavor.toEntity());
             }
             residentEntity.setFavorsRequested(favors);
         }
 
-        if (services != null) {
+        if (getServices() != null) {
             List<ServiceEntity> servicesE = new ArrayList<>();
-            for (ServiceDTO dtoService : services) {
+            for (ServiceDTO dtoService : getServices()) {
                 servicesE.add(dtoService.toEntity());
             }
             residentEntity.setServices(servicesE);
         }
 
-        if (notifications != null) {
+        if (getNotifications() != null) {
             List<NotificationEntity> notificationsE = new ArrayList<>();
-            for (NotificationDTO dtoNotification : notifications) {
+            for (NotificationDTO dtoNotification : getNotifications()) {
                 notificationsE.add(dtoNotification.toEntity());
             }
             residentEntity.setNotifications(notificationsE);
         }
 
-        if (posts != null) {
+        if (getPosts() != null) {
             List<PostEntity> postsE = new ArrayList<>();
-            for (PostDTO dtoPost : posts) {
+            for (PostDTO dtoPost : getPosts()) {
                 postsE.add(dtoPost.toEntity());
             }
             residentEntity.setPostsToView(postsE);
         }
 
-        if (groups != null) {
+        if (getGroups() != null) {
             List<GroupEntity> groupsE = new ArrayList<>();
-            for (GroupDTO dtoGroup : groups) {
+            for (GroupDTO dtoGroup : getGroups()) {
                 groupsE.add(dtoGroup.toEntity());
             }
             residentEntity.setGroups(groupsE);
         }
 
-        if (businesses != null) {
+        if (getBusinesses() != null) {
             List<BusinessEntity> businessEntities = new ArrayList<>();
-            for (BusinessDTO businessDTO : businesses) {
+            for (BusinessDTO businessDTO : getBusinesses()) {
                 businessEntities.add(businessDTO.toEntity());
             }
             residentEntity.setBusinesses(businessEntities);
         }
+
+        residentEntity.setAlbum(getAlbum());
 
         return residentEntity;
     }
@@ -237,14 +245,14 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
     /**
      * @return the attendedEvents
      */
-    public List<EventDTO> getattendedEvents() {
+    public List<EventDTO> getAttendedEvents() {
         return attendedEvents;
     }
 
     /**
      * @param attendedEvents the attendedEvents to set
      */
-    public void setattendedEvents(List<EventDTO> attendedEvents) {
+    public void setAttendedEvents(List<EventDTO> attendedEvents) {
         this.attendedEvents = attendedEvents;
     }
 
@@ -361,6 +369,20 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
     }
 
     /**
+     * @return the businesses
+     */
+    public List<BusinessDTO> getBusinesses() {
+        return businesses;
+    }
+
+    /**
+     * @param businesses the businesses to set
+     */
+    public void setBusinesses(List<BusinessDTO> businesses) {
+        this.businesses = businesses;
+    }
+
+    /**
      * @return the comments
      */
     public List<CommentDTO> getComments() {
@@ -374,12 +396,12 @@ public class ResidentProfileDetailDTO extends ResidentProfileDTO implements Seri
         this.comments = comments;
     }
 
-    public List<BusinessDTO> getBusinesses() {
-        return businesses;
+    public List<String> getAlbum() {
+        return album;
     }
 
-    public void setBusinesses(List<BusinessDTO> businesses) {
-        this.businesses = businesses;
+    public void setAlbum(List<String> album) {
+        this.album = album;
     }
 
 }
