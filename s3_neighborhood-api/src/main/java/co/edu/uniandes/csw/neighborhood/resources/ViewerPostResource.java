@@ -23,11 +23,11 @@ SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.resources;
 
-import co.edu.uniandes.csw.neighborhood.dtos.GroupDetailDTO;
+import co.edu.uniandes.csw.neighborhood.dtos.PostDetailDTO;
 
-import co.edu.uniandes.csw.neighborhood.entities.GroupEntity;
-import co.edu.uniandes.csw.neighborhood.ejb.GroupLogic;
-import co.edu.uniandes.csw.neighborhood.ejb.MemberGroupLogic;
+import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
+import co.edu.uniandes.csw.neighborhood.ejb.PostLogic;
+import co.edu.uniandes.csw.neighborhood.ejb.ViewerPostLogic;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.mappers.WebApplicationExceptionMapper;
 import java.util.List;
@@ -47,152 +47,152 @@ import java.util.logging.Logger;
 import javax.ws.rs.WebApplicationException;
 
 /**
- * Class implementing resource "resident/{id}/membershipGroups".
+ * Class implementing resource "resident/{id}/postToView".
  *
  * @author albayona
  * @version 1.0
  */
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class MemberGroupResource {
+public class ViewerPostResource {
 
-    private static final Logger LOGGER = Logger.getLogger(MemberGroupResource.class.getName());
-
-    @Inject
-    private MemberGroupLogic memberGroupLogic;
+    private static final Logger LOGGER = Logger.getLogger(ViewerPostResource.class.getName());
 
     @Inject
-    private GroupLogic groupLogic;
+    private ViewerPostLogic ViewerPostLogic;
+
+    @Inject
+    private PostLogic PostLogic;
 
     /**
-     * Associates a group with existing member
+     * Associates a Post with existing Viewer
      *
-     * @param groupsId id from group to be associated
-     * @param membersId id from member
+     * @param postsId id from Post to be associated
+     * @param viewersId id from Viewer
      * @param neighId parent neighborhood
-     * @return JSON {@link GroupDetailDTO} -
+     * @return JSON {@link PostDetailDTO} -
      * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException
      * @throws WebApplicationException {@link WebApplicationExceptionMapper} -
      * Logic error if not found
      */
     @POST
-    @Path("{groupsId: \\d+}")
-    public GroupDetailDTO associateGroupToResidentProfile(@PathParam("membersId") Long membersId, @PathParam("groupsId") Long groupsId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Associating group to member from resource: input: membersId {0} , groupsId {1}", new Object[]{membersId, groupsId});
-        if (groupLogic.getGroup(groupsId, neighId) == null) {
-            throw new WebApplicationException("Resource /groups/" + groupsId + " does not exist.", 404);
+    @Path("{postsId: \\d+}")
+    public PostDetailDTO associatePostToResidentProfile(@PathParam("viewersId") Long viewersId, @PathParam("postsId") Long postsId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Associating Post to Viewer from resource: input: viewersId {0} , postsId {1}", new Object[]{viewersId, postsId});
+        if (PostLogic.getPost(postsId, neighId) == null) {
+            throw new WebApplicationException("Resource /Posts/" + postsId + " does not exist.", 404);
         }
-        GroupDetailDTO detailDTO = new GroupDetailDTO(memberGroupLogic.associateGroupToMember(membersId, groupsId, neighId));
-        LOGGER.log(Level.INFO, "Ended associating group to member from resource: output: {0}", detailDTO);
+        PostDetailDTO detailDTO = new PostDetailDTO(ViewerPostLogic.associatePostToViewer(viewersId, postsId, neighId));
+        LOGGER.log(Level.INFO, "Ended associating Post to Viewer from resource: output: {0}", detailDTO);
         return detailDTO;
     }
 
     /**
-     * Looks for all the groups associated to a member and returns it
+     * Looks for all the Posts associated to a Viewer and returns it
      *
-     * @param membersId id from member whose groups are wanted
+     * @param viewersId id from Viewer whose Posts are wanted
      * @param neighId parent neighborhood
-     * @return JSONArray {@link GroupDetailDTO} - groups found in member. An
+     * @return JSONArray {@link PostDetailDTO} - Posts found in Viewer. An
      * empty list if none is found
      */
     @GET
-    public List<GroupDetailDTO> getGroups(@PathParam("membersId") Long membersId, @PathParam("neighborhoodId") Long neighId) {
-        LOGGER.log(Level.INFO, "Looking for groups from resources: input: {0}", membersId);
-        List<GroupDetailDTO> list = groupsListEntity2DTO(memberGroupLogic.getGroups(membersId, neighId));
-        LOGGER.log(Level.INFO, "Ended looking for groups from resources: output: {0}", list);
+    public List<PostDetailDTO> getPosts(@PathParam("viewersId") Long viewersId, @PathParam("neighborhoodId") Long neighId) {
+        LOGGER.log(Level.INFO, "Looking for Posts from resources: input: {0}", viewersId);
+        List<PostDetailDTO> list = PostsListEntity2DTO(ViewerPostLogic.getPosts(viewersId, neighId));
+        LOGGER.log(Level.INFO, "Ended looking for Posts from resources: output: {0}", list);
         return list;
     }
 
     /**
-     * Looks for a group with specified ID by URL which is associated with 
-     * member and returns it
+     * Looks for a Post with specified ID by URL which is associated with 
+     * Viewer and returns it
      *
-     * @param groupsId id from wanted group
-     * @param membersId id from member whose group is wanted
+     * @param postsId id from wanted Post
+     * @param viewersId id from Viewer whose Post is wanted
      * @param neighId parent neighborhood
-     * @return {@link GroupDetailDTO} - group found inside member
+     * @return {@link PostDetailDTO} - Post found inside Viewer
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
-     * Logic error if group not found
+     * Logic error if Post not found
      */
     @GET
-    @Path("{groupsId: \\d+}")
-    public GroupDetailDTO getGroup(@PathParam("membersId") Long membersId, @PathParam("groupsId") Long groupsId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Looking for group: input: membersId {0} , groupsId {1}", new Object[]{membersId, groupsId});
-        if (groupLogic.getGroup(groupsId, neighId) == null) {
-            throw new WebApplicationException("Resource /groups/" + groupsId + " does not exist.", 404);
+    @Path("{postsId: \\d+}")
+    public PostDetailDTO getPost(@PathParam("viewersId") Long viewersId, @PathParam("postsId") Long postsId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Looking for Post: input: viewersId {0} , postsId {1}", new Object[]{viewersId, postsId});
+        if (PostLogic.getPost(postsId, neighId) == null) {
+            throw new WebApplicationException("Resource /Posts/" + postsId + " does not exist.", 404);
         }
-        GroupDetailDTO detailDTO = new GroupDetailDTO(memberGroupLogic.getGroup(membersId, groupsId, neighId));
-        LOGGER.log(Level.INFO, "Ended looking for group: output: {0}", detailDTO);
+        PostDetailDTO detailDTO = new PostDetailDTO(ViewerPostLogic.getPost(viewersId, postsId, neighId));
+        LOGGER.log(Level.INFO, "Ended looking for Post: output: {0}", detailDTO);
         return detailDTO;
     }
 
     /**
      * 
-     * Updates a list from groups inside a member which is received in body
+     * Updates a list from Posts inside a Viewer which is received in body
      *
-     * @param membersId  id from member whose list of groups is to be updated
-     * @param groups JSONArray {@link GroupDetailDTO} - modified groups list 
+     * @param viewersId  id from Viewer whose list of Posts is to be updated
+     * @param Posts JSONArray {@link PostDetailDTO} - modified Posts list 
      * @param neighId parent neighborhood
-     * @return JSONArray {@link GroupDetailDTO} - updated list
+     * @return JSONArray {@link PostDetailDTO} - updated list
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Error if not found
      */
     @PUT
-    public List<GroupDetailDTO> replaceGroups(@PathParam("membersId") Long membersId, List<GroupDetailDTO> groups, @PathParam("neighborhoodId") Long neighId) {
-        LOGGER.log(Level.INFO, "Replacing member groups from resource: input: membersId {0} , groups {1}", new Object[]{membersId, groups});
-        for (GroupDetailDTO group : groups) {
-            if (groupLogic.getGroup(group.getId(), neighId) == null) {
-                     throw new WebApplicationException("Resource /groups/" + groups + " does not exist.", 404);
+    public List<PostDetailDTO> replacePosts(@PathParam("viewersId") Long viewersId, List<PostDetailDTO> Posts, @PathParam("neighborhoodId") Long neighId) {
+        LOGGER.log(Level.INFO, "Replacing Viewer Posts from resource: input: viewersId {0} , Posts {1}", new Object[]{viewersId, Posts});
+        for (PostDetailDTO Post : Posts) {
+            if (PostLogic.getPost(Post.getId(), neighId) == null) {
+                     throw new WebApplicationException("Resource /Posts/" + Posts + " does not exist.", 404);
             }
         }
-        List<GroupDetailDTO> lista = groupsListEntity2DTO(memberGroupLogic.replaceGroups(membersId, groupsListDTO2Entity(groups), neighId));
-        LOGGER.log(Level.INFO, "Ended replacing member groups from resource: output:{0}", lista);
+        List<PostDetailDTO> lista = PostsListEntity2DTO(ViewerPostLogic.replacePosts(viewersId, PostsListDTO2Entity(Posts), neighId));
+        LOGGER.log(Level.INFO, "Ended replacing Viewer Posts from resource: output:{0}", lista);
         return lista;
     }
 
     /**
-     * Removes a group from member
+     * Removes a Post from Viewer
      *
-     * @param membersId id from member whose group is to be removed
-     * @param groupsId id from group to be removed
+     * @param viewersId id from Viewer whose Post is to be removed
+     * @param postsId id from Post to be removed
      * @param neighId parent neighborhood
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Error if not found
      */
     @DELETE
-    @Path("{groupsId: \\d+}")
-    public void removeGroup(@PathParam("membersId") Long membersId, @PathParam("groupsId") Long groupsId, @PathParam("neighborhoodId") Long neighId) {
-        LOGGER.log(Level.INFO, "Removing group from member: input: membersId {0} , groupsId {1}", new Object[]{membersId, groupsId});
-        if (groupLogic.getGroup(groupsId, neighId) == null) {
-                 throw new WebApplicationException("Resource /groups/" + groupsId + " does not exist.", 404);
+    @Path("{postsId: \\d+}")
+    public void removePost(@PathParam("viewersId") Long viewersId, @PathParam("postsId") Long postsId, @PathParam("neighborhoodId") Long neighId) {
+        LOGGER.log(Level.INFO, "Removing Post from Viewer: input: viewersId {0} , postsId {1}", new Object[]{viewersId, postsId});
+        if (PostLogic.getPost(postsId, neighId) == null) {
+                 throw new WebApplicationException("Resource /Posts/" + postsId + " does not exist.", 404);
         }
-        memberGroupLogic.removeGroup(membersId, groupsId, neighId);
-        LOGGER.info("Ended removing group from member: output: void");
+        ViewerPostLogic.removePost(viewersId, postsId, neighId);
+        LOGGER.info("Ended removing Post from Viewer: output: void");
     }
 
     /**
-     * Converts an entity list with groups to a DTO list.
+     * Converts an entity list with Posts to a DTO list.
      *
      * @param entityList entity list.
      * @return DTO list.
      */
-    private List<GroupDetailDTO> groupsListEntity2DTO(List<GroupEntity> entityList) {
-        List<GroupDetailDTO> list = new ArrayList<>();
-        for (GroupEntity entity : entityList) {
-            list.add(new GroupDetailDTO(entity));
+    private List<PostDetailDTO> PostsListEntity2DTO(List<PostEntity> entityList) {
+        List<PostDetailDTO> list = new ArrayList<>();
+        for (PostEntity entity : entityList) {
+            list.add(new PostDetailDTO(entity));
         }
         return list;
     }
 
     /**
-     * Converts a DTO list with groups to an entity list.
+     * Converts a DTO list with Posts to an entity list.
      *
      * @param dtos DTO list.
      * @return entity list.
      */
-    private List<GroupEntity> groupsListDTO2Entity(List<GroupDetailDTO> dtos) {
-        List<GroupEntity> list = new ArrayList<>();
-        for (GroupDetailDTO dto : dtos) {
+    private List<PostEntity> PostsListDTO2Entity(List<PostDetailDTO> dtos) {
+        List<PostEntity> list = new ArrayList<>();
+        for (PostDetailDTO dto : dtos) {
             list.add(dto.toEntity());
         }
         return list;

@@ -49,8 +49,7 @@ public class GroupResource {
      *
      * @param group {@link GroupDTO} - Group to be persisted
      * @param neighId parent neighborhood
-     * @return JSON {@link GroupDTO} - Auto-generated group to be
-     * persisted
+     * @return JSON {@link GroupDTO} - Auto-generated group to be persisted
      */
     @POST
     public GroupDetailDTO createGroup(GroupDetailDTO group, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
@@ -66,8 +65,8 @@ public class GroupResource {
      * Looks for all groups on application and returns them.
      *
      * @param neighId parent neighborhood
-     * @return JSONArray {@link GroupDetailDTO} - All the groups on
-     * application if found. Otherwise, an empty list.
+     * @return JSONArray {@link GroupDetailDTO} - All the groups on application
+     * if found. Otherwise, an empty list.
      */
     @GET
     public List<GroupDetailDTO> getGroups(@PathParam("neighborhoodId") Long neighId) {
@@ -100,10 +99,11 @@ public class GroupResource {
     }
 
     /**
-     * Updates group with id from URL with the information contained in
-     * request body.
+     * Updates group with id from URL with the information contained in request
+     * body.
      *
-     * @param groupsId ID from group to be updated. Must be a sequence of digits.
+     * @param groupsId ID from group to be updated. Must be a sequence of
+     * digits.
      * @param neighId parent neighborhood
      * @param group {@link GroupDetailDTO} Group to be updated.
      * @return JSON {@link GroupDetailDTO} - Updated group
@@ -118,7 +118,7 @@ public class GroupResource {
         if (groupLogic.getGroup(groupsId, neighId) == null) {
             throw new WebApplicationException("Resource /groups/" + groupsId + " does not exist.", 404);
         }
-        GroupDetailDTO detailDTO = new GroupDetailDTO(groupLogic.updateGroup(group.toEntity(), neighId ));
+        GroupDetailDTO detailDTO = new GroupDetailDTO(groupLogic.updateGroup(group.toEntity(), neighId));
         LOGGER.log(Level.INFO, "Ended updating group from resource: output: {0}", detailDTO);
 
         return detailDTO;
@@ -157,8 +157,6 @@ public class GroupResource {
         return list;
     }
 
-
-
     /**
      *
      * Connects /groups route with /members route which are dependent of group
@@ -169,7 +167,6 @@ public class GroupResource {
      * @param neighId parent neighborhood
      * @return members resource from the specified group
      */
-
     @Path("{groupsId: \\d+}/members")
     public Class<GroupMemberResource> getGroupMemberResource(@PathParam("groupsId") Long groupsId, @PathParam("neighborhoodId") Long neighId) {
         if (groupLogic.getGroup(groupsId, neighId) == null) {
@@ -177,7 +174,56 @@ public class GroupResource {
         }
         return GroupMemberResource.class;
     }
-    
-    
+
+    /**
+     * Connects /residents path with /events path which depends on the group
+     * resource, by redirecting to the service managing the URL segment in
+     * charge of the event.
+     *
+     * @param groupsId id from group from which the resource is being accessed
+     * @param neighId parent neighborhood
+     * @return event resource from the specified group
+     */
+    @Path("{groupsId: \\d+}/events")
+    public Class<EventGroupResource> getEventGroupResource(@PathParam("groupsId") Long groupsId, @PathParam("neighborhoodId") Long neighId) {
+        if (groupLogic.getGroup(groupsId, neighId) == null) {
+            throw new WebApplicationException("Resource /groups/" + groupsId + " does not exist.", 404);
+        }
+        return EventGroupResource.class;
+    }
+
+    /**
+     * Connects /residents path with /posts path which depends on the group
+     * resource, by redirecting to the service managing the URL segment in
+     * charge of the post.
+     *
+     * @param groupsId id from group from which the resource is being accessed
+     * @param neighId parent neighborhood
+     * @return post resource from the specified group
+     */
+    @Path("{groupsId: \\d+}/posts")
+    public Class<PostGroupResource> getPostGroupResource(@PathParam("groupsId") Long groupsId, @PathParam("neighborhoodId") Long neighId) {
+        if (groupLogic.getGroup(groupsId, neighId) == null) {
+            throw new WebApplicationException("Resource /groups/" + groupsId + " does not exist.", 404);
+        }
+        return PostGroupResource.class;
+    }
+
+    /**
+     * Connects /residents path with /favors path which depends on the group
+     * resource, by redirecting to the service managing the URL segment in
+     * charge of the favor.
+     *
+     * @param groupsId id from group from which the resource is being accessed
+     * @param neighId parent neighborhood
+     * @return favor resource from the specified group
+     */
+    @Path("{groupsId: \\d+}/favors")
+    public Class<FavorGroupResource> getFavorGroupResource(@PathParam("groupsId") Long groupsId, @PathParam("neighborhoodId") Long neighId) {
+        if (groupLogic.getGroup(groupsId, neighId) == null) {
+            throw new WebApplicationException("Resource /groups/" + groupsId + " does not exist.", 404);
+        }
+        return FavorGroupResource.class;
+    }
 
 }

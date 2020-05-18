@@ -23,10 +23,10 @@ SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.resources;
 
-import co.edu.uniandes.csw.neighborhood.dtos.ResidentProfileDetailDTO;
-import co.edu.uniandes.csw.neighborhood.ejb.GroupMemberLogic;
-import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
-import co.edu.uniandes.csw.neighborhood.ejb.ResidentProfileLogic;
+import co.edu.uniandes.csw.neighborhood.dtos.FavorDetailDTO;
+import co.edu.uniandes.csw.neighborhood.ejb.FavorGroupLogic;
+import co.edu.uniandes.csw.neighborhood.entities.FavorEntity;
+import co.edu.uniandes.csw.neighborhood.ejb.FavorLogic;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.mappers.WebApplicationExceptionMapper;
 import java.util.List;
@@ -46,155 +46,132 @@ import java.util.logging.Logger;
 import javax.ws.rs.WebApplicationException;
 
 /**
- * Class implementing resource "groups/{id}/members".
+ * Class implementing resource "groups/{id}/favors".
  *
  * @author albayona
  * @version 1.0
  */
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class GroupMemberResource {
+public class FavorGroupResource {
 
-    private static final Logger LOGGER = Logger.getLogger(GroupMemberResource.class.getName());
-
-    @Inject
-    private GroupMemberLogic groupMemberLogic;
+    private static final Logger LOGGER = Logger.getLogger(FavorGroupResource.class.getName());
 
     @Inject
-    private ResidentProfileLogic memberLogic;
+    private FavorGroupLogic groupFavorLogic;
+
+    @Inject
+    private FavorLogic favorLogic;
 
     /**
-     * Associates a member with existing group
+     * Associates a favor with existing group
      *
-     * @param membersId id from member to be associated
+     * @param favorsId id from favor to be associated
      * @param groupsId id from group
      * @param neighId parent neighborhood
-     * @return JSON {@link ResidentProfileDetailDTO} -
+     * @return JSON {@link FavorDetailDTO} -
      * @throws WebApplicationException {@link WebApplicationExceptionMapper} -
      * Logic error if not found
      */
     @POST
-    @Path("{membersId: \\d+}")
-    public ResidentProfileDetailDTO associateMemberToGroup(@PathParam("groupsId") Long groupsId, @PathParam("membersId") Long membersId,  @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Associating member to group from resource: input: groupsId {0} , membersId {1}", new Object[]{groupsId, membersId});
-        if (memberLogic.getResident(membersId, neighId) == null) {
-            throw new WebApplicationException("Resource /members/" + membersId + " does not exist.", 404);
+    @Path("{favorsId: \\d+}")
+    public FavorDetailDTO associateFavorToGroup(@PathParam("groupsId") Long groupsId, @PathParam("favorsId") Long favorsId,  @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Associating favor to group from resource: input: groupsId {0} , favorsId {1}", new Object[]{groupsId, favorsId});
+        if (favorLogic.getFavor(favorsId, neighId) == null) {
+            throw new WebApplicationException("Resource /favors/" + favorsId + " does not exist.", 404);
         }
-        ResidentProfileEntity e = groupMemberLogic.associateMemberToGroup(groupsId, membersId, neighId);
+        FavorEntity e = groupFavorLogic.associateFavorToGroup(groupsId, favorsId, neighId);
         
-        ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO(e);
+        FavorDetailDTO detailDTO = new FavorDetailDTO(e);
 
-        LOGGER.log(Level.INFO, "Ended associating member to group from resource: output: {0}", detailDTO);
+        LOGGER.log(Level.INFO, "Ended associating favor to group from resource: output: {0}", detailDTO);
         return detailDTO;
     }
 
     /**
-     * Looks for all the members associated to a group and returns it
+     * Looks for all the favors associated to a group and returns it
      *
-     * @param groupsId id from group whose members are wanted
+     * @param groupsId id from group whose favors are wanted
      * @param neighId parent neighborhood
-     * @return JSONArray {@link ResidentProfileDetailDTO} - members found in group. An
+     * @return JSONArray {@link FavorDetailDTO} - favors found in group. An
      * empty list if none is found
      */
     @GET
-    public List<ResidentProfileDetailDTO> getMembers(@PathParam("groupsId") Long groupsId,  @PathParam("neighborhoodId") Long neighId) {
-        LOGGER.log(Level.INFO, "Looking for members from resources: input: {0}", groupsId);
-        List<ResidentProfileDetailDTO> list = membersListEntity2DTO(groupMemberLogic.getMembers(groupsId, neighId));
-        LOGGER.log(Level.INFO, "Ended looking for members from resources: output: {0}", list);
+    public List<FavorDetailDTO> getFavors(@PathParam("groupsId") Long groupsId,  @PathParam("neighborhoodId") Long neighId) {
+        LOGGER.log(Level.INFO, "Looking for favors from resources: input: {0}", groupsId);
+        List<FavorDetailDTO> list = favorsListEntity2DTO(groupFavorLogic.getFavors(groupsId, neighId));
+        LOGGER.log(Level.INFO, "Ended looking for favors from resources: output: {0}", list);
         return list;
     }
 
     /**
-     * Looks for a member with specified ID by URL which is associated with 
+     * Looks for a favor with specified ID by URL which is associated with 
      * group and returns it
      *
-     * @param membersId id from wanted member
-     * @param groupsId id from group whose member is wanted
+     * @param favorsId id from wanted favor
+     * @param groupsId id from group whose favor is wanted
      * @param neighId parent neighborhood
-     * @return {@link ResidentProfileDetailDTO} - member found inside group
+     * @return {@link FavorDetailDTO} - favor found inside group
      * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
-     * Logic error if member not found
+     * Logic error if favor not found
      */
     @GET
-    @Path("{membersId: \\d+}")
-    public ResidentProfileDetailDTO getMember(@PathParam("groupsId") Long groupsId, @PathParam("membersId") Long membersId,  @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Looking for member: input: groupsId {0} , membersId {1}", new Object[]{groupsId, membersId});
-        if (memberLogic.getResident(membersId, neighId) == null) {
-            throw new WebApplicationException("Resource /members/" + membersId + " does not exist.", 404);
+    @Path("{favorsId: \\d+}")
+    public FavorDetailDTO getFavor(@PathParam("groupsId") Long groupsId, @PathParam("favorsId") Long favorsId,  @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Looking for favor: input: groupsId {0} , favorsId {1}", new Object[]{groupsId, favorsId});
+        if (favorLogic.getFavor(favorsId, neighId) == null) {
+            throw new WebApplicationException("Resource /favors/" + favorsId + " does not exist.", 404);
         }
-        ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO(groupMemberLogic.getMember(groupsId, membersId, neighId));
-        LOGGER.log(Level.INFO, "Ended looking for member: output: {0}", detailDTO);
+        FavorDetailDTO detailDTO = new FavorDetailDTO(groupFavorLogic.getFavor(groupsId, favorsId, neighId));
+        LOGGER.log(Level.INFO, "Ended looking for favor: output: {0}", detailDTO);
         return detailDTO;
     }
 
-    /**
-     * 
-     * Updates a list from members inside a group which is received in body
-     *
-     * @param groupsId  id from group whose list of members is to be updated
-     * @param members JSONArray {@link ResidentProfileDetailDTO} - modified members list 
-     * @param neighId  parent neighborhood
-     * @return JSONArray {@link ResidentProfileDetailDTO} - updated list
-     * @throws WebApplicationException {@link WebApplicationExceptionMapper}
-     * Error if not found
-     */
-    @PUT
-    public List<ResidentProfileDetailDTO> replaceMembers(@PathParam("groupsId") Long groupsId, List<ResidentProfileDetailDTO> members,  @PathParam("neighborhoodId") Long neighId) {
-        LOGGER.log(Level.INFO, "Replacing group members from resource: input: groupsId {0} , members {1}", new Object[]{groupsId, members});
-        for (ResidentProfileDetailDTO member : members) {
-            if (memberLogic.getResident(member.getId(), neighId) == null) {
-                     throw new WebApplicationException("Resource /members/" + members + " does not exist.", 404);
-            }
-        }
-        List<ResidentProfileDetailDTO> lista = membersListEntity2DTO(groupMemberLogic.replaceMembers(groupsId, membersListDTO2Entity(members), neighId));
-        LOGGER.log(Level.INFO, "Ended replacing group members from resource: output:{0}", lista);
-        return lista;
-    }
 
     /**
-     * Removes a member from group
+     * Removes a favor from group
      *
-     * @param groupsId id from group whose member is to be removed
-     * @param membersId id from member to be removed
+     * @param groupsId id from group whose favor is to be removed
+     * @param favorsId id from favor to be removed
      * @param neighId parent neighborhood
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Error if not found
      */
     @DELETE
-    @Path("{membersId: \\d+}")
-    public void removeMember(@PathParam("groupsId") Long groupsId, @PathParam("membersId") Long membersId,  @PathParam("neighborhoodId") Long neighId) {
-        LOGGER.log(Level.INFO, "Removing member from group: input: groupsId {0} , membersId {1}", new Object[]{groupsId, membersId});
-        if (memberLogic.getResident(membersId, neighId) == null) {
-                 throw new WebApplicationException("Resource /members/" + membersId + " does not exist.", 404);
+    @Path("{favorsId: \\d+}")
+    public void removeFavor(@PathParam("groupsId") Long groupsId, @PathParam("favorsId") Long favorsId,  @PathParam("neighborhoodId") Long neighId) {
+        LOGGER.log(Level.INFO, "Removing favor from group: input: groupsId {0} , favorsId {1}", new Object[]{groupsId, favorsId});
+        if (favorLogic.getFavor(favorsId, neighId) == null) {
+                 throw new WebApplicationException("Resource /favors/" + favorsId + " does not exist.", 404);
         }
-        groupMemberLogic.removeMember(groupsId, membersId, neighId);
-        LOGGER.info("Ended removing member from group: output: void");
+        groupFavorLogic.removeFavor(groupsId, favorsId, neighId);
+        LOGGER.info("Ended removing favor from group: output: void");
     }
 
     /**
-     * Converts an entity list with members to a DTO list.
+     * Converts an entity list with favors to a DTO list.
      *
      * @param entityList entity list.
      * @return DTO list.
      */
-    private List<ResidentProfileDetailDTO> membersListEntity2DTO(List<ResidentProfileEntity> entityList) {
-        List<ResidentProfileDetailDTO> list = new ArrayList<>();
-        for (ResidentProfileEntity entity : entityList) {
-            list.add(new ResidentProfileDetailDTO(entity));
+    private List<FavorDetailDTO> favorsListEntity2DTO(List<FavorEntity> entityList) {
+        List<FavorDetailDTO> list = new ArrayList<>();
+        for (FavorEntity entity : entityList) {
+            list.add(new FavorDetailDTO(entity));
         }
         return list;
     }
 
     /**
-     * Converts a DTO list with members to an entity list.
+     * Converts a DTO list with favors to an entity list.
      *
      * @param dtos DTO list.
      * @return entity list.
      */
-    private List<ResidentProfileEntity> membersListDTO2Entity(List<ResidentProfileDetailDTO> dtos) {
-        List<ResidentProfileEntity> list = new ArrayList<>();
-        for (ResidentProfileDetailDTO dto : dtos) {
+    private List<FavorEntity> favorsListDTO2Entity(List<FavorDetailDTO> dtos) {
+        List<FavorEntity> list = new ArrayList<>();
+        for (FavorDetailDTO dto : dtos) {
             list.add(dto.toEntity());
         }
         return list;

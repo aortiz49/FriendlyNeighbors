@@ -157,21 +157,25 @@ public class PostResource {
         return list;
     }
 
+
     /**
      *
-     * Connects /posts route with /comments route which are dependent of post resource, by
-     * redirecting to the comment managing the URL segment in charge of the members
+     * Connects /posts route with /viewers route which are dependent of post
+     * resource, by redirecting to the service managing the URL segment in
+     * charge of the viewers
      *
      * @param postsId id from post from which the resource is being accessed
      * @param neighId parent neighborhood
-     * @return groups resource from the specified post
+     * @return viewers resource from the specified post
      */
-    @Path("{postsId: \\d+}/comments")
-    public Class<CommentPostResource> getCommentPostResource(@PathParam("postsId") Long postsId, @PathParam("neighborhoodId") Long neighId) {
+
+    @Path("{postsId: \\d+}/viewers")
+    public Class<PostViewerResource> getPostViewerResource(@PathParam("postsId") Long postsId, @PathParam("neighborhoodId") Long neighId) {
         if (postLogic.getPost(postsId, neighId) == null) {
             throw new WebApplicationException("Resource /posts/" + postsId + " does not exist.", 404);
         }
-        return CommentPostResource.class;
+        return PostViewerResource.class;
     }
+    
 
 }

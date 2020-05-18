@@ -188,6 +188,24 @@ public class ResidentProfileResource {
         return MemberGroupResource.class;
     }
 
+        /**
+     *
+     * Connects /residents route with /postsToView route which are dependent of resident
+     * resource, by redirecting to the service managing the URL segment in charge of the viewers
+     *
+     * @param residentsId id from resident from which the resource is being accessed
+     * @param neighId parent neighborhood
+     * @return posts resource from the specified resident
+     */
+    @Path("{viewersId: \\d+}/postsToView")
+    public Class<ViewerPostResource> getViewerPostResource(@PathParam("viewersId") Long residentsId, @PathParam("neighborhoodId") Long neighId) {
+        if (residentLogic.getResident(residentsId, neighId) == null) {
+            throw new WebApplicationException("Resource /residents/" + residentsId + " does not exist.", 404);
+        }
+        return ViewerPostResource.class;
+    }
+
+    
     /**
      *
      * Connects /residents route with /favorsToHelp route which are dependent of resident resource,

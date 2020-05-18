@@ -75,6 +75,12 @@ public class GroupEntity extends BaseEntity implements Serializable {
     @PodamExclude
     @ManyToMany
     private List<EventEntity> events = new ArrayList<>();
+    
+    
+
+    @PodamExclude
+    @ManyToMany
+    private List<FavorEntity> favors = new ArrayList<>();
 
     /**
      * The posts made by the group.
@@ -188,6 +194,14 @@ public class GroupEntity extends BaseEntity implements Serializable {
      */
     public void setPosts(List<PostEntity> posts) {
         this.posts = posts;
+    }
+
+    public List<FavorEntity> getFavors() {
+        return favors;
+    }
+
+       public void setFavors(List<FavorEntity> favors) {
+        this.favors = favors;
     }
     
    

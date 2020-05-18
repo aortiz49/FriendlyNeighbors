@@ -23,10 +23,10 @@ SOFTWARE.
  */
 package co.edu.uniandes.csw.neighborhood.resources;
 
-import co.edu.uniandes.csw.neighborhood.dtos.ResidentProfileDetailDTO;
-import co.edu.uniandes.csw.neighborhood.ejb.GroupMemberLogic;
-import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
-import co.edu.uniandes.csw.neighborhood.ejb.ResidentProfileLogic;
+import co.edu.uniandes.csw.neighborhood.dtos.EventDetailDTO;
+import co.edu.uniandes.csw.neighborhood.ejb.EventGroupLogic;
+import co.edu.uniandes.csw.neighborhood.entities.EventEntity;
+import co.edu.uniandes.csw.neighborhood.ejb.EventLogic;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.mappers.WebApplicationExceptionMapper;
 import java.util.List;
@@ -46,155 +46,132 @@ import java.util.logging.Logger;
 import javax.ws.rs.WebApplicationException;
 
 /**
- * Class implementing resource "groups/{id}/members".
+ * Class implementing resource "groups/{id}/events".
  *
  * @author albayona
  * @version 1.0
  */
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class GroupMemberResource {
+public class EventGroupResource {
 
-    private static final Logger LOGGER = Logger.getLogger(GroupMemberResource.class.getName());
-
-    @Inject
-    private GroupMemberLogic groupMemberLogic;
+    private static final Logger LOGGER = Logger.getLogger(EventGroupResource.class.getName());
 
     @Inject
-    private ResidentProfileLogic memberLogic;
+    private EventGroupLogic groupEventLogic;
+
+    @Inject
+    private EventLogic eventLogic;
 
     /**
-     * Associates a member with existing group
+     * Associates a event with existing group
      *
-     * @param membersId id from member to be associated
+     * @param eventsId id from event to be associated
      * @param groupsId id from group
      * @param neighId parent neighborhood
-     * @return JSON {@link ResidentProfileDetailDTO} -
+     * @return JSON {@link EventDetailDTO} -
      * @throws WebApplicationException {@link WebApplicationExceptionMapper} -
      * Logic error if not found
      */
     @POST
-    @Path("{membersId: \\d+}")
-    public ResidentProfileDetailDTO associateMemberToGroup(@PathParam("groupsId") Long groupsId, @PathParam("membersId") Long membersId,  @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Associating member to group from resource: input: groupsId {0} , membersId {1}", new Object[]{groupsId, membersId});
-        if (memberLogic.getResident(membersId, neighId) == null) {
-            throw new WebApplicationException("Resource /members/" + membersId + " does not exist.", 404);
+    @Path("{eventsId: \\d+}")
+    public EventDetailDTO associateEventToGroup(@PathParam("groupsId") Long groupsId, @PathParam("eventsId") Long eventsId,  @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Associating event to group from resource: input: groupsId {0} , eventsId {1}", new Object[]{groupsId, eventsId});
+        if (eventLogic.getEvent(eventsId, neighId) == null) {
+            throw new WebApplicationException("Resource /events/" + eventsId + " does not exist.", 404);
         }
-        ResidentProfileEntity e = groupMemberLogic.associateMemberToGroup(groupsId, membersId, neighId);
+        EventEntity e = groupEventLogic.associateEventToGroup(groupsId, eventsId, neighId);
         
-        ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO(e);
+        EventDetailDTO detailDTO = new EventDetailDTO(e);
 
-        LOGGER.log(Level.INFO, "Ended associating member to group from resource: output: {0}", detailDTO);
+        LOGGER.log(Level.INFO, "Ended associating event to group from resource: output: {0}", detailDTO);
         return detailDTO;
     }
 
     /**
-     * Looks for all the members associated to a group and returns it
+     * Looks for all the events associated to a group and returns it
      *
-     * @param groupsId id from group whose members are wanted
+     * @param groupsId id from group whose events are wanted
      * @param neighId parent neighborhood
-     * @return JSONArray {@link ResidentProfileDetailDTO} - members found in group. An
+     * @return JSONArray {@link EventDetailDTO} - events found in group. An
      * empty list if none is found
      */
     @GET
-    public List<ResidentProfileDetailDTO> getMembers(@PathParam("groupsId") Long groupsId,  @PathParam("neighborhoodId") Long neighId) {
-        LOGGER.log(Level.INFO, "Looking for members from resources: input: {0}", groupsId);
-        List<ResidentProfileDetailDTO> list = membersListEntity2DTO(groupMemberLogic.getMembers(groupsId, neighId));
-        LOGGER.log(Level.INFO, "Ended looking for members from resources: output: {0}", list);
+    public List<EventDetailDTO> getEvents(@PathParam("groupsId") Long groupsId,  @PathParam("neighborhoodId") Long neighId) {
+        LOGGER.log(Level.INFO, "Looking for events from resources: input: {0}", groupsId);
+        List<EventDetailDTO> list = eventsListEntity2DTO(groupEventLogic.getEvents(groupsId, neighId));
+        LOGGER.log(Level.INFO, "Ended looking for events from resources: output: {0}", list);
         return list;
     }
 
     /**
-     * Looks for a member with specified ID by URL which is associated with 
+     * Looks for a event with specified ID by URL which is associated with 
      * group and returns it
      *
-     * @param membersId id from wanted member
-     * @param groupsId id from group whose member is wanted
+     * @param eventsId id from wanted event
+     * @param groupsId id from group whose event is wanted
      * @param neighId parent neighborhood
-     * @return {@link ResidentProfileDetailDTO} - member found inside group
+     * @return {@link EventDetailDTO} - event found inside group
      * @throws co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
-     * Logic error if member not found
+     * Logic error if event not found
      */
     @GET
-    @Path("{membersId: \\d+}")
-    public ResidentProfileDetailDTO getMember(@PathParam("groupsId") Long groupsId, @PathParam("membersId") Long membersId,  @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
-        LOGGER.log(Level.INFO, "Looking for member: input: groupsId {0} , membersId {1}", new Object[]{groupsId, membersId});
-        if (memberLogic.getResident(membersId, neighId) == null) {
-            throw new WebApplicationException("Resource /members/" + membersId + " does not exist.", 404);
+    @Path("{eventsId: \\d+}")
+    public EventDetailDTO getEvent(@PathParam("groupsId") Long groupsId, @PathParam("eventsId") Long eventsId,  @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Looking for event: input: groupsId {0} , eventsId {1}", new Object[]{groupsId, eventsId});
+        if (eventLogic.getEvent(eventsId, neighId) == null) {
+            throw new WebApplicationException("Resource /events/" + eventsId + " does not exist.", 404);
         }
-        ResidentProfileDetailDTO detailDTO = new ResidentProfileDetailDTO(groupMemberLogic.getMember(groupsId, membersId, neighId));
-        LOGGER.log(Level.INFO, "Ended looking for member: output: {0}", detailDTO);
+        EventDetailDTO detailDTO = new EventDetailDTO(groupEventLogic.getEvent(groupsId, eventsId, neighId));
+        LOGGER.log(Level.INFO, "Ended looking for event: output: {0}", detailDTO);
         return detailDTO;
     }
 
-    /**
-     * 
-     * Updates a list from members inside a group which is received in body
-     *
-     * @param groupsId  id from group whose list of members is to be updated
-     * @param members JSONArray {@link ResidentProfileDetailDTO} - modified members list 
-     * @param neighId  parent neighborhood
-     * @return JSONArray {@link ResidentProfileDetailDTO} - updated list
-     * @throws WebApplicationException {@link WebApplicationExceptionMapper}
-     * Error if not found
-     */
-    @PUT
-    public List<ResidentProfileDetailDTO> replaceMembers(@PathParam("groupsId") Long groupsId, List<ResidentProfileDetailDTO> members,  @PathParam("neighborhoodId") Long neighId) {
-        LOGGER.log(Level.INFO, "Replacing group members from resource: input: groupsId {0} , members {1}", new Object[]{groupsId, members});
-        for (ResidentProfileDetailDTO member : members) {
-            if (memberLogic.getResident(member.getId(), neighId) == null) {
-                     throw new WebApplicationException("Resource /members/" + members + " does not exist.", 404);
-            }
-        }
-        List<ResidentProfileDetailDTO> lista = membersListEntity2DTO(groupMemberLogic.replaceMembers(groupsId, membersListDTO2Entity(members), neighId));
-        LOGGER.log(Level.INFO, "Ended replacing group members from resource: output:{0}", lista);
-        return lista;
-    }
 
     /**
-     * Removes a member from group
+     * Removes a event from group
      *
-     * @param groupsId id from group whose member is to be removed
-     * @param membersId id from member to be removed
+     * @param groupsId id from group whose event is to be removed
+     * @param eventsId id from event to be removed
      * @param neighId parent neighborhood
      * @throws WebApplicationException {@link WebApplicationExceptionMapper}
      * Error if not found
      */
     @DELETE
-    @Path("{membersId: \\d+}")
-    public void removeMember(@PathParam("groupsId") Long groupsId, @PathParam("membersId") Long membersId,  @PathParam("neighborhoodId") Long neighId) {
-        LOGGER.log(Level.INFO, "Removing member from group: input: groupsId {0} , membersId {1}", new Object[]{groupsId, membersId});
-        if (memberLogic.getResident(membersId, neighId) == null) {
-                 throw new WebApplicationException("Resource /members/" + membersId + " does not exist.", 404);
+    @Path("{eventsId: \\d+}")
+    public void removeEvent(@PathParam("groupsId") Long groupsId, @PathParam("eventsId") Long eventsId,  @PathParam("neighborhoodId") Long neighId) {
+        LOGGER.log(Level.INFO, "Removing event from group: input: groupsId {0} , eventsId {1}", new Object[]{groupsId, eventsId});
+        if (eventLogic.getEvent(eventsId, neighId) == null) {
+                 throw new WebApplicationException("Resource /events/" + eventsId + " does not exist.", 404);
         }
-        groupMemberLogic.removeMember(groupsId, membersId, neighId);
-        LOGGER.info("Ended removing member from group: output: void");
+        groupEventLogic.removeEvent(groupsId, eventsId, neighId);
+        LOGGER.info("Ended removing event from group: output: void");
     }
 
     /**
-     * Converts an entity list with members to a DTO list.
+     * Converts an entity list with events to a DTO list.
      *
      * @param entityList entity list.
      * @return DTO list.
      */
-    private List<ResidentProfileDetailDTO> membersListEntity2DTO(List<ResidentProfileEntity> entityList) {
-        List<ResidentProfileDetailDTO> list = new ArrayList<>();
-        for (ResidentProfileEntity entity : entityList) {
-            list.add(new ResidentProfileDetailDTO(entity));
+    private List<EventDetailDTO> eventsListEntity2DTO(List<EventEntity> entityList) {
+        List<EventDetailDTO> list = new ArrayList<>();
+        for (EventEntity entity : entityList) {
+            list.add(new EventDetailDTO(entity));
         }
         return list;
     }
 
     /**
-     * Converts a DTO list with members to an entity list.
+     * Converts a DTO list with events to an entity list.
      *
      * @param dtos DTO list.
      * @return entity list.
      */
-    private List<ResidentProfileEntity> membersListDTO2Entity(List<ResidentProfileDetailDTO> dtos) {
-        List<ResidentProfileEntity> list = new ArrayList<>();
-        for (ResidentProfileDetailDTO dto : dtos) {
+    private List<EventEntity> eventsListDTO2Entity(List<EventDetailDTO> dtos) {
+        List<EventEntity> list = new ArrayList<>();
+        for (EventDetailDTO dto : dtos) {
             list.add(dto.toEntity());
         }
         return list;
