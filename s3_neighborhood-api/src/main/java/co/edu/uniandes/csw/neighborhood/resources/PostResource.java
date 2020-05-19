@@ -177,5 +177,22 @@ public class PostResource {
         return PostViewerResource.class;
     }
     
+        /**
+     *
+     * Connects /posts route with /comments route which are dependent of post resource, by
+     * redirecting to the comment managing the URL segment in charge of the members
+     *
+     * @param postsId id from post from which the resource is being accessed
+     * @param neighId parent neighborhood
+     * @return groups resource from the specified post
+     */
+    @Path("{postsId: \\d+}/comments")
+    public Class<CommentPostResource> getCommentPostResource(@PathParam("postsId") Long postsId, @PathParam("neighborhoodId") Long neighId) {
+        if (postLogic.getPost(postsId, neighId) == null) {
+            throw new WebApplicationException("Resource /posts/" + postsId + " does not exist.", 404);
+        }
+        return CommentPostResource.class;
+    }
+    
 
 }
