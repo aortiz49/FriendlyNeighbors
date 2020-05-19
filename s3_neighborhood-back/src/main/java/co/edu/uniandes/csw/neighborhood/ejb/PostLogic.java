@@ -37,10 +37,13 @@ import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
- * Class that implements the connection with the post persistence for the Post entity.
-
+ * Class that implements the connection with the post persistence for the Post
+ * entity.
+ *
  * @author albayona
  */
 @Stateless
@@ -49,7 +52,6 @@ public class PostLogic {
 //===================================================
 // Attributes
 //===================================================
-
     /**
      * The logger used to send activity messages to the user.
      */
@@ -174,6 +176,16 @@ public class PostLogic {
         PostEntity modified = persistence.update(postEntity, neighID);
         LOGGER.log(Level.INFO, "Ended update process for post with id {0}", postEntity.getId());
         return modified;
+    }
+
+    public List<ResidentProfileEntity> getPotentialViewers(Long postID, Long neighID) {
+
+        List<ResidentProfileEntity> s1 = residentPersistence.findAll(neighID);
+        List<ResidentProfileEntity> s2 = getPost(postID, neighID).getViewers();
+        s1.removeAll(s2);
+
+        return s1;
+
     }
 
 }

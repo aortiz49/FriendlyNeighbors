@@ -62,13 +62,12 @@ public class PostResource {
 //===================================================
 // REST API
 //===================================================
-    
     /**
      * Looks for all posts on application and returns them.
      *
      * @param neighId parent neighborhood
-     * @return JSONArray {@link PostDetailDTO} - All the posts on application if found. Otherwise,
-     * an empty list.
+     * @return JSONArray {@link PostDetailDTO} - All the posts on application if
+     * found. Otherwise, an empty list.
      */
     @GET
     public List<PostDetailDTO> getPosts(@PathParam("neighborhoodId") Long neighId) {
@@ -84,8 +83,8 @@ public class PostResource {
      * @param postsId Id from wanted post. Must be a sequence of digits.
      * @param neighId parent neighborhood
      * @return JSON {@link PostDetailDTO} - Wanted post DTO
-     * @throws WebApplicationException {@link WebApplicationExceptionMapper} - Logic error if not
-     * found
+     * @throws WebApplicationException {@link WebApplicationExceptionMapper} -
+     * Logic error if not found
      */
     @GET
     @Path("{postsId: \\d+}")
@@ -101,14 +100,15 @@ public class PostResource {
     }
 
     /**
-     * Updates post with id from URL with the information contained in request body. 52
+     * Updates post with id from URL with the information contained in request
+     * body. 52
      *
      * @param postsId ID from post to be updated. Must be a sequence of digits.
      * @param neighId parent neighborhood
      * @param post {@link PostDetailDTO} Post to be updated.
      * @return JSON {@link PostDetailDTO} - Updated post
-     * @throws WebApplicationException {@link WebApplicationExceptionMapper} - Logic error if not
-     * found
+     * @throws WebApplicationException {@link WebApplicationExceptionMapper} -
+     * Logic error if not found
      */
     @PUT
     @Path("{postsId: \\d+}")
@@ -129,8 +129,8 @@ public class PostResource {
      *
      * @param postsId id from post to be deleted
      * @param neighId parent neighborhood
-     * @throws WebApplicationException {@link WebApplicationExceptionMapper} Logic error if not
-     * found
+     * @throws WebApplicationException {@link WebApplicationExceptionMapper}
+     * Logic error if not found
      */
     @DELETE
     @Path("{postsId: \\d+}")
@@ -157,7 +157,6 @@ public class PostResource {
         return list;
     }
 
-
     /**
      *
      * Connects /posts route with /viewers route which are dependent of post
@@ -168,7 +167,6 @@ public class PostResource {
      * @param neighId parent neighborhood
      * @return viewers resource from the specified post
      */
-
     @Path("{postsId: \\d+}/viewers")
     public Class<PostViewerResource> getPostViewerResource(@PathParam("postsId") Long postsId, @PathParam("neighborhoodId") Long neighId) {
         if (postLogic.getPost(postsId, neighId) == null) {
@@ -176,11 +174,12 @@ public class PostResource {
         }
         return PostViewerResource.class;
     }
-    
-        /**
+
+    /**
      *
-     * Connects /posts route with /comments route which are dependent of post resource, by
-     * redirecting to the comment managing the URL segment in charge of the members
+     * Connects /posts route with /comments route which are dependent of post
+     * resource, by redirecting to the comment managing the URL segment in
+     * charge of the members
      *
      * @param postsId id from post from which the resource is being accessed
      * @param neighId parent neighborhood
@@ -193,6 +192,5 @@ public class PostResource {
         }
         return CommentPostResource.class;
     }
-    
 
 }

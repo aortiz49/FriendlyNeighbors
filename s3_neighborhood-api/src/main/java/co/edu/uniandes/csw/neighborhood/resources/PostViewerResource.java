@@ -103,6 +103,16 @@ public class PostViewerResource {
         LOGGER.log(Level.INFO, "Ended looking for viewers from resources: output: {0}", list);
         return list;
     }
+    
+    @Path("/potential")
+    @GET
+    public List<ResidentProfileDetailDTO> getPViewers(@PathParam("postsId") Long postsId,  @PathParam("neighborhoodId") Long neighId) {
+        LOGGER.log(Level.INFO, "Looking for pViewers from resources: input: {0}", postsId);
+          List<ResidentProfileDetailDTO> list = viewersListEntity2DTO(postViewerLogic.getPotentialViewers(postsId, neighId));
+        LOGGER.log(Level.INFO, "Ended looking for pViewers from resources: output: {0}", list);
+        return list;
+    }
+    
 
     /**
      * Looks for a viewer with specified ID by URL which is associated with 
