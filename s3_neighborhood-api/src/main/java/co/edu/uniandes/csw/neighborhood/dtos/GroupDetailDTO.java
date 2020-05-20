@@ -7,28 +7,22 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 /**
  * This class represent a set of neighbors with common interests
  *
  * @author albayona
  */
-
 public class GroupDetailDTO extends GroupDTO implements Serializable {
 
-    
 //===================================================
 // Attributes
 //===================================================
-
     /**
      * Represents the groups who are members of this post
      */
     private List<ResidentProfileDTO> members = new ArrayList();
 
-    
-     /**
+    /**
      * The posts made by the group.
      */
     private List<PostDTO> posts = new ArrayList<>();
@@ -36,13 +30,10 @@ public class GroupDetailDTO extends GroupDTO implements Serializable {
     public GroupDetailDTO() {
         super();
     }
+    private List<String> album;
 
-    
-    
-    
     /**
-     * Creates a detailed group DTO from group entity, including its
-     * relations.
+     * Creates a detailed group DTO from group entity, including its relations.
      *
      * @param groupEntity from which new group DTO will be created
      *
@@ -54,8 +45,6 @@ public class GroupDetailDTO extends GroupDTO implements Serializable {
             posts = new ArrayList<>();
             members = new ArrayList<>();
 
-
-          
             for (PostEntity entityPost : groupEntity.getPosts()) {
                 posts.add(new PostDTO(entityPost));
             }
@@ -63,6 +52,8 @@ public class GroupDetailDTO extends GroupDTO implements Serializable {
             for (ResidentProfileEntity entityResident : groupEntity.getMembers()) {
                 members.add(new ResidentProfileDTO(entityResident));
             }
+
+            album = groupEntity.getAlbum();
 
         }
     }
@@ -83,8 +74,7 @@ public class GroupDetailDTO extends GroupDTO implements Serializable {
             }
             groupEntity.setMembers(membersE);
         }
-        
-        
+
         if (getPosts() != null) {
             List<PostEntity> postsE = new ArrayList<>();
             for (PostDTO dtoMember : getPosts()) {
@@ -92,8 +82,8 @@ public class GroupDetailDTO extends GroupDTO implements Serializable {
             }
             groupEntity.setPosts(postsE);
         }
-            
-            
+        groupEntity.setAlbum(getAlbum());
+
         return groupEntity;
     }
 
@@ -124,9 +114,13 @@ public class GroupDetailDTO extends GroupDTO implements Serializable {
     public void setPosts(List<PostDTO> posts) {
         this.posts = posts;
     }
-    
-    
 
- 
+    public List<String> getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(List<String> album) {
+        this.album = album;
+    }
 
 }

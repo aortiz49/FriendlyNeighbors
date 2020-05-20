@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
@@ -52,9 +54,15 @@ public class GroupEntity extends BaseEntity implements Serializable {
      */
     private String description;
 
+    private String muralPicture;
+
 //===================================================
 // Relations
 //===================================================
+    @ElementCollection
+    @CollectionTable(name = "groupAlbum")
+    private List<String> album;
+
     /**
      * Represents the residents who are members of this post.
      */
@@ -75,8 +83,6 @@ public class GroupEntity extends BaseEntity implements Serializable {
     @PodamExclude
     @ManyToMany
     private List<EventEntity> events = new ArrayList<>();
-    
-    
 
     @PodamExclude
     @ManyToMany
@@ -93,11 +99,9 @@ public class GroupEntity extends BaseEntity implements Serializable {
             orphanRemoval = true)
     private List<PostEntity> posts = new ArrayList<>();
 
-    
 //===================================================
 // Getters & Setters
 //=================================================== 
-
     /**
      * @return the dateCreated
      */
@@ -200,10 +204,26 @@ public class GroupEntity extends BaseEntity implements Serializable {
         return favors;
     }
 
-       public void setFavors(List<FavorEntity> favors) {
+    public void setFavors(List<FavorEntity> favors) {
         this.favors = favors;
     }
-    
-   
 
+    public List<String> getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(List<String> album) {
+        this.album = album;
+    }
+
+    public String getMuralPicture() {
+        return muralPicture;
+    }
+
+    public void setMuralPicture(String muralPicture) {
+        this.muralPicture = muralPicture;
+    }
+
+    
+    
 }

@@ -3,6 +3,7 @@ package co.edu.uniandes.csw.neighborhood.dtos;
 import co.edu.uniandes.csw.neighborhood.adapters.DateAdapter;
 import co.edu.uniandes.csw.neighborhood.entities.GroupEntity;
 import java.util.Date;
+import java.util.List;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -42,6 +43,9 @@ public class GroupDTO {
      */
     private NeighborhoodDTO neighborhood;
 
+    private String muralPicture;
+
+
     public GroupDTO() {
         super();
     }
@@ -57,6 +61,7 @@ public class GroupDTO {
         this.dateCreated = entityGroup.getDateCreated();
         this.name = entityGroup.getName();
         this.description = entityGroup.getDescription();
+        this.muralPicture = entityGroup.getMuralPicture();
 
         if (entityGroup.getNeighborhood() != null) {
             this.neighborhood = new NeighborhoodDTO(entityGroup.getNeighborhood());
@@ -76,6 +81,7 @@ public class GroupDTO {
         groupEntity.setDateCreated(getDateCreated());
         groupEntity.setName(getName());
         groupEntity.setDescription(getDescription());
+        groupEntity.setMuralPicture(getMuralPicture());
 
         if (neighborhood != null) {
             groupEntity.setNeighborhood(getNeighborhood().toEntity());
@@ -154,4 +160,14 @@ public class GroupDTO {
         this.id = Id;
     }
 
+    public String getMuralPicture() {
+        return muralPicture;
+    }
+
+    public void setMuralPicture(String muralPicture) {
+        this.muralPicture = muralPicture;
+    }
+
+    
+    
 }

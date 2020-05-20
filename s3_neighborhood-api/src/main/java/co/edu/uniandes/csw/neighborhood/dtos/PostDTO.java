@@ -29,10 +29,11 @@ package co.edu.uniandes.csw.neighborhood.dtos;
 import co.edu.uniandes.csw.neighborhood.adapters.DateAdapter;
 import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
 import java.util.Date;
+import java.util.List;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
-
+ *
  * @k.romero
  */
 public class PostDTO {
@@ -74,6 +75,8 @@ public class PostDTO {
      */
     private GroupDTO group;
 
+    private List<String> album;
+
     public PostDTO() {
         super();
     }
@@ -85,7 +88,7 @@ public class PostDTO {
         this.numberOfLikes = entityPost.getNumberOfLikes();
         this.title = entityPost.getTitle();
         this.publishDate = entityPost.getPublishDate();
-        
+
         if (entityPost.getAuthor() != null) {
             this.author = new ResidentProfileDTO(entityPost.getAuthor());
         }
@@ -95,6 +98,7 @@ public class PostDTO {
         if (entityPost.getGroup() != null) {
             this.group = new GroupDTO(entityPost.getGroup());
         }
+        album = entityPost.getAlbum();
     }
 
     /**
@@ -111,7 +115,7 @@ public class PostDTO {
         postEntity.setNumberOfLikes(getNumberOfLikes());
         postEntity.setTitle(getTitle());
         postEntity.setPublishDate(getPublishDate());
-        
+
         if (getAuthor() != null) {
             postEntity.setAuthor(getAuthor().toEntity());
         }
@@ -121,6 +125,8 @@ public class PostDTO {
         if (getGroup() != null) {
             postEntity.setGroup(getGroup().toEntity());
         }
+        
+          postEntity.setAlbum(getAlbum());
 
         return postEntity;
     }
@@ -236,7 +242,13 @@ public class PostDTO {
     public void setGroup(GroupDTO group) {
         this.group = group;
     }
-    
-    
+
+    public List<String> getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(List<String> album) {
+        this.album = album;
+    }
 
 }

@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -24,13 +26,11 @@ import uk.co.jemos.podam.common.PodamStrategyValue;
  *
  * @author albayona
  */
-
 /**
- *This class represents a post made by a resident
+ * This class represents a post made by a resident
  */
 @Entity
-public class PostEntity extends BaseEntity implements Serializable{
-    
+public class PostEntity extends BaseEntity implements Serializable {
 
 //===================================================
 // Attributes
@@ -41,7 +41,7 @@ public class PostEntity extends BaseEntity implements Serializable{
     @Temporal(TemporalType.DATE)
     @PodamStrategyValue(DateStrategy.class)
     private Date publishDate;
-    
+
     /**
      * Represents the title of the post
      */
@@ -51,36 +51,39 @@ public class PostEntity extends BaseEntity implements Serializable{
      * Represents the main text body shown in the post
      */
     private String description;
-    
+
     /**
      * Represents the number of numberOfLikes of the post
      */
     private Integer numberOfLikes;
-    
+
 //===================================================
 // Relations
 //===================================================
-        
+    @ElementCollection
+    @CollectionTable(name = "postAlbum")
+    private List<String> album;
+
     /**
-     * Represents the author of this post 
+     * Represents the author of this post
      */
     @PodamExclude
     @ManyToOne
     private ResidentProfileEntity author;
 
     /**
-     * Represents the business author of this post 
+     * Represents the business author of this post
      */
     @PodamExclude
     @ManyToOne
     private BusinessEntity business;
-    
+
     /**
      * Represents the users this post is visible to
      */
     @PodamExclude
     @ManyToMany
-   private List<ResidentProfileEntity> viewers = new ArrayList();
+    private List<ResidentProfileEntity> viewers = new ArrayList();
 
     /**
      * Represents comments received in this post
@@ -91,22 +94,19 @@ public class PostEntity extends BaseEntity implements Serializable{
             fetch = javax.persistence.FetchType.LAZY,
             cascade = CascadeType.ALL, orphanRemoval = true
     )
-     
+
     private List<CommentEntity> comments = new ArrayList();
 
-     
-     /**
+    /**
      * Represents the group this post is shared with
      */
     @PodamExclude
     @ManyToOne
-   private GroupEntity group;
-     
-     
+    private GroupEntity group;
+
 //===================================================
 // Getters & Setters
 //===================================================  
-
     /**
      * @return the publishDate
      */
@@ -233,6 +233,14 @@ public class PostEntity extends BaseEntity implements Serializable{
         this.group = group;
     }
 
+    public List<String> getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(List<String> album) {
+        this.album = album;
+    }
+
     
-  
+    
 }
