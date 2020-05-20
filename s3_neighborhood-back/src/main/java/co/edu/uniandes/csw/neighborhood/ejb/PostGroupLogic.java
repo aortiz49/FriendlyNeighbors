@@ -47,7 +47,7 @@ public class PostGroupLogic {
         GroupEntity groupEntity = groupPersistence.find(groupId, neighId);
         PostEntity postEntity = postPersistence.find(postId, neighId);
 
-        groupEntity.getPosts().add(postEntity);
+        postEntity.setGroup(groupEntity);
 
         LOGGER.log(Level.INFO, "Association created between post with id {0} and group with id {1}, from neighbothood {2}", new Object[]{postId, groupId, neighId});
         return postPersistence.find(postId, neighId);
@@ -99,7 +99,7 @@ public class PostGroupLogic {
         LOGGER.log(Level.INFO, "Deleting association between post with id {0} and  group with id {1}, from neighbothood {2}", new Object[]{postId, groupId, neighId});
         PostEntity postEntity = postPersistence.find(postId, neighId);
         GroupEntity groupEntity = groupPersistence.find(groupId, neighId);
-        groupEntity.getPosts().remove(postEntity);
+         postEntity.setGroup(null);
         LOGGER.log(Level.INFO, "Association deleted between post with id {0} and  group with id {1}, from neighbothood {2}", new Object[]{postId, groupId, neighId});
     }
 
