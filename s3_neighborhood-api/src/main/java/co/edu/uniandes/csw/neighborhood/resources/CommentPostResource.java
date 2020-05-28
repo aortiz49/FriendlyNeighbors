@@ -80,7 +80,7 @@ public class CommentPostResource {
      */
     @POST
     @Path("{authorsId: \\d+}")
-    public CommentDTO createComment(@PathParam("postsId") Long postsId, @PathParam("authorsId") Long authorsId, CommentDTO comment, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
+    public CommentDTO createComment(@PathParam("postsId") Long postsId, @PathParam("authorsId") Long authorsId, CommentDTO comment, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException, WebApplicationException {
         LOGGER.log(Level.INFO, "Creating comment for post from resource: input: postsId {0} , commentsId {1}", new Object[]{postsId, comment.getId()});
 
         CommentEntity entity = null;
@@ -124,7 +124,7 @@ public class CommentPostResource {
      */
     @GET
     @Path("{commentsId: \\d+}")
-    public CommentDTO getComment(@PathParam("postsId") Long postsId, @PathParam("commentsId") Long commentsId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
+    public CommentDTO getComment(@PathParam("postsId") Long postsId, @PathParam("commentsId") Long commentsId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException, WebApplicationException {
         LOGGER.log(Level.INFO, "Looking for comment: input: postsId {0} , commentsId {1}", new Object[]{postsId, commentsId});
         if (commentLogic.getComment(commentsId, neighId) == null) {
             throw new WebApplicationException("Resource /comments/" + commentsId + " does not exist.", 404);
@@ -147,7 +147,7 @@ public class CommentPostResource {
      * Error if not found
      */
     @PUT
-    public List<CommentDTO> replaceComments(@PathParam("postsId") Long postsId, List<CommentDTO> comments, @PathParam("neighborhoodId") Long neighId) {
+    public List<CommentDTO> replaceComments(@PathParam("postsId") Long postsId, List<CommentDTO> comments, @PathParam("neighborhoodId") Long neighId) throws WebApplicationException{
         LOGGER.log(Level.INFO, "Replacing post comments from resource: input: postsId {0} , comments {1}", new Object[]{postsId, comments});
         for (CommentDTO comment : comments) {
             if (commentLogic.getComment(comment.getId(), neighId) == null) {
@@ -173,7 +173,7 @@ public class CommentPostResource {
      */
     @DELETE
     @Path("{commentsId: \\d+}")
-    public void removeComment(@PathParam("postsId") Long postsId, @PathParam("commentsId") Long commentsId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
+    public void removeComment(@PathParam("postsId") Long postsId, @PathParam("commentsId") Long commentsId, @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException, WebApplicationException {
         LOGGER.log(Level.INFO, "Removing comment from post: input: postsId {0} , commentsId {1}", new Object[]{postsId, commentsId});
         if (commentLogic.getComment(commentsId, neighId) == null) {
             throw new WebApplicationException("Resource /comments/" + commentsId + " does not exist.", 404);
