@@ -2,6 +2,7 @@ package co.edu.uniandes.csw.neighborhood.dtos;
 
 import co.edu.uniandes.csw.neighborhood.adapters.DateAdapter;
 import co.edu.uniandes.csw.neighborhood.entities.GroupEntity;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -13,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  *
  * @author albayona
  */
-public class GroupDTO {
+public class GroupDTO implements Serializable{
 
 //===================================================
 // Attributes
@@ -44,7 +45,6 @@ public class GroupDTO {
     private NeighborhoodDTO neighborhood;
 
     private String muralPicture;
-
 
     public GroupDTO() {
         super();
@@ -168,6 +168,4 @@ public class GroupDTO {
         this.muralPicture = muralPicture;
     }
 
-    
-    
 }
