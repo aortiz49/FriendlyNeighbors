@@ -75,7 +75,7 @@ public class PostViewerResource {
      */
     @POST
     @Path("{viewersId: \\d+}")
-    public ResidentProfileDetailDTO associateViewerToPost(@PathParam("postsId") Long postsId, @PathParam("viewersId") Long viewersId,  @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
+    public ResidentProfileDetailDTO associateViewerToPost(@PathParam("postsId") Long postsId, @PathParam("viewersId") Long viewersId,  @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException, WebApplicationException {
         LOGGER.log(Level.INFO, "Associating viewer to post from resource: input: postsId {0} , viewersId {1}", new Object[]{postsId, viewersId});
         if (viewerLogic.getResident(viewersId, neighId) == null) {
             throw new WebApplicationException("Resource /viewers/" + viewersId + " does not exist.", 404);
@@ -128,7 +128,7 @@ public class PostViewerResource {
      */
     @GET
     @Path("{viewersId: \\d+}")
-    public ResidentProfileDetailDTO getViewer(@PathParam("postsId") Long postsId, @PathParam("viewersId") Long viewersId,  @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException {
+    public ResidentProfileDetailDTO getViewer(@PathParam("postsId") Long postsId, @PathParam("viewersId") Long viewersId,  @PathParam("neighborhoodId") Long neighId) throws BusinessLogicException, WebApplicationException {
         LOGGER.log(Level.INFO, "Looking for viewer: input: postsId {0} , viewersId {1}", new Object[]{postsId, viewersId});
         if (viewerLogic.getResident(viewersId, neighId) == null) {
             throw new WebApplicationException("Resource /viewers/" + viewersId + " does not exist.", 404);
@@ -173,7 +173,7 @@ public class PostViewerResource {
      */
     @DELETE
     @Path("{viewersId: \\d+}")
-    public void removeViewer(@PathParam("postsId") Long postsId, @PathParam("viewersId") Long viewersId,  @PathParam("neighborhoodId") Long neighId) {
+    public void removeViewer(@PathParam("postsId") Long postsId, @PathParam("viewersId") Long viewersId,  @PathParam("neighborhoodId") Long neighId) throws WebApplicationException{
         LOGGER.log(Level.INFO, "Removing viewer from post: input: postsId {0} , viewersId {1}", new Object[]{postsId, viewersId});
         if (viewerLogic.getResident(viewersId, neighId) == null) {
                  throw new WebApplicationException("Resource /viewers/" + viewersId + " does not exist.", 404);
