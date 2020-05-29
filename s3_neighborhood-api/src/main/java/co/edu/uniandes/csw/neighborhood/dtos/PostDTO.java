@@ -28,6 +28,7 @@ package co.edu.uniandes.csw.neighborhood.dtos;
 
 import co.edu.uniandes.csw.neighborhood.adapters.DateAdapter;
 import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -36,7 +37,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *
  * @k.romero
  */
-public class PostDTO {
+public class PostDTO implements Serializable{
 
     /**
      * Represents the date post was made

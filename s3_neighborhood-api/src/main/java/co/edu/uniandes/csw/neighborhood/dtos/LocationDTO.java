@@ -6,12 +6,13 @@
 package co.edu.uniandes.csw.neighborhood.dtos;
 
 import co.edu.uniandes.csw.neighborhood.entities.LocationEntity;
+import java.io.Serializable;
 
 /**
  *
  * @author v.cardonac1
  */
-public class LocationDTO {
+public class LocationDTO implements Serializable{
 
 //===================================================
 // Attributes
