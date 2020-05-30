@@ -226,4 +226,19 @@ public class GroupResource {
         return FavorGroupResource.class;
     }
 
+    
+        @POST
+    @Path("{groupsId: \\d+}/album")
+    public GroupDetailDTO associatePictureToGroup(@PathParam("groupsId") Long postsId, @PathParam("neighborhoodId") Long neighId, String pic) throws BusinessLogicException, WebApplicationException {
+        LOGGER.log(Level.INFO, "Associating album to group from resource: input: postsId {0}", new Object[]{postsId});
+        if (groupLogic.getGroup(postsId, neighId) == null) {
+            throw new WebApplicationException("Resource /groups/" + postsId + " does not exist.", 404);
+        }
+        GroupEntity e = groupLogic.associatePictureToGroup(postsId, neighId, pic);
+
+        GroupDetailDTO detailDTO = new GroupDetailDTO(e);
+
+        LOGGER.log(Level.INFO, "Ended associating album to group from resource: output: {0}", detailDTO);
+        return detailDTO;
+    }
 }

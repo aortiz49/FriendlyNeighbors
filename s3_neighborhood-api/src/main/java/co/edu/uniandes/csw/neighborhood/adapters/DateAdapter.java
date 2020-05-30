@@ -38,7 +38,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
  */
 public class DateAdapter extends XmlAdapter<String, Date> {
     
-      private static final Logger LOGGER = Logger.getLogger(DateAdapter.class.getName());
+        private static final Logger LOGGER = Logger.getLogger(DateAdapter.class.getName());
 
     /**
      * Thread safe {@link DateFormat}.
@@ -47,7 +47,7 @@ public class DateAdapter extends XmlAdapter<String, Date> {
 
         @Override
         protected DateFormat initialValue() {
-            return new SimpleDateFormat("yyyy-MM-dd");
+              return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         }
     };
 

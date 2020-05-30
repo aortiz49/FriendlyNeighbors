@@ -20,8 +20,10 @@ SOFTWARE.
 package co.edu.uniandes.csw.neighborhood.resources;
 
 import co.edu.uniandes.csw.neighborhood.dtos.PostDetailDTO;
+import co.edu.uniandes.csw.neighborhood.dtos.ResidentProfileDetailDTO;
 import co.edu.uniandes.csw.neighborhood.ejb.PostLogic;
 import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.mappers.WebApplicationExceptionMapper;
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -191,6 +194,21 @@ public class PostResource {
             throw new WebApplicationException("Resource /posts/" + postsId + " does not exist.", 404);
         }
         return CommentPostResource.class;
+    }
+
+    @POST
+    @Path("{postsId: \\d+}/album")
+    public PostDetailDTO associatePictureToPost(@PathParam("postsId") Long postsId, @PathParam("neighborhoodId") Long neighId, String pic) throws BusinessLogicException, WebApplicationException {
+        LOGGER.log(Level.INFO, "Associating album to post from resource: input: postsId {0}", new Object[]{postsId});
+        if (postLogic.getPost(postsId, neighId) == null) {
+            throw new WebApplicationException("Resource /posts/" + postsId + " does not exist.", 404);
+        }
+        PostEntity e = postLogic.associateAlbumToPost(postsId, neighId, pic);
+
+           PostDetailDTO detailDTO = new PostDetailDTO(e);
+
+        LOGGER.log(Level.INFO, "Ended associating album to post from resource: output: {0}", detailDTO);
+        return detailDTO;
     }
 
 }

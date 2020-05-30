@@ -35,6 +35,7 @@ import javax.inject.Inject;
 import co.edu.uniandes.csw.neighborhood.persistence.*;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentLoginEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 
@@ -219,4 +220,13 @@ public class ResidentProfileLogic {
         return modified;
     }
 
+    
+    
+    public ResidentProfileEntity associatePictureToResident(Long residentId, Long neighId, String pic) throws BusinessLogicException {
+        ResidentProfileEntity entity = persistence.find(residentId, neighId);
+
+        entity.getAlbum().add(pic);
+        return persistence.find(residentId, neighId);
+    }
+    
 }
