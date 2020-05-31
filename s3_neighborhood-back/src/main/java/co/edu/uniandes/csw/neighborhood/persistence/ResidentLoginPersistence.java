@@ -94,15 +94,6 @@ public class ResidentLoginPersistence {
         LOGGER.log(Level.INFO, "Querying for residentLogin with id '{'0'}'{0} belonging to {1}", new Object[]{pResidentLoginId, pNeighborhoodId});
 
         ResidentLoginEntity login = em.find(ResidentLoginEntity.class, pResidentLoginId);
-
-        if (login != null) {
-            if (login.getNeighborhood() == null
-                    || !login.getNeighborhood().getId().equals(pNeighborhoodId)) {
-                throw new RuntimeException("Login " + pResidentLoginId + " does not belong to "
-                        + "neighborhood " + pNeighborhoodId);
-            }
-        }
-
         return login;
     }
 
