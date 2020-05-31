@@ -127,7 +127,7 @@ public class PostViewerLogic {
         LOGGER.log(Level.INFO, "Association deleted between viewer with id {0} and  post with id {1}, from neighbothood {2}", new Object[]{viewerId, postId, neighId});
     }
 
-        public List<ResidentProfileEntity> getPotentialViewers(Long postID, Long neighID) {
+    public List<ResidentProfileEntity> getPotentialViewers(Long postID, Long neighID) {
 
         List<ResidentProfileEntity> s1 = viewerPersistence.findAll(neighID);
         List<ResidentProfileEntity> s2 = postPersistence.find(postID, neighID).getViewers();
@@ -137,6 +137,4 @@ public class PostViewerLogic {
 
     }
 
-
-    
 }

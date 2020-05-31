@@ -15,8 +15,10 @@ import javax.inject.Inject;
 import co.edu.uniandes.csw.neighborhood.persistence.GroupPersistence;
 import co.edu.uniandes.csw.neighborhood.entities.GroupEntity;
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
+import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 
 /**
  *
@@ -26,6 +28,9 @@ import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
 public class GroupLogic {
 
     private static final Logger LOGGER = Logger.getLogger(GroupLogic.class.getName());
+
+    @Inject
+    private ResidentProfilePersistence residentPersistence;
 
     @Inject
     private GroupPersistence persistence;
@@ -154,6 +159,16 @@ public class GroupLogic {
 
         entity.getAlbum().add(pic);
         return persistence.find(groupId, neighId);
+    }
+
+    public List<ResidentProfileEntity> getPotentialMembers(Long group, Long neighID) {
+
+        List<ResidentProfileEntity> s1 = residentPersistence.findAll(neighID);
+        List<ResidentProfileEntity> s2 = getGroup(group, neighID).getMembers();
+        s1.removeAll(s2);
+
+        return s1;
+
     }
 
 }

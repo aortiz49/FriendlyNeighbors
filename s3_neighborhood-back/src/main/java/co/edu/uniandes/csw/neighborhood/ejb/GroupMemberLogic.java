@@ -127,4 +127,13 @@ public class GroupMemberLogic {
         LOGGER.log(Level.INFO, "Association deleted between member with id {0} and  group with id {1}, from neighbothood {2}", new Object[]{memberId, groupId, neighId});
     }
 
+    public List<ResidentProfileEntity> getPotentialMembers(Long group, Long neighID) {
+
+        List<ResidentProfileEntity> s1 = memberPersistence.findAll(neighID);
+        List<ResidentProfileEntity> s2 = groupPersistence.find(group, neighID).getMembers();
+        s1.removeAll(s2);
+
+        return s1;
+
+    }
 }
