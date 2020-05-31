@@ -161,14 +161,6 @@ public class GroupLogic {
         return persistence.find(groupId, neighId);
     }
 
-    public List<ResidentProfileEntity> getPotentialMembers(Long group, Long neighID) {
 
-        List<ResidentProfileEntity> s1 = residentPersistence.findAll(neighID);
-        List<ResidentProfileEntity> s2 = getGroup(group, neighID).getMembers();
-        s1.removeAll(s2);
-
-        return s1;
-
-    }
 
 }
