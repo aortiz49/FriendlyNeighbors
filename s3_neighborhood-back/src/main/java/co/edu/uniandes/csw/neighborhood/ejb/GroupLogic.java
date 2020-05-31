@@ -15,8 +15,10 @@ import javax.inject.Inject;
 import co.edu.uniandes.csw.neighborhood.persistence.GroupPersistence;
 import co.edu.uniandes.csw.neighborhood.entities.GroupEntity;
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
+import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
 
 /**
  *
@@ -26,6 +28,9 @@ import co.edu.uniandes.csw.neighborhood.persistence.NeighborhoodPersistence;
 public class GroupLogic {
 
     private static final Logger LOGGER = Logger.getLogger(GroupLogic.class.getName());
+
+    @Inject
+    private ResidentProfilePersistence residentPersistence;
 
     @Inject
     private GroupPersistence persistence;
@@ -61,12 +66,11 @@ public class GroupLogic {
             throw new BusinessLogicException("A description has to be specified");
         }
 
-
         // must have a neighborhood
         if (persistedNeighborhood == null) {
             throw new BusinessLogicException("The group must have an existing neighborhood!");
         }
-        
+
         groupEntity.setNeighborhood(persistedNeighborhood);
 
         persistence.create(groupEntity);
@@ -79,7 +83,7 @@ public class GroupLogic {
      * Deletes a group by ID
      *
      * @param id of group to be deleted
-     * @param neighId parent neighborhood 
+     * @param neighId parent neighborhood
      */
     public void deleteGroup(Long id, Long neighId) {
 
@@ -91,7 +95,7 @@ public class GroupLogic {
     /**
      * Get all group entities
      *
-     * @param neighId parent neighborhood 
+     * @param neighId parent neighborhood
      * @return all of group entities
      */
     public List<GroupEntity> getGroups(Long neighId) {
@@ -106,7 +110,7 @@ public class GroupLogic {
      * Gets a group by id
      *
      * @param id from entity group
-     * @param neighId parent neighborhood 
+     * @param neighId parent neighborhood
      * @return entity group found
      */
     public GroupEntity getGroup(Long id, Long neighId) {
@@ -120,10 +124,10 @@ public class GroupLogic {
      * Updates a group
      *
      * @param groupEntity to be updated
-     * @param neighId parent neighborhood 
+     * @param neighId parent neighborhood
      * @return the entity with the updated group
      */
-    public GroupEntity updateGroup(GroupEntity groupEntity,  Long neighId) throws BusinessLogicException {
+    public GroupEntity updateGroup(GroupEntity groupEntity, Long neighId) throws BusinessLogicException {
         LOGGER.log(Level.INFO, "Starting update process for group with id {0}", groupEntity.getId());
 
         //must have a name
@@ -148,6 +152,23 @@ public class GroupLogic {
         GroupEntity modified = persistence.update(groupEntity, neighId);
         LOGGER.log(Level.INFO, "Ended update process for group with id {0}", groupEntity.getId());
         return modified;
+    }
+
+    public GroupEntity associatePictureToGroup(Long groupId, Long neighId, String pic) throws BusinessLogicException {
+        GroupEntity entity = persistence.find(groupId, neighId);
+
+        entity.getAlbum().add(pic);
+        return persistence.find(groupId, neighId);
+    }
+
+    public List<ResidentProfileEntity> getPotentialMembers(Long group, Long neighID) {
+
+        List<ResidentProfileEntity> s1 = residentPersistence.findAll(neighID);
+        List<ResidentProfileEntity> s2 = getGroup(group, neighID).getMembers();
+        s1.removeAll(s2);
+
+        return s1;
+
     }
 
 }

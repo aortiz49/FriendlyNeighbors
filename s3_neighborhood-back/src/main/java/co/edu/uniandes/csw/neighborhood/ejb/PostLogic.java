@@ -37,8 +37,10 @@ import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.neighborhood.persistence.ResidentProfilePersistence;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * Class that implements the connection with the post persistence for the Post
@@ -188,4 +190,13 @@ public class PostLogic {
 
     }
 
+    public PostEntity associateAlbumToPost(Long postId, Long neighId, String pic) throws BusinessLogicException {
+        LOGGER.log(Level.INFO, "Initiating association between album with post with id {1}, from neighbothood {2}", new Object[]{postId, neighId});
+        PostEntity postEntity = persistence.find(postId, neighId);
+
+        postEntity.getAlbum().add(pic);
+
+        LOGGER.log(Level.INFO, "Initiating association between album with post with id {1}, from neighbothood {2}", new Object[]{postId, neighId});
+        return persistence.find(postId, neighId);
+    }
 }

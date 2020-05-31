@@ -35,6 +35,7 @@ import javax.inject.Inject;
 import co.edu.uniandes.csw.neighborhood.persistence.*;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentProfileEntity;
 import co.edu.uniandes.csw.neighborhood.entities.NeighborhoodEntity;
+import co.edu.uniandes.csw.neighborhood.entities.PostEntity;
 import co.edu.uniandes.csw.neighborhood.entities.ResidentLoginEntity;
 import co.edu.uniandes.csw.neighborhood.exceptions.BusinessLogicException;
 
@@ -86,7 +87,11 @@ public class ResidentProfileLogic {
         if(persistedLogin.getResident()!=null){
             throw new BusinessLogicException("The login already has a resident");
         }
-
+        //1b. E-mail cannot be duplicated 
+        if (persistence.findByEmail(residentEntity.getEmail())  != null) {
+            throw new BusinessLogicException("E-mail provided already in use: " + residentEntity.getEmail() + "\"");
+        }
+        
 
         residentEntity.setNeighborhood(persistedNeighborhood);
         persistedLogin.setResident(residentEntity);
@@ -105,11 +110,7 @@ public class ResidentProfileLogic {
         if (residentEntity.getEmail() == null) {
             throw new BusinessLogicException("An e-mail has to be specified");
         }
-        //1b. E-mail cannot be duplicated 
-        if (persistence.findByEmail(residentEntity.getEmail())  != null) {
-            throw new BusinessLogicException("E-mail provided already in use: " + residentEntity.getEmail() + "\"");
-        }
-        
+
         // 2. Proof of residence must not be null.
         if (residentEntity.getProofOfResidence() == null) {
             throw new BusinessLogicException("A proof of residence has to be specified");
@@ -205,7 +206,6 @@ public class ResidentProfileLogic {
             if (persistence.findByEmail(residentEntity.getEmail()) != null) {
                 throw new BusinessLogicException("E-mail provided already in use: " + residentEntity.getEmail() + "\"");
             }
-
         }
 
         verifyBusinessRules(residentEntity);
@@ -219,4 +219,13 @@ public class ResidentProfileLogic {
         return modified;
     }
 
+    
+    
+    public ResidentProfileEntity associatePictureToResident(Long residentId, Long neighId, String pic) throws BusinessLogicException {
+        ResidentProfileEntity entity = persistence.find(residentId, neighId);
+
+        entity.getAlbum().add(pic);
+        return persistence.find(residentId, neighId);
+    }
+    
 }

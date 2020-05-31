@@ -42,7 +42,6 @@ public class PostDTO implements Serializable{
     /**
      * Represents the date post was made
      */
-    @XmlJavaTypeAdapter(DateAdapter.class)
     private Date publishDate;
     /**
      * Represents the title of the post

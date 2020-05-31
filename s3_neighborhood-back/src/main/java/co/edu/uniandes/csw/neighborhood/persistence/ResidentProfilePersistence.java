@@ -88,6 +88,8 @@ public class ResidentProfilePersistence {
         LOGGER.log(Level.INFO, "Deleting resident with id {0} belonging to neighborhood  {1}", new Object[]{residentEntity.getId(), neighborhood_id});
 
         find(residentEntity.getId(), neighborhood_id);
+        
+        
 
         return em.merge(residentEntity);
     }
